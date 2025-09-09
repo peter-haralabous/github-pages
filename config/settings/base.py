@@ -1,4 +1,3 @@
-# ruff: noqa: ERA001
 """Base settings to build other settings files upon."""
 
 from pathlib import Path
@@ -53,7 +52,7 @@ DATABASES = {
     "default": {
         **env.db(
             "DATABASE_URL",
-            default="sqlite:///sandwich.sqlite3",
+            default="sqlite:///data/sandwich.db",
         ),
         "OPTIONS": {
             "transaction_mode": "IMMEDIATE",
@@ -101,6 +100,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "sandwich.users",
     "sandwich.bread",
+    "sandwich.patients",
+    "sandwich.providers",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -269,7 +269,7 @@ tags
 dump.rdb
 
 # local database
-sandwich.sqlite3*
+data/*
 
 ### Project template
 mailpit

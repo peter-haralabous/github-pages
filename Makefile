@@ -14,8 +14,12 @@ node_modules: package.json yarn.lock
 migrate:
 	uv run manage.py migrate
 
+.PHONY: mailpit
+mailpit:
+	docker compose up -d mailpit
+
 .PHONY: dev
-dev: init migrate
+dev: init migrate mailpit
 	yarn run dev
 
 .PHONY: test
