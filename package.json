@@ -39,7 +39,7 @@
     "dev": "concurrently 'yarn:dev:*'",
     "build": "webpack --config webpack/prod.config.js",
     "dev:webpack": "webpack serve --config webpack/dev.config.js",
-    "dev:django": "python manage.py runserver_plus"
+    "dev:django": "uv run manage.py runserver_plus"
   },
   "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b"
 }
