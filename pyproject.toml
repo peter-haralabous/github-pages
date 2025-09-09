@@ -77,7 +77,7 @@ select = [
     "FBT",
     "B",
     "A",
-    "COM",
+    "COM818", # the other COM rules conflict with `ruff format`
     "C4",
     "DTZ",
     "T10",
