@@ -265,16 +265,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "5.1.12"
+version = "5.2.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f0/99/a951d93a27a5bc59fb96edbcdbc03fb9bfac51177f1bc0110888de85af3f/django-5.1.12.tar.gz", hash = "sha256:8a8991b1ec052ef6a44fefd1ef336ab8daa221287bcb91a4a17d5e1abec5bbcc", size = 10737777, upload-time = "2025-09-03T13:09:45.855Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/8c/2a21594337250a171d45dda926caa96309d5136becd1f48017247f9cdea0/django-5.2.6.tar.gz", hash = "sha256:da5e00372763193d73cecbf71084a3848458cecf4cee36b9a1e8d318d114a87b", size = 10858861, upload-time = "2025-09-03T13:04:03.23Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/1c/a9520c8263e980b0b9933c9b5ce8f22c9ddf007b062e4eb428b557ff0932/django-5.1.12-py3-none-any.whl", hash = "sha256:9eb695636cea3601b65690f1596993c042206729afb320ca0960b55f8ed4477b", size = 8277454, upload-time = "2025-09-03T13:09:30.997Z" },
+    { url = "https://files.pythonhosted.org/packages/f5/af/6593f6d21404e842007b40fdeb81e73c20b6649b82d020bb0801b270174c/django-5.2.6-py3-none-any.whl", hash = "sha256:60549579b1174a304b77e24a93d8d9fafe6b6c03ac16311f3e25918ea5a20058", size = 8303111, upload-time = "2025-09-03T13:03:47.808Z" },
 ]
 
 [[package]]
@@ -1093,6 +1093,7 @@ dependencies = [
     { name = "django-model-utils" },
     { name = "django-redis" },
     { name = "django-storages", extra = ["s3"] },
+    { name = "django-stubs-ext" },
     { name = "django-webpack-loader" },
     { name = "gunicorn" },
     { name = "hiredis" },
@@ -1125,7 +1126,7 @@ dev = [
 requires-dist = [
     { name = "argon2-cffi", specifier = "==25.1.0" },
     { name = "crispy-bootstrap5", specifier = "==2025.6" },
-    { name = "django", specifier = "==5.1.12" },
+    { name = "django", specifier = "==5.2.6" },
     { name = "django-allauth", extras = ["mfa"], specifier = "==65.11.1" },
     { name = "django-anymail", extras = ["amazon-ses"], specifier = "==13.1" },
     { name = "django-crispy-forms", specifier = "==2.4" },
@@ -1133,6 +1134,7 @@ requires-dist = [
     { name = "django-model-utils", specifier = "==5.0.0" },
     { name = "django-redis", specifier = "==6.0.0" },
     { name = "django-storages", extras = ["s3"], specifier = "==1.14.6" },
+    { name = "django-stubs-ext", specifier = ">=5.2.2" },
     { name = "django-webpack-loader", specifier = "==3.2.1" },
     { name = "gunicorn", specifier = "==23.0.0" },
     { name = "hiredis", specifier = "==3.2.1" },

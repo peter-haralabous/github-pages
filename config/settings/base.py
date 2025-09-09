@@ -3,7 +3,10 @@
 
 from pathlib import Path
 
+import django_stubs_ext
 import environ
+
+django_stubs_ext.monkeypatch()
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # sandwich/
@@ -97,6 +100,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "sandwich.users",
+    "sandwich.bread",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
