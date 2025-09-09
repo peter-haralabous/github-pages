@@ -163,10 +163,6 @@ version = "0.1.0"
 description = "bread + htmx"
 readme = "README.md"
 
-license = { text = "Not open source" }
-authors = [
-  { name = "Thrive Health", email = "dev@thrive.health" },
-]
 requires-python = "==3.12.*"
 dependencies = [
     "argon2-cffi==25.1.0",
