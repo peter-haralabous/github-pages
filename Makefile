@@ -21,3 +21,7 @@ dev: init migrate
 .PHONY: test
 test: init migrate
 	uv run pytest
+
+.PHONY: lint
+lint: init
+	uv run pre-commit run -a
