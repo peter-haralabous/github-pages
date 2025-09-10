@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 
-from sandwich.bread.models import Patient
+from sandwich.core.models import Patient
 from sandwich.users.models import User
 
 

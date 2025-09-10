@@ -1,7 +1,7 @@
 from django.db import models
 
-from sandwich.bread.models.abstract import TimestampedModel
-from sandwich.bread.models.organization import Organization
+from sandwich.core.models.abstract import TimestampedModel
+from sandwich.core.models.organization import Organization
 from sandwich.users.models import User
 
 

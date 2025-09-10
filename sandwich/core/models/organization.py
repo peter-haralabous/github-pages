@@ -1,6 +1,6 @@
 from django.db import models
 
-from sandwich.bread.models.abstract import TimestampedModel
+from sandwich.core.models.abstract import TimestampedModel
 
 
 class Organization(TimestampedModel):

@@ -99,7 +99,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "sandwich.users",
-    "sandwich.bread",
+    "sandwich.core",
     "sandwich.patients",
     "sandwich.providers",
     # Your stuff: custom apps go here

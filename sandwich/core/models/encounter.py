@@ -1,9 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from sandwich.bread.models.abstract import TimestampedModel
-from sandwich.bread.models.organization import Organization
-from sandwich.bread.models.patient import Patient
+from sandwich.core.models.abstract import TimestampedModel
+from sandwich.core.models.organization import Organization
+from sandwich.core.models.patient import Patient
 
 
 class EncounterStatus(models.TextChoices):

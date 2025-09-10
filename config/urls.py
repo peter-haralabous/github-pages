@@ -19,7 +19,7 @@ urlpatterns = [
     path("users/", include("sandwich.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    path("", include("sandwich.bread.urls")),
+    path("", include("sandwich.core.urls")),
     path("patients/", include("sandwich.patients.urls", namespace="patients")),
     path("providers/", include("sandwich.providers.urls", namespace="providers")),
     # Media files
