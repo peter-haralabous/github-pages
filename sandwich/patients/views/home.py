@@ -10,6 +10,6 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 def home(request: AuthenticatedHttpRequest) -> HttpResponse:
     patient = request.user.patient_set.first()
     if patient:
-        return redirect("patients:patient", pk=patient.id)
+        return redirect("patients:patient_details", patient_id=patient.id)
 
     return render(request, "patient/home.html")

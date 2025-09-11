@@ -1,3 +1,5 @@
+from typing import Any
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
@@ -54,18 +56,18 @@ class PatientAdd(forms.ModelForm[Patient]):
 
 
 @login_required
-def patient(request: AuthenticatedHttpRequest, pk: int) -> HttpResponse:
-    patient = get_object_or_404(request.user.patient_set, id=pk)
+def patient_edit(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResponse:
+    patient = get_object_or_404(request.user.patient_set, id=patient_id)
     if request.method == "POST":
         form = PatientEdit(request.POST, instance=patient)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "Patient updated successfully.")
-            return HttpResponseRedirect(reverse("patient", kwargs={"pk": pk}))
+            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient_id}))
     else:
         form = PatientEdit(instance=patient)
 
-    context = {"form": form}
+    context = {"form": form} | _patient_context(request, patient=patient)
     return render(request, "patient/patient_edit.html", context)
 
 
@@ -76,9 +78,23 @@ def patient_add(request: AuthenticatedHttpRequest) -> HttpResponse:
         if form.is_valid():
             patient = form.save(user=request.user)
             messages.add_message(request, messages.SUCCESS, "Patient added successfully.")
-            return HttpResponseRedirect(reverse("patients:patient", kwargs={"pk": patient.id}))
+            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
     else:
         form = PatientAdd()
 
-    context = {"form": form}
+    context = {"form": form} | _patient_context(request)
     return render(request, "patient/patient_add.html", context)
+
+
+@login_required
+def patient_details(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResponse:
+    patient = get_object_or_404(request.user.patient_set, id=patient_id)
+    tasks = patient.task_set.all()
+
+    context = {"patient": patient, "tasks": tasks} | _patient_context(request, patient=patient)
+    return render(request, "patient/patient_details.html", context)
+
+
+def _patient_context(request: AuthenticatedHttpRequest, patient: Patient | None = None) -> dict[str, Any]:
+    """Fetch additional template context required for patient context"""
+    return {"patient": patient, "patients": request.user.patient_set.all()}

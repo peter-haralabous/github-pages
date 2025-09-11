@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+  {% for p in patients %}
+    {# TODO: show a red pill next to patients with pending tasks #}
+    <li class="nav-item">
+      <a class="nav-link {% if p.id == patient.id %}active{% endif %}"
+         href="{% url "patients:patient_details" patient_id=p.id %}">{{ p.full_name }}</a>
+    </li>
+  {% endfor %}
+  <span class="flex-grow-1"></span>
+  <li class="nav-item">
+    {# FIXME-NG: mark this as active when on the add_patient route #}
+    <a class="nav-link" href="{% url "patients:patient_add" %}">Add Patient</a>
+  </li>
+</ul>
