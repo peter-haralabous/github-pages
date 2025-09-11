@@ -7,25 +7,51 @@
   </p>
   <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
      class="btn btn-primary">Edit</a>
+  {% if current_encounter %}
+    <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+          class="d-inline"
+          method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Archive</button>
+    </form>
+  {% endif %}
   <hr />
   <h3>Tasks</h3>
   <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
+        <th>Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for task in tasks %}
         <tr>
           <td>{{ task.name }}</td>
+          <td>{{ task.get_status_display }}</td>
+          <td>
+            {% if task.active %}
+              <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
+                    class="d-inline"
+                    method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+              </form>
+            {% endif %}
+          </td>
         </tr>
       {% empty %}
-        <tr>
+        <tr colspan="3">
           <td>No tasks</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
-  <a href="#" class="btn btn-primary">Add Task</a>
+  <form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
+        class="d-inline"
+        method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Add Task</button>
+  </form>
 {% endblock main %}

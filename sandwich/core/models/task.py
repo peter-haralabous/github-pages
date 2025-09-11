@@ -27,6 +27,10 @@ class TaskStatus(models.TextChoices):
     ENTERED_IN_ERROR = "entered-in-error", _("Entered in Error")
 
 
+def is_terminal(status: TaskStatus) -> bool:
+    return status in [TaskStatus.CANCELLED, TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.ENTERED_IN_ERROR]
+
+
 # NOTE-NG: this is just a placeholder for now. We'll want to expand this model significantly in the future.
 class Task(TimestampedModel):
     """
@@ -45,3 +49,12 @@ class Task(TimestampedModel):
     encounter = models.ForeignKey(Encounter, on_delete=models.CASCADE)
 
     status = models.CharField(max_length=255, choices=TaskStatus)
+
+    @property
+    def name(self) -> str:
+        return f"Task {self.id}"
+
+    @property
+    def active(self) -> bool:
+        # FIXME-NG: self.status is a str, not a TaskStatus
+        return not is_terminal(self.status)  # type: ignore[arg-type]
