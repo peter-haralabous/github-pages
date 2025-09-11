@@ -3,7 +3,6 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -11,6 +10,10 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from sandwich.core.models import Organization
+from sandwich.core.models.role import RoleName
+from sandwich.core.service.organization_service import create_default_roles
+from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.util.http import AuthenticatedHttpRequest
 
 
 class OrganizationEdit(forms.ModelForm[Organization]):
@@ -36,8 +39,8 @@ class OrganizationAdd(forms.ModelForm[Organization]):
 
 
 @login_required
-def organization_edit(request: HttpRequest, organization_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def organization_edit(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
 
     if request.method == "POST":
         form = OrganizationEdit(request.POST, instance=organization)
@@ -53,11 +56,14 @@ def organization_edit(request: HttpRequest, organization_id: int) -> HttpRespons
 
 
 @login_required
-def organization_add(request: HttpRequest) -> HttpResponse:
+def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = OrganizationAdd(request.POST)
         if form.is_valid():
             organization = form.save()
+            create_default_roles(organization)
+            organization.role_set.get(name=RoleName.OWNER).group.user_set.add(request.user)
+
             messages.add_message(request, messages.SUCCESS, "Organization added successfully.")
             return HttpResponseRedirect(reverse("providers:organization", kwargs={"organization_id": organization.id}))
     else:

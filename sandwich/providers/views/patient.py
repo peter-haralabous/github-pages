@@ -3,7 +3,6 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -21,8 +20,10 @@ from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_pending_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
+from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
+from sandwich.core.util.http import AuthenticatedHttpRequest
 
 
 class PatientEdit(forms.ModelForm[Patient]):
@@ -65,8 +66,8 @@ class PatientAdd(forms.ModelForm[Patient]):
 
 
 @login_required
-def patient_details(request: HttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_details(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     current_encounter = get_current_encounter(patient)
     tasks = current_encounter.task_set.all() if current_encounter else []
@@ -85,8 +86,8 @@ def patient_details(request: HttpRequest, organization_id: int, patient_id: int)
 
 
 @login_required
-def patient_edit(request: HttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     if request.method == "POST":
@@ -108,8 +109,8 @@ def patient_edit(request: HttpRequest, organization_id: int, patient_id: int) ->
 
 
 @login_required
-def patient_add(request: HttpRequest, organization_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     if request.method == "POST":
         form = PatientAdd(request.POST)
         if form.is_valid():
@@ -127,8 +128,8 @@ def patient_add(request: HttpRequest, organization_id: int) -> HttpResponse:
 
 
 @login_required
-def patient_list(request: HttpRequest, organization_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patients = list(Patient.objects.filter(organization=organization))
 
     context = {"patients": patients, "organization": organization}
@@ -137,8 +138,8 @@ def patient_list(request: HttpRequest, organization_id: int) -> HttpResponse:
 
 @login_required
 @require_POST
-def patient_archive(request: HttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     current_encounter = get_current_encounter(patient)
 
@@ -153,8 +154,8 @@ def patient_archive(request: HttpRequest, organization_id: int, patient_id: int)
 
 @login_required
 @require_POST
-def patient_add_task(request: HttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     current_encounter = get_current_encounter(patient)
@@ -173,8 +174,10 @@ def patient_add_task(request: HttpRequest, organization_id: int, patient_id: int
 
 @login_required
 @require_POST
-def patient_cancel_task(request: HttpRequest, organization_id: int, patient_id: int, task_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_cancel_task(
+    request: AuthenticatedHttpRequest, organization_id: int, patient_id: int, task_id: int
+) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     task = get_object_or_404(patient.task_set, id=task_id)
 
@@ -188,8 +191,8 @@ def patient_cancel_task(request: HttpRequest, organization_id: int, patient_id: 
 
 @login_required
 @require_POST
-def patient_resend_invite(request: HttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
-    organization = get_object_or_404(Organization, id=organization_id)
+def patient_resend_invite(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     assert patient.user is None, "Patient already has a user"

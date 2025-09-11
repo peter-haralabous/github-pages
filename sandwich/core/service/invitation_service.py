@@ -26,6 +26,8 @@ def find_or_create_patient_invitation(patient: Patient) -> Invitation:
 
 
 def resend_patient_invitation_email(patient: Patient) -> None:
+    assert patient.organization, "Patient has no organization"
+
     # this is a bit messy, because we didn't track why the invitation was originally sent
     invitation = find_or_create_patient_invitation(patient)
 
