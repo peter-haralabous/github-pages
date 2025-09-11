@@ -33,44 +33,34 @@
   </head>
   <body class="{% block bodyclass %}{% endblock bodyclass %}">
     {% block body %}
-      <div class="mb-1">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-          <div class="container-fluid">
-            <button class="navbar-toggler navbar-toggler-right"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'home' %}">HealthConnect</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
+      <div class="mb-4">
+        <nav class="navbar bg-base-100 shadow">
+          <div class="container mx-auto flex flex-wrap items-center justify-between">
+            <div class="navbar-start">
+              <a class="btn btn-ghost normal-case text-xl" href="{% url 'home' %}">HealthConnect</a>
+            </div>
+            <div class="navbar-end">
+              <ul class="menu menu-horizontal px-1">
                 {% block nav_items %}
-                  <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                  <li>
+                    <a class="active" href="{% url 'home' %}">Home</a>
                   </li>
                 {% endblock nav_items %}
                 {% if request.user.is_authenticated %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
+                  <li>
+                    <a href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
                   </li>
-                  <li class="nav-item">
-                    {# URL provided by django-allauth/account/urls.py #}
-                    <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+                  <li>
+                    <a href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
                   </li>
                 {% else %}
                   {% if ACCOUNT_ALLOW_REGISTRATION %}
-                    <li class="nav-item">
-                      {# URL provided by django-allauth/account/urls.py #}
-                      <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+                    <li>
+                      <a id="sign-up-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
                     </li>
                   {% endif %}
-                  <li class="nav-item">
-                    {# URL provided by django-allauth/account/urls.py #}
-                    <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+                  <li>
+                    <a id="log-in-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
                   </li>
                 {% endif %}
               </ul>
@@ -78,15 +68,15 @@
           </div>
         </nav>
       </div>
-      <div class="container">
+      <div class="container mx-auto">
         {% if messages %}
           {% for message in messages %}
-            <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-              {{ message }}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} mb-4 flex items-center justify-between">
+              <span>{{ message }}</span>
               <button type="button"
-                      class="btn-close"
-                      data-bs-dismiss="alert"
-                      aria-label="Close"></button>
+                      class="btn btn-sm btn-ghost"
+                      onclick="this.parentElement.remove()"
+                      aria-label="Close">&times;</button>
             </div>
           {% endfor %}
         {% endif %}

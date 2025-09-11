@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <h1>HealthConnect</h1>
-  <p>
-    Your comprehensive healthcare management platform connecting patients and providers for better health outcomes and streamlined care coordination.
-  </p>
-  <a href="{% url "patients:home" %}">Continue as Patient</a>
-  <a href="{% url "providers:home" %}">Continue as Provider</a>
+  <div class="flex flex-col items-center justify-center">
+    <div class="max-w-xl w-full p-8 bg-white rounded-lg shadow-lg">
+      <h1 class="text-4xl font-bold text-primary mb-4">HealthConnect</h1>
+      <p class="text-lg text-gray-600 mb-8">
+        Your comprehensive healthcare management platform connecting patients and providers for better health outcomes and streamlined care coordination.
+      </p>
+      <div class="flex flex-col gap-4">
+        <a href="{% url 'patients:home' %}" class="btn btn-primary w-full">Continue as Patient</a>
+        <a href="{% url 'providers:home' %}" class="btn btn-secondary w-full">Continue as Provider</a>
+      </div>
+    </div>
+  </div>
 {% endblock main %}
