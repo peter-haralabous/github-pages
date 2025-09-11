@@ -5,6 +5,9 @@
   <p>
     <strong>Name:</strong> {{ patient.full_name }}
   </p>
+  <p>
+    <strong>Email:</strong> {{ patient.email|default:"—" }}
+  </p>
   <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
      class="btn btn-primary">Edit</a>
   {% if current_encounter %}
