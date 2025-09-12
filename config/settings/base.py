@@ -155,6 +155,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "sandwich.core.middleware.TimezoneMiddleware",
 ]
 
 # STATIC
