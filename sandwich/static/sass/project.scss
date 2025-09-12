@@ -1,3 +1,21 @@
 @import 'tailwindcss';
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
+
+/* load classes used by crispy-tailwind */
+@source "../../../.venv/lib/python3.12/site-packages/crispy_tailwind";
+
+/* base.html generates alert variants at runtime */
+@source inline("alert-{success,danger,warning,info}");
+
+/* bring back some default styling */
+@layer base {
+  h1 {
+    font-size: var(--text-2xl);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+  }
+}

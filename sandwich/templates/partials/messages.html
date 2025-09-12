@@ -1,0 +1,11 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} mb-4 flex items-center justify-between">
+      <span>{{ message }}</span>
+      <button type="button"
+              class="btn btn-sm btn-ghost"
+              onclick="this.parentElement.remove()"
+              aria-label="Close">&times;</button>
+    </div>
+  {% endfor %}
+{% endif %}
