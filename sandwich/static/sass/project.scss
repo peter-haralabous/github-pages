@@ -15,13 +15,16 @@
 @layer base {
   h1 {
     @apply text-2xl;
+    @apply font-bold;
   }
 
   h2 {
     @apply text-xl;
+    @apply font-semibold;
   }
 
   h3 {
     @apply text-lg;
+    @apply font-semibold;
   }
 }

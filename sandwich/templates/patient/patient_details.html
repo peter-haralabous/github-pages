@@ -1,10 +1,10 @@
 {% extends "patient/base.html" %}
 
 {% block content %}
-  <h2 class="text-2xl font-bold mb-4">Hi {{ patient.full_name }}</h2>
+  <h2 class="mb-4">Hi {{ patient.full_name }}</h2>
   <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
      class="btn btn-primary mb-6">Edit</a>
-  <h3 class="text-xl font-semibold mb-2">Tasks</h3>
+  <h3 class="mb-2">Tasks</h3>
   <div class="overflow-x-auto">
     <table class="table table-zebra w-full">
       <thead>
