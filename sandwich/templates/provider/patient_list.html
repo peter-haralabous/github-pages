@@ -15,7 +15,7 @@
              class="input"
              placeholder="Search"
              value="{{ search }}" />
-      <select name="has_active_encounter" class="input">
+      <select name="has_active_encounter" class="input w-auto">
         <option value="">All Statuses</option>
         <option value="true"
                 {% if has_active_encounter_filter == "true" %}selected{% endif %}>Active</option>
@@ -24,6 +24,8 @@
       </select>
       <input type="hidden" name="sort" value="{{ sort }}" />
       <button type="submit" class="btn">Search</button>
+      <a href="{% url 'providers:patient_list' organization_id=organization.id %}"
+         class="btn btn-secondary">Clear</a>
     </div>
   </form>
   <table class="table">
