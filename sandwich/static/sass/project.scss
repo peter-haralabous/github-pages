@@ -27,4 +27,9 @@
     @apply text-lg;
     @apply font-semibold;
   }
+
+  hr {
+    border-top: none;
+    @apply divider;
+  }
 }
