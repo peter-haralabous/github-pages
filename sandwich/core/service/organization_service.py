@@ -10,7 +10,8 @@ from sandwich.users.models import User
 def get_provider_organizations(user: User) -> QuerySet[Organization]:
     """Returns a QuerySet of organizations that the user is a provider user in."""
     # TODO: move to user.provider_organizations?
-    return Organization.objects.filter(
+    # FIXME: why does mypy think that `role` isn't an Organization field?
+    return Organization.objects.filter(  # type: ignore[misc]
         role__group__user=user, role__name__in=(RoleName.OWNER, RoleName.STAFF)
     ).distinct()
 

@@ -14,10 +14,10 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
-from sandwich.core.models import Organization
-from sandwich.core.models import Patient
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.models.organization import Organization
+from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.encounter_service import complete_encounter

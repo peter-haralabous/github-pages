@@ -1,8 +1,8 @@
 from django.contrib.auth.models import Group
 from django.db import models
 
-from sandwich.core.models import Organization
 from sandwich.core.models.abstract import TimestampedModel
+from sandwich.core.models.organization import Organization
 
 
 # NOTE-NG: this is lightly adapted from bread
@@ -38,6 +38,9 @@ class Role(TimestampedModel):
         Organization,
         on_delete=models.CASCADE,
     )
+
+    # FIXME: why does mypy not see this by default?
+    objects: models.Manager["Role"]
 
     class Meta:
         constraints = [

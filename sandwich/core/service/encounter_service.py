@@ -1,8 +1,8 @@
 from django.utils import timezone
 
-from sandwich.core.models import Patient
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.models.patient import Patient
 from sandwich.core.service.task_service import cancel_task
 
 

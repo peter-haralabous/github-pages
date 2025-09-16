@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
-from sandwich.core.models import Organization
+from sandwich.core.models.organization import Organization
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import create_default_roles
 from sandwich.core.service.organization_service import get_provider_organizations
@@ -62,7 +62,8 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
         if form.is_valid():
             organization = form.save()
             create_default_roles(organization)
-            organization.role_set.get(name=RoleName.OWNER).group.user_set.add(request.user)
+            # FIXME: why does mypy think that `role_set` isn't an Organization field?
+            organization.role_set.get(name=RoleName.OWNER).group.user_set.add(request.user)  # type: ignore[attr-defined]
 
             messages.add_message(request, messages.SUCCESS, "Organization added successfully.")
             return HttpResponseRedirect(reverse("providers:organization", kwargs={"organization_id": organization.id}))

@@ -50,6 +50,21 @@ repos:
       - id: djlint-reformat-django
       - id: djlint-django
 
+  - repo: local
+    hooks:
+      - id: django-makemigrations
+        name: 'makemigrations --check'
+        entry: uv run manage.py makemigrations --check
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: mypy
+        name: 'mypy .'
+        entry: uv run mypy .
+        language: system
+        types: [python]
+        pass_filenames: false
+
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
 ci:
   autoupdate_schedule: weekly

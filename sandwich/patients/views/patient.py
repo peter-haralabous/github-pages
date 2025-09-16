@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
-from sandwich.core.models import Patient
+from sandwich.core.models.patient import Patient
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.users.models import User
 

@@ -56,7 +56,10 @@ class CreateSubmissionRequest(ninja.Schema):
 
 
 class UpdateSubmissionRequest(CreateSubmissionRequest):
-    id: str = ninja.Field(default=None, alias="_id")
+    # NOTE-NG: mypy doesn't like default=None when the field only accepts str
+    # but this works fine at runtime -- if id is provided it must be a str
+    # see https://github.com/pydantic/pydantic/issues/1223
+    id: str = ninja.Field(default=None, alias="_id")  # type:ignore[assignment]
 
 
 class SubmissionResponse(ninja.Schema):

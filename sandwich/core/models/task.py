@@ -2,8 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
 
-from sandwich.core.models import Encounter
 from sandwich.core.models.abstract import TimestampedModel
+from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.formio_submission import FormioSubmission
 from sandwich.core.models.patient import Patient
 
