@@ -30,6 +30,8 @@
       <!-- place project specific Javascript in this file -->
       {% render_bundle 'project' 'js' %}
     {% endblock javascript %}
+    {% block extra_head %}
+    {% endblock extra_head %}
   </head>
   <body class="{% block bodyclass %}{% endblock bodyclass %}">
     {% block body %}

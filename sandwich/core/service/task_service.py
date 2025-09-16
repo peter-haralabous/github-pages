@@ -18,6 +18,14 @@ def cancel_task(task: Task) -> None:
     task.save()
 
 
+def complete_task(task: Task) -> None:
+    """Complete a task."""
+    assert task.active, "Task is not active"
+    task.status = TaskStatus.COMPLETED
+    task.ended_at = timezone.now()
+    task.save()
+
+
 def send_task_added_email(task: Task) -> None:
     to = task.patient.email
     subject = "You've been assigned a task!"

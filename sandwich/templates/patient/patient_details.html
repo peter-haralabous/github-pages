@@ -18,7 +18,10 @@
       <tbody>
         {% for task in tasks %}
           <tr>
-            <td>{{ task.name }}</td>
+            <td>
+              <a href="{% url "patients:task" patient_id=task.patient_id task_id=task.id %}"
+                 class="link">{{ task.name }}</a>
+            </td>
             <td>{{ task.created_at }}</td>
             <td>{{ task.ended_at|default:"—" }}</td>
             <td>{{ task.get_status_display }}</td>

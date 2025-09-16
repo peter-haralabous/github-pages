@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from sandwich.core.models import Encounter
 from sandwich.core.models.abstract import TimestampedModel
+from sandwich.core.models.formio_submission import FormioSubmission
 from sandwich.core.models.patient import Patient
 
 
@@ -61,3 +62,11 @@ class Task(TimestampedModel):
     def active(self) -> bool:
         # FIXME-NG: self.status is a str, not a TaskStatus
         return not terminal_task_status(self.status)  # type: ignore[arg-type]
+
+    @property
+    def formio_submission(self) -> FormioSubmission | None:
+        # the default behaviour of ReverseOneToOneDescriptor is to raise an exception, but that's annoying
+        try:
+            return self._formio_submission
+        except FormioSubmission.DoesNotExist:
+            return None
