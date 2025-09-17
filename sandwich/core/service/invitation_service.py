@@ -1,10 +1,10 @@
-from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils import timezone
 
 from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.patient import Patient
+from sandwich.core.service.email_service import send_email
 from sandwich.users.models import User
 
 # FIXME-NG: move to settings.py
@@ -39,7 +39,7 @@ def resend_patient_invitation_email(patient: Patient) -> None:
 
 Click to get started: {task_url}
 """
-    send_mail(subject, body, None, [to])
+    send_email(to, subject, body)
 
 
 def accept_patient_invitation(invitation: Invitation, user: User) -> None:

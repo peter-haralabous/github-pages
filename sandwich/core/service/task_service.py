@@ -1,9 +1,9 @@
-from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils import timezone
 
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
+from sandwich.core.service.email_service import send_email
 from sandwich.core.service.invitation_service import find_or_create_patient_invitation
 
 # FIXME-NG: move to settings.py
@@ -43,4 +43,4 @@ def send_task_added_email(task: Task) -> None:
 
 Click to get started: {task_url}
     """
-    send_mail(subject, body, None, [to])
+    send_email(to, subject, body)
