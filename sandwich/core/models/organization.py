@@ -1,6 +1,13 @@
+import pydantic
 from django.db import models
+from django_pydantic_field import SchemaField
 
 from sandwich.core.models.abstract import TimestampedModel
+
+
+class PatientStatus(pydantic.BaseModel):
+    value: str
+    label: str
 
 
 class Organization(TimestampedModel):
@@ -14,8 +21,4 @@ class Organization(TimestampedModel):
 
     name = models.CharField(max_length=255)
 
-    # TODO: organization defines the patient statuses that the want to use. how do we manage this?
-    #       a CSV string field here? feels wrong
-    #       JSON-formatted { value, label } pairs? maybe
-    #       another Django model? maybe
-    # patient_statuses = models.CharField(max_length=255, blank=True)
+    patient_statuses: list[PatientStatus] = SchemaField(schema=list[PatientStatus], default=[])

@@ -6,7 +6,8 @@
     <tr>
       <th>{% sortable_column "Name" "first_name" %}</th>
       <th>{% sortable_column "Email" "email" %}</th>
-      <th>{% sortable_column "Status" "has_active_encounter" %}</th>
+      <th>{% sortable_column "Active" "has_active_encounter" %}</th>
+      <th>{% sortable_column "Status" "patient_status" %}</th>
       <th>{% sortable_column "Created" "created_at" %}</th>
       <th>{% sortable_column "Updated" "updated_at" %}</th>
     </tr>
@@ -20,12 +21,13 @@
         </td>
         <td>{{ patient.email|default:"—" }}</td>
         <td>{{ patient.has_active_encounter|yesno:"Active,Archived" }}</td>
+        <td>{{ patient.patient_status|default:"—" }}</td>
         <td>{{ patient.created_at }}</td>
         <td>{{ patient.updated_at }}</td>
       </tr>
     {% empty %}
       <tr>
-        <td colspan="5" class="text-center">No patients found.</td>
+        <td colspan="6" class="text-center">No patients found.</td>
       </tr>
     {% endfor %}
   </tbody>

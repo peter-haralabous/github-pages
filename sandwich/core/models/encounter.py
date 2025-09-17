@@ -67,3 +67,12 @@ class Encounter(TimestampedModel):
     @property
     def active(self) -> bool:
         return not terminal_encounter_status(self.status)
+
+    def get_patient_status_display(self) -> str:
+        # NOTE-NG: the name of this method matches the magic one that Django would normally generate
+        # https://docs.djangoproject.com/en/5.2/ref/models/instances/#django.db.models.Model.get_FOO_display
+        if self.patient_status:
+            for option in self.organization.patient_statuses:
+                if option.value == self.patient_status:
+                    return option.label
+        return self.patient_status

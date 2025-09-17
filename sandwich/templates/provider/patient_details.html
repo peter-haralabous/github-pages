@@ -1,5 +1,7 @@
 {% extends "provider/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block main %}
   <h2>Patient Details</h2>
   <p>
@@ -24,58 +26,70 @@
     </form>
   {% endif %}
   {% if current_encounter %}
+    <hr />
+    <h2>Current Encounter</h2>
+    <p>
+      <strong>Patient Status:</strong> {{ current_encounter.get_patient_status_display|default:"—" }}
+    </p>
     <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
           class="inline"
           method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Archive</button>
     </form>
+    {% crispy current_encounter_form %}
+    <h3>Tasks</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Started</th>
+          <th>Ended</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.name }}</td>
+            <td>{{ task.created_at }}</td>
+            <td>{{ task.ended_at|default:"—" }}</td>
+            <td>{{ task.get_status_display }}</td>
+            <td>
+              {% if task.active %}
+                <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
+                      class="inline"
+                      method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+                </form>
+              {% else %}
+                <button type="button" class="btn btn-outline-secondary btn-sm disabled">Re-request</button>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">No tasks found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
+          class="inline"
+          method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+  {% else %}
+    <form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
+          class="inline"
+          method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Start a new Encounter</button>
+    </form>
   {% endif %}
-  <hr />
-  <h3>Tasks</h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Started</th>
-        <th>Ended</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for task in tasks %}
-        <tr>
-          <td>{{ task.name }}</td>
-          <td>{{ task.created_at }}</td>
-          <td>{{ task.ended_at|default:"—" }}</td>
-          <td>{{ task.get_status_display }}</td>
-          <td>
-            {% if task.active %}
-              <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
-                    class="inline"
-                    method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
-              </form>
-            {% else %}
-              <button type="button" class="btn btn-outline-secondary btn-sm disabled">Re-request</button>
-            {% endif %}
-          </td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="5" class="text-center">No tasks found.</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
-        class="inline"
-        method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Add Task</button>
-  </form>
   {% if past_encounters %}
     <hr />
     <h3>Past Encounters</h3>
@@ -85,6 +99,7 @@
           <th>Started</th>
           <th>Ended</th>
           <th>Status</th>
+          <th>Patient Status</th>
         </tr>
       </thead>
       <tbody>
@@ -94,10 +109,11 @@
             <td>{{ encounter.created_at }}</td>
             <td>{{ encounter.ended_at|default:"—" }}</td>
             <td>{{ encounter.get_status_display }}</td>
+            <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="3" class="text-center">No past encounters.</td>
+            <td colspan="4" class="text-center">No past encounters.</td>
           </tr>
         {% endfor %}
       </tbody>

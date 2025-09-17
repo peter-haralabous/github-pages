@@ -69,6 +69,28 @@ class PatientAdd(forms.ModelForm[Patient]):
         }
 
 
+def build_encounter_form_class(organization: Organization) -> type[forms.ModelForm[Encounter]]:
+    patient_status_choices = [(s.value, s.label) for s in organization.patient_statuses]
+    patient_status_choices.insert(0, ("", "—"))
+
+    # TODO-NG: there's got to be a better way to pass the patient status choices through
+    #          without creating a new class for each organization
+    class EncounterForm(forms.ModelForm[Encounter]):
+        def __init__(self, *args, **kwargs) -> None:
+            super().__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.add_input(Submit("submit", "Submit"))
+
+        class Meta:
+            model = Encounter
+            fields = ("patient_status",)
+            widgets = {
+                "patient_status": forms.Select(choices=patient_status_choices),
+            }
+
+    return EncounterForm
+
+
 @login_required
 def patient_details(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
@@ -78,10 +100,29 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
     pending_invitation = get_pending_invitation(patient)
 
+    EncounterForm = build_encounter_form_class(organization)  # noqa: N806
+    if current_encounter:
+        if request.method == "POST":
+            current_encounter_form = EncounterForm(request.POST, instance=current_encounter)
+            if current_encounter_form.is_valid():
+                current_encounter_form.save()
+                messages.add_message(request, messages.SUCCESS, "Encounter updated successfully.")
+                return HttpResponseRedirect(
+                    reverse(
+                        "providers:patient",
+                        kwargs={"patient_id": patient.id, "organization_id": organization.id},
+                    )
+                )
+        else:
+            current_encounter_form = EncounterForm(instance=current_encounter)
+    else:
+        current_encounter_form = None
+
     context = {
         "patient": patient,
         "organization": organization,
         "current_encounter": current_encounter,
+        "current_encounter_form": current_encounter_form,
         "past_encounters": past_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
@@ -154,6 +195,7 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
     )
     page = request.GET.get("page", 1)
     has_active_encounter_filter = request.GET.get("has_active_encounter", "").lower()
+    patient_status_filter = request.GET.get("patient_status", "").lower()
 
     patients = Patient.objects.filter(organization=organization)
     patients = patients.annotate(
@@ -164,6 +206,9 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
 
     if has_active_encounter_filter in ("true", "false"):
         patients = patients.filter(has_active_encounter=(has_active_encounter_filter == "true"))
+
+    if patient_status_filter:
+        patients = patients.filter(encounter__patient_status=patient_status_filter)
 
     if search:
         patients = patients.filter(
@@ -186,6 +231,7 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
         "sort": sort,
         "page": page,
         "has_active_encounter_filter": has_active_encounter_filter,
+        "patient_status_filter": patient_status_filter,
     }
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/patient_list_table.html", context)

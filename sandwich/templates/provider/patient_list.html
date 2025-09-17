@@ -9,7 +9,7 @@
   <form hx-get="{% url "providers:patient_list" organization_id=organization.id %}"
         hx-target="#patient_table_container"
         hx-push-url="true"
-        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter']">
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter'], change from:select[name='patient_status']">
     <div class="mb-2">
       <input name="search"
              type="text"
@@ -17,11 +17,20 @@
              placeholder="Search"
              value="{{ search }}" />
       <select name="has_active_encounter" class="input w-auto">
-        <option value="">All Statuses</option>
+        <option value="">All Patients</option>
+        <hr />
         <option value="true"
                 {% if has_active_encounter_filter == "true" %}selected{% endif %}>Active</option>
         <option value="false"
                 {% if has_active_encounter_filter == "false" %}selected{% endif %}>Archived</option>
+      </select>
+      <select name="patient_status" class="input w-auto">
+        <option value="">Status</option>
+        <hr />
+        {% for s in organization.patient_statuses %}
+          <option value="{{ s.value }}"
+                  {% if patient_status_filter == s.value %}selected{% endif %}>{{ s.label }}</option>
+        {% endfor %}
       </select>
       <input type="hidden" name="sort" value="{{ sort }}" />
       <button type="submit" class="btn">Search</button>
