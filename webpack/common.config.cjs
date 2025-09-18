@@ -26,7 +26,7 @@ module.exports = {
     rules: [
       // we pass the output from babel loader to react-hot loader
       {
-        test: /\.js$/,
+        test: /\.[tj]sx?$/,
         loader: 'babel-loader',
       },
       {
@@ -49,6 +49,6 @@ module.exports = {
   },
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
 };

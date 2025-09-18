@@ -1,5 +1,5 @@
 import '../sass/project.scss';
-import './components/command-palette.js';
+import './components/command-palette';
 
 /* Project specific Javascript goes here. */
 

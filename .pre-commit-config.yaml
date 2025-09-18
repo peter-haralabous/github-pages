@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-json
+      #- id: check-json # tsconfig.json is not valid json, but that's ok
       - id: check-toml
       - id: check-xml
       - id: check-yaml
@@ -62,6 +62,12 @@ repos:
         entry: uv run mypy .
         language: system
         types: [python]
+        pass_filenames: false
+      - id: tsc
+        name: 'tsc'
+        entry: yarn tsc
+        language: system
+        types_or: [javascript, jsx, ts, tsx]
         pass_filenames: false
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date

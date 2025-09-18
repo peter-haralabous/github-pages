@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, type PropertyValues } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
@@ -69,13 +69,14 @@ class CommandPalette extends LitElement {
 
   // --- ELEMENT REFERENCES ---
   // Use the @query decorator to get a direct reference to an element in the template.
-  @query('.palette-input') accessor _searchInput;
+  @query('.palette-input') accessor _searchInput!: HTMLInputElement;
+
+  // --- PRIVATE FIELDS ---
+  debounceTimer: number | undefined;
 
   // --- LIFECYCLE & EVENT LISTENERS ---
   connectedCallback() {
     super.connectedCallback();
-    // Bind `this` for the global listener
-    this._handleGlobalKeydown = this._handleGlobalKeydown.bind(this);
     document.addEventListener('keydown', this._handleGlobalKeydown);
   }
 
@@ -85,7 +86,7 @@ class CommandPalette extends LitElement {
   }
 
   // updated() is a Lit lifecycle method called after the component's DOM has been updated.
-  updated(changedProperties) {
+  updated(changedProperties: PropertyValues) {
     // If the palette was just opened, focus the input.
     if (changedProperties.has('isOpen') && this.isOpen) {
       this._searchInput.focus();
@@ -107,16 +108,16 @@ class CommandPalette extends LitElement {
   }
 
   // --- EVENT HANDLERS ---
-  _handleGlobalKeydown(e) {
+  _handleGlobalKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
       this.isOpen = !this.isOpen;
     }
     if (e.key === 'Escape' && this.isOpen) this.isOpen = false;
-  }
+  };
 
-  _onInput = (e) => {
-    const query = e.target.value;
+  _onInput = (e: InputEvent) => {
+    const query = (e.target as HTMLInputElement).value;
     // Debounce search
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
@@ -124,8 +125,8 @@ class CommandPalette extends LitElement {
     }, 200);
   };
 
-  _onKeydown(e) {
-    const results = this.shadowRoot.querySelectorAll('.palette-results ul li');
+  _onKeydown(e: KeyboardEvent) {
+    const results = this.shadowRoot!.querySelectorAll('.palette-results ul li');
     if (results.length === 0) return;
 
     switch (e.key) {
@@ -152,7 +153,7 @@ class CommandPalette extends LitElement {
 
   // This is the only manual DOM manipulation we need, as the items are raw HTML
   _updateSelectedClass() {
-    const items = this.shadowRoot.querySelectorAll('.palette-results ul li a');
+    const items = this.shadowRoot!.querySelectorAll('.palette-results ul li a');
     items.forEach((item, index) => {
       item.classList.toggle('selected', index === this.selectedIndex);
       if (index === this.selectedIndex)
@@ -166,7 +167,7 @@ class CommandPalette extends LitElement {
     return html`
       <div
         class="palette-overlay ${this.isOpen ? '' : 'hidden'}"
-        @click=${(e) => {
+        @click=${(e: MouseEvent) => {
           if (e.target === e.currentTarget) this.isOpen = false;
         }}
       >
