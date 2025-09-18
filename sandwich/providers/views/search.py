@@ -2,15 +2,10 @@ import logging
 from dataclasses import dataclass
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Exists
-from django.db.models import OuterRef
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
-from sandwich.core.models.encounter import Encounter
-from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.patient_service import maybe_patient_name
@@ -34,15 +29,7 @@ def search(request: AuthenticatedHttpRequest, organization_id: int):
     results: list[Result] = []
 
     if q:
-        patients = Patient.objects.filter(organization=organization)
-        patients = patients.annotate(
-            has_active_encounter=Exists(
-                Encounter.objects.filter(patient=OuterRef("pk"), status=EncounterStatus.IN_PROGRESS)
-            )
-        )
-        patients = patients.filter(
-            Q(first_name__icontains=q) | Q(last_name__icontains=q) | Q(phn__icontains=q) | Q(email__icontains=q)
-        )[:20]
+        patients = Patient.objects.filter(organization=organization).search(q)[:20]  # type: ignore[attr-defined]
 
         results.extend(
             Result(

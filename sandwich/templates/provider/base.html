@@ -10,5 +10,7 @@
   </li>
 {% endblock nav_items %}
 {% block modal %}
-  <command-palette search-url="{% url 'providers:search' organization_id=organization.id %}" />
+  {% if organization %}
+    <command-palette search-url="{% url 'providers:search' organization_id=organization.id %}" />
+  {% endif %}
 {% endblock modal %}

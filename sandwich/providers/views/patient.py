@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Exists
 from django.db.models import OuterRef
-from django.db.models import Q
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -216,12 +215,7 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
         patients = patients.filter(encounter__patient_status=patient_status_filter)
 
     if search:
-        patients = patients.filter(
-            Q(first_name__icontains=search)
-            | Q(last_name__icontains=search)
-            | Q(phn__icontains=search)
-            | Q(email__icontains=search)
-        )
+        patients = patients.search(search)  # type: ignore[attr-defined]
 
     if sort:
         patients = patients.order_by(sort)

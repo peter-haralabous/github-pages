@@ -1,8 +1,38 @@
+import logging
+
 from django.db import models
+from django.db.models.expressions import RawSQL
 
 from sandwich.core.models.abstract import TimestampedModel
 from sandwich.core.models.organization import Organization
 from sandwich.users.models import User
+
+logger = logging.getLogger(__name__)
+
+
+class PatientQuerySet(models.QuerySet):
+    def search(self, query):
+        """
+        Performs a full-text search and filters the current QuerySet.
+        """
+        if not query:
+            return self
+
+        # important note: the subquery isn't executed eagerly; it'll be evaluated later
+        # when the whole QuerySet is fetched.
+        subquery = "SELECT rowid FROM core_patient_fts WHERE core_patient_fts MATCH %s"
+
+        return self.filter(pk__in=RawSQL(subquery, [query]))  # noqa: S611
+
+
+class PatientManager(models.Manager["Patient"]):
+    def get_queryset(self):
+        return PatientQuerySet(self.model, using=self._db)
+
+    # You can keep the search method on the manager if you want to be
+    # able to call Patient.objects.search() directly as a shortcut.
+    def search(self, query):
+        return self.get_queryset().search(query)
 
 
 class Patient(TimestampedModel):
@@ -37,6 +67,8 @@ class Patient(TimestampedModel):
     # each patient record belongs to at most one organization
     # TODO: pull in patient merging logic from Classic
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+
+    objects = PatientManager()
 
     @property
     def full_name(self) -> str:
