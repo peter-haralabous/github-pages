@@ -278,3 +278,5 @@ sandwich/media/
 .pytest_cache/
 sandwich/static/webpack_bundles/
 webpack-stats.json
+
+tsconfig.tsbuildinfo
