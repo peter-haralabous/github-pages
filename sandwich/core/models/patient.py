@@ -1,4 +1,5 @@
 import logging
+from typing import Self
 
 from django.db import models
 from django.db.models.expressions import RawSQL
@@ -10,13 +11,23 @@ from sandwich.users.models import User
 logger = logging.getLogger(__name__)
 
 
+def escape_fts5(query: str) -> str:
+    # TODO: we could do a lot better here
+    def quote(s: str) -> str:
+        return f'"{s.replace('"', '""')}"'
+
+    return " AND ".join(quote(t.strip()) for t in query.split())
+
+
 class PatientQuerySet(models.QuerySet):
-    def search(self, query):
+    def search(self, query: str) -> Self:
         """
         Performs a full-text search and filters the current QuerySet.
         """
         if not query:
             return self
+
+        query = escape_fts5(query)
 
         # important note: the subquery isn't executed eagerly; it'll be evaluated later
         # when the whole QuerySet is fetched.
@@ -31,7 +42,7 @@ class PatientManager(models.Manager["Patient"]):
 
     # You can keep the search method on the manager if you want to be
     # able to call Patient.objects.search() directly as a shortcut.
-    def search(self, query):
+    def search(self, query: str):
         return self.get_queryset().search(query)
 
 
