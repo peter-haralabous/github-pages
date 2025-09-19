@@ -24,17 +24,16 @@ dev: init migrate mailpit
 
 .PHONY: test-unit
 test-unit: init migrate
-	uv run pytest -m "not e2e" -x --picked --mode=branch
+	uv run pytest -m "not e2e" -x
 
 .PHONY: test-e2e
 test-e2e: init migrate
 	# https://pytest-xdist.readthedocs.io/en/stable/distribution.html
-	# https://github.com/anapaulagomes/pytest-picked
-	uv run pytest -m e2e -n logical -x --picked --mode=branch
+	uv run pytest -m e2e -n logical -x
 
 .PHONY: test-branch
 test: init migrate
-	uv run pytest -n logical -x --picked --mode=branch
+	uv run pytest -n logical -x
 
 .PHONY: lint
 lint: init
