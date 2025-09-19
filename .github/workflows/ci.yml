@@ -80,7 +80,7 @@ jobs:
 
       # TODO-WF: this could be cached https://github.com/microsoft/playwright/issues/7249
       - name: Install playwright browser
-        run: playwright install
+        run: uv run playwright install
 
       - name: Check db migrations
         run: uv run python manage.py makemigrations --check
