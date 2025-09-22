@@ -9,9 +9,6 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  IMAGE_TAG: latest
-
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: false
@@ -20,7 +17,8 @@ jobs:
   build:
     uses: ./.github/workflows/run-build.yml
     with:
-      image_tag: ${{ env.IMAGE_TAG }}
+      # Note: must match image_tag set in deploy step
+      image_tag: latest
       should_publish: 'true'
 
   test:
@@ -31,4 +29,5 @@ jobs:
     uses: ./.github/workflows/run-deploy.yml
     with:
       environment: integration
-      image_tag: ${{ env.IMAGE_TAG }}
+      # Note: must match image_tag set in build step
+      image_tag: latest
