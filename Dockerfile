@@ -86,7 +86,7 @@ RUN DATABASE_URL="" \
   DJANGO_SETTINGS_MODULE="config.settings.test" \
   python manage.py compilemessages
 
-EXPOSE 5000
+EXPOSE 3000
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["/start"]

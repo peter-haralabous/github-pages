@@ -77,6 +77,6 @@ docker run \
   -e "DJANGO_ALLOWED_HOSTS=*" \
   -e DJANGO_SECURE_SSL_REDIRECT=false \
   -v ./data:/app/data \
-  -p 3000:5000 \
+  -p 3000:3000 \
   --rm sandwich
 ```
