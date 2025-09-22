@@ -25,8 +25,8 @@ jobs:
       - uses: actions/checkout@v5.0.0
       - uses: aws-actions/configure-aws-credentials@v5.0.0
         with:
-          # Defined in tf: https://github.com/thrivehealth/terraform/blob/78c420999bcfeda27ba80e2bbd64978c804e894f/stacks/deploy/github.tf#L47
-          role-to-assume: arn:aws:iam::153784117502:role/deploy-github-action
+          # Defined in tf: https://github.com/thrivehealth/terraform/blob/main/stacks/deploy/sandwich.tf
+          role-to-assume: arn:aws:iam::153784117502:role/deploy-sandwich-ci
           aws-region: ca-central-1
       - env:
           APP: sandwich
