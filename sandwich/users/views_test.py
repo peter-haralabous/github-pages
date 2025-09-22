@@ -12,9 +12,9 @@ from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from sandwich.users.factories import UserFactory
 from sandwich.users.forms import UserAdminChangeForm
 from sandwich.users.models import User
-from sandwich.users.tests.factories import UserFactory
 from sandwich.users.views import UserRedirectView
 from sandwich.users.views import UserUpdateView
 from sandwich.users.views import user_detail_view
