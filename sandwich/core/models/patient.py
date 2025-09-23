@@ -31,7 +31,7 @@ class PatientQuerySet(models.QuerySet):
 
         # important note: the subquery isn't executed eagerly; it'll be evaluated later
         # when the whole QuerySet is fetched.
-        subquery = "SELECT rowid FROM core_patient_fts WHERE core_patient_fts MATCH %s"
+        subquery = "SELECT patient_uuid FROM core_patient_fts WHERE core_patient_fts MATCH %s"
 
         return self.filter(pk__in=RawSQL(subquery, [query]))  # noqa: S611
 
