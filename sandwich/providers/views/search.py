@@ -22,14 +22,25 @@ class Result:
 
 @login_required
 def search(request: AuthenticatedHttpRequest, organization_id: int):
+    logger.info("Starting patient search", extra={"organization_id": organization_id, "user_id": request.user.id})
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     q = request.GET.get("q", "").strip()
+
+    logger.debug(
+        "Search query received",
+        extra={"organization_id": organization_id, "query_length": len(q), "has_query": bool(q)},
+    )
 
     # TODO: sort these sensibly
     results: list[Result] = []
 
     if q:
         patients = Patient.objects.filter(organization=organization).search(q)[:20]  # type: ignore[attr-defined]
+
+        logger.debug(
+            "Patient search completed", extra={"organization_id": organization_id, "results_count": len(patients)}
+        )
 
         results.extend(
             Result(
@@ -50,6 +61,7 @@ def search(request: AuthenticatedHttpRequest, organization_id: int):
                 ),
             )
         )
+        logger.debug("Added create patient option with parsed name", extra={"organization_id": organization_id})
     else:
         results.append(
             Result(
@@ -57,6 +69,9 @@ def search(request: AuthenticatedHttpRequest, organization_id: int):
                 url=reverse("providers:patient_add", kwargs={"organization_id": organization.id}),
             )
         )
+        logger.debug("Added generic create patient option", extra={"organization_id": organization_id})
+
+    logger.info("Search completed", extra={"organization_id": organization_id, "total_results": len(results)})
 
     context = {"results": results}
     return render(request, "provider/partials/search_results.html", context)

@@ -1,3 +1,5 @@
+import logging
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
@@ -28,6 +30,8 @@ from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
+
+logger = logging.getLogger(__name__)
 
 
 class PatientEdit(forms.ModelForm[Patient]):
@@ -93,6 +97,11 @@ def build_encounter_form_class(organization: Organization) -> type[forms.ModelFo
 
 @login_required
 def patient_details(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    logger.info(
+        "Accessing provider patient details",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     current_encounter = get_current_encounter(patient)
@@ -100,12 +109,43 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
     pending_invitation = get_pending_invitation(patient)
 
+    logger.debug(
+        "Patient details loaded",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "patient_id": patient_id,
+            "has_current_encounter": bool(current_encounter),
+            "task_count": len(list(tasks)),
+            "past_encounter_count": past_encounters.count(),
+            "has_pending_invitation": bool(pending_invitation),
+        },
+    )
+
     EncounterForm = build_encounter_form_class(organization)  # noqa: N806
     if current_encounter:
         if request.method == "POST":
+            logger.info(
+                "Processing encounter update form",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization_id,
+                    "patient_id": patient_id,
+                    "encounter_id": current_encounter.id,
+                },
+            )
             current_encounter_form = EncounterForm(request.POST, instance=current_encounter)
             if current_encounter_form.is_valid():
                 current_encounter_form.save()
+                logger.info(
+                    "Encounter updated successfully",
+                    extra={
+                        "user_id": request.user.id,
+                        "organization_id": organization_id,
+                        "patient_id": patient_id,
+                        "encounter_id": current_encounter.id,
+                    },
+                )
                 messages.add_message(request, messages.SUCCESS, "Encounter updated successfully.")
                 return HttpResponseRedirect(
                     reverse(
@@ -113,7 +153,26 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
                         kwargs={"patient_id": patient.id, "organization_id": organization.id},
                     )
                 )
+            logger.warning(
+                "Invalid encounter update form",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization_id,
+                    "patient_id": patient_id,
+                    "encounter_id": current_encounter.id,
+                    "form_errors": list(current_encounter_form.errors.keys()),
+                },
+            )
         else:
+            logger.debug(
+                "Rendering encounter form",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization_id,
+                    "patient_id": patient_id,
+                    "encounter_id": current_encounter.id,
+                },
+            )
             current_encounter_form = EncounterForm(instance=current_encounter)
     else:
         current_encounter_form = None
@@ -132,13 +191,26 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
 
 @login_required
 def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    logger.info(
+        "Accessing provider patient edit",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     if request.method == "POST":
+        logger.info(
+            "Processing provider patient edit form",
+            extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        )
         form = PatientEdit(request.POST, instance=patient)
         if form.is_valid():
             form.save()
+            logger.info(
+                "Provider patient updated successfully",
+                extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+            )
             messages.add_message(request, messages.SUCCESS, "Patient updated successfully.")
             return HttpResponseRedirect(
                 reverse(
@@ -146,7 +218,20 @@ def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patien
                     kwargs={"patient_id": patient.id, "organization_id": organization.id},
                 )
             )
+        logger.warning(
+            "Invalid provider patient edit form",
+            extra={
+                "user_id": request.user.id,
+                "organization_id": organization_id,
+                "patient_id": patient_id,
+                "form_errors": list(form.errors.keys()),
+            },
+        )
     else:
+        logger.debug(
+            "Rendering provider patient edit form",
+            extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        )
         form = PatientEdit(instance=patient)
 
     context = {"form": form, "organization": organization}
@@ -155,22 +240,59 @@ def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patien
 
 @login_required
 def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+    logger.info(
+        "Accessing provider patient add", extra={"user_id": request.user.id, "organization_id": organization_id}
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     if request.method == "POST":
+        logger.info(
+            "Processing provider patient add form",
+            extra={"user_id": request.user.id, "organization_id": organization_id},
+        )
         form = PatientAdd(request.POST)
         if form.is_valid():
             patient = form.save(organization=organization)
-            Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS)
+            encounter = Encounter.objects.create(
+                patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
+            )
+            logger.info(
+                "Provider patient and encounter created successfully",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization_id,
+                    "patient_id": patient.id,
+                    "encounter_id": encounter.id,
+                },
+            )
             messages.add_message(request, messages.SUCCESS, "Patient added successfully.")
             return HttpResponseRedirect(
                 reverse("providers:patient", kwargs={"patient_id": patient.id, "organization_id": organization.id})
             )
+        logger.warning(
+            "Invalid provider patient add form",
+            extra={
+                "user_id": request.user.id,
+                "organization_id": organization_id,
+                "form_errors": list(form.errors.keys()),
+            },
+        )
     else:
-        form = PatientAdd()
         maybe_name = maybe_patient_name(request.GET.get("maybe_name", ""))
         if maybe_name:
+            logger.debug(
+                "Pre-filling patient form with parsed name",
+                extra={"user_id": request.user.id, "organization_id": organization_id, "has_parsed_name": True},
+            )
+            form = PatientAdd()
             form.fields["first_name"].initial = maybe_name[0]
             form.fields["last_name"].initial = maybe_name[1]
+        else:
+            logger.debug(
+                "Rendering empty provider patient add form",
+                extra={"user_id": request.user.id, "organization_id": organization_id},
+            )
+            form = PatientAdd()
 
     context = {"form": form, "organization": organization}
     return render(request, "provider/patient_add.html", context)
@@ -187,6 +309,8 @@ def _validate_sort(sort: str | None, valid_sorts: list[str]) -> str | None:
 
 @login_required
 def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+    logger.info("Accessing patient list", extra={"user_id": request.user.id, "organization_id": organization_id})
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
 
     search = request.GET.get("search", "").strip()
@@ -200,6 +324,19 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
     page = request.GET.get("page", 1)
     has_active_encounter_filter = request.GET.get("has_active_encounter", "").lower()
     patient_status_filter = request.GET.get("patient_status", "").lower()
+
+    logger.debug(
+        "Patient list filters applied",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "search_length": len(search),
+            "sort": sort,
+            "page": page,
+            "has_active_encounter_filter": has_active_encounter_filter,
+            "patient_status_filter": patient_status_filter,
+        },
+    )
 
     patients = Patient.objects.filter(organization=organization)
     patients = patients.annotate(
@@ -223,6 +360,17 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
     paginator = Paginator(patients, 25)
     patients_page = paginator.get_page(page)
 
+    logger.debug(
+        "Patient list results",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "total_count": paginator.count,
+            "page_count": len(patients_page),
+            "is_htmx": bool(request.headers.get("HX-Request")),
+        },
+    )
+
     context = {
         "patients": patients_page,
         "organization": organization,
@@ -240,6 +388,11 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
 @login_required
 @require_POST
 def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    logger.info(
+        "Archiving patient",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     current_encounter = get_current_encounter(patient)
@@ -249,6 +402,16 @@ def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, pat
     assert current_encounter is not None, "No current encounter found for patient"
     complete_encounter(current_encounter)
 
+    logger.info(
+        "Patient archived successfully",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "patient_id": patient_id,
+            "encounter_id": current_encounter.id,
+        },
+    )
+
     messages.add_message(request, messages.SUCCESS, "Patient archived successfully.")
     return HttpResponseRedirect(reverse("providers:patient_list", kwargs={"organization_id": organization.id}))
 
@@ -256,6 +419,11 @@ def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, pat
 @login_required
 @require_POST
 def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    logger.info(
+        "Adding task to patient",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
@@ -264,8 +432,29 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, pa
         current_encounter = Encounter.objects.create(
             patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
         )
+        logger.debug(
+            "Created new encounter for task",
+            extra={
+                "user_id": request.user.id,
+                "organization_id": organization_id,
+                "patient_id": patient_id,
+                "encounter_id": current_encounter.id,
+            },
+        )
+
     task = Task.objects.create(encounter=current_encounter, patient=patient, status=TaskStatus.REQUESTED)
     send_task_added_email(task)
+
+    logger.info(
+        "Task added successfully",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "patient_id": patient_id,
+            "task_id": task.id,
+            "encounter_id": current_encounter.id,
+        },
+    )
 
     messages.add_message(request, messages.SUCCESS, "Task added successfully.")
     return HttpResponseRedirect(
@@ -278,11 +467,31 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, pa
 def patient_cancel_task(
     request: AuthenticatedHttpRequest, organization_id: int, patient_id: int, task_id: int
 ) -> HttpResponse:
+    logger.info(
+        "Cancelling patient task",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "patient_id": patient_id,
+            "task_id": task_id,
+        },
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
     task = get_object_or_404(patient.task_set, id=task_id)
 
     cancel_task(task)
+
+    logger.info(
+        "Task cancelled successfully",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization_id,
+            "patient_id": patient_id,
+            "task_id": task_id,
+        },
+    )
 
     messages.add_message(request, messages.SUCCESS, "Task cancelled successfully.")
     return HttpResponseRedirect(
@@ -293,11 +502,21 @@ def patient_cancel_task(
 @login_required
 @require_POST
 def patient_resend_invite(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+    logger.info(
+        "Resending patient invitation",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
+
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     assert patient.user is None, "Patient already has a user"
     resend_patient_invitation_email(patient)
+
+    logger.info(
+        "Patient invitation resent successfully",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+    )
 
     messages.add_message(request, messages.SUCCESS, "Invitation resent successfully.")
     return HttpResponseRedirect(

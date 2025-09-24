@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from crispy_forms.helper import FormHelper
@@ -14,6 +15,8 @@ from django.urls import reverse
 from sandwich.core.models.patient import Patient
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.users.models import User
+
+logger = logging.getLogger(__name__)
 
 
 class PatientEdit(forms.ModelForm[Patient]):
@@ -57,14 +60,23 @@ class PatientAdd(forms.ModelForm[Patient]):
 
 @login_required
 def patient_edit(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResponse:
+    logger.info("Accessing patient edit", extra={"user_id": request.user.id, "patient_id": patient_id})
+
     patient = get_object_or_404(request.user.patient_set, id=patient_id)
     if request.method == "POST":
+        logger.info("Processing patient edit form", extra={"user_id": request.user.id, "patient_id": patient_id})
         form = PatientEdit(request.POST, instance=patient)
         if form.is_valid():
             form.save()
+            logger.info("Patient updated successfully", extra={"user_id": request.user.id, "patient_id": patient_id})
             messages.add_message(request, messages.SUCCESS, "Patient updated successfully.")
             return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient_id}))
+        logger.warning(
+            "Invalid patient edit form",
+            extra={"user_id": request.user.id, "patient_id": patient_id, "form_errors": list(form.errors.keys())},
+        )
     else:
+        logger.debug("Rendering patient edit form", extra={"user_id": request.user.id, "patient_id": patient_id})
         form = PatientEdit(instance=patient)
 
     context = {"form": form} | _patient_context(request, patient=patient)
@@ -73,13 +85,21 @@ def patient_edit(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResp
 
 @login_required
 def patient_add(request: AuthenticatedHttpRequest) -> HttpResponse:
+    logger.info("Accessing patient add", extra={"user_id": request.user.id})
+
     if request.method == "POST":
+        logger.info("Processing patient add form", extra={"user_id": request.user.id})
         form = PatientAdd(request.POST)
         if form.is_valid():
             patient = form.save(user=request.user)
+            logger.info("Patient created successfully", extra={"user_id": request.user.id, "patient_id": patient.id})
             messages.add_message(request, messages.SUCCESS, "Patient added successfully.")
             return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
+        logger.warning(
+            "Invalid patient add form", extra={"user_id": request.user.id, "form_errors": list(form.errors.keys())}
+        )
     else:
+        logger.debug("Rendering patient add form", extra={"user_id": request.user.id})
         form = PatientAdd()
 
     context = {"form": form} | _patient_context(request)
@@ -88,8 +108,15 @@ def patient_add(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 @login_required
 def patient_details(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResponse:
+    logger.info("Accessing patient details", extra={"user_id": request.user.id, "patient_id": patient_id})
+
     patient = get_object_or_404(request.user.patient_set, id=patient_id)
     tasks = patient.task_set.all()
+
+    logger.debug(
+        "Patient details loaded",
+        extra={"user_id": request.user.id, "patient_id": patient_id, "task_count": tasks.count()},
+    )
 
     context = {"patient": patient, "tasks": tasks} | _patient_context(request, patient=patient)
     return render(request, "patient/patient_details.html", context)
