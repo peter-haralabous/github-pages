@@ -23,6 +23,7 @@ def test_patient_search() -> None:
     assert search("doe j") == [p]
     assert search("john d") == [p]
     assert search("john doe") == [p]
+    assert search("  john  ") == [p]
 
     # don't match patients in another organization
     assert search("jane") == []

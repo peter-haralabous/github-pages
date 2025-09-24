@@ -25,31 +25,19 @@ class PatientQuerySet(models.QuerySet):
         # Remove or replace characters that cause tsquery syntax errors
         sanitized_query = re.sub(r"[^\w\s]", " ", query)
 
-        # Split into terms and filter out empty ones
-        terms = [term.strip() for term in sanitized_query.split() if term.strip()]
+        terms = sanitized_query.split()
         if not terms:
             return self
 
         # For partial matching, add :* suffix for prefix search
         prefix_terms = [f"{term}:*" for term in terms]
 
-        try:
-            search_query = SearchQuery(" & ".join(prefix_terms), search_type="raw", config="english")
-            return (
-                self.filter(search_vector=search_query)
-                .annotate(rank=SearchRank(F("search_vector"), search_query))
-                .order_by("-rank")
-            )
-        except Exception as e:  # noqa: BLE001
-            # If the raw query fails, fall back to a simple search
-            logger.warning("FTS query failed", extra={"query": query, "error": e})
-            # Use websearch_to_tsquery as fallback - it's more forgiving
-            try:
-                search_query = SearchQuery(query, search_type="websearch", config="english")
-                return self.filter(search_vector=search_query)
-            except Exception:  # noqa: BLE001
-                # If all else fails, return empty queryset
-                return self.none()
+        search_query = SearchQuery(" & ".join(prefix_terms), search_type="raw", config="english")
+        return (
+            self.filter(search_vector=search_query)
+            .annotate(rank=SearchRank(F("search_vector"), search_query))
+            .order_by("-rank")
+        )
 
 
 class PatientManager(models.Manager["Patient"]):
