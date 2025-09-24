@@ -162,7 +162,7 @@ dev = [
     "pytest==8.4.2",
     "pytest-django==4.11.1",
     "pytest-sugar==1.1.1",
-    "pytest-playwright==0.5.2",
+    "pytest-playwright==0.7.1",
     "ruff==0.12.12",
     "syrupy>=4.9.1",
     "werkzeug[watchdog]==3.1.3",
