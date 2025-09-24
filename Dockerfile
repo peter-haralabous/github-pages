@@ -80,6 +80,12 @@ RUN chown django:django ${APP_HOME}
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
+ARG APP_VERSION=latest
+ENV APP_VERSION=${APP_VERSION}
+ENV DD_VERSION="${APP_VERSION}"
+LABEL com.newhippo.app_version="${APP_VERSION}"
+LABEL com.datadoghq.tags.version="${APP_VERSION}"
+
 USER django
 
 RUN DATABASE_URL="" \
