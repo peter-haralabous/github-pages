@@ -13,7 +13,6 @@ markers = [
 [tool.coverage.run]
 include = ["sandwich/**"]
 omit = [
-  "*/migrations/*",
   "*/tests/*",
   ".venv/*",            # Exclude the virtual environment
   "*/__init__.py",      # Exclude all __init__.py files
