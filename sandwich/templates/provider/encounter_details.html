@@ -25,31 +25,22 @@
       <button type="submit" class="btn btn-outline-primary">Resend Invitation</button>
     </form>
   {% endif %}
-  {% if current_encounter %}
+  <hr />
+  <h2>Encounter</h2>
+  <p>
+    <strong>Patient Status:</strong> {{ current_encounter.get_patient_status_display|default:"—" }}
+  </p>
+  <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+        class="inline"
+        method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Archive</button>
+  </form>
+  {% crispy encounter_form %}
+  {% include 'provider/partials/encounter_tasks.html' %}
+  {% if other_encounters %}
     <hr />
-    <h2>Current Encounter</h2>
-    <p>
-      <strong>Patient Status:</strong> {{ current_encounter.get_patient_status_display|default:"—" }}
-    </p>
-    <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
-          class="inline"
-          method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Archive</button>
-    </form>
-    {% crispy current_encounter_form %}
-    {% include 'provider/partials/encounter_tasks.html' %}
-  {% else %}
-    <form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
-          class="inline"
-          method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Start a new Encounter</button>
-    </form>
-  {% endif %}
-  {% if past_encounters %}
-    <hr />
-    <h3>Past Encounters</h3>
+    <h3>Other Encounters</h3>
     <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
       <table class="table">
         <thead>
@@ -62,7 +53,7 @@
         </thead>
         <tbody>
           {# TODO: link to details about past encounters #}
-          {% for encounter in past_encounters %}
+          {% for encounter in other_encounters %}
             <tr>
               <td>{{ encounter.created_at }}</td>
               <td>{{ encounter.ended_at|default:"—" }}</td>

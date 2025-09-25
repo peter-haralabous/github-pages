@@ -7,6 +7,8 @@
        href="{% url 'providers:organization' organization_id=organization.id %}">Home</a>
     <a class="tab"
        href="{% url "providers:patient_list" organization_id=organization.id %}">Patients</a>
+    <a class="tab"
+       href="{% url "providers:encounter_list" organization_id=organization.id %}">Encounters</a>
     <div class="flex-grow-1"></div>
     <a class="tab"
        href="{% url "providers:organization_edit" organization_id=organization.id %}">Settings</a>

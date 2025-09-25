@@ -30,6 +30,8 @@ from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import validate_sort
+from sandwich.providers.views.encounter import build_encounter_form_class
 
 logger = logging.getLogger(__name__)
 
@@ -71,28 +73,6 @@ class PatientAdd(forms.ModelForm[Patient]):
         widgets = {
             "date_of_birth": forms.DateInput(attrs={"type": "date"}),
         }
-
-
-def build_encounter_form_class(organization: Organization) -> type[forms.ModelForm[Encounter]]:
-    patient_status_choices = [(s.value, s.label) for s in organization.patient_statuses]
-    patient_status_choices.insert(0, ("", "—"))
-
-    # TODO-NG: there's got to be a better way to pass the patient status choices through
-    #          without creating a new class for each organization
-    class EncounterForm(forms.ModelForm[Encounter]):
-        def __init__(self, *args, **kwargs) -> None:
-            super().__init__(*args, **kwargs)
-            self.helper = FormHelper()
-            self.helper.add_input(Submit("submit", "Submit"))
-
-        class Meta:
-            model = Encounter
-            fields = ("patient_status",)
-            widgets = {
-                "patient_status": forms.Select(choices=patient_status_choices),
-            }
-
-    return EncounterForm
 
 
 @login_required
@@ -298,15 +278,6 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
     return render(request, "provider/patient_add.html", context)
 
 
-def _validate_sort(sort: str | None, valid_sorts: list[str]) -> str | None:
-    if sort is None:
-        return None
-    field = sort[1:] if sort.startswith("-") else sort
-    if field not in valid_sorts:
-        return None
-    return sort
-
-
 @login_required
 def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
     logger.info("Accessing patient list", extra={"user_id": request.user.id, "organization_id": organization_id})
@@ -315,7 +286,7 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
 
     search = request.GET.get("search", "").strip()
     sort = (
-        _validate_sort(
+        validate_sort(
             request.GET.get("sort"),
             ["first_name", "last_name", "email", "date_of_birth", "has_active_encounter", "created_at", "updated_at"],
         )

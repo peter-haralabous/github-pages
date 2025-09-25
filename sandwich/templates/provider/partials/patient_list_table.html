@@ -1,62 +1,60 @@
 {% load sortable %}
 {% load query_string %}
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>{% sortable_column "Name" "first_name" %}</th>
-      <th>{% sortable_column "Email" "email" %}</th>
-      <th>{% sortable_column "Active" "has_active_encounter" %}</th>
-      <th>{% sortable_column "Status" "patient_status" %}</th>
-      <th>{% sortable_column "Created" "created_at" %}</th>
-      <th>{% sortable_column "Updated" "updated_at" %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for patient in patients %}
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  <table class="table">
+    <thead>
       <tr>
-        <td>
-          <a class="link"
-             href="{% url "providers:patient" patient_id=patient.id organization_id=organization.id %}">{{ patient.full_name }}</a>
-        </td>
-        <td>{{ patient.email|default:"—" }}</td>
-        <td>{{ patient.has_active_encounter|yesno:"Active,Archived" }}</td>
-        <td>{{ patient.patient_status|default:"—" }}</td>
-        <td>{{ patient.created_at }}</td>
-        <td>{{ patient.updated_at }}</td>
+        <th>{% sortable_column "Name" "first_name" %}</th>
+        <th>{% sortable_column "Email" "email" %}</th>
+        <th>{% sortable_column "Active" "has_active_encounter" %}</th>
+        <th>{% sortable_column "Created" "created_at" %}</th>
+        <th>{% sortable_column "Updated" "updated_at" %}</th>
       </tr>
-    {% empty %}
-      <tr>
-        <td colspan="6" class="text-center">No patients found.</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for patient in patients %}
+        <tr>
+          <td>
+            <a class="link"
+               href="{% url "providers:patient" patient_id=patient.id organization_id=organization.id %}">{{ patient.full_name }}</a>
+          </td>
+          <td>{{ patient.email|default:"—" }}</td>
+          <td>{{ patient.has_active_encounter|yesno:"Active,Archived" }}</td>
+          <td>{{ patient.created_at }}</td>
+          <td>{{ patient.updated_at }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center">No patients found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 <!-- Pagination controls -->
-<nav aria-label="Patient pagination">
-  <div class="join">
-    {% if patients.has_previous %}
-      <a class="join-item btn"
-         href="{% query_string request.GET page=patients.previous_page_number %}"
-         aria-label="Previous">
-        <span aria-hidden="true">&laquo; Previous</span>
-      </a>
-    {% else %}
-      <button class="join-item btn" disabled aria-label="Previous">
-        <span aria-hidden="true">&laquo; Previous</span>
-      </button>
-    {% endif %}
-    <span class="join-item btn">Page {{ patients.number }} of {{ patients.paginator.num_pages }}</span>
-    {% if patients.has_next %}
-      <a class="join-item btn"
-         href="{% query_string request.GET page=patients.next_page_number %}"
-         aria-label="Next">
-        <span aria-hidden="true">Next &raquo;</span>
-      </a>
-    {% else %}
-      <button class="join-item btn" disabled aria-label="Next">
-        <span aria-hidden="true">Next &raquo;</span>
-      </button>
-    {% endif %}
-  </div>
+<nav aria-label="Patient pagination" class="join mt-2">
+  {% if patients.has_previous %}
+    <a class="join-item btn"
+       href="{% query_string request.GET page=patients.previous_page_number %}"
+       aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </button>
+  {% endif %}
+  <span class="join-item btn">Page {{ patients.number }} of {{ patients.paginator.num_pages }}</span>
+  {% if patients.has_next %}
+    <a class="join-item btn"
+       href="{% query_string request.GET page=patients.next_page_number %}"
+       aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </button>
+  {% endif %}
 </nav>

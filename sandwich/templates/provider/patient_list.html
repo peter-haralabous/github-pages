@@ -11,6 +11,8 @@
        href="{% url 'providers:organization' organization_id=organization.id %}">Home</a>
     <a class="tab tab-active"
        href="{% url "providers:patient_list" organization_id=organization.id %}">Patients</a>
+    <a class="tab"
+       href="{% url "providers:encounter_list" organization_id=organization.id %}">Encounters</a>
     <div class="flex-grow-1"></div>
     <a class="tab"
        href="{% url "providers:organization_edit" organization_id=organization.id %}">Settings</a>
@@ -18,7 +20,7 @@
   <form hx-get="{% url "providers:patient_list" organization_id=organization.id %}"
         hx-target="#patient_table_container"
         hx-push-url="true"
-        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter'], change from:select[name='patient_status']">
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter']">
     <div class="mb-2">
       <input name="search"
              type="text"
@@ -32,14 +34,6 @@
                 {% if has_active_encounter_filter == "true" %}selected{% endif %}>Active</option>
         <option value="false"
                 {% if has_active_encounter_filter == "false" %}selected{% endif %}>Archived</option>
-      </select>
-      <select name="patient_status" class="input w-auto">
-        <option value="">Status</option>
-        <hr />
-        {% for s in organization.patient_statuses %}
-          <option value="{{ s.value }}"
-                  {% if patient_status_filter == s.value %}selected{% endif %}>{{ s.label }}</option>
-        {% endfor %}
       </select>
       <input type="hidden" name="sort" value="{{ sort }}" />
       <button type="submit" class="btn">Search</button>

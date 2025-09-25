@@ -1,0 +1,46 @@
+<h3>Tasks</h3>
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Started</th>
+        <th>Ended</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+        <tr>
+          <td>{{ task.name }}</td>
+          <td>{{ task.created_at }}</td>
+          <td>{{ task.ended_at|default:"—" }}</td>
+          <td>{{ task.get_status_display }}</td>
+          <td>
+            {% if task.active %}
+              <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
+                    class="inline"
+                    method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+              </form>
+            {% else %}
+              <button type="button" class="btn btn-outline-secondary btn-sm disabled">Re-request</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center">No tasks found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
+      class="inline"
+      method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Add Task</button>
+</form>

@@ -1,0 +1,51 @@
+{% extends "provider/base.html" %}
+
+{% block main %}
+  <div class="flex justify-between">
+    <h2>{{ organization.name }}</h2>
+    <a href="{% url "providers:patient_add" organization_id=organization.id %}"
+       class="btn btn-primary">Add a Patient</a>
+  </div>
+  <div class="tabs tabs-border w-full">
+    <a class="tab"
+       href="{% url 'providers:organization' organization_id=organization.id %}">Home</a>
+    <a class="tab"
+       href="{% url "providers:patient_list" organization_id=organization.id %}">Patients</a>
+    <a class="tab tab-active"
+       href="{% url "providers:encounter_list" organization_id=organization.id %}">Encounters</a>
+    <div class="flex-grow-1"></div>
+    <a class="tab"
+       href="{% url "providers:organization_edit" organization_id=organization.id %}">Settings</a>
+  </div>
+  <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
+        hx-target="#encounter_table_container"
+        hx-push-url="true"
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='active'], change from:select[name='patient_status']">
+    <div class="mb-2">
+      <input name="search"
+             type="text"
+             class="input"
+             placeholder="Search"
+             value="{{ search }}" />
+      <select name="active" class="input w-auto">
+        <option value="">All Encounters</option>
+        <hr />
+        <option value="true" {% if active_filter == "true" %}selected{% endif %}>Active</option>
+        <option value="false" {% if active_filter == "false" %}selected{% endif %}>Archived</option>
+      </select>
+      <select name="patient_status" class="input w-auto">
+        <option value="">Status</option>
+        <hr />
+        {% for s in organization.patient_statuses %}
+          <option value="{{ s.value }}"
+                  {% if patient_status_filter == s.value %}selected{% endif %}>{{ s.label }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" name="sort" value="{{ sort }}" />
+      <button type="submit" class="btn">Search</button>
+      <a href="{% url 'providers:encounter_list' organization_id=organization.id %}"
+         class="btn btn-secondary">Clear</a>
+    </div>
+  </form>
+  <div id="encounter_table_container">{% include "provider/partials/encounter_list_table.html" %}</div>
+{% endblock main %}
