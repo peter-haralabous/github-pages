@@ -10,8 +10,11 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
+from django_jsonform.widgets import JSONFormWidget
+from django_pydantic_field.forms import SchemaField
 
 from sandwich.core.models.organization import Organization
+from sandwich.core.models.organization import PatientStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import create_default_roles
 from sandwich.core.service.organization_service import get_provider_organizations
@@ -21,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 class OrganizationEdit(forms.ModelForm[Organization]):
+    patient_statuses = SchemaField(schema=list[PatientStatus], widget=JSONFormWidget, required=False)
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -32,6 +37,8 @@ class OrganizationEdit(forms.ModelForm[Organization]):
 
 
 class OrganizationAdd(forms.ModelForm[Organization]):
+    patient_statuses = SchemaField(schema=list[PatientStatus], widget=JSONFormWidget, required=False)
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

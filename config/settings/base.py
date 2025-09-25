@@ -89,6 +89,7 @@ THIRD_PARTY_APPS = [
     "allauth.mfa",
     "allauth.socialaccount",
     "webpack_loader",
+    "django_jsonform",
     "procrastinate.contrib.django",
 ]
 

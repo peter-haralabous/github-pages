@@ -30,3 +30,10 @@
     @apply divider;
   }
 }
+
+/* django-jsonform styles don't really match anything in the app */
+.django-jsonform-container {
+  input {
+    @apply input;
+  }
+}
