@@ -37,3 +37,11 @@ jobs:
     uses: ./.github/workflows/run-smoke-test.yml
     with:
       environment: integration
+
+  deploy-production:
+    needs: smoketest-integration
+    uses: ./.github/workflows/run-deploy.yml
+    with:
+      environment: production
+      # Note: must match image_tag set in build step
+      image_tag: latest
