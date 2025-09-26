@@ -19,6 +19,7 @@ if READ_DOT_ENV_FILE:
 
 # GENERAL
 # ------------------------------------------------------------------------------
+ENVIRONMENT = env("ENVIRONMENT_NAME", default=None)
 APP_VERSION = env.str("APP_VERSION", default="latest")
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
@@ -194,6 +195,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
+                "sandwich.core.context_processors.settings_context",
                 "sandwich.users.context_processors.allauth_settings",
             ],
         },

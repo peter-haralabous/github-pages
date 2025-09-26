@@ -25,6 +25,9 @@
     ================================================== -->
     {# Placed at the top of the document so pages load faster with defer #}
     {% block javascript %}
+      {# You can find these variables supplied by server.core.context_processors.settings_context #}
+      {{ environment | json_script:"environment" }}
+      {{ app_version | json_script:"app_version" }}
       <!-- Vendor dependencies bundled as one file -->
       {% render_bundle 'vendors' 'js' %}
       <!-- place project specific Javascript in this file -->
