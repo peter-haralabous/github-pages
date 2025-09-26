@@ -28,6 +28,12 @@ class User(AbstractUser):
 
     objects: ClassVar[UserManager] = UserManager()
 
+    def initials(self) -> str:
+        """
+        1 or 2-letter abbreviation for the user, to be used in places like avatars.
+        """
+        return self.email[0].upper()
+
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.
 

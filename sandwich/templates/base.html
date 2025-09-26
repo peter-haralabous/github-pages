@@ -40,36 +40,41 @@
     {% block body %}
       <div class="mb-4">
         <nav class="navbar bg-base-100 shadow">
-          <div class="container mx-auto flex flex-wrap items-center justify-between">
-            <div class="navbar-start">
-              <a class="btn btn-ghost normal-case text-xl" href="{% url 'home' %}">HealthConnect</a>
-            </div>
-            <div class="navbar-end">
-              <ul class="menu menu-horizontal px-1">
-                {% block nav_items %}
-                  <li>
-                    <a class="active" href="{% url 'home' %}">Home</a>
-                  </li>
-                {% endblock nav_items %}
-                {% if request.user.is_authenticated %}
+          <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl" href="{% url 'home' %}">HealthConnect</a>
+          </div>
+          <div class="flex gap-2 items-center">
+            {% block nav_items %}
+            {% endblock nav_items %}
+            {% if request.user.is_authenticated %}
+              <div class="dropdown dropdown-end">
+                <div tabindex="0"
+                     role="button"
+                     class="btn btn-ghost btn-circle border-none avatar avatar-placeholder">
+                  <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                    <span class="text-sm">{{ request.user.initials }}</span>
+                  </div>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                   <li>
                     <a href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
                   </li>
                   <li>
                     <a href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
                   </li>
-                {% else %}
-                  {% if ACCOUNT_ALLOW_REGISTRATION %}
-                    <li>
-                      <a id="sign-up-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
-                    </li>
-                  {% endif %}
-                  <li>
-                    <a id="log-in-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
-                  </li>
-                {% endif %}
-              </ul>
-            </div>
+                </ul>
+              </div>
+            {% else %}
+              {% if ACCOUNT_ALLOW_REGISTRATION %}
+                <a id="sign-up-link"
+                   class="btn btn-ghost"
+                   href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+              {% endif %}
+              <a id="log-in-link"
+                 class="btn btn-ghost"
+                 href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+            {% endif %}
           </div>
         </nav>
       </div>
