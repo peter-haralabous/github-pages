@@ -171,7 +171,7 @@ version = "0.1.0"
 description = "bread + htmx"
 readme = "README.md"
 
-requires-python = "==3.12.*"
+requires-python = "==3.13.*"
 dependencies = [
     "argon2-cffi==25.1.0",
     "crispy-tailwind>=1.0.3",
