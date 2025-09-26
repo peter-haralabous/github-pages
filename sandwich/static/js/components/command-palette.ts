@@ -40,6 +40,14 @@ class CommandPalette extends LitElement {
       border-bottom: 1px solid #eee;
       outline: none;
     }
+    .palette-footer {
+      background: #f8f9fa;
+      padding: 8px 16px;
+      font-size: 0.95em;
+      color: #666;
+      border-top: 1px solid #eee;
+      text-align: center;
+    }
     ul {
       list-style: none;
       margin: 0;
@@ -92,6 +100,12 @@ class CommandPalette extends LitElement {
       this._searchInput.focus();
       this._performSearch(); // Perform initial search
     }
+    if (
+      changedProperties.has('resultsHTML') ||
+      changedProperties.has('selectedIndex')
+    ) {
+      this._updateSelectedClass();
+    }
   }
 
   // --- METHODS ---
@@ -100,7 +114,7 @@ class CommandPalette extends LitElement {
     try {
       const response = await fetch(url);
       this.resultsHTML = await response.text();
-      this.selectedIndex = -1;
+      this.selectedIndex = 0;
     } catch (error) {
       console.error('Error fetching search results:', error);
       this.resultsHTML = '<p>Error loading results.</p>';
@@ -148,7 +162,6 @@ class CommandPalette extends LitElement {
         }
         break;
     }
-    this._updateSelectedClass();
   }
 
   // This is the only manual DOM manipulation we need, as the items are raw HTML
@@ -183,6 +196,11 @@ class CommandPalette extends LitElement {
             <ul>
               ${unsafeHTML(this.resultsHTML)}
             </ul>
+          </div>
+          <div class="palette-footer">
+            <small>
+              ↑/↓ to select &nbsp;|&nbsp; Enter to go &nbsp;|&nbsp; Esc to close
+            </small>
           </div>
         </div>
       </div>
