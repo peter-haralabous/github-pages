@@ -30,6 +30,6 @@ jobs:
           aws-region: ca-central-1
       - env:
           APP: sandwich
-          ENVIRONMENT: integration
+          ENVIRONMENT: ${{ inputs.environment }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: ./scripts/deploy.sh ${{ inputs.app }}
