@@ -5,5 +5,6 @@
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security"]
-  }
+  },
+  "minimumReleaseAge": "7 days"
 }
