@@ -1,0 +1,19 @@
+name: Continuous Integration - Jira Link Check
+
+on:
+  pull_request:
+    types: [opened, reopened, edited]
+
+jobs:
+  check-for-jira-link:
+    if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'thrivehealth-renovate[bot]' && github.event_name != 'merge_group' }}
+    runs-on: ubuntu-latest
+    steps:
+      # Check if there's at least one line that's just the Jira ticket link.
+      # Ideally, this would only check the last line of the commit message,
+      # but we can only do regex with this tool.
+      - name: Check for Jira link
+        uses: gsactions/commit-message-checker@fe405fb023d9422b2dc4426cd57fb581eee22c54
+        with:
+          pattern: '(\W|^)https?:\/\/new-hippo\.atlassian\.net\/browse\/[A-Z0-9]+-[0-9]+(\W|$)'
+          error: 'You need one line with the Jira ticket link.'
