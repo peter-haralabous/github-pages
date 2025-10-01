@@ -1,6 +1,6 @@
 ### Motivation
 
-[TC-](https://new-hippo.atlassian.net/browse/TC-)
+[HC-](https://new-hippo.atlassian.net/browse/HC-)
 
 _[Replace this when making the PR] Why are you making this change? Provide a short explanation and/or screenshots. Is there remaining work that's not part of this PR?_
 
