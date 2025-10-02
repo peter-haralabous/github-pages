@@ -10,7 +10,7 @@ class PatientStatus(pydantic.BaseModel):
     label: str
 
 
-class Organization(BaseModel):
+class Organization(BaseModel):  # type: ignore[django-manager-missing] # see docs/typing
     """
     ... companies, institutions, corporations, departments, community groups, ...
 

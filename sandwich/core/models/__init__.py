@@ -5,6 +5,7 @@ from .organization import Organization
 from .patient import Patient
 from .predicate import Predicate
 from .task import Task
+from .template import Template
 
 __all__ = [
     "Encounter",
@@ -14,4 +15,5 @@ __all__ = [
     "Patient",
     "Predicate",
     "Task",
+    "Template",
 ]
