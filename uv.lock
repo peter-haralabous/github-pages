@@ -503,6 +503,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-modeltranslation"
+version = "0.19.17"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a7/32/34f33d0a375087197e1e7b6e27a87332c3dfaa970cb38ec353b6198b855b/django_modeltranslation-0.19.17.tar.gz", hash = "sha256:13bd9cab4e4aed0bef5624c17a7da2ac8c5538f0650adbd89ce8c878cbef02fd", size = 77741 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/83/87/f8cf0626e502fd6fd996b8dc590985ed5002b63dfb4442f954670bd101b7/django_modeltranslation-0.19.17-py3-none-any.whl", hash = "sha256:fda198c08b4ede0c2fd09b795ab420a04c7b5a868315fdf4aade0d0a526c269f", size = 93423 },
+]
+
+[[package]]
 name = "django-ninja"
 version = "1.4.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1605,6 +1617,7 @@ dependencies = [
     { name = "django-environ" },
     { name = "django-jsonform" },
     { name = "django-model-utils" },
+    { name = "django-modeltranslation" },
     { name = "django-ninja" },
     { name = "django-pydantic-field" },
     { name = "django-redis" },
@@ -1662,6 +1675,7 @@ requires-dist = [
     { name = "django-environ", specifier = "==0.12.0" },
     { name = "django-jsonform", specifier = ">=2.23.2" },
     { name = "django-model-utils", specifier = "==5.0.0" },
+    { name = "django-modeltranslation", specifier = "==0.19.17" },
     { name = "django-ninja", specifier = ">=1.4.3" },
     { name = "django-pydantic-field", specifier = ">=0.3.13" },
     { name = "django-redis", specifier = "==6.0.0" },
