@@ -2,6 +2,8 @@ import os
 
 import pytest
 
+from sandwich.core.factories import OrganizationFactory
+from sandwich.core.models import Organization
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
@@ -17,3 +19,13 @@ def _media_storage(settings, tmpdir) -> None:
 @pytest.fixture
 def user(db) -> User:
     return UserFactory()  # type:ignore[return-value]
+
+
+@pytest.fixture
+def organization(db) -> Organization:
+    return OrganizationFactory(name="Organization")  # type:ignore[return-value]
+
+
+@pytest.fixture
+def other_organization(db) -> Organization:
+    return OrganizationFactory(name="Other")  # type:ignore[return-value]
