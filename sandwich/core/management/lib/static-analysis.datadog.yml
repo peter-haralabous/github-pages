@@ -1,0 +1,10 @@
+# https://docs.datadoghq.com/security/code_security/static_analysis/setup/?tab=github#repository-level-configuration-file
+rulesets:
+  - python-best-practices:
+    rules:
+      init-method-required:
+        ignore:
+          - '**/*'
+      any-type-disallow:
+        ignore:
+          - '**/*'
