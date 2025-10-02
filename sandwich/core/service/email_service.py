@@ -1,6 +1,6 @@
 import logging
 
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +22,16 @@ def send_email(to, subject, body):
         logger.warning("Dropping email - no recipient specified", extra={"subject": subject})
         return
 
+    msg = EmailMessage(
+        subject=subject,
+        body=body,
+        from_email=None,
+        to=[to],
+    )
+    msg.content_subtype = "html"
+
     try:
-        send_mail(subject, body, None, [to])
+        msg.send()
         logger.info("Email sent successfully", extra={"has_recipient": bool(to)})
     except Exception as e:
         logger.exception("Failed to send email", extra={"error_type": type(e).__name__})
