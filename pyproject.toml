@@ -138,6 +138,10 @@ ignore = [
 extend-unsafe-fixes = [
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# Ignore `PLR2004` (Magic value used in comparison) in test files
+"*_test.py" = ["PLR2004"]
+
 [tool.ruff.lint.isort]
 force-single-line = true
 

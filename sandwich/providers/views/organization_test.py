@@ -13,7 +13,7 @@ def test_organization_add_form() -> None:
     assert form.is_valid(), f"Form errors: {form.errors}"
     organization = form.save()
     assert organization.name == "Test Organization"
-    assert len(organization.patient_statuses) == 2  # noqa: PLR2004
+    assert len(organization.patient_statuses) == 2
     assert organization.patient_statuses[0].value == "active"
     assert organization.patient_statuses[0].label == "Active"
     assert organization.patient_statuses[1].value == "inactive"

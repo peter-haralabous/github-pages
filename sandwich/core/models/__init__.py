@@ -1,3 +1,4 @@
+from .consent import Consent
 from .encounter import Encounter
 from .entity import Entity
 from .invitation import Invitation
@@ -8,6 +9,7 @@ from .task import Task
 from .template import Template
 
 __all__ = [
+    "Consent",
     "Encounter",
     "Entity",
     "Invitation",
