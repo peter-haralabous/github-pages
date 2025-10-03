@@ -76,6 +76,8 @@ def render(
     context: dict[str, Any] | None = None,
     organization: Organization | None = None,
     language: str | None = None,
+    *,
+    as_markdown: bool = True,
 ) -> HtmlStr:
     context = context or {}
     language = language or settings.LANGUAGE_CODE
@@ -87,7 +89,7 @@ def render(
         loaders=[(TemplateLoader, {"organization": organization, "language": language})],
     )
     markdown_str = engine.render_to_string(template_name=template_name, context=context)
-    return MarkdownIt().render(markdown_str)
+    return MarkdownIt().render(markdown_str) if as_markdown else markdown_str
 
 
 def render_template(template: Template, **kwargs: Any) -> HtmlStr:
