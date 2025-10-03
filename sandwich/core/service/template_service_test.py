@@ -4,7 +4,7 @@ from textwrap import dedent
 from typing import cast
 
 import pytest
-from django.template import TemplateDoesNotExist
+from django.template.exceptions import TemplateDoesNotExist
 
 from sandwich.core.factories import TemplateFactory
 from sandwich.core.models import Organization
