@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import typing
+from pathlib import Path
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.apps import apps
 from django.conf import settings
+from django.core.mail import EmailMessage
+
+from sandwich.core.service.template_service import LoaderDefinitions
+from sandwich.core.service.template_service import render
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialLogin
@@ -13,12 +19,55 @@ if typing.TYPE_CHECKING:
     from sandwich.users.models import User
 
 
-class AccountAdapter(DefaultAccountAdapter):
+def allauth_loaders() -> LoaderDefinitions:
+    allauth_templates = Path(apps.get_app_config("allauth").path) / "templates"
+    return [("django.template.loaders.filesystem.Loader", (allauth_templates,))]
+
+
+class DefaultAccountAdapterProtocol(typing.Protocol):
+    def get_from_email(self) -> str: ...
+
+
+class TemplatedMailMixin:
+    """Mixin to add Template email rendering to allauth adapters."""
+
+    def render_mail(
+        self: DefaultAccountAdapterProtocol,
+        template_prefix: str,
+        email: str,
+        context: dict[str, typing.Any],
+        headers: dict[str, str] | None = None,
+    ) -> EmailMessage:
+        """
+        Renders an email with the given template prefix and context.
+
+        The templates used are "{template_prefix}_subject.txt" and "{template_prefix}_message.txt".
+
+        The templates are looked up using two template loaders:
+        - The database loader, looking in the Template model for templates with the given slug
+        - The filesystem loader, looking in the "templates" directory of allauth
+        """
+
+        context.setdefault("app_url", settings.APP_URL)
+        msg = EmailMessage(
+            subject=render(
+                f"{template_prefix}_subject.txt", context=context, loaders=allauth_loaders(), as_markdown=False
+            ).strip(),
+            body=render(f"{template_prefix}_message.txt", context=context, loaders=allauth_loaders()),
+            from_email=self.get_from_email(),
+            to=[email],
+            headers=headers or {},
+        )
+        msg.content_subtype = "html"
+        return msg
+
+
+class AccountAdapter(TemplatedMailMixin, DefaultAccountAdapter):
     def is_open_for_signup(self, request: HttpRequest) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
 
-class SocialAccountAdapter(DefaultSocialAccountAdapter):
+class SocialAccountAdapter(TemplatedMailMixin, DefaultSocialAccountAdapter):
     def is_open_for_signup(
         self,
         request: HttpRequest,

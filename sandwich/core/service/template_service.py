@@ -98,6 +98,7 @@ def render(  # noqa: PLR0913
     engine = ClassLoaderEngine(
         libraries={
             "i18n": "django.templatetags.i18n",
+            "account": "allauth.account.templatetags.account",
         },
         loaders=[(TemplateLoader, {"organization": organization, "language": language}), *loaders],
     )
