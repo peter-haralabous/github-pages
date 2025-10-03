@@ -1,3 +1,4 @@
+from inspect import isclass
 from typing import Any
 
 from django.conf import settings
@@ -26,7 +27,7 @@ class ClassLoaderEngine(Engine):
     """An Engine that can load template loaders from classes directly."""
 
     def find_template_loader(self, loader: Any) -> Loader:
-        if issubclass(loader, Loader):
+        if isclass(loader) and issubclass(loader, Loader):
             return loader(self)
         return super().find_template_loader(loader)
 
