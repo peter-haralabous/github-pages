@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = "==3.13.*"
 
 [[package]]
@@ -530,6 +530,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/cd/1a/f0d051f54375cfd2310f803925993fdc4172e41e627d63ece48194b07892/django_ninja-1.4.3.tar.gz", hash = "sha256:e46d477ca60c228d2a5eb3cc912094928ea830d364501f966661eeada67cb038", size = 3709571, upload-time = "2025-06-04T15:11:13.408Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/ec/0cfa9b817f048cdec354354ae0569d7c0fd63907e5b1f927a7ee04a18635/django_ninja-1.4.3-py3-none-any.whl", hash = "sha256:f3204137a059437b95677049474220611f1cf9efedba9213556474b75168fa01", size = 2426185, upload-time = "2025-06-04T15:11:11.314Z" },
+]
+
+[[package]]
+name = "django-private-storage"
+version = "3.1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/46/82/d4ce6aa4a7e8d9699cef5e04b0d180f60aeaea71a48720c3bc7c43ea417c/django_private_storage-3.1.3.tar.gz", hash = "sha256:b3d1f4660ddac54ce5576473b093f50e7c04f0d065cb64e9bba2d201885792e6", size = 25488, upload-time = "2025-10-05T11:13:35.655Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2b/44/51d3e9b4bd9375b2690422063dff7b8ecf8cc3ab773828519830e8f2da47/django_private_storage-3.1.3-py3-none-any.whl", hash = "sha256:bac47df9a18be1b0c3c1af4ae903dba1360482ce05579a4f65cdd38adb44fedc", size = 34520, upload-time = "2025-10-05T11:13:34.101Z" },
 ]
 
 [[package]]
@@ -1647,6 +1656,7 @@ dependencies = [
     { name = "django-model-utils" },
     { name = "django-modeltranslation" },
     { name = "django-ninja" },
+    { name = "django-private-storage" },
     { name = "django-pydantic-field" },
     { name = "django-redis" },
     { name = "django-storages", extra = ["s3"] },
@@ -1705,6 +1715,7 @@ requires-dist = [
     { name = "django-model-utils", specifier = "==5.0.0" },
     { name = "django-modeltranslation", specifier = "==0.19.17" },
     { name = "django-ninja", specifier = ">=1.4.3" },
+    { name = "django-private-storage", specifier = ">=3.1.3" },
     { name = "django-pydantic-field", specifier = ">=0.3.13" },
     { name = "django-redis", specifier = "==6.0.0" },
     { name = "django-storages", extras = ["s3"], specifier = "==1.14.6" },

@@ -88,6 +88,7 @@ THIRD_PARTY_APPS = [
     "webpack_loader",
     "django_jsonform",
     "procrastinate.contrib.django",
+    "private_storage",
 ]
 
 LOCAL_APPS = [
@@ -361,3 +362,7 @@ PROCRASTINATE_IMPORT_PATHS = ["sandwich.core.service.procrastinate_service"]
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# TODO-NG: write our own permission function
+PRIVATE_STORAGE_AUTH_FUNCTION = "private_storage.permissions.allow_staff"
+PRIVATE_STORAGE_ROOT = str(APPS_DIR / "private-media")

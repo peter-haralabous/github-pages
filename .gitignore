@@ -279,6 +279,7 @@ data/*
 ### Project template
 mailpit
 sandwich/media/
+sandwich/private-media/
 
 .pytest_cache/
 sandwich/static/webpack_bundles/

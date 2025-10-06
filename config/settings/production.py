@@ -64,7 +64,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     default=True,
 )
 
-
+# STATIC & MEDIA
+# ------------------------
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_ACCESS_KEY_ID = env("DJANGO_AWS_ACCESS_KEY_ID", default=None)
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
@@ -89,8 +90,11 @@ AWS_S3_REGION_NAME = env("DJANGO_AWS_S3_REGION_NAME", default=None)
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#cloudfront
 AWS_S3_CUSTOM_DOMAIN = env("DJANGO_AWS_S3_CUSTOM_DOMAIN", default=None)
 aws_s3_domain = AWS_S3_CUSTOM_DOMAIN or f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-# STATIC & MEDIA
-# ------------------------
+
+# https://github.com/edoburu/django-private-storage?tab=readme-ov-file#storing-files-on-amazon-s3
+PRIVATE_STORAGE_CLASS = "private_storage.storage.s3boto3.PrivateS3BotoStorage"
+AWS_PRIVATE_STORAGE_BUCKET_NAME = env("DJANGO_AWS_PRIVATE_STORAGE_BUCKET_NAME")
+
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",

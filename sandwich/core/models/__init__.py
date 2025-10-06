@@ -1,4 +1,5 @@
 from .consent import Consent
+from .document import Document
 from .encounter import Encounter
 from .entity import Entity
 from .formio_submission import FormioSubmission
@@ -11,6 +12,7 @@ from .template import Template
 
 __all__ = [
     "Consent",
+    "Document",
     "Encounter",
     "Entity",
     "FormioSubmission",
