@@ -1,5 +1,3 @@
-from typing import cast
-
 import pytest
 
 from sandwich.core.factories import PatientFactory
@@ -18,9 +16,8 @@ def organization():
 
 @pytest.fixture
 def patient(organization: Organization) -> Patient:
-    return cast(
-        "Patient",
-        PatientFactory(first_name="John", last_name="Doe", email="jdoe@example.com", organization=organization),
+    return PatientFactory.create(
+        first_name="John", last_name="Doe", email="jdoe@example.com", organization=organization
     )
 
 

@@ -18,14 +18,14 @@ def _media_storage(settings, tmpdir) -> None:
 
 @pytest.fixture
 def user(db) -> User:
-    return UserFactory()  # type:ignore[return-value]
+    return UserFactory.create()
 
 
 @pytest.fixture
 def organization(db) -> Organization:
-    return OrganizationFactory(name="Organization")  # type:ignore[return-value]
+    return OrganizationFactory.create(name="Organization")
 
 
 @pytest.fixture
 def other_organization(db) -> Organization:
-    return OrganizationFactory(name="Other")  # type:ignore[return-value]
+    return OrganizationFactory.create(name="Other")

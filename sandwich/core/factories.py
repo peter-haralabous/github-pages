@@ -7,7 +7,7 @@ from sandwich.core.models import Template
 from sandwich.core.service.organization_service import create_default_roles
 
 
-class OrganizationFactory(DjangoModelFactory):
+class OrganizationFactory(DjangoModelFactory[Organization]):
     class Meta:
         model = Organization
 
@@ -18,7 +18,7 @@ class OrganizationFactory(DjangoModelFactory):
         create_default_roles(self)
 
 
-class PatientFactory(DjangoModelFactory):
+class PatientFactory(DjangoModelFactory[Patient]):
     class Meta:
         model = Patient
 
@@ -27,7 +27,7 @@ class PatientFactory(DjangoModelFactory):
     date_of_birth = factory.Faker("date_of_birth")
 
 
-class TemplateFactory(factory.django.DjangoModelFactory):
+class TemplateFactory(factory.django.DjangoModelFactory[Template]):
     class Meta:
         model = Template
         django_get_or_create = ("organization", "slug")

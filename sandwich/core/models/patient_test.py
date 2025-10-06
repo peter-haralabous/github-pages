@@ -1,5 +1,3 @@
-from typing import cast
-
 import pytest
 
 from sandwich.core.factories import PatientFactory
@@ -10,10 +8,10 @@ from sandwich.core.models import Patient
 @pytest.mark.django_db
 def test_patient_search() -> None:
     o = Organization.objects.create(name="Test Organization")
-    p = cast("Patient", PatientFactory(first_name="John", last_name="Doe", organization=o))
+    p = PatientFactory.create(first_name="John", last_name="Doe", organization=o)
 
     # don't match this one
-    PatientFactory(
+    PatientFactory.create(
         first_name="Jane", last_name="Doe", organization=Organization.objects.create(name="Other Organization")
     )
 

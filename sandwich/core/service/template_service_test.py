@@ -2,7 +2,6 @@
 
 from collections.abc import Collection
 from textwrap import dedent
-from typing import cast
 
 import pytest
 from django.template.exceptions import TemplateDoesNotExist
@@ -29,9 +28,7 @@ def build_templates(
 ) -> dict[str, Template]:
     exclude = exclude or set()
     return {
-        slug: cast(
-            "Template", TemplateFactory(organization=organization, slug=slug, content=content.format(name=name))
-        )
+        slug: TemplateFactory.create(organization=organization, slug=slug, content=content.format(name=name))
         for slug, content in template_content.items()
         if slug not in exclude
     }

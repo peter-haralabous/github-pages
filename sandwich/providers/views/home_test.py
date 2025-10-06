@@ -74,13 +74,13 @@ def test_home_redirects_to_organization_when_single_org(rf: RequestFactory):
     request = rf.get("/")
     request.user = user
 
-    organization = OrganizationFactory()
+    organization = OrganizationFactory.create()
     assign_organization_role(organization, RoleName.OWNER, user)
 
     response = home(request)
 
     assert isinstance(response, HttpResponseRedirect)
-    assert response.url == reverse("providers:organization", kwargs={"organization_id": organization.id})  # type:ignore[attr-defined]
+    assert response.url == reverse("providers:organization", kwargs={"organization_id": organization.id})
 
 
 @pytest.mark.django_db
