@@ -2,6 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from sandwich.core.models import Organization
+from sandwich.core.models import Patient
 from sandwich.core.models import Template
 from sandwich.core.service.organization_service import create_default_roles
 
@@ -15,6 +16,15 @@ class OrganizationFactory(DjangoModelFactory):
     @factory.post_generation
     def create_roles(self: Organization, create, extracted, **kwargs):
         create_default_roles(self)
+
+
+class PatientFactory(DjangoModelFactory):
+    class Meta:
+        model = Patient
+
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+    date_of_birth = factory.Faker("date_of_birth")
 
 
 class TemplateFactory(factory.django.DjangoModelFactory):

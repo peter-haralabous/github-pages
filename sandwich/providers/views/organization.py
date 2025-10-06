@@ -34,7 +34,7 @@ class OrganizationEdit(forms.ModelForm[Organization]):
 
     class Meta:
         model = Organization
-        fields = ("name", "patient_statuses")
+        fields = ("name", "patient_statuses", "verification_type")
 
 
 class OrganizationAdd(forms.ModelForm[Organization]):
@@ -47,7 +47,7 @@ class OrganizationAdd(forms.ModelForm[Organization]):
 
     class Meta:
         model = Organization
-        fields = ("name", "patient_statuses")
+        fields = ("name", "patient_statuses", "verification_type")
 
 
 @login_required

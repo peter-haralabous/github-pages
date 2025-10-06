@@ -8,6 +8,7 @@ def test_organization_add_form() -> None:
     form_data = {
         "name": "Test Organization",
         "patient_statuses": '[{"value": "active", "label": "Active"}, {"value": "inactive", "label": "Inactive"}]',
+        "verification_type": "DATE_OF_BIRTH",
     }
     form = OrganizationAdd(data=form_data)
     assert form.is_valid(), f"Form errors: {form.errors}"
@@ -25,6 +26,7 @@ def test_organization_add_form_no_statuses() -> None:
     form_data = {
         "name": "Test Organization",
         "patient_statuses": "[]",
+        "verification_type": "DATE_OF_BIRTH",
     }
     form = OrganizationAdd(data=form_data)
     assert form.is_valid(), f"Form errors: {form.errors}"

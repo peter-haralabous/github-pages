@@ -62,7 +62,7 @@ class Patient(BaseModel):
     #       once the user has claimed their Patient we shouldn't be using it anymore
     email = models.EmailField(blank=True)
 
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField()
 
     # TODO: name modelled incorrectly but expediently
     #       this is how we think about patients in BC, but it's definitely not universal
