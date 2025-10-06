@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
@@ -54,6 +55,11 @@ class Task(BaseModel):
 
     # this is Task.executionPeriod.end in FHIR
     ended_at = models.DateTimeField(blank=True, null=True)
+
+    def clean(self):
+        if self.encounter and self.patient and self.encounter.patient != self.patient:
+            msg = "Encounter and patient do not match."
+            raise ValidationError(msg)
 
     @property
     def name(self) -> str:
