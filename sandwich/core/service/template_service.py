@@ -1,3 +1,4 @@
+from collections import defaultdict
 from collections.abc import Generator
 from inspect import isclass
 from typing import Any
@@ -53,6 +54,10 @@ class TemplateLoader(Loader):
 
         self.organization: Organization | None = organization
         self.language: str | None = language
+        self._templates: dict[str, dict[Organization | None, Template]] = defaultdict(dict)
+
+        for template in Template.objects.filter(Q(organization=self.organization) | Q(organization__isnull=True)):
+            self._templates[template.slug][template.organization] = template
 
     def get_template_sources(self, template_name: str) -> Generator[Origin, Any, None]:
         """
@@ -61,11 +66,13 @@ class TemplateLoader(Loader):
 
         https://docs.djangoproject.com/en/stable/ref/templates/api/#template-origin
         """
-        templates = Template.objects.filter(
-            Q(organization=self.organization) | Q(organization__isnull=True), slug=template_name
-        ).order_by("organization_id")  # Prefer organization-specific templates to global ones
-        for template in templates:
-            yield TemplateOrigin(template=template, language=self.language)
+        if templates := self._templates.get(template_name):
+            # Prefer organization-specific templates to global ones
+            if self.organization:
+                if template := templates.get(self.organization):
+                    yield TemplateOrigin(template=template, language=self.language)
+            if template := templates.get(None):
+                yield TemplateOrigin(template=template, language=self.language)
 
     @staticmethod
     def get_contents(origin: TemplateOrigin) -> str:
