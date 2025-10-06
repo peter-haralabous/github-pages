@@ -62,10 +62,19 @@ def build_template_loader(organization: Organization | None, language: str):
     return TemplateLoader
 
 
-def render_template(template: Template, context: dict[str, Any] | None = None, language: str | None = None) -> HtmlStr:
+def render(
+    template_name: str,
+    context: dict[str, Any] | None = None,
+    organization: Organization | None = None,
+    language: str | None = None,
+) -> HtmlStr:
     context = context or {}
     language = language or settings.LANGUAGE_CODE
 
-    engine = ClassLoaderEngine(loaders=[build_template_loader(template.organization, language)])
-    markdown_str = engine.render_to_string(template_name=template.slug, context=context)
+    engine = ClassLoaderEngine(loaders=[build_template_loader(organization, language)])
+    markdown_str = engine.render_to_string(template_name=template_name, context=context)
     return MarkdownIt().render(markdown_str)
+
+
+def render_template(template: Template, **kwargs: Any) -> HtmlStr:
+    return render(template_name=template.slug, organization=template.organization, **kwargs)
