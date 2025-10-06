@@ -75,22 +75,24 @@ class TemplateLoader(Loader):
         return origin.template.content
 
 
-def render(
+def render(  # noqa: PLR0913
     template_name: str,
     context: dict[str, Any] | None = None,
     organization: Organization | None = None,
     language: str | None = None,
+    loaders: LoaderDefinitions | None = None,
     *,
     as_markdown: bool = True,
 ) -> HtmlStr:
     context = context or {}
     language = language or settings.LANGUAGE_CODE
+    loaders = loaders or []
 
     engine = ClassLoaderEngine(
         libraries={
             "i18n": "django.templatetags.i18n",
         },
-        loaders=[(TemplateLoader, {"organization": organization, "language": language})],
+        loaders=[(TemplateLoader, {"organization": organization, "language": language}), *loaders],
     )
     markdown_str = engine.render_to_string(template_name=template_name, context=context)
     return MarkdownIt().render(markdown_str) if as_markdown else markdown_str
