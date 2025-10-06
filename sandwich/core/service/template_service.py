@@ -17,7 +17,7 @@ from sandwich.core.models import Template
 from sandwich.core.types import HtmlStr
 
 type ContextDict = dict[str, Any]
-type LoaderDefinition = Loader | str | tuple[Loader | str, dict[str, object]]
+type LoaderDefinition = Loader | str | tuple[Loader, dict[str, object]] | tuple[str, tuple[Any, ...]]
 type LoaderDefinitions = list[LoaderDefinition]
 
 
