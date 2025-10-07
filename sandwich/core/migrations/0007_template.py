@@ -9,7 +9,7 @@ from django.db import models
 
 
 def load_initial_data(apps, schema_editor):
-    call_command("loaddata", "template.json", app_label="core")
+    call_command("loaddata", "sandwich/core/migrations/fixtures/template.json")
 
 
 class Migration(migrations.Migration):
