@@ -77,3 +77,19 @@ smoke-test-production:
 	uv run --script ./scripts/smoke_test.py \
 		https://hc.thrive.health/ \
 		"${GITHUB_SHA}"
+
+.PHONY: data
+data:
+	uv run manage.py data generate
+
+.PHONY: save-fixtures
+save-fixtures:
+	uv run manage.py dumpdata --natural-primary --natural-foreign --indent 2 \
+		core.organization > sandwich/core/fixtures/organization.json
+	uv run manage.py dumpdata --natural-primary --natural-foreign --indent 2 \
+		core.template > sandwich/core/fixtures/template.json
+	uv run pre-commit run --all-files prettier || true
+
+.PHONY: load-fixtures
+load-fixtures:
+	uv run manage.py loaddata organization template
