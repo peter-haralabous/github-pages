@@ -40,7 +40,7 @@ dev: init collectstatic migrate mailpit postgres
 
 .PHONY: test-unit
 test-unit: .venv postgres
-	uv run pytest -m "not e2e" -x
+	uv run pytest -m "not e2e" -x # --snapshot-update
 
 .PHONY: test-e2e
 test-e2e: .playwright-browsers collectstatic
