@@ -4,6 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 
+from sandwich.core.models.email import EmailType
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.email_service import send_templated_email
@@ -83,6 +84,7 @@ def send_task_added_email(task: Task) -> None:
         context={"task": task, "task_url": task_url},
         organization=task.patient.organization,
         language=None,
+        email_type=EmailType.task,
     )
 
     logger.info("Task notification email sent", extra={"task_id": task.id, "patient_id": task.patient.id})

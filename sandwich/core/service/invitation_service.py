@@ -4,6 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 
+from sandwich.core.models.email import EmailType
 from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.patient import Patient
@@ -90,6 +91,8 @@ def resend_patient_invitation_email(patient: Patient) -> None:
         context={"invitation": invitation, "task_url": task_url},
         organization=patient.organization,
         language=None,
+        email_type=EmailType.invitation,
+        invitation=invitation,
     )
 
     logger.info("Patient invitation email resent", extra={"patient_id": patient.id, "invitation_id": invitation.id})
