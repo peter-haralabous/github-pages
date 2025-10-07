@@ -1,5 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
+from slugify import slugify
 
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient
@@ -12,6 +13,7 @@ class OrganizationFactory(DjangoModelFactory[Organization]):
         model = Organization
 
     name = factory.Faker("company")
+    slug = factory.LazyAttribute(lambda o: slugify(o.name))
 
     @factory.post_generation
     def create_roles(self: Organization, create, extracted, **kwargs):

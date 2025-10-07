@@ -1,5 +1,6 @@
 import pytest
 
+from sandwich.core.factories import OrganizationFactory
 from sandwich.core.factories import PatientFactory
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient
@@ -7,7 +8,7 @@ from sandwich.core.models import Patient
 
 @pytest.mark.django_db
 def test_patient_search() -> None:
-    o = Organization.objects.create(name="Test Organization")
+    o = OrganizationFactory.create(name="Test Organization")
     p = PatientFactory.create(first_name="John", last_name="Doe", organization=o)
 
     # don't match this one
