@@ -123,6 +123,9 @@ LOGIN_URL = "account_login"
 GOOGLE_OAUTH_CLIENT_ID = env.str("GOOGLE_OAUTH_CLIENT_ID", default=None)
 GOOGLE_OAUTH_SECRET = env.str("GOOGLE_OAUTH_SECRET", default=None)
 
+# https://docs.allauth.org/en/dev/socialaccount/configuration.html
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
 if GOOGLE_OAUTH_SECRET and GOOGLE_OAUTH_CLIENT_ID:
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
@@ -146,6 +149,10 @@ if GOOGLE_OAUTH_SECRET and GOOGLE_OAUTH_CLIENT_ID:
             "AUTH_PARAMS": {
                 "access_type": "online",
             },
+            # This is potentially dangerous when used with untrustworthy
+            # providers -- so we apply on a per-provider basis.
+            # https://docs.allauth.org/en/dev/socialaccount/configuration.html
+            "EMAIL_AUTHENTICATION": True,
         }
     }
 
