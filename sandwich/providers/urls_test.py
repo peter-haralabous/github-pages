@@ -7,8 +7,10 @@ from django.urls import reverse
 
 from sandwich.core.factories import PatientFactory
 from sandwich.core.models import Encounter
+from sandwich.core.models import Task
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.role import RoleName
+from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.urls_test import get_all_urls
 from sandwich.providers.urls import urlpatterns as providers_urlpatterns
@@ -29,6 +31,9 @@ def test_provider_http_get_urls_return_status_200(db, user, organization) -> Non
     encounter = Encounter.objects.create(
         patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
     )
+
+    # Need a task for the task route
+    task = Task.objects.create(encounter=encounter, patient=patient, status=TaskStatus.REQUESTED)
 
     # List of urls which are other http verbs (e.g. POST) or redirect (non HTTP 200)
     exclude_url_names = [
@@ -64,6 +69,13 @@ def test_provider_http_get_urls_return_status_200(db, user, organization) -> Non
         (
             reverse("providers:patient_edit", kwargs={"organization_id": organization.id, "patient_id": patient.id}),
             "patient_edit",
+        ),
+        (
+            reverse(
+                "providers:task",
+                kwargs={"organization_id": organization.id, "patient_id": patient.id, "task_id": task.id},
+            ),
+            "task",
         ),
         (reverse("providers:patient_list", kwargs={"organization_id": organization.id}), "patient_list"),
         (reverse("providers:patient_add", kwargs={"organization_id": organization.id}), "patient_add"),
