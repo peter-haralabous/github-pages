@@ -18,6 +18,8 @@
           <td>{{ task.ended_at|default:"—" }}</td>
           <td>{{ task.get_status_display }}</td>
           <td>
+            <a class="btn btn-outline-secondary btn-sm"
+               href="{% url "providers:task" organization_id=organization.id patient_id=patient.id task_id=task.id %}">View</a>
             {% if task.active %}
               <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
                     class="inline"

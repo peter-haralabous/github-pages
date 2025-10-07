@@ -5,11 +5,13 @@ from typing import Literal
 
 import ninja
 import pydantic
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja.security import SessionAuth
 
 from sandwich.core.models.formio_submission import FormioSubmission
+from sandwich.core.models.role import RoleName
 from sandwich.core.models.task import Task
 from sandwich.core.service.task_service import complete_task
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -32,13 +34,25 @@ def get_task(request: AuthenticatedHttpRequest, form_name: str):
     # NOTE-NG: we're using the task ID here as the form name
     # patients don't have permission to load arbitrary forms
     task_id = form_name
-    return get_object_or_404(Task.objects.filter(patient__in=request.user.patient_set.all()), id=task_id)
+    return get_object_or_404(
+        Task.objects.filter(
+            # this is the patient case
+            Q(patient__in=request.user.patient_set.all())
+            |
+            # this is the provider case
+            Q(
+                encounter__organization__role__group__user=request.user,
+                encounter__organization__role__name__in=(RoleName.OWNER, RoleName.STAFF),
+            )
+        ),
+        id=task_id,
+    )
 
 
 def get_submission(task: Task, submission_id: str) -> FormioSubmission:
     submission = task.formio_submission
     assert submission
-    assert submission.id == int(submission_id)
+    assert str(submission.id) == submission_id
     return submission
 
 

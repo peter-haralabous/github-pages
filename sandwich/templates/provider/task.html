@@ -1,0 +1,61 @@
+{% extends "provider/base.html" %}
+
+{% block sidenav %}
+  {% include 'provider/partials/sidenav.html' %}
+{% endblock sidenav %}
+{% block extra_head %}
+  <script src="https://cdn.form.io/js/formio.form.js"></script>
+  {# can't load fonts inside a shadow root. this is the first couple lines of https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css #}
+  <style>
+    @font-face {
+      font-display: block;
+      font-family: "bootstrap-icons";
+      src: url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff2?e34853135f9e39acf64315236852cd5a") format("woff2"),
+        url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff?e34853135f9e39acf64315236852cd5a") format("woff");
+    }
+  </style>
+{% endblock extra_head %}
+{% block content %}
+  <div class="mb-2">
+    <a class="link"
+       href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">&larr; Back to {{ patient.full_name }}</a>
+    viewing {{ task.status }} task {{ task.name }}
+  </div>
+  <div id="formio"></div>
+  {{ formio_user | json_script:"formio_user" }}
+  <script type="text/javascript">
+    (async function() {
+      const formio_user = JSON.parse(document.getElementById('formio_user').textContent)
+      Formio.getUser = () => formio_user;
+
+      const outer = document.getElementById('formio');
+      const shadow = outer.attachShadow({
+        mode: 'open'
+      });
+      const inner = document.createElement('div');
+      shadow.appendChild(inner);
+
+      for (const css of [
+          'https://cdn.form.io/js/formio.form.min.css',
+          'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css',
+          'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+        ]) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = css;
+        shadow.appendChild(link);
+      }
+
+      const form = await Formio.createForm(inner, "{{ form_url }}", {
+        saveDraft: true,
+        shadowRoot: shadow,
+        // TODO-NG: turn off djLint javascript reformatting and use |yesno:"true,false"
+        readOnly: "{{read_only}}" === "True",
+      });
+
+      form.on('submitDone', (submission) => {
+        window.location.reload();
+      })
+    })();
+  </script>
+{% endblock content %}
