@@ -6,11 +6,7 @@
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
   {% if not SOCIALACCOUNT_ONLY %}
-    <div role="separator" class="my-8 flex items-center">
-      <span class="border-t border-gray-300 w-full"></span>
-      <span class="px-4">{% trans "or" %}</span>
-      <span class="border-t border-gray-300 w-full"></span>
-    </div>
+    <div class="my-8 divider">{% trans "or" %}</div>
   {% endif %}
   {% include "socialaccount/snippets/google_button.html" %}
   {% include "socialaccount/snippets/login_extra.html" %}
