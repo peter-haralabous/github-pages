@@ -79,6 +79,12 @@ repos:
         language: system
         types_or: [ts, tsx]
         pass_filenames: false
+      - id: yarn-dedupe
+        name: 'yarn dedupe'
+        entry: yarn dedupe
+        language: system
+        files: yarn.lock
+        pass_filenames: false
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
 ci:
