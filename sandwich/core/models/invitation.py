@@ -15,6 +15,7 @@ class InvitationStatus(models.TextChoices):
     DECLINED = "DECLINED"
     EXPIRED = "EXPIRED"
     FAILED_VERIFICATION = "FAILED_VERIFICATION"
+    FAILED = "FAILED"
 
 
 INVITE_EXPIRY_DAYS = 90
