@@ -10,7 +10,9 @@ from sandwich.core.models import Invitation
 from sandwich.core.models import Patient
 from sandwich.core.models.email import EmailStatus
 from sandwich.core.models.email import EmailType
+from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.service.email_service import email_sent_post_process
+from sandwich.core.service.email_service import handle_tracking
 from sandwich.core.service.email_service import send_email
 
 
@@ -232,3 +234,58 @@ def test_email_sent_post_process_handles_missing_x_email_id_header() -> None:
     email.refresh_from_db()
     assert email.status == ""
     assert email.message_id == ""
+
+
+@pytest.mark.django_db
+def test_handle_tracking_updates_correct_email_record() -> None:
+    """Test that handle_tracking updates the correct email record when bounce event is received."""
+    # Create an Email record with a message_id
+    email = Email.objects.create(
+        to="test@example.com", type=EmailType.task, message_id="test-message-id-123", status=EmailStatus.SENT
+    )
+
+    # Mock the event object for bounced event
+    mock_event = mock.Mock()
+    mock_event.event_type = "bounced"
+    mock_event.message_id = "test-message-id-123"
+    mock_event.reject_reason = "Mailbox does not exist"
+
+    # Call the function
+    handle_tracking(sender=None, event=mock_event, esp_name="Amazon SES")
+
+    # Verify the Email record was updated
+    email.refresh_from_db()
+    assert email.status == EmailStatus.BOUNCED
+
+
+@pytest.mark.django_db
+def test_handle_tracking_updates_invitation_if_one_exists(patient: Patient) -> None:
+    """Test that handle_tracking updates invitation status when email bounces and invitation exists."""
+    # Create an invitation
+    invitation = Invitation.objects.create(patient=patient, status=InvitationStatus.PENDING)
+
+    # Create an Email record linked to the invitation
+    email = Email.objects.create(
+        to="test@example.com",
+        type=EmailType.invitation,
+        message_id="test-message-id-456",
+        status=EmailStatus.SENT,
+        invitation=invitation,
+    )
+
+    # Mock the event object for bounced event
+    mock_event = mock.Mock()
+    mock_event.event_type = "bounced"
+    mock_event.message_id = "test-message-id-456"
+    mock_event.reject_reason = "Mailbox does not exist"
+
+    # Call the function
+    handle_tracking(sender=None, event=mock_event, esp_name="Amazon SES")
+
+    # Verify the Email record was updated
+    email.refresh_from_db()
+    assert email.status == EmailStatus.BOUNCED
+
+    # Verify the Invitation record was updated to FAILED
+    invitation.refresh_from_db()
+    assert invitation.status == InvitationStatus.FAILED

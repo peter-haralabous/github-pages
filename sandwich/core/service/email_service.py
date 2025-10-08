@@ -11,7 +11,9 @@ from sandwich.core.models import Email
 from sandwich.core.models import Invitation
 from sandwich.core.models import Organization
 from sandwich.core.models import Task
+from sandwich.core.models.email import EmailStatus
 from sandwich.core.models.email import EmailType
+from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.service.template_service import render
 from sandwich.core.types import HtmlStr
 
@@ -58,8 +60,6 @@ def send_email(  # noqa: PLR0913
         },
     )
 
-    # TODO: set up bounce tracking, etc.
-    # see https://anymail.dev/en/stable/esps/amazon_ses/#status-tracking-webhooks
     if not to:
         # TODO: should this throw instead?
         logger.warning("Dropping email - no recipient specified", extra={"subject": subject})
@@ -121,4 +121,11 @@ def handle_tracking(sender, event, esp_name, **kwargs):
         logger.info("Received email tracking event")
         if event.event_type == "bounced":
             logger.warning("Email bounced", extra={"reason": event.reject_reason, "message_id": event.message_id})
-            # TODO: Update email record in db
+            email = Email.objects.get(message_id=event.message_id)
+            email.status = EmailStatus.BOUNCED
+            email.save(update_fields=["status"])
+            invitation = Invitation.objects.get(id=email.invitation.id) if email.invitation else None
+
+            if invitation:
+                invitation.status = InvitationStatus.FAILED
+                invitation.save(update_fields=["status"])
