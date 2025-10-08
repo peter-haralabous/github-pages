@@ -11,6 +11,55 @@ document outlines when to write a component, where files live, and what to avoid
 - Type safety: Prefer TypeScript for all new code. Decorators (`@property`) and `accessor` syntax are supported (see
   `tsconfig.json` enabling `experimentalDecorators`).
 - Minimal global scripts: Avoid large, monolithic entry files manipulating arbitrary selectors.
+- Tiered delivery: Choose the smallest compliant delivery mechanism (see Size-Based Guidance) to keep bundles lean and
+  CSP tight.
+
+### Size-Based Guidance (Choosing How to Ship Code)
+
+Pick one of three sizes. Start lower; move up if the feature grows.
+
+1. Small (inline, nonced snippet)
+    - Use ONLY for trivial, self-contained enhancement (≤ ~20 lines, no fetch/XHR, no dynamic HTML string building).
+    - Must include `nonce="{{ request.csp_nonce }}"`.
+    - Optional `type="module"` if you need modern syntax (no imports from local files—keep it self-contained).
+    - If it grows beyond trivial, migrate to Medium.
+      Example:
+   ```html
+   <script nonce="{{ request.csp_nonce }}">
+     document.addEventListener('DOMContentLoaded', () => {
+       const btn = document.querySelector('[data-dismiss]');
+       if (btn) btn.addEventListener('click', () => btn.remove());
+     });
+   </script>
+   ```
+
+2. Medium (add to existing `project.ts` bundle)
+    - Default for most new features.
+    - Create a module under `sandwich/static/js/<feature>.ts` and import it from `project.ts` OR directly add logic
+      there.
+    - Suitable when: code may evolve, reused across pages, or more than a handful of lines.
+
+3. Large (new dedicated entrypoint)
+    - For substantial or infrequently used areas (e.g., analytics dashboard, large admin tool) where isolating payload
+      improves performance.
+    - Steps:
+        1. Create `sandwich/static/js/<name>.ts`.
+        2. Add an entry in `webpack/common.config.cjs`:
+           ```js
+           entry: {
+             project: path.resolve(__dirname, '../sandwich/static/js/project'),
+             vendors: path.resolve(__dirname, '../sandwich/static/js/vendors'),
+             <name>: path.resolve(__dirname, `../sandwich/static/js/<name>`),
+           }
+           ```
+        3. Rebuild (dev server auto or `npm run build`).
+        4. Include only on needed template(s): `{% render_bundle '<name>' 'js' %}`.
+
+Decision flow:
+
+- Is it truly trivial, one-off, and unlikely to grow? Small.
+- Will it share code, grow, or benefit from TypeScript/imports? Medium.
+- Is it large or rarely needed so we should avoid inflating baseline? Large.
 
 ### Directory Layout
 
@@ -75,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 If logic grows, refactor into a component.
 
+(Add: If the behavior is extremely small and truly one-off, consider a Small inline nonced script instead of even a
+module—but migrate if it expands.)
+
 ### Avoid Imperative DOM Scanning
 
 Anti‑pattern:
@@ -133,12 +185,14 @@ violates our CSP guidance).
 
 ### Summary Rules
 
-- Default: Use a Lit Web Component.
-- Only use plain modules for trivial enhancement.
+- Default: Use a Lit Web Component for reusable UI.
+- Small enhancement: MAY use a tiny inline nonced `<script>` if it meets the CSP small criteria.
+- Medium feature: Add/import code into `project.ts`.
+- Large / isolated feature: New webpack entrypoint + `{% render_bundle %}`.
 - Never inline event handler attributes.
-- Never add raw `<script src>` tags; rely on bundling.
-- Keep component APIs small and attribute-driven.
+- Never add raw `<script src>` tags that bypass bundling.
+- Move code up the size ladder (small → medium → large) as complexity grows; never let inline snippets accrete
+  complexity.
 
 > [!NOTE]
-> Unsure whether a feature should be a component? Start a component unless you have a strong reason not to; refactoring
-> from ad‑hoc DOM code into a component later is more work.
+> Unsure? If it might grow, skip the inline snippet and go straight to Medium (bundle) for better maintainability.
