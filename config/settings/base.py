@@ -292,7 +292,10 @@ CONTENT_SECURITY_POLICY = {
         "form-action": [SELF],
         "report-uri": report_uri,
         "img-src": [SELF, "data:"],
+        "script-src": [SELF],  # Report has nonce
+        "script-src-elem": [SELF],  # Report has nonce
         "style-src-elem": [
+            SELF,
             NONCE,
             UNSAFE_HASHES,
             "'sha256-faU7yAF8NxuMTNEwVmBz+VcYeIoBQ2EMHW3WaVxCvnk='",  # htmx injects a <style> tag
@@ -307,11 +310,13 @@ CONTENT_SECURITY_POLICY_REPORT_ONLY = {
         "form-action": [SELF],
         "frame-ancestors": [SELF],
         "script-src": [SELF, NONCE],
+        "script-src-elem": [SELF, NONCE],
         "style-src": [
             SELF,
             NONCE,
         ],
         "style-src-elem": [
+            SELF,
             NONCE,
             UNSAFE_HASHES,
             "'sha256-faU7yAF8NxuMTNEwVmBz+VcYeIoBQ2EMHW3WaVxCvnk='",  # htmx injects a <style> tag
