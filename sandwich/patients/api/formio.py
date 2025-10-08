@@ -34,6 +34,7 @@ def get_task(request: AuthenticatedHttpRequest, form_name: str):
     # NOTE-NG: we're using the task ID here as the form name
     # patients don't have permission to load arbitrary forms
     task_id = form_name
+    # Multiple provider role/group memberships can create duplicate rows via JOINs; use distinct().
     return get_object_or_404(
         Task.objects.filter(
             # this is the patient case
@@ -44,7 +45,7 @@ def get_task(request: AuthenticatedHttpRequest, form_name: str):
                 encounter__organization__role__group__user=request.user,
                 encounter__organization__role__name__in=(RoleName.OWNER, RoleName.STAFF),
             )
-        ),
+        ).distinct(),
         id=task_id,
     )
 
