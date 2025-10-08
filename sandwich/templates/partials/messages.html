@@ -1,7 +1,7 @@
 {% if messages %}
   {% for message in messages %}
-    <message-alert>
     {# djlint:off #}
+    <message-alert
       tags="{% if message.tags %}{{ message.tags }}{% endif %}"
     {# djlint:on #}
     message="{{ message }}">
