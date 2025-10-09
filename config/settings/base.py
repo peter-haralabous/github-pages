@@ -366,9 +366,6 @@ LOGGING = {
 # pass `extra={}` through to datadog
 DJANGO_DATADOG_LOGGER_EXTRA_INCLUDE = r"^(django_datadog_logger|procrastinate|sandwich)(|\..+)$"
 
-REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
-REDIS_SSL = REDIS_URL.startswith("rediss://")
-
 
 # django-allauth
 # ------------------------------------------------------------------------------
