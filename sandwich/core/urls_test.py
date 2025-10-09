@@ -46,6 +46,7 @@ def is_login_required(view_callback):
 def test_all_routes_are_authenticated():
     allowed_public_routes = {
         "",
+        "favicon.ico",
         "healthcheck/",
         "patients/api/",
         "patients/api/docs",

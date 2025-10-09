@@ -2,9 +2,11 @@ import private_storage.urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.templatetags.static import static as resolve_static
 from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -24,6 +26,7 @@ urlpatterns = [
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     path("private-media/", include(private_storage.urls)),
+    path("favicon.ico", RedirectView.as_view(url=resolve_static("images/favicons/favicon.ico"))),
 ]
 
 
