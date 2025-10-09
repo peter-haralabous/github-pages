@@ -1,10 +1,14 @@
 {% extends "layout/onboarding.html" %}
 
-{% block content %}
+{% block title %}
   <h1 class="text-center text-primary">HealthConnect</h1>
+{% endblock title %}
+{% block sub_title %}
   <p class="text-lg text-gray-600 mb-8">
     Your comprehensive healthcare management platform connecting patients and providers for better health outcomes and streamlined care coordination.
   </p>
+{% endblock sub_title %}
+{% block content %}
   <div class="flex flex-col sm:flex-row gap-4">
     <a href="{% url 'patients:home' %}"
        class="btn btn-primary gap-3 py-10 px-6">
