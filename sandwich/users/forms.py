@@ -1,5 +1,8 @@
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from django import forms
 from django.contrib.auth import forms as admin_forms
 from django.forms import EmailField
 from django.utils.translation import gettext_lazy as _
@@ -42,3 +45,22 @@ class UserSocialSignupForm(SocialSignupForm):
     Default fields will be added automatically.
     See UserSignupForm otherwise.
     """
+
+
+class AccountDeleteForm(forms.Form):
+    confirmation = forms.CharField(
+        max_length=6, label="", widget=forms.TextInput(attrs={"placeholder": "Type 'DELETE' to confirm"})
+    )
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit("submit", "Delete"))
+
+    def clean_confirmation(self):
+        confirmation = self.cleaned_data["confirmation"]
+
+        if confirmation != "DELETE":
+            raise forms.ValidationError("Must type 'DELETE' to confirm.")  # noqa: TRY003, EM101
+
+        return confirmation

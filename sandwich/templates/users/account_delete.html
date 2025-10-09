@@ -1,0 +1,23 @@
+{% extends "users/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>{% translate 'Delete Account' %}</h2>
+  <p class="my-4">{% translate 'Are you sure you want to delete your account?' %}</p>
+  <p class="my-4">
+    {% translate 'All data associated with your user account will be permanently removed from our system.' %}
+  </p>
+  <p class="my-4">
+    <strong>{% translate 'This action cannot be undone.' %}</strong>
+  </p>
+  <p class="my-4">
+    {% blocktranslate trimmed %}
+      This includes all associated patients within your account and any related data.
+      If you are a caregiver, parent, or guardian managing accounts for others, their data will also be permanently
+      deleted.
+    {% endblocktranslate %}
+  </p>
+  {% crispy form %}
+{% endblock content %}
