@@ -75,7 +75,7 @@ smoke-test-integration: .playwright-browsers
 
 .PHONY: smoke-test-production
 smoke-test-production:
-	uv run --script ./scripts/smoke_test.py \
+	uv run --script ./scripts/check_version.py \
 		https://hc.thrive.health/ \
 		"${GITHUB_SHA}"
 
