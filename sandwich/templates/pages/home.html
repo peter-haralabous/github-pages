@@ -1,14 +1,14 @@
 {% extends "layout/onboarding.html" %}
 
-{% block title %}
+{% block component_title %}
   <h1 class="text-center text-primary">HealthConnect</h1>
-{% endblock title %}
-{% block sub_title %}
+{% endblock component_title %}
+{% block component_sub_title %}
   <p class="text-lg text-gray-600 mb-8">
     Your comprehensive healthcare management platform connecting patients and providers for better health outcomes and streamlined care coordination.
   </p>
-{% endblock sub_title %}
-{% block content %}
+{% endblock component_sub_title %}
+{% block component_content %}
   <div class="flex flex-col sm:flex-row gap-4">
     <a href="{% url 'patients:home' %}"
        class="btn btn-primary gap-3 py-10 px-6">
@@ -35,4 +35,4 @@
       <span class="text-sm font-medium">Continue as Provider</span>
     </a>
   </div>
-{% endblock content %}
+{% endblock component_content %}
