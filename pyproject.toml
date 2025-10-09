@@ -6,7 +6,8 @@ python_files = [
     "*_test.py",
 ]
 markers = [
-  "e2e: marks tests as end-to-end tests that use playwright"
+  "e2e: marks tests as end-to-end tests that use playwright",
+  "smoke_test: tests that are run against the integration environment",
 ]
 
 # ==== Coverage ====

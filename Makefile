@@ -40,7 +40,7 @@ dev: init collectstatic migrate mailpit postgres
 
 .PHONY: test-unit
 test-unit: .venv postgres
-	uv run pytest -m "not e2e" --exitfirst # --snapshot-update
+	uv run pytest -m "not e2e and not smoke_test" --exitfirst # --snapshot-update
 
 .PHONY: test-e2e
 test-e2e: .playwright-browsers collectstatic
@@ -62,15 +62,16 @@ lint: init
 
 .PHONY: smoke-test-development
 smoke-test-development:
-	uv run --script ./scripts/smoke_test.py \
+	uv run --script ./scripts/check_version.py \
 		http://localhost:3000/ \
 		"latest"
 
 .PHONY: smoke-test-integration
 smoke-test-integration:
-	uv run --script ./scripts/smoke_test.py \
+	uv run --script ./scripts/check_version.py \
 		https://hc.wethrive.ninja/ \
 		"${GITHUB_SHA}"
+	uv run pytest -m smoke_test --numprocesses logical --exitfirst
 
 .PHONY: smoke-test-production
 smoke-test-production:

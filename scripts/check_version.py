@@ -46,7 +46,7 @@ def check_deployed_version(base_url: str, sha: str):
 
 def main(base_url: str, sha: str):
     check_deployed_version(base_url, sha)
-    success("All smoke tests have passed")
+    success("Version check passed")
 
 
 if __name__ == "__main__":

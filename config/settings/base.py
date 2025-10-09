@@ -283,12 +283,13 @@ report_params = urlencode(
     }
 )
 report_tags = quote_plus(f"service:sandwich,environment:{ENVIRONMENT},version:{API_VERSION}")
-report_uri = f"https://browser-intake-datadoghq.eu/api/v2/logs?{report_params}&ddtags={report_tags}"
+rum_host = "https://browser-intake-datadoghq.eu"
+report_uri = f"{rum_host}/api/v2/logs?{report_params}&ddtags={report_tags}"
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
+        "connect-src": [SELF, f"'{rum_host}'"],
         "default-src": [SELF],
         "frame-ancestors": [SELF],
-        "form-action": [SELF],
         "report-uri": report_uri,
         "img-src": [SELF, "data:"],
         "script-src": [SELF, NONCE],
