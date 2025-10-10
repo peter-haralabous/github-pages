@@ -1,13 +1,17 @@
 from unittest.mock import patch
 
 import pytest
+from django.http import HttpResponse
 from django.test import Client
 from django.urls import reverse
 
 from sandwich.core.factories import ConsentFactory
+from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.middleware.consent import _has_consented_to_policies
+from sandwich.core.models import Document
 from sandwich.core.models.consent import Consent
 from sandwich.core.models.consent import ConsentPolicy
+from sandwich.core.service.consent_service import record_consent
 from sandwich.users.models import User
 
 
@@ -54,7 +58,8 @@ def test_middleware(client: Client, user_wo_consent: User) -> None:
     client.force_login(user_wo_consent)
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
-        client.get(reverse("core:home"))
+        mock_handle_missing_consent.return_value = HttpResponse()
+        client.get(reverse("patients:home"))
         mock_handle_missing_consent.assert_called_once()
 
 
@@ -67,7 +72,7 @@ def test_middleware_consented(
     client.force_login(user_wo_consent)
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
-        client.get(reverse("core:home"))
+        client.get(reverse("patients:home"))
         mock_handle_missing_consent.assert_not_called()
 
 
@@ -76,4 +81,14 @@ def test_middleware_exempt(client: Client, user_wo_consent: User) -> None:
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
         client.get(reverse("core:healthcheck"))
+        mock_handle_missing_consent.assert_not_called()
+
+
+def test_media_exempt(client: Client, user: User, document: Document) -> None:
+    client.force_login(user)
+    # Reject required policies
+    record_consent(user, dict.fromkeys(ConsentMiddleware.required_policies, False))
+
+    with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
+        client.get(document.file.url)
         mock_handle_missing_consent.assert_not_called()
