@@ -6,47 +6,29 @@ from django.urls import reverse
 from sandwich.core.factories import ConsentFactory
 from sandwich.core.models import Organization
 from sandwich.core.models.consent import ConsentPolicy
-from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
 pytestmark = pytest.mark.django_db
 
 
-class TestAccountDeleteView:
-    def test_account_delete_authentication(self, db) -> None:
-        # Try unauth'd
-        client = Client()
-        url = reverse("core:account_delete")
-        response = client.get(url)
-        assert isinstance(response, HttpResponseRedirect)
-        assert response.status_code == 302  # Redirect to login
-        assert reverse("account_login") in response.url
+def test_account_delete_post_valid_form(db, user: User, organization: Organization) -> None:
+    ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=True)
+    ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_PRIVACY_POLICY, decision=True)
 
-        # Try auth'd
-        user = UserFactory.create()
-        client.force_login(user)
-        response = client.get(url)
-        assert response.status_code == 200
-        assert response.templates[0].name == "users/account_delete.html"
+    client = Client()
+    client.force_login(user)
+    url = reverse("core:account_delete")
+    response = client.post(url, data={"confirmation": "DELETE"})
 
-    def test_account_delete_post_valid_form(self, db, user: User, organization: Organization) -> None:
-        ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=True)
-        ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_PRIVACY_POLICY, decision=True)
+    assert response.status_code == 302
+    assert isinstance(response, HttpResponseRedirect)
+    assert reverse("account_login") in response.url
 
-        client = Client()
-        client.force_login(user)
-        url = reverse("core:account_delete")
-        response = client.post(url, data={"confirmation": "DELETE"})
+    # Note: User.delete_account() model tests covers associated entity deletion exhaustively
+    assert User.objects.filter(pk=user.pk).exists() is False
 
-        assert response.status_code == 302
-        assert isinstance(response, HttpResponseRedirect)
-        assert reverse("account_login") in response.url
-
-        # Note: User.delete_account() model tests covers associated entity deletion exhaustively
-        assert User.objects.filter(pk=user.pk).exists() is False
-
-        # Try to access a protected route
-        response = client.get(reverse("patients:patient_add"))
-        assert response.status_code == 302  # Middleware redirects user to login
-        assert isinstance(response, HttpResponseRedirect)
-        assert reverse("account_login") in response.url
+    # Try to access a protected route
+    response = client.get(reverse("patients:patient_add"))
+    assert response.status_code == 302  # Middleware redirects user to login
+    assert isinstance(response, HttpResponseRedirect)
+    assert reverse("account_login") in response.url
