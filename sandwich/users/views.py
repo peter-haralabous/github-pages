@@ -1,19 +1,14 @@
 import logging
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import QuerySet
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 
-from sandwich.core.models import Consent
-from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -79,19 +74,3 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
-
-
-@login_required
-def legal_view(request: AuthenticatedHttpRequest) -> HttpResponse:
-    consents = Consent.objects.for_user(request.user)
-
-    if len(consents) == 0:
-        logger.critical("User has no consented policies", extra={"user_id": request.user.pk})
-
-    return render(
-        request,
-        "users/legal.html",
-        {
-            "consents": consents,
-        },
-    )
