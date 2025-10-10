@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Any
 
 import pytest
 from django.test import Client
@@ -6,6 +7,8 @@ from django.urls import reverse
 
 from sandwich.core.factories import PatientFactory
 from sandwich.core.models.patient import Patient
+from sandwich.patients.views.patient import PatientAdd
+from sandwich.patients.views.patient import PatientEdit
 from sandwich.users.models import User
 
 
@@ -73,3 +76,75 @@ def test_patient_onboarding_add(db, user: User) -> None:
     assert created_patient
     assert response.status_code == HTTPStatus.FOUND
     assert response.headers.get("Location") == reverse("patients:home")
+
+
+@pytest.mark.parametrize(
+    ("data", "is_valid"),
+    [
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+            },
+            True,
+            id="Pass: All required fields present, date in past.",
+        ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "2500-11-11",
+            },
+            False,
+            id="Fail: date of birth in future",
+        ),
+        pytest.param(
+            {
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+            },
+            False,
+            id="Fail: missing required field",
+        ),
+    ],
+)
+def test_patient_edit_form(data: dict[str, Any], *, is_valid: bool) -> None:
+    patient_form = PatientEdit(data)
+    assert patient_form.is_valid() == is_valid
+
+
+@pytest.mark.parametrize(
+    ("data", "is_valid"),
+    [
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+            },
+            True,
+            id="Pass: All required fields present, date in past.",
+        ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "2500-11-11",
+            },
+            False,
+            id="Fail: date of birth in future",
+        ),
+        pytest.param(
+            {
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+            },
+            False,
+            id="Fail: missing required field",
+        ),
+    ],
+)
+def test_patient_create_form(data: dict[str, Any], *, is_valid: bool) -> None:
+    patient_form = PatientAdd(data)
+    assert patient_form.is_valid() == is_valid

@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from typing import Any
 
 from crispy_forms.helper import FormHelper
@@ -16,6 +17,7 @@ from django.urls import reverse
 
 from sandwich.core.models.patient import Patient
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,10 @@ class PatientEdit(forms.ModelForm[Patient]):
             "phn",
             Submit("submit", "Submit"),
         )
+
+    def clean_date_of_birth(self) -> date:
+        dob = self.cleaned_data["date_of_birth"]
+        return valid_date_of_birth(dob)
 
     class Meta:
         model = Patient
@@ -56,6 +62,10 @@ class PatientAdd(forms.ModelForm[Patient]):
             "phn",
             Submit("submit", "Submit"),
         )
+
+    def clean_date_of_birth(self) -> date:
+        dob = self.cleaned_data["date_of_birth"]
+        return valid_date_of_birth(dob)
 
     def save(self, commit: bool = True, user: User | None = None) -> Patient:  # noqa: FBT001,FBT002
         instance = super().save(commit=False)

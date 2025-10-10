@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div
@@ -33,6 +34,7 @@ from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
+from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.views.encounter import build_encounter_form_class
 
 logger = logging.getLogger(__name__)
@@ -49,6 +51,10 @@ class PatientEdit(forms.ModelForm[Patient]):
             "phn",
             Submit("submit", "Submit"),
         )
+
+    def clean_date_of_birth(self) -> date:
+        dob = self.cleaned_data["date_of_birth"]
+        return valid_date_of_birth(dob)
 
     class Meta:
         model = Patient
@@ -72,6 +78,10 @@ class PatientAdd(forms.ModelForm[Patient]):
             "phn",
             Submit("submit", "Submit"),
         )
+
+    def clean_date_of_birth(self) -> date:
+        dob = self.cleaned_data["date_of_birth"]
+        return valid_date_of_birth(dob)
 
     def save(self, commit: bool = True, organization: Organization | None = None) -> Patient:  # noqa: FBT001,FBT002
         instance = super().save(commit=False)
