@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 from anymail.message import AnymailMessage
 from anymail.message import AnymailRecipientStatus
+from anymail.signals import EventType
 from django.core import mail
 
 from sandwich.core.models import Email
@@ -150,15 +151,12 @@ def test_send_email_handles_sending_exception() -> None:
 
 @pytest.mark.django_db
 def test_handle_tracking_updates_correct_email_record() -> None:
-    """Test that handle_tracking updates the correct email record when bounce event is received."""
-    # Create an Email record with a message_id
     email = Email.objects.create(
         to="test@example.com", type=EmailType.task, message_id="test-message-id-123", status=EmailStatus.SENT
     )
 
-    # Mock the event object for bounced event
     mock_event = mock.Mock()
-    mock_event.event_type = "bounced"
+    mock_event.event_type = EventType.BOUNCED
     mock_event.message_id = "test-message-id-123"
     mock_event.reject_reason = "Mailbox does not exist"
 
@@ -168,6 +166,40 @@ def test_handle_tracking_updates_correct_email_record() -> None:
     # Verify the Email record was updated
     email.refresh_from_db()
     assert email.status == EmailStatus.BOUNCED
+
+
+@pytest.mark.django_db
+def test_handle_tracking_handles_delivered() -> None:
+    email = Email.objects.create(
+        to="test@example.com", type=EmailType.task, message_id="test-message-id-123", status=EmailStatus.SENT
+    )
+
+    mock_event = mock.Mock()
+    mock_event.event_type = EventType.DELIVERED
+    mock_event.message_id = "test-message-id-123"
+
+    handle_tracking(sender=None, event=mock_event, esp_name="Amazon SES")
+
+    # Verify the Email record was updated
+    email.refresh_from_db()
+    assert email.status == EmailStatus.DELIVERED
+
+
+@pytest.mark.django_db
+def test_handle_tracking_handles_complained() -> None:
+    email = Email.objects.create(
+        to="test@example.com", type=EmailType.task, message_id="test-message-id-123", status=EmailStatus.SENT
+    )
+
+    mock_event = mock.Mock()
+    mock_event.event_type = EventType.COMPLAINED
+    mock_event.message_id = "test-message-id-123"
+
+    handle_tracking(sender=None, event=mock_event, esp_name="Amazon SES")
+
+    # Verify the Email record was updated
+    email.refresh_from_db()
+    assert email.status == EmailStatus.COMPLAINED
 
 
 @pytest.mark.django_db

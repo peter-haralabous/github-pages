@@ -1,6 +1,7 @@
 import logging
 
 from anymail.message import AnymailMessage
+from anymail.signals import EventType
 from anymail.signals import tracking
 from django.conf import settings
 from django.dispatch import receiver
@@ -102,7 +103,7 @@ def record_email_delivery(
 def handle_tracking(sender, event, esp_name, **kwargs):
     logger.info("Received email tracking event")
     if esp_name == "Amazon SES":
-        if event.event_type == "bounced":
+        if event.event_type == EventType.BOUNCED:
             logger.warning("Email bounced", extra={"reason": event.reject_reason, "message_id": event.message_id})
             email = Email.objects.get(message_id=event.message_id)
             email.status = EmailStatus.BOUNCED
@@ -112,6 +113,14 @@ def handle_tracking(sender, event, esp_name, **kwargs):
             if invitation:
                 invitation.status = InvitationStatus.FAILED
                 invitation.save(update_fields=["status"])
+        elif event.event_type == EventType.DELIVERED:
+            email = Email.objects.get(message_id=event.message_id)
+            email.status = EmailStatus.DELIVERED
+            email.save(update_fields=["status"])
+        elif event.event_type == EventType.COMPLAINED:
+            email = Email.objects.get(message_id=event.message_id)
+            email.status = EmailStatus.COMPLAINED
+            email.save(update_fields=["status"])
         else:
             logger.info("Unhandled tracking event", extra={"event": event.event_type})
     logger.info("Finished processing email tracking event")
