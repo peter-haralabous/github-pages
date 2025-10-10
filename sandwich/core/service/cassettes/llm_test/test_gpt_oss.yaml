@@ -1,0 +1,49 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "what is 1 + 1"}]}],
+        "system": [], "inferenceConfig": {}}'
+      headers:
+        Content-Length:
+          - '109'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTEwMTBUMjIyMTAxWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            YjM0Y2U3M2EtMGE5Mi00MDUzLTlhZDItMGY2M2FmOTE5Njdh
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.us-west-2.amazonaws.com/model/openai.gpt-oss-120b-1%3A0/converse
+    response:
+      body:
+        string:
+          "{\"metrics\":{\"latencyMs\":361},\"output\":{\"message\":{\"content\":[{\"reasoningContent\":{\"reasoningText\":{\"text\":\"The
+          user asks a simple math question: \\\"what is 1 + 1\\\". It's a direct question.
+          The answer is 2. Provide answer.\"}}},{\"text\":\"1\u202F+\u202F1\u202F=\u202F2.\"}],\"role\":\"assistant\"}},\"stopReason\":\"end_turn\",\"usage\":{\"inputTokens\":76,\"outputTokens\":51,\"serverToolUsage\":{},\"totalTokens\":127}}"
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '385'
+        Content-Type:
+          - application/json
+        Date:
+          - Fri, 10 Oct 2025 22:21:02 GMT
+        x-amzn-RequestId:
+          - a4712474-404e-4a75-8a2b-9254fd69129f
+      status:
+        code: 200
+        message: OK
+version: 1

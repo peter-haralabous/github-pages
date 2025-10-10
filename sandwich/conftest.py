@@ -42,3 +42,11 @@ def django_session_fixtures(fixtures: Iterable[str]):
             call_command("loaddata", *fixtures)
 
     return load_data
+
+
+@pytest.fixture(scope="module")
+def vcr_config():
+    return {
+        # strip sensitive headers by default
+        "filter_headers": [("Authorization", None), ("X-Amz-Security-Token", None)],
+    }

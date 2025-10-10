@@ -1,0 +1,48 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "what is 1 + 1"}]}],
+        "system": [], "inferenceConfig": {}}'
+      headers:
+        Content-Length:
+          - '109'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTEwMTBUMjIyMDU5Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            ZDFiZTA5ZmQtYThhOS00NGZkLWFhMGItMzY2MDlhYmM1ZTAz
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":2001},"output":{"message":{"content":[{"text":"1
+          + 1 = 2"}],"role":"assistant"}},"stopReason":"end_turn","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":15,"outputTokens":13,"serverToolUsage":{},"totalTokens":28}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '322'
+        Content-Type:
+          - application/json
+        Date:
+          - Fri, 10 Oct 2025 22:21:01 GMT
+        x-amzn-RequestId:
+          - 03e62b35-7f98-4020-a684-c849ad69dc80
+      status:
+        code: 200
+        message: OK
+version: 1
