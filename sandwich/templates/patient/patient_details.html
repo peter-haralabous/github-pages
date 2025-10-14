@@ -2,7 +2,69 @@
 
 {% block content %}
   <h2 class="mb-4">Hi {{ patient.full_name }}</h2>
-  <h3 class="mb-2">Tasks</h3>
+  <h3 class="my-2 flex items-center gap-2">
+    Documents
+    <button id="upload-btn" type="button" class="btn btn-sm btn-primary">Upload</button>
+    <form id="upload-form"
+          hx-post="{% url 'patients:document_upload' patient_id=patient.id %}"
+          hx-target="#documents-table-container"
+          hx-encoding="multipart/form-data"
+          class="hidden">
+      <input type="file" id="file-input" name="file" accept="application/pdf" />
+      {% csrf_token %}
+    </form>
+  </h3>
+  <div id="documents-table-container">{% include "patient/partials/documents_table.html" %}</div>
+  <div id="upload-status" class="mt-2 text-sm"></div>
+  <script nonce="{{ request.csp_nonce }}">
+    document.getElementById('upload-btn').addEventListener('click', () => {
+      document.getElementById('file-input').click()
+    });
+    document.getElementById('file-input').addEventListener('change', () => {
+      document.getElementById('upload-form').requestSubmit();
+    });
+
+    // Visual feedback for drag events
+    const tableContainer = document.getElementById('documents-table-container');
+    tableContainer.addEventListener('dragover', e => {
+      e.preventDefault();
+      tableContainer.children[0].classList.add('border-primary', 'bg-base-300');
+    });
+    tableContainer.addEventListener('dragleave', e => {
+      e.preventDefault();
+      tableContainer.children[0].classList.remove('border-primary', 'bg-base-300');
+    });
+    tableContainer.addEventListener('drop', e => {
+      e.preventDefault();
+      tableContainer.children[0].classList.remove('border-primary', 'bg-base-300');
+      const files = e.dataTransfer.files;
+      if (!files.length) return;
+      const file = files[0];
+      if (file.type !== 'application/pdf') {
+        document.getElementById('upload-status').textContent = 'Only PDF files are allowed.';
+        document.getElementById('upload-status').classList.add('text-error');
+        return;
+      }
+      const fileInput = document.getElementById('file-input');
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      fileInput.files = dataTransfer.files;
+      document.getElementById('upload-form').requestSubmit();
+    });
+    // htmx event handlers for status
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+      if (evt.detail.target.id === 'documents-table-container') {
+        document.getElementById('upload-status').textContent = 'Upload successful!';
+        document.getElementById('upload-status').classList.remove('text-error');
+      }
+    });
+    document.body.addEventListener('htmx:responseError', function(evt) {
+      document.getElementById('upload-status').textContent = 'Upload failed.';
+      document.getElementById('upload-status').classList.add('text-error');
+    });
+  </script>
+  {# NOTE: tasks are only relevant if this patient is linked with an organization #}
+  <h3 class="my-2">Tasks</h3>
   <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
     <table class="table">
       <thead>

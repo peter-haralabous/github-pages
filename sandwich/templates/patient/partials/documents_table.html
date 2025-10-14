@@ -1,0 +1,35 @@
+<div id="documents-table-wrapper"
+     class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  <table id="documents-table" class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Uploaded</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for document in documents %}
+        <tr>
+          <td>
+            <a href="{{ document.file.url }}" target="_blank" class="link">{{ document.file.name }}</a>
+          </td>
+          <td>{{ document.created_at }}</td>
+          <td>
+            <form hx-post="{% url 'patients:document_delete' patient_id=document.patient_id document_id=document.id %}"
+                  hx-target="#documents-table-wrapper"
+                  hx-swap="outerHTML"
+                  class="inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-xs btn-error">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3" class="text-center">No documents found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

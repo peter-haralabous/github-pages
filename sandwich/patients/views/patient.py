@@ -159,14 +159,22 @@ def patient_details(request: AuthenticatedHttpRequest, patient_id: int) -> HttpR
     logger.info("Accessing patient details", extra={"user_id": request.user.id, "patient_id": patient_id})
 
     patient = get_object_or_404(request.user.patient_set, id=patient_id)
+
+    # TODO-NG: page & sort these lists
     tasks = patient.task_set.all()
+    documents = patient.document_set.all()
 
     logger.debug(
         "Patient details loaded",
-        extra={"user_id": request.user.id, "patient_id": patient_id, "task_count": tasks.count()},
+        extra={
+            "user_id": request.user.id,
+            "patient_id": patient_id,
+            "task_count": tasks.count(),
+            "document_count": documents.count(),
+        },
     )
 
-    context = {"patient": patient, "tasks": tasks} | _patient_context(request, patient=patient)
+    context = {"patient": patient, "tasks": tasks, "documents": documents} | _patient_context(request, patient=patient)
     return render(request, "patient/patient_details.html", context)
 
 

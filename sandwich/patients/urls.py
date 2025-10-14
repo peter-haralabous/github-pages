@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .api import api
+from .views.document import delete
+from .views.document import upload
 from .views.home import home
 from .views.invitation import accept_invite
 from .views.patient import patient_add
@@ -18,5 +20,7 @@ urlpatterns = [
     path("patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
     path("invite/<str:token>/accept", accept_invite, name="accept_invite"),
     path("patient/<uuid:patient_id>/task/<uuid:task_id>", task, name="task"),
+    path("patient/<uuid:patient_id>/document/upload", upload, name="document_upload"),
+    path("patient/<uuid:patient_id>/document/<uuid:document_id>/delete/", delete, name="document_delete"),
     path("api/", api.urls, name="api"),
 ]

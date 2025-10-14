@@ -23,6 +23,8 @@ def test_patient_http_get_urls_return_status_200(db, user) -> None:
     exclude_url_names = [
         "home",  # Redirect
         "accept_invite",  # POST
+        "document_delete",  # POST
+        "document_upload",  # POST
         "task",  # POST
         "api-root",  # Ninja api routes below
         "openapi-json",
