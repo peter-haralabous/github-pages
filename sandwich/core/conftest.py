@@ -8,6 +8,13 @@ from sandwich.core.models import Patient
 from sandwich.core.models import Task
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.task import TaskStatus
+from sandwich.users.factories import UserFactory
+from sandwich.users.models import User
+
+
+@pytest.fixture
+def user_wo_consent(db) -> User:
+    return UserFactory.create(consent=None)
 
 
 @pytest.fixture

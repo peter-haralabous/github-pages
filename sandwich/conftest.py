@@ -5,6 +5,7 @@ import pytest
 from django.core.management import call_command
 
 from sandwich.core.factories import OrganizationFactory
+from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.models import Organization
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
@@ -20,7 +21,7 @@ def _media_storage(settings, tmpdir) -> None:
 
 @pytest.fixture
 def user(db) -> User:
-    return UserFactory.create()
+    return UserFactory.create(consents=ConsentMiddleware.required_policies)
 
 
 @pytest.fixture

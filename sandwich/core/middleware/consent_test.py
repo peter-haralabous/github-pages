@@ -12,40 +12,46 @@ from sandwich.users.models import User
 
 
 @pytest.fixture
-def privacy_consent(user: User) -> Consent:
-    return ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_PRIVACY_POLICY, decision=True)
+def privacy_consent(user_wo_consent: User) -> Consent:
+    return ConsentFactory.create(user=user_wo_consent, policy=ConsentPolicy.THRIVE_PRIVACY_POLICY, decision=True)
 
 
 @pytest.fixture
-def tou_consent(user: User) -> Consent:
-    return ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=True)
+def tou_consent(user_wo_consent: User) -> Consent:
+    return ConsentFactory.create(user=user_wo_consent, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=True)
 
 
 @pytest.fixture
-def tou_refusal(user: User) -> Consent:
-    return ConsentFactory.create(user=user, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=False)
+def tou_refusal(user_wo_consent: User) -> Consent:
+    return ConsentFactory.create(user=user_wo_consent, policy=ConsentPolicy.THRIVE_TERMS_OF_USE, decision=False)
 
 
-def test__has_consented_to_policies(privacy_consent: Consent, tou_consent: Consent, user: User) -> None:
-    assert _has_consented_to_policies(user, {ConsentPolicy.THRIVE_PRIVACY_POLICY}) is True
-    assert _has_consented_to_policies(user, {ConsentPolicy.THRIVE_TERMS_OF_USE}) is True
+def test__has_consented_to_policies(privacy_consent: Consent, tou_consent: Consent, user_wo_consent: User) -> None:
+    assert _has_consented_to_policies(user_wo_consent, {ConsentPolicy.THRIVE_PRIVACY_POLICY}) is True
+    assert _has_consented_to_policies(user_wo_consent, {ConsentPolicy.THRIVE_TERMS_OF_USE}) is True
     assert (
-        _has_consented_to_policies(user, {ConsentPolicy.THRIVE_PRIVACY_POLICY, ConsentPolicy.THRIVE_TERMS_OF_USE})
+        _has_consented_to_policies(
+            user_wo_consent, {ConsentPolicy.THRIVE_PRIVACY_POLICY, ConsentPolicy.THRIVE_TERMS_OF_USE}
+        )
         is True
     )
 
 
-def test__has_consented_to_policies_rejected(privacy_consent: Consent, tou_refusal: Consent, user: User) -> None:
-    assert _has_consented_to_policies(user, {ConsentPolicy.THRIVE_PRIVACY_POLICY}) is True
-    assert _has_consented_to_policies(user, {ConsentPolicy.THRIVE_TERMS_OF_USE}) is False
+def test__has_consented_to_policies_rejected(
+    privacy_consent: Consent, tou_refusal: Consent, user_wo_consent: User
+) -> None:
+    assert _has_consented_to_policies(user_wo_consent, {ConsentPolicy.THRIVE_PRIVACY_POLICY}) is True
+    assert _has_consented_to_policies(user_wo_consent, {ConsentPolicy.THRIVE_TERMS_OF_USE}) is False
     assert (
-        _has_consented_to_policies(user, {ConsentPolicy.THRIVE_PRIVACY_POLICY, ConsentPolicy.THRIVE_TERMS_OF_USE})
+        _has_consented_to_policies(
+            user_wo_consent, {ConsentPolicy.THRIVE_PRIVACY_POLICY, ConsentPolicy.THRIVE_TERMS_OF_USE}
+        )
         is False
     )
 
 
-def test_middleware(client: Client, user: User) -> None:
-    client.force_login(user)
+def test_middleware(client: Client, user_wo_consent: User) -> None:
+    client.force_login(user_wo_consent)
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
         client.get(reverse("core:home"))
@@ -54,19 +60,19 @@ def test_middleware(client: Client, user: User) -> None:
 
 def test_middleware_consented(
     client: Client,
-    user: User,
+    user_wo_consent: User,
     privacy_consent: Consent,
     tou_consent: Consent,
 ) -> None:
-    client.force_login(user)
+    client.force_login(user_wo_consent)
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
         client.get(reverse("core:home"))
         mock_handle_missing_consent.assert_not_called()
 
 
-def test_middleware_exempt(client: Client, user: User) -> None:
-    client.force_login(user)
+def test_middleware_exempt(client: Client, user_wo_consent: User) -> None:
+    client.force_login(user_wo_consent)
 
     with patch("sandwich.core.middleware.consent._handle_missing_consent") as mock_handle_missing_consent:
         client.get(reverse("core:healthcheck"))
