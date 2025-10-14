@@ -1,0 +1,15 @@
+<button id="error-back" class="btn btn-outline">Go Back</button>
+<a href="mailto:support@thrive.health" class="btn btn-primary">Email Support</a>
+<button id="error-reload" class="btn btn-outline">Try Again</button>
+<script nonce="{{ request.csp_nonce }}">
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#error-back').addEventListener('click', (e) => {
+      e.preventDefault();
+      history.back()
+    })
+    document.querySelector('#error-reload').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.reload();
+    })
+  })
+</script>

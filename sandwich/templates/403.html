@@ -1,40 +1,24 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="corporate">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Error 403 - Forbidden</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @keyframes float {
-        0%, 100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-      .float-animation {
-        animation: float 3s ease-in-out infinite;
-      }
-    </style>
-  </head>
-  <body class="bg-base-200 min-h-screen flex items-center justify-center">
-    <div class="text-center px-4">
-      <!-- Heroicon: lock-closed (outline) -->
-      <svg class="w-32 h-32 mx-auto text-base-content/10 float-animation" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-      </svg>
+{% extends 'base.html' %}
 
-      <h1 class="text-6xl font-bold text-base-content mt-8 mb-4">Error 403</h1>
-      <p class="text-xl text-base-content/70 mb-8">Access Denied. You don't have permission to view this page.</p>
-
-      <div class="flex flex-wrap gap-3 justify-center">
-        <button onclick="history.back()" class="btn btn-outline">Go Back</button>
-        <a href="mailto:support@thrive.health" class="btn btn-primary">Email Support</a>
-        <button onclick="location.reload()" class="btn btn-outline">Try Again</button>
-      </div>
-    </div>
-  </body>
-</html>
+{% block title %}
+  Error 403 - Forbidden
+{% endblock title %}
+{% block bodyclass %}
+  bg-base-200 min-h-screen flex items-center justify-center
+{% endblock bodyclass %}
+{% block body %}
+  <div class="text-center px-4">
+    <!-- Heroicon: lock-closed (outline) -->
+    <svg class="w-32 h-32 mx-auto text-base-content/10 float-animation"
+         xmlns="http://www.w3.org/2000/svg"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke-width="1.5"
+         stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+    </svg>
+    <h1 class="text-6xl font-bold text-base-content mt-8 mb-4">Error 403</h1>
+    <p class="text-xl text-base-content/70 mb-8">Access Denied. You don't have permission to view this page.</p>
+    <div class="flex flex-wrap gap-3 justify-center">{% include 'partials/error-options.html' %}</div>
+  </div>
+{% endblock body %}
