@@ -22,7 +22,7 @@ urlpatterns: list[URLResolver | URLPattern] = [
     # Anymail webhooks
     path("anymail/", include("anymail.urls")),
     # Your stuff: custom urls includes go here
-    path("", include("sandwich.core.urls")),
+    path("", include("sandwich.core.urls", namespace="core")),
     path("patients/", include("sandwich.patients.urls", namespace="patients")),
     path("providers/", include("sandwich.providers.urls", namespace="providers")),
     # Media files
