@@ -19,6 +19,7 @@ class PatientAccessMiddleware:
 
     _allowed_routes = [
         "patients:accept_invite",
+        "patients:consent",
         "patients:patient_onboarding_add",
     ]
     """These routes are allowed to be visited without the user having an associated patient yet."""

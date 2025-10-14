@@ -45,6 +45,7 @@ def test_patient_http_get_urls_return_status_200(db, user) -> None:
     }
 
     urls = [
+        (reverse("patients:consent"), "consent"),
         (reverse("patients:patient_add"), "patient_add"),
         (reverse("patients:patient_onboarding_add"), "patient_onboarding_add"),
         (reverse("patients:patient_details", kwargs={"patient_id": patient.pk}), "patient_details"),
@@ -57,4 +58,4 @@ def test_patient_http_get_urls_return_status_200(db, user) -> None:
         assert response.status_code == HTTPStatus.OK, f"URL {url_name} returned {response.status_code}"
         tested_patient_route_names.add(url_name)
 
-    assert found_patient_route_names == tested_patient_route_names
+    assert found_patient_route_names == tested_patient_route_names, "Did you add a route?"

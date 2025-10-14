@@ -1,0 +1,31 @@
+{% extends "layout/onboarding.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block component_content %}
+  <div class="text-center">
+    <h2>Your Consent Matters</h2>
+    <p>Please review how we use your data to provide our services.</p>
+  </div>
+  <hr />
+  <h3>Your Health Data</h3>
+  <p>
+    To provide you with personalized insights, summaries, and recommendations, Health Connect processes the health information you provide. This data is stored securely and is only used to power the features within your account.
+  </p>
+  <h3>Use of AI</h3>
+  <p>
+    We use advanced AI models to analyze your health records, generate summaries, and identify potential health recommendations. Your data is not used to train these models, and your personal information remains private.
+  </p>
+  <h3>Privacy and Security</h3>
+  <p>
+    We are committed to protecting your privacy. All your data is encrypted and stored following industry-best security practices. You are always in control of your information and can manage or delete it at any time.
+  </p>
+  <button class="btn btn-outline"
+          hx-get="https://www.thrive.health/privacynotice"
+          hx-push-url="true">Legal Privacy Policy</button>
+  <button class="btn btn-outline"
+          hx-get="https://www.thrive.health/terms"
+          hx-push-url="true">Legal Terms of Use</button>
+  <hr />
+  {% crispy form %}
+{% endblock component_content %}
