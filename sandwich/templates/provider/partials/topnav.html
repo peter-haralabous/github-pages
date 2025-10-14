@@ -3,25 +3,27 @@
 {% load static i18n %}
 
 {% block topnav_items_start %}
-  <a class="flex items-center gap-2 text-xl font-bold"
-     href="{% url 'providers:home' %}">
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="24"
-         height="24"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="1.5"
-         stroke-linecap="round"
-         stroke-linejoin="round"
-         class="size-6 text-primary"
-         aria-hidden="true">
-      <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-      <path d="M2.62 13.8A2.25 2.25 0 1 1 6 10.836a2.25 2.25 0 1 1 3.38 2.966l-2.626 2.856a.998.998 0 0 1-1.507 0z"></path>
-      <path d="M4 6.005V4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-1.9-1.376"></path>
-    </svg>
-    HealthConnect
-  </a>
+  <div class="flex items-center text-xl font-bold gap-2">
+    {# FIXME: Remove "secret" link once provider vs patient accounts delineated #}
+    <a href="{% url 'core:home' %}">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="1.5"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           class="size-6 text-primary"
+           aria-hidden="true">
+        <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+        <path d="M2.62 13.8A2.25 2.25 0 1 1 6 10.836a2.25 2.25 0 1 1 3.38 2.966l-2.626 2.856a.998.998 0 0 1-1.507 0z"></path>
+        <path d="M4 6.005V4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-1.9-1.376"></path>
+      </svg>
+    </a>
+    <a href="{% url 'providers:home' %}">HealthConnect</a>
+  </div>
 {% endblock topnav_items_start %}
 {% block topnav_items_center %}
   {# TODO: just show the opened command palette inline, instead of this fakery #}
