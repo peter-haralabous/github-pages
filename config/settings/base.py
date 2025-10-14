@@ -293,7 +293,7 @@ rum_host = "https://browser-intake-datadoghq.eu"
 report_uri = f"{rum_host}/api/v2/logs?{report_params}&ddtags={report_tags}"
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
-        "connect-src": [SELF, f"'{rum_host}/'"],
+        "connect-src": [SELF, f"{rum_host}/"],
         "default-src": [SELF],
         "frame-ancestors": [SELF],
         "report-uri": report_uri,
@@ -306,6 +306,7 @@ CONTENT_SECURITY_POLICY = {
             UNSAFE_HASHES,
             "'sha256-faU7yAF8NxuMTNEwVmBz+VcYeIoBQ2EMHW3WaVxCvnk='",  # htmx injects a <style> tag
         ],
+        "worker-src": [SELF, "blob:"],
     },
 }
 # EMAIL
