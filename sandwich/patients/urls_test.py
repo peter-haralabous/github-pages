@@ -50,6 +50,7 @@ def test_patient_http_get_urls_return_status_200(db, user) -> None:
         (reverse("patients:patient_onboarding_add"), "patient_onboarding_add"),
         (reverse("patients:patient_details", kwargs={"patient_id": patient.pk}), "patient_details"),
         (reverse("patients:patient_edit", kwargs={"patient_id": patient.pk}), "patient_edit"),
+        (reverse("patients:get_phn_validation"), "get_phn_validation"),
     ]
 
     tested_patient_route_names = set()

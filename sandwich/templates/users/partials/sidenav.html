@@ -4,7 +4,7 @@
   {% for patient in user_patients %}
     <li>
       <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
-         class="flex items-center justify-start w-full btn btn-ghost {% if request.resolver_match.url_name == 'patient_edit' %}btn-active{% endif %}">
+         class="flex items-center justify-start w-full btn btn-ghost {% if patient.id == request.resolver_match.kwargs.patient_id %}btn-active{% endif %}">
         <svg xmlns="http://www.w3.org/2000/svg"
              fill="none"
              viewBox="0 0 24 24"

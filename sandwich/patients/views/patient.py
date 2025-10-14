@@ -18,6 +18,8 @@ from django.urls import reverse
 from sandwich.core.models.patient import Patient
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
+from sandwich.core.validators.phn import clean_phn
+from sandwich.core.validators.phn import phn_attr_for_province
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -26,6 +28,13 @@ logger = logging.getLogger(__name__)
 class PatientEdit(forms.ModelForm[Patient]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.fields["province"].widget.attrs.update(
+            {
+                "hx-get": reverse("patients:get_phn_validation"),
+                "hx-target": "#div_id_phn",
+                "hx-trigger": "change",
+            }
+        )
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div("first_name", "last_name", css_class="flex gap-4"),
@@ -38,6 +47,18 @@ class PatientEdit(forms.ModelForm[Patient]):
     def clean_date_of_birth(self) -> date:
         dob = self.cleaned_data["date_of_birth"]
         return valid_date_of_birth(dob)
+
+    def clean_phn(self):
+        """Custom validation for the BC PHN field."""
+        province = self.cleaned_data.get("province")
+        phn = str(self.cleaned_data.get("phn"))
+        if not province or not phn:
+            return phn
+        cleaned_phn = clean_phn(province, phn)
+        if cleaned_phn is not None:
+            return cleaned_phn
+        error_message = "Invalid phn"
+        raise forms.ValidationError(error_message)
 
     class Meta:
         model = Patient
@@ -54,6 +75,13 @@ class PatientAdd(forms.ModelForm[Patient]):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.fields["province"].widget.attrs.update(
+            {
+                "hx-get": reverse("patients:get_phn_validation"),
+                "hx-target": "#div_id_phn",
+                "hx-trigger": "change",
+            }
+        )
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div("first_name", "last_name", css_class="flex gap-4"),
@@ -66,6 +94,18 @@ class PatientAdd(forms.ModelForm[Patient]):
     def clean_date_of_birth(self) -> date:
         dob = self.cleaned_data["date_of_birth"]
         return valid_date_of_birth(dob)
+
+    def clean_phn(self):
+        """Custom validation for the BC PHN field."""
+        province = self.cleaned_data.get("province")
+        phn = str(self.cleaned_data.get("phn"))
+        if not province or not phn:
+            return phn
+        cleaned_phn = clean_phn(province, phn)
+        if cleaned_phn is not None:
+            return cleaned_phn
+        error_message = "Invalid phn"
+        raise forms.ValidationError(error_message)
 
     def save(self, commit: bool = True, user: User | None = None) -> Patient:  # noqa: FBT001,FBT002
         instance = super().save(commit=False)
@@ -181,3 +221,23 @@ def patient_details(request: AuthenticatedHttpRequest, patient_id: int) -> HttpR
 def _patient_context(request: AuthenticatedHttpRequest, patient: Patient | None = None) -> dict[str, Any]:
     """Fetch additional template context required for patient context"""
     return {"patient": patient, "patients": request.user.patient_set.all()}
+
+
+@login_required
+def get_phn_validation(request: AuthenticatedHttpRequest) -> HttpResponse:
+    province = request.GET.get("province")
+
+    # Note: being used for patient add/onbboarding, might have to change
+    form = PatientEdit()
+
+    attrs = phn_attr_for_province(province)
+
+    # Update the attributes on the form
+    form.fields["phn"].widget.attrs.update(attrs)
+
+    logger.debug(
+        "Phn pattern results",
+        extra={"user_id": request.user.id, "attrs": form.fields["phn"].widget.attrs},
+    )
+
+    return render(request, "patient/partials/phn_input.html", {"form": form})

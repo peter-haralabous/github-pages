@@ -21,6 +21,7 @@ class PatientAccessMiddleware:
         "patients:accept_invite",
         "patients:consent",
         "patients:patient_onboarding_add",
+        "patients:get_phn_validation",
     ]
     """These routes are allowed to be visited without the user having an associated patient yet."""
 

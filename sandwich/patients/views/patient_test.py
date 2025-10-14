@@ -23,7 +23,7 @@ def test_patient_edit_post_updates_patient(db, user: User) -> None:
         "last_name": patient.last_name,
         "date_of_birth": patient.date_of_birth,
         "province": "BC",
-        "phn": patient.phn,
+        "phn": "9111111117",  # BC requires more specific PHN
     }
     response = client.post(url, data)
     assert response.status_code == HTTPStatus.FOUND
@@ -47,7 +47,7 @@ def test_patient_add(db, user: User) -> None:
         "last_name": "Newpatient",
         "date_of_birth": patient.date_of_birth,
         "province": "BC",
-        "phn": patient.phn,
+        "phn": "9111111117",  # BC requires more specific PHN
     }
     response = client.post(url, data)
     created_patient = Patient.objects.get(last_name="Newpatient", date_of_birth=patient.date_of_birth)
@@ -69,7 +69,7 @@ def test_patient_onboarding_add(db, user: User) -> None:
         "last_name": "Newpatient",
         "date_of_birth": patient.date_of_birth,
         "province": "BC",
-        "phn": patient.phn,
+        "phn": "9111111117",  # BC requires more specific PHN
     }
     response = client.post(url, data)
     created_patient = Patient.objects.get(last_name="Newpatient", date_of_birth=patient.date_of_birth)
@@ -107,6 +107,28 @@ def test_patient_onboarding_add(db, user: User) -> None:
             False,
             id="Fail: missing required field",
         ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+                "province": "BC",
+                "phn": "9111111117",
+            },
+            True,
+            id="Pass: BC phn is valid",
+        ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+                "province": "BC",
+                "phn": "9111111119",
+            },
+            False,
+            id="Fail: BC phn is not valid",
+        ),
     ],
 )
 def test_patient_edit_form(data: dict[str, Any], *, is_valid: bool) -> None:
@@ -142,6 +164,28 @@ def test_patient_edit_form(data: dict[str, Any], *, is_valid: bool) -> None:
             },
             False,
             id="Fail: missing required field",
+        ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+                "province": "BC",
+                "phn": "9111111117",
+            },
+            True,
+            id="Pass: BC phn is valid",
+        ),
+        pytest.param(
+            {
+                "first_name": "Tad",
+                "last_name": "Cooper",
+                "date_of_birth": "1961-11-11",
+                "province": "BC",
+                "phn": "9111111119",
+            },
+            False,
+            id="Fail: BC phn is not valid",
         ),
     ],
 )

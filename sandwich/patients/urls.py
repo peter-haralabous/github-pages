@@ -6,6 +6,7 @@ from .views.document import delete
 from .views.document import upload
 from .views.home import home
 from .views.invitation import accept_invite
+from .views.patient import get_phn_validation
 from .views.patient import patient_add
 from .views.patient import patient_details
 from .views.patient import patient_edit
@@ -25,4 +26,5 @@ urlpatterns = [
     path("patient/<uuid:patient_id>/document/upload", upload, name="document_upload"),
     path("patient/<uuid:patient_id>/document/<uuid:document_id>/delete/", delete, name="document_delete"),
     path("api/", api.urls, name="api"),
+    path("get_phn_validation/", get_phn_validation, name="get_phn_validation"),
 ]
