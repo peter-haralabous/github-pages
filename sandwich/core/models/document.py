@@ -16,7 +16,8 @@ class Document(BaseModel):
     patient = models.ForeignKey("Patient", on_delete=models.CASCADE)
 
     # this is DocumentReference.context in FHIR
-    encounter = models.ForeignKey("Encounter", on_delete=models.CASCADE)
+    # it will be null for patient-uploaded documents that weren't collected in response to a practitioner request
+    encounter = models.ForeignKey("Encounter", on_delete=models.CASCADE, null=True, blank=True)
 
     # there probably want to be more metadata fields here
     # - processing state
