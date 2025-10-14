@@ -20,12 +20,10 @@
   <p>
     We are committed to protecting your privacy. All your data is encrypted and stored following industry-best security practices. You are always in control of your information and can manage or delete it at any time.
   </p>
-  <button class="btn btn-outline"
-          hx-get="https://www.thrive.health/privacynotice"
-          hx-push-url="true">Legal Privacy Policy</button>
-  <button class="btn btn-outline"
-          hx-get="https://www.thrive.health/terms"
-          hx-push-url="true">Legal Terms of Use</button>
+  {% comment %}
+  <button class="btn btn-outline" hx-get="https://www.thrive.health/privacynotice" hx-push-url="true">Legal Privacy Policy</button>
+  <button class="btn btn-outline" hx-get="https://www.thrive.health/terms" hx-push-url="true">Legal Terms of Use</button>
+  {% endcomment %}
   <hr />
   {% crispy form %}
 {% endblock component_content %}
