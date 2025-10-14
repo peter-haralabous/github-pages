@@ -35,8 +35,9 @@ class PatientConsentForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
+        self.helper = FormHelper(self)
         self.helper.add_input(Submit("continue", "Continue", css_class="btn btn-primary w-full"))
+        self.helper.field_template = "form/field.html"  # type: ignore[assignment]
 
 
 @login_required

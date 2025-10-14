@@ -52,3 +52,30 @@
 .float-animation {
   animation: float 3s ease-in-out infinite;
 }
+
+@layer utility {
+  /* Fix alignment on checkboxes */
+  .checkbox_wrapper {
+    div {
+      display: grid;
+      grid-template-columns: 0fr 1fr;
+      grid-template-rows: 0fr 0fr;
+
+      input {
+        margin-right: 0.5em;
+        grid-column: 1;
+        grid-row: 1 / 2;
+      }
+
+      label {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      small {
+        grid-column: 2;
+        grid-row: 2;
+      }
+    }
+  }
+}
