@@ -13,7 +13,7 @@ urlpatterns: list[URLResolver | URLPattern] = [
     path("accounts/", include("allauth.urls")),
     path("accounts/", include("allauth.socialaccount.urls")),
     # Anymail webhooks
-    path("anymail/", include("anymail.urls")),
+    path("anymail/", include("anymail.urls", namespace="anymail")),
     path("patients/", include("sandwich.patients.urls", namespace="patients")),
     path("providers/", include("sandwich.providers.urls", namespace="providers")),
     path("", include("sandwich.core.urls", namespace="core")),
