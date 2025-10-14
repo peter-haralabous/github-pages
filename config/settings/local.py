@@ -52,6 +52,10 @@ from .base import env
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
+SERVE_DJDT = True
+SERVE_ERROR_VIEWS = True
+SERVE_MEDIA = True
+
 ENVIRONMENT = "local"
 APP_URL = "http://localhost:3000"
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
