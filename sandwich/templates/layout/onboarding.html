@@ -2,6 +2,8 @@
 
 {% block main %}
   <div class="min-h-screen grid grid-rows-[1fr_min-content] items-center justify-center px-4 md:px-0 py-10">
+    {% block component_logo %}
+    {% endblock component_logo %}
     <div class="prose max-w-{% block component_max_width %}xl{% endblock component_max_width %} w-full p-6 md:p-8 bg-white rounded-none md:rounded-lg shadow-none sm:shadow-lg border border-neutral-200">
       <div class="flex flex-col items-center text-center mb-6">
         {% block component_icon %}
