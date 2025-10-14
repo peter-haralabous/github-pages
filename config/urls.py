@@ -1,4 +1,6 @@
+import private_storage.urls
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern
 from django.urls import URLResolver
@@ -18,8 +20,13 @@ urlpatterns: list[URLResolver | URLPattern] = [
     path("patients/", include("sandwich.patients.urls", namespace="patients")),
     path("providers/", include("sandwich.providers.urls", namespace="providers")),
     path("", include("sandwich.core.urls", namespace="core")),
+    # NO NAMESPACE; private_storage doesn't support; bad private_storage
+    path("private-media/", include(private_storage.urls)),
 ]
 
+# in production files live in S3 and this route doesn't exist
+if settings.SERVE_MEDIA:
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
 
 if settings.SERVE_DJDT:
     import debug_toolbar

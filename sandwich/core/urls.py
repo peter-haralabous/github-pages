@@ -1,8 +1,5 @@
-import private_storage.urls
 from django.conf import settings
-from django.conf.urls.static import static
 from django.templatetags.static import static as resolve_static
-from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import RedirectView
@@ -18,7 +15,6 @@ urlpatterns = [
     path("healthcheck/", healthcheck.healthcheck, name="healthcheck"),
     path("delete-account/", account_delete, name="account_delete"),
     path("legal/", legal_view, name="legal"),
-    path("private-media/", include(private_storage.urls)),
     path("favicon.ico", RedirectView.as_view(url=resolve_static("images/favicons/favicon.ico"))),
 ]
 
@@ -44,6 +40,3 @@ if settings.SERVE_ERROR_VIEWS:
         ),
         path("500/", default_views.server_error),
     ]
-
-if settings.SERVE_MEDIA:
-    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
