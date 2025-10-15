@@ -1,0 +1,25 @@
+{% extends "users/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h1 class="mb-6">Notifications Settings</h1>
+  <form hx-post="{% url 'core:account_notifications' %}"
+        hx-trigger="change"
+        hx-swap="none"
+        hx-sync="this:replace"
+        hx-push-url="false">
+    {% csrf_token %}
+    <fieldset class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
+      <legend class="fieldset-legend">Marketing emails and promotional offers</legend>
+      <label class="label" for="decision">
+        <input type="checkbox"
+               name="decision"
+               class="toggle toggle-primary"
+               {% if decision %}checked="checked"{% endif %} />
+        Receive updates around new features, tips, and special offers
+      </label>
+    </fieldset>
+  </form>
+{% endblock content %}

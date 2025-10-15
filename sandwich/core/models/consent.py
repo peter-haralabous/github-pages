@@ -20,6 +20,9 @@ class ConsentManager(models.Manager["Consent"]):
         """
         return self.filter(user=user).order_by("policy", "-date").distinct("policy")
 
+    def latest_for_user_policy(self, user: User, policy: ConsentPolicy) -> "Consent | None":
+        return self.filter(user=user, policy=policy).order_by("-date").first()
+
 
 class Consent(BaseModel):
     """

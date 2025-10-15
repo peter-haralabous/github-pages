@@ -8,12 +8,14 @@ from django.views.generic import TemplateView
 from sandwich.core.views import healthcheck
 from sandwich.core.views.account import account_delete
 from sandwich.core.views.legal import legal_view
+from sandwich.core.views.notifications import account_notifications
 
 app_name = "core"
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path("healthcheck/", healthcheck.healthcheck, name="healthcheck"),
     path("delete-account/", account_delete, name="account_delete"),
+    path("notifications", account_notifications, name="account_notifications"),
     path("legal/", legal_view, name="legal"),
     path("favicon.ico", RedirectView.as_view(url=resolve_static("images/favicons/favicon.ico"))),
 ]

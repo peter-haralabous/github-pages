@@ -1,10 +1,13 @@
-{% if messages %}
-  {% for message in messages %}
-    {# djlint:off #}
-    <message-alert
-      tags="{% if message.tags %}{{ message.tags }}{% endif %}"
-    {# djlint:on #}
-    message="{{ message }}">
-    </message-alert>
-  {% endfor %}
-{% endif %}
+{% comment %}
+The hx-swap-oob here means that you can respond from the server with just this
+template, and it will append the new messages to the div#messages with the new
+ones from the server. Use that behaviour when you want the application to only
+'toast' a response.
+{% endcomment %}
+<div id="messages" hx-swap-oob="beforeend">
+  {% if messages %}
+    {% for message in messages %}
+      {% include 'partials/message_item.html' %}
+    {% endfor %}
+  {% endif %}
+</div>
