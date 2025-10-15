@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.users.models import User
@@ -20,9 +21,6 @@ class ConsentManager(models.Manager["Consent"]):
         """
         return self.filter(user=user).order_by("policy", "-date").distinct("policy")
 
-    def latest_for_user_policy(self, user: User, policy: ConsentPolicy) -> "Consent | None":
-        return self.filter(user=user, policy=policy).order_by("-date").first()
-
 
 class Consent(BaseModel):
     """
@@ -41,6 +39,6 @@ class Consent(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     policy = models.CharField(max_length=255, choices=ConsentPolicy)
     decision = models.BooleanField()  # in FHIR this is "deny"/"permit" as a string code
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
 
     objects = ConsentManager()
