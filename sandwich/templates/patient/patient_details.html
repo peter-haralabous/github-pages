@@ -64,26 +64,28 @@
     });
   </script>
   {# NOTE: tasks are only relevant if this patient is linked with an organization #}
-  {% if tasks.length > 0 %}
-    <h3 class="mb-2">Tasks</h3>
-    {% for task in tasks %}
-      <div class="card card-border bg-base-100 rounded-2xl">
-        <div class="card-body">
-          <h2 class="card-title">{{ task.name }}</h2>
-          {% if task.active %}
-            <div class="badge badge-outline badge-success">Active</div>
-          {% else %}
-            <div class="badge badge-outline badge-error">Inactive</div>
-          {% endif %}
-          <p>Assigned on {{ task.created_at }}</p>
-          {% if task.ended_at %}<p>Complated on {{ task.ended_at }}</p>{% endif %}
-          <div class="card-actions justify-end">
-            <a href="{% url " patients:task" patient_id=task.patient_id task_id=task.id %}"
-               class="btn btn-primary">Go to
-            task</a>
+  {% if tasks %}
+    <h3 class="my-4">Tasks</h3>
+    <div class="flex space-y-4 flex-col">
+      {% for task in tasks %}
+        <div class="card card-border bg-base-100 rounded-2xl w-full">
+          <div class="card-body">
+            <h2 class="card-title">{{ task.name }}</h2>
+            {% if task.active %}
+              <div class="badge badge-outline badge-success">Active</div>
+            {% else %}
+              <div class="badge badge-outline badge-error">Inactive</div>
+            {% endif %}
+            <p>Assigned on {{ task.created_at }}</p>
+            {% if task.ended_at %}<p>Complated on {{ task.ended_at }}</p>{% endif %}
+            <div class="card-actions justify-end">
+              <a href="{% url "patients:task" patient_id=task.patient_id task_id=task.id %}"
+                 class="btn btn-primary">Go to
+              task</a>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   {% endif %}
 {% endblock content %}
