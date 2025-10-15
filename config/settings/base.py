@@ -399,6 +399,13 @@ SOCIALACCOUNT_ADAPTER = "sandwich.users.adapters.SocialAccountAdapter"
 SOCIALACCOUNT_FORMS = {"signup": "sandwich.users.forms.UserSocialSignupForm"}
 
 
+# django-guardian
+# ------------------------------------------------------------------------------
+GUARDIAN_MONKEY_PATCH_USER = (
+    False  # https://django-guardian.readthedocs.io/en/latest/userguide/custom-user-model#custom-user-model
+)
+
+
 # django-webpack-loader
 # ------------------------------------------------------------------------------
 WEBPACK_LOADER = {

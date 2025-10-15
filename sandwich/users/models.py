@@ -7,13 +7,14 @@ from django.db.models import CharField
 from django.db.models import EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from guardian.mixins import GuardianUserMixin
 
 from .managers import UserManager
 
 logger = logging.getLogger(__name__)
 
 
-class User(AbstractUser):
+class User(AbstractUser, GuardianUserMixin):
     """
     Default custom user model for sandwich.
     If adding fields that need to be filled at user signup,
