@@ -1,10 +1,8 @@
 {% extends "base_left_nav.html" %}
 
+{% block topnav %}
+  {% include 'patient/partials/topnav.html' %}
+{% endblock topnav %}
 {% block nav_items %}
   <a class="btn btn-ghost" href="{% url 'patients:home' %}">Home</a>
 {% endblock nav_items %}
-{% block main %}
-  {% include "patient/partials/switcher.html" %}
-  {% block content %}
-  {% endblock content %}
-{% endblock main %}

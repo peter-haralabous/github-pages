@@ -119,6 +119,14 @@ class Patient(BaseModel):
             GinIndex(fields=["search_vector"]),
         ]
 
+    def initials(self) -> str:
+        """
+        1 or 2-letter abbreviation for the Patient, to be used in places like avatars.
+        """
+        return (
+            (self.first_name[0] if self.first_name else "") + (self.last_name[0] if self.last_name else "")
+        ).upper()
+
     @property
     def full_name(self) -> str:
         return f"{self.first_name} {self.last_name}"

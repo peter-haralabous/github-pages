@@ -13,8 +13,10 @@
       {% endblock topnav %}
       <div class="p-6">
         {% include 'partials/messages.html' %}
-        {% block content %}
-        {% endblock content %}
+        {% block main %}
+          {% block content %}
+          {% endblock content %}
+        {% endblock main %}
       </div>
     </div>
   </div>

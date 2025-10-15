@@ -18,7 +18,10 @@
           </div>
         </div>
         <ul tabindex="0"
-            class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+            class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 min-w-52 p-2 shadow">
+          <li class="menu-title pointer-events-none">
+            <div class="text-xs">{{ user.email }}</div>
+          </li>
           <li>
             <a href="{% url 'account_email' %}">{% translate "Settings" %}</a>
           </li>

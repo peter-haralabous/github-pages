@@ -34,3 +34,20 @@ def test_patient_search() -> None:
     # punctuation shouldn't throw an error
     assert search("'steve") == []
     assert search("-steve") == []
+
+
+def test_initials() -> None:
+    p = Patient(first_name="John", last_name="Doe")
+    assert p.initials() == "JD"
+
+    p = Patient(first_name="Alice", last_name="Smith")
+    assert p.initials() == "AS"
+
+    p = Patient(first_name="Bob", last_name="")
+    assert p.initials() == "B"
+
+    p = Patient(first_name="", last_name="Brown")
+    assert p.initials() == "B"
+
+    p = Patient(first_name="", last_name="")
+    assert p.initials() == ""
