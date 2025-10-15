@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.document import Document
+from sandwich.users.models import User
 
 
 class SourceTypes(models.TextChoices):
@@ -49,6 +50,24 @@ class Provenance(BaseModel):
         default="",
         help_text="The name of the tool or LLM used for extraction.",
     )
+    user = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text="The user who created the text, if source_type is TEXT.",
+    )
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    models.Q(source_type=SourceTypes.TEXT, user__isnull=False)
+                    | ~models.Q(source_type=SourceTypes.TEXT)
+                ),
+                name="user_required_for_text_source",
+            )
+        ]
 
     def __str__(self) -> str:
         doc_str = self.document.pk if self.document else "N/A"
