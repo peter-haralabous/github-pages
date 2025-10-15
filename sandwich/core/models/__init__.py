@@ -9,6 +9,7 @@ from .invitation import Invitation
 from .organization import Organization
 from .patient import Patient
 from .predicate import Predicate
+from .provenance import Provenance
 from .task import Task
 from .template import Template
 
@@ -24,6 +25,7 @@ __all__ = [
     "Organization",
     "Patient",
     "Predicate",
+    "Provenance",
     "Task",
     "Template",
 ]
