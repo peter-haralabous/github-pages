@@ -12,6 +12,13 @@ from sandwich.core.models import Task
 from sandwich.core.models import Template
 
 
+@admin.register(Consent)
+class ConsentAdmin(admin.ModelAdmin):
+    list_display = ("user", "policy", "decision")
+    search_fields = ("user__email", "policy")
+    list_filter = ("policy", "decision", "created_at", "updated_at")
+
+
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
     list_display = ("to", "status", "created_at", "updated_at")
@@ -39,5 +46,5 @@ class TemplateAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [Consent, Document, Encounter, FormioSubmission, Invitation, Patient, Task],
+    [Document, Encounter, FormioSubmission, Invitation, Patient, Task],
 )
