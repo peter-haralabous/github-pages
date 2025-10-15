@@ -4,7 +4,7 @@ template, and it will append the new messages to the div#messages with the new
 ones from the server. Use that behaviour when you want the application to only
 'toast' a response.
 {% endcomment %}
-<div id="messages" hx-swap-oob="beforeend">
+<div class="toast toast-end" id="messages" hx-swap-oob="beforeend">
   {% if messages %}
     {% for message in messages %}
       {% include 'partials/message_item.html' %}
