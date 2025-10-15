@@ -29,7 +29,7 @@ class PatientConsentForm(forms.Form):
     )
     marketing = forms.BooleanField(
         required=False,
-        label="Stay up to date (Optional))",
+        label="Stay up to date (Optional)",
         help_text="Receive occasional emails such as updates on features, tips, and promotional content",
     )
 
