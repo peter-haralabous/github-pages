@@ -1,28 +1,22 @@
-# ruff: noqa: TC006
-
-from typing import cast
-
 import pytest
 from guardian.shortcuts import assign_perm
 
 from sandwich.core.factories import OrganizationFactory
-from sandwich.core.models.organization import Organization
 from sandwich.users.factories import UserFactory
-from sandwich.users.models import User
 
 
 @pytest.mark.django_db
 def test_object_permissions_no_perms() -> None:
-    user = cast(User, UserFactory())
-    organization = cast(Organization, OrganizationFactory())
+    user = UserFactory.create()
+    organization = OrganizationFactory.create()
 
     assert user.has_perm("change_organization", organization) is False
 
 
 @pytest.mark.django_db
 def test_object_permissions_assign_perms() -> None:
-    user = cast(User, UserFactory())
-    organization = cast(Organization, OrganizationFactory())
+    user = UserFactory.create()
+    organization = OrganizationFactory.create()
 
     assign_perm("change_organization", user, organization)
     assert user.has_perm("change_organization", organization)
@@ -33,10 +27,10 @@ def test_object_permissions_assign_perms() -> None:
 
 @pytest.mark.django_db
 def test_object_permissions_specific_to_object() -> None:
-    user_a = cast(User, UserFactory())
-    user_b = cast(User, UserFactory())
-    organization_a = cast(Organization, OrganizationFactory())
-    organization_b = cast(Organization, OrganizationFactory())
+    user_a = UserFactory.create()
+    user_b = UserFactory.create()
+    organization_a = OrganizationFactory.create()
+    organization_b = OrganizationFactory.create()
 
     # user_a is given permissions for org_a
     assign_perm("change_organization", user_a, organization_a)
