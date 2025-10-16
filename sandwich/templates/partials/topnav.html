@@ -25,10 +25,23 @@
           </div>
           <ul tabindex="0"
               class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 min-w-52 p-2 shadow">
-            <li class="menu-title pointer-events-none">
-              {% block avatar_menu_title %}
-                <div class="text-xs">{{ user.email }}</div>
-              {% endblock avatar_menu_title %}
+            <li>
+              <a href="{% url "core:switcher" %}">
+                <div class="flex-col">
+                  {% block avatar_menu_title %}
+                    Switch context
+                  {% endblock avatar_menu_title %}
+                  <div class="text-xs text-secondary">{{ user.email }}</div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="1.5"
+                     stroke="currentColor"
+                     class="size-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                </svg>
+              </a>
             </li>
             <li>
               <a href="{% url 'account_email' %}">{% translate "Settings" %}</a>

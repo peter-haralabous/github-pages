@@ -1,10 +1,11 @@
 from django.conf import settings
+from django.http import HttpRequest
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils import timezone
 
 
-def healthcheck(request):
+def healthcheck(request: HttpRequest):
     """
     Healthcheck endpoint.
     """

@@ -8,11 +8,5 @@
   {% endif %}
 {% endblock avatar_initials %}
 {% block avatar_menu_title %}
-  {% if patient %}
-    {# TODO: patient switcher #}
-    <div class="text-base-content">{{ patient.full_name }}</div>
-    <div class="text-xs">{{ user.email }}</div>
-  {% else %}
-    <div class="text-xs">{{ user.email }}</div>
-  {% endif %}
+  {% if patient %}{{ patient.full_name }}{% endif %}
 {% endblock avatar_menu_title %}
