@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.models import Group
 from django.db.models import QuerySet
+from guardian.shortcuts import assign_perm
 
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.role import Role
@@ -29,14 +30,36 @@ def get_provider_organizations(user: User) -> QuerySet[Organization]:
     return organizations
 
 
-def create_default_roles(organization: Organization) -> None:
+# TODO: Add org role permissions
+DEFAULT_ORGANIZATION_ROLES: dict[str, list[str]] = {
+    RoleName.OWNER: [
+        "view_organization",
+        "change_organization",
+        "delete_organization",
+    ],
+    RoleName.ADMIN: [
+        "view_organization",
+        "change_organization",
+    ],
+    RoleName.STAFF: [
+        "view_organization",
+    ],
+    RoleName.PATIENT: ["view_organization"],
+}
+
+
+def create_default_roles_and_perms(organization: Organization) -> None:
     logger.info("Creating default roles for organization", extra={"organization_id": organization.id})
 
     created_roles = []
-    for role_name in [RoleName.OWNER, RoleName.STAFF, RoleName.PATIENT]:
+    for role_name, org_perms in DEFAULT_ORGANIZATION_ROLES.items():
         group = Group.objects.create(name=f"{role_name}_{organization.id}")
         role = Role.objects.create(organization=organization, name=role_name, group=group)
         created_roles.append(role_name)
+
+        for perm in org_perms:
+            assign_perm(perm, group, organization)
+
         logger.debug(
             "Created role for organization",
             extra={

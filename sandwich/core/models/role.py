@@ -15,6 +15,7 @@ class RoleName:
     """
 
     OWNER = "owner"
+    ADMIN = "admin"
     STAFF = "staff"
     PATIENT = "patient"
 

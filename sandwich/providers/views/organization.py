@@ -14,12 +14,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from django_jsonform.widgets import JSONFormWidget
 from django_pydantic_field.forms import SchemaField
+from guardian.decorators import permission_required_or_403
 
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.organization import PatientStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
-from sandwich.core.service.organization_service import create_default_roles
+from sandwich.core.service.organization_service import create_default_roles_and_perms
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
@@ -51,8 +52,9 @@ class OrganizationAdd(forms.ModelForm[Organization]):
 
 
 # The JSONFormWidget for PatientStatuses uses this method for style
-@csp_update({"style-src-attr": UNSAFE_INLINE})  # type:ignore[arg-type]
+@csp_update({"style-src-attr": UNSAFE_INLINE})
 @login_required
+@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
 def organization_edit(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
     logger.info("Accessing organization edit", extra={"user_id": request.user.id, "organization_id": organization_id})
 
@@ -92,6 +94,8 @@ def organization_edit(request: AuthenticatedHttpRequest, organization_id: int) -
     return render(request, "provider/organization_edit.html", context)
 
 
+# TODO(MM): Add permissions -- for now we'll leave this unchecked so any role
+# can create an org to test
 @login_required
 def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
     logger.info("Accessing organization add", extra={"user_id": request.user.id})
@@ -105,7 +109,7 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
                 "Organization created successfully",
                 extra={"user_id": request.user.id, "organization_id": organization.id},
             )
-            create_default_roles(organization)
+            create_default_roles_and_perms(organization)
             assign_organization_role(organization, RoleName.OWNER, request.user)
             logger.debug(
                 "User assigned as organization owner",

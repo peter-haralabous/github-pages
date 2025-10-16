@@ -1,6 +1,41 @@
 import pytest
+from django.test import Client
+from django.urls import reverse
 
+from sandwich.core.models.organization import Organization
+from sandwich.core.models.organization import VerificationType
+from sandwich.core.models.role import RoleName
+from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.providers.views.organization import OrganizationAdd
+from sandwich.users.models import User
+
+
+@pytest.mark.django_db
+def test_organization_edit(user: User, organization: Organization) -> None:
+    assign_organization_role(organization, RoleName.OWNER, user)
+
+    client = Client()
+    client.force_login(user)
+    url = reverse("providers:organization_edit", kwargs={"organization_id": organization.id})
+    data = {"name": "new org name", "verification_type": VerificationType.DATE_OF_BIRTH}
+    res = client.post(url, data)
+
+    assert res.status_code == 302
+    organization.refresh_from_db()
+    assert organization.name == "new org name"
+
+
+@pytest.mark.django_db
+def test_organization_edit_deny_access(user: User, organization: Organization) -> None:
+    assign_organization_role(organization, RoleName.PATIENT, user)
+
+    client = Client()
+    client.force_login(user)
+    url = reverse("providers:organization_edit", kwargs={"organization_id": organization.id})
+    data = {"name": "new org name", "verification_type": VerificationType.DATE_OF_BIRTH}
+    res = client.post(url, data)
+
+    assert res.status_code == 403
 
 
 @pytest.mark.django_db

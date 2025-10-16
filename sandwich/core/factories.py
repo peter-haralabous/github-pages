@@ -7,7 +7,7 @@ from sandwich.core.models import Organization
 from sandwich.core.models import Patient
 from sandwich.core.models import Template
 from sandwich.core.models.consent import ConsentPolicy
-from sandwich.core.service.organization_service import create_default_roles
+from sandwich.core.service.organization_service import create_default_roles_and_perms
 
 
 class ConsentFactory(DjangoModelFactory[Consent]):
@@ -30,7 +30,7 @@ class OrganizationFactory(DjangoModelFactory[Organization]):
 
     @factory.post_generation
     def create_roles(self: Organization, create, extracted, **kwargs):
-        create_default_roles(self)
+        create_default_roles_and_perms(self)
 
 
 class PatientFactory(DjangoModelFactory[Patient]):
