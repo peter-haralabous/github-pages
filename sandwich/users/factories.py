@@ -40,7 +40,7 @@ class UserFactory(DjangoModelFactory[User]):
 
     @post_generation
     def consents(self, create: bool, extracted: Sequence[Any], **kwargs):  # noqa: FBT001
-        if extracted:
+        if create and extracted:
             record_consent(user=self, decisions=dict.fromkeys(extracted, True))  # type: ignore[arg-type]
 
     @classmethod
