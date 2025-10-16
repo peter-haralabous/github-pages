@@ -8,21 +8,37 @@ from sandwich.core.models.entity import EntityType
 
 @pytest.mark.django_db
 def test_entity_unique_patient_id():
-    # Create a Patient entity with patient_id in metadata
+    # Create an entity with a patient_id in metadata
     e1 = Entity.objects.create(type=EntityType.PATIENT, metadata={"patient_id": "abc"})
     assert e1.pk is not None
 
-    # Creating another Patient entity with the same patient_id should fail
+    # Creating another entity with the same patient_id should fail
     with pytest.raises(IntegrityError), transaction.atomic():
         Entity.objects.create(type=EntityType.PATIENT, metadata={"patient_id": "abc"})
 
-    # Creating another Patient entity with a different patient_id should succeed
+    # Creating another entity with a different patient_id should succeed
     e2 = Entity.objects.create(type=EntityType.PATIENT, metadata={"patient_id": "def"})
     assert e2.pk is not None
 
-    # Creating a Patient entity without patient_id in metadata should succeed
+    # Creating an entity without patient_id in metadata should succeed
     e3 = Entity.objects.create(type=EntityType.PATIENT, metadata={})
     assert e3.pk is not None
+
+
+@pytest.mark.django_db
+def test_entity_non_patient_no_constraint():
+    # Non-Patient entities: patient_id can be duplicated
+    # Although this probably won't occur in practice,
+    # we want to ensure that the constraint only applies to Patient entities.
+    e1 = Entity.objects.create(type=EntityType.CONDITION, metadata={"patient_id": "abc"})
+    e2 = Entity.objects.create(type=EntityType.CONDITION, metadata={"patient_id": "abc"})
+    assert e1.pk is not None
+    assert e2.pk is not None
+
+    e3 = Entity.objects.create(type=EntityType.MEDICATION, metadata={"patient_id": "abc"})
+    e4 = Entity.objects.create(type=EntityType.MEDICATION, metadata={"patient_id": "abc"})
+    assert e3.pk is not None
+    assert e4.pk is not None
 
 
 @pytest.mark.django_db
