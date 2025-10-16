@@ -9,6 +9,7 @@ from sandwich.core.factories import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.models import Organization
 from sandwich.core.models.patient import Patient
+from sandwich.core.util.testing import UserRequestFactory
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
@@ -19,6 +20,11 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 @pytest.fixture(autouse=True)
 def _media_storage(settings, tmpdir) -> None:
     settings.MEDIA_ROOT = tmpdir.strpath
+
+
+@pytest.fixture
+def urf() -> UserRequestFactory:
+    return UserRequestFactory()
 
 
 @pytest.fixture

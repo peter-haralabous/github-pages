@@ -1,8 +1,16 @@
+from django.contrib.auth.models import AnonymousUser
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpRequest
 from django.urls import ResolverMatch
 from django.urls import resolve
 
 from sandwich.users.models import User
+
+
+class UserHttpRequest(WSGIRequest):
+    """If your view function is NOT decorated with @login_required, use this type for the request parameter."""
+
+    user: User | AnonymousUser
 
 
 # https://github.com/typeddjango/django-stubs#how-can-i-create-a-httprequest-thats-guaranteed-to-have-an-authenticated-user
