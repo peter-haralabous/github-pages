@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import URLPattern
 from django.urls import URLResolver
 from django.urls import get_resolver
+from django.views.generic import View
 from ninja.operation import PathView
 
 
@@ -34,13 +36,37 @@ def is_login_required(view_callback):
     # Case 2: Class-Based View
     if hasattr(view_callback, "view_class"):
         view_class = view_callback.view_class
-        return issubclass(view_class, LoginRequiredMixin)
+        if issubclass(view_class, LoginRequiredMixin):
+            return True
 
     # Case 3: Function-Based View
     # This relies on an implementation detail of the @login_required decorator.
     # It wraps the view in a function that has a 'login_url' attribute.
     # This also detects @permission_required, as it uses the same underlying decorator.
     return hasattr(view_callback, "login_url")
+
+
+def test_is_login_required():
+    class ExampleClassBasedView(View):
+        pass
+
+    class ExampleLoginRequiredClassBasedView(LoginRequiredMixin, View):
+        pass
+
+    decorated_class_based_view = login_required(ExampleClassBasedView.as_view())
+
+    def function_based_view(request):
+        pass
+
+    @login_required
+    def decorated_function_based_view(request):
+        pass
+
+    assert is_login_required(ExampleClassBasedView.as_view()) is False
+    assert is_login_required(ExampleLoginRequiredClassBasedView.as_view()) is True
+    assert is_login_required(decorated_class_based_view) is True
+    assert is_login_required(function_based_view) is False
+    assert is_login_required(decorated_function_based_view) is True
 
 
 def test_all_routes_are_authenticated():
