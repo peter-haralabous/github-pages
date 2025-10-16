@@ -34,7 +34,7 @@ class Entity(BaseModel):
             models.UniqueConstraint(
                 models.F("metadata__patient_id"),
                 name="unique_patient_id_in_metadata",
-                condition=models.Q(metadata__has_key="patient_id"),
+                condition=(models.Q(metadata__has_key="patient_id") & models.Q(type=EntityType.PATIENT.value)),
             )
         ]
 
