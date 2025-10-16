@@ -38,7 +38,12 @@ class UserFactory(DjangoModelFactory[User]):
         if extracted:
             record_consent(user=self, decisions=dict.fromkeys(extracted, True))  # type: ignore[arg-type]
 
+    @classmethod
+    def _after_postgeneration(cls, instance, create, results=None):
+        if create:
+            # Persist any in-place modifications made by post-generation hooks.
+            instance.save()
+
     class Meta:
         model = User
         django_get_or_create = ["email"]
-        skip_postgeneration_save = False
