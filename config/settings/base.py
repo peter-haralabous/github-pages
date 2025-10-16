@@ -254,6 +254,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "sandwich.core.context_processors.settings_context",
                 "sandwich.core.context_processors.patients_context",
+                "sandwich.core.context_processors.providers_context",
                 "sandwich.users.context_processors.allauth_settings",
             ],
         },

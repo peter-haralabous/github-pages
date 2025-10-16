@@ -1,22 +1,52 @@
 {% extends 'partials/sidenav.html' %}
 
 {% block sidenav-items %}
-  {% for patient in user_patients %}
+  {% if user_patients %}
     <li>
-      <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
-         class="flex items-center justify-start w-full btn btn-ghost {% if patient.id == request.resolver_match.kwargs.patient_id %}btn-active{% endif %}">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             fill="none"
-             viewBox="0 0 24 24"
-             stroke-width="1.5"
-             stroke="currentColor"
-             class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-        </svg>
-        <span class="ml-3">{{ patient.full_name }}</span>
-      </a>
+      <h2 class="menu-title">Patient Profiles</h2>
+      <ul>
+        {% for patient in user_patients %}
+          <li>
+            <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
+               class="flex items-center justify-start w-full btn btn-ghost {% if patient.id == request.resolver_match.kwargs.patient_id %}btn-active{% endif %}">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke-width="1.5"
+                   stroke="currentColor"
+                   class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+              <span class="ml-3">{{ patient.full_name }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
     </li>
-  {% endfor %}
+  {% endif %}
+  {% if user_organizations %}
+    <li>
+      <h2 class="menu-title">Organizations</h2>
+      <ul>
+        {% for organization in user_organizations %}
+          <li>
+            <a href="{% url "providers:organization_edit" organization_id=organization.id %}"
+               class="flex items-center justify-start w-full btn btn-ghost {% if organization.id == request.resolver_match.kwargs.organization_id %}btn-active{% endif %}">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke-width="1.5"
+                   stroke="currentColor"
+                   class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+              </svg>
+              <span class="ml-3">{{ organization.name }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
   <li>
     <a href="{% url 'account_email' %}"
        class="flex items-center justify-start w-full btn btn-ghost {% if request.resolver_match.url_name == 'account_email' %}btn-active{% endif %}">
