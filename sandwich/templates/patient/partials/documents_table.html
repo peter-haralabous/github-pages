@@ -12,7 +12,9 @@
       {% for document in documents %}
         <tr>
           <td>
-            <a href="{{ document.file.url }}" target="_blank" class="link">{{ document.file.name }}</a>
+            <a href="{% url "patients:document_download" document_id=document.id %}"
+               target="_blank"
+               class="link">{{ document.file.name }}</a>
           </td>
           <td>{{ document.created_at }}</td>
           <td>

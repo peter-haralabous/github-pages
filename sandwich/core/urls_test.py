@@ -1,25 +1,34 @@
+from collections.abc import Callable
+from collections.abc import Sequence
+from dataclasses import dataclass
+from typing import Any
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import URLPattern
 from django.urls import URLResolver
 from django.urls import get_resolver
 from django.views.generic import View
+from django_extensions.management.commands.show_urls import Command as ShowUrlsCommand
 from ninja.operation import PathView
 
 
-def get_all_urls(url_patterns: list[URLPattern | URLResolver], parent_pattern: str | None = None):
+@dataclass
+class UrlRegistration:
+    name: str
+    pattern: str
+    view: Callable[..., Any]
+
+
+def get_all_urls(
+    url_patterns: Sequence[URLPattern | URLResolver], base: str = "", namespace: str | None = None
+) -> list[UrlRegistration]:
     """
     Recursively explores the URL patterns to generate a flat list of all URLs.
     """
-    urls = []
-    for pattern in url_patterns:
-        full_pattern = (parent_pattern or "") + str(pattern.pattern)
-
-        if isinstance(pattern, URLResolver):
-            urls.extend(get_all_urls(pattern.url_patterns, full_pattern))
-        elif isinstance(pattern, URLPattern):
-            urls.append({"name": pattern.name, "pattern": full_pattern, "view": pattern.callback})
-    return urls
+    urls = ShowUrlsCommand().extract_views_from_urlpatterns(url_patterns, base, namespace=namespace)
+    # Each object in the returned list is a three-tuple: (view_func, regex, name)
+    return [UrlRegistration(name, regex, view) for view, regex, name in urls]
 
 
 def is_login_required(view_callback):
@@ -86,10 +95,10 @@ def test_all_routes_are_authenticated():
     for url in urls:
         # ignoring admin and allauth routes for now; they don't use the same decorators as the rest of the app
         # Ignore all the anymail routes. These are used for the webhooks
-        if url["pattern"].startswith(("admin/", "accounts/", "anymail/")):
+        if url.pattern.startswith(("admin/", "accounts/", "anymail/")):
             continue
 
-        if not is_login_required(url["view"]):
-            found_public_routes.add(url["pattern"])
+        if not is_login_required(url.view):
+            found_public_routes.add(url.pattern)
 
     assert found_public_routes == allowed_public_routes

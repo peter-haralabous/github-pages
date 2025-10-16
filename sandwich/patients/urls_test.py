@@ -1,62 +1,65 @@
 from http import HTTPStatus
 
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
-from django.urls import URLPattern
-from django.urls import URLResolver
 from django.urls import reverse
 
 from sandwich.core.factories import PatientFactory
+from sandwich.core.models import Document
+from sandwich.core.urls_test import UrlRegistration
 from sandwich.core.urls_test import get_all_urls
 from sandwich.patients.urls import urlpatterns as patients_urlspatterns
 
 
-def get_patient_urls() -> list[URLPattern | URLResolver]:
+def get_patient_urls() -> list[UrlRegistration]:
     return get_all_urls(patients_urlspatterns)  # type: ignore[arg-type]
 
 
-def test_patient_http_get_urls_return_status_200(db, user) -> None:
+# List of urls which are other http verbs (e.g. POST) or redirect (non HTTP 200)
+EXCLUDED_URL_NAMES = {
+    "home",  # Redirect
+    "accept_invite",  # POST
+    "document_delete",  # POST
+    "document_upload",  # POST
+    "task",  # POST
+    # Ninja api routes below
+    "api-1.0.0:api-root",
+    "api-1.0.0:openapi-json",
+    "api-1.0.0:openapi-view",
+    "api-1.0.0:get_formio_form",
+    "api-1.0.0:get_formio_form_submission",
+    "api-1.0.0:list_formio_form_submissions",
+    "api-1.0.0:submit_formio_form",
+    "api-1.0.0:update_formio_form_submission_with_id",
+    "api-1.0.0:update_formio_form_submission_without_id",
+}
+
+
+def test_no_stale_exclusions():
+    assert EXCLUDED_URL_NAMES.issubset({url.name for url in get_patient_urls()})
+
+
+@pytest.mark.parametrize("url", get_patient_urls(), ids=lambda url: url.name)
+def test_patient_http_get_urls_return_status_200(db, user, url) -> None:
+    if url.name in EXCLUDED_URL_NAMES:
+        pytest.skip(f"{url.name} is excluded")
+
+    # NOTE: always creating a patient, even when it is not needed for the route,
+    # because we don't want to get redirected to onboarding_add by middleware
     patient = PatientFactory.create(user=user)
+
     client = Client()
     client.force_login(user)
+    kwargs = {}
 
-    # List of urls which are other http verbs (e.g. POST) or redirect (non HTTP 200)
-    exclude_url_names = [
-        "home",  # Redirect
-        "accept_invite",  # POST
-        "document_delete",  # POST
-        "document_upload",  # POST
-        "task",  # POST
-        "api-root",  # Ninja api routes below
-        "openapi-json",
-        "openapi-view",
-        "get_formio_form",  # see formio.py
-        "get_formio_form_submission",
-        "list_formio_form_submissions",
-        "submit_formio_form",
-        "update_formio_form_submission_with_id",
-        "update_formio_form_submission_without_id",
-    ]
+    if ":patient_id>" in url.pattern:
+        kwargs["patient_id"] = patient.pk
 
-    patient_urls = get_patient_urls()
-    found_patient_route_names = {
-        obj.get("name")  # type: ignore[union-attr]
-        for obj in patient_urls
-        if obj.get("name") and obj.get("name") not in exclude_url_names  # type: ignore[union-attr]
-    }
+    if ":document_id>" in url.pattern:
+        kwargs["document_id"] = Document.objects.create(
+            patient=patient, file=SimpleUploadedFile(name="empty", content=b"")
+        ).pk
 
-    urls = [
-        (reverse("patients:consent"), "consent"),
-        (reverse("patients:patient_add"), "patient_add"),
-        (reverse("patients:patient_onboarding_add"), "patient_onboarding_add"),
-        (reverse("patients:patient_details", kwargs={"patient_id": patient.pk}), "patient_details"),
-        (reverse("patients:patient_edit", kwargs={"patient_id": patient.pk}), "patient_edit"),
-        (reverse("patients:get_phn_validation"), "get_phn_validation"),
-    ]
-
-    tested_patient_route_names = set()
-    for url, url_name in urls:
-        response = client.get(url)
-        assert response.status_code == HTTPStatus.OK, f"URL {url_name} returned {response.status_code}"
-        tested_patient_route_names.add(url_name)
-
-    assert found_patient_route_names == tested_patient_route_names, "Did you add a route?"
+    response = client.get(reverse("patients:" + url.name, kwargs=kwargs))
+    assert response.status_code == HTTPStatus.OK
