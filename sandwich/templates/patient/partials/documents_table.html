@@ -4,6 +4,8 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Type</th>
+        <th>Size</th>
         <th>Uploaded</th>
         <th></th>
       </tr>
@@ -14,7 +16,11 @@
           <td>
             <a href="{% url "patients:document_download" document_id=document.id %}"
                target="_blank"
-               class="link">{{ document.file.name }}</a>
+               class="link">{{ document.original_filename }}</a>
+          </td>
+          <td>{{ document.content_type }}</td>
+          <td>
+            {% if document.size %}{{ document.size|filesizeformat }}{% endif %}
           </td>
           <td>{{ document.created_at }}</td>
           <td>
@@ -29,7 +35,7 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="3" class="text-center">No documents found.</td>
+          <td colspan="5" class="text-center">No documents found.</td>
         </tr>
       {% endfor %}
     </tbody>

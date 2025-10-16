@@ -1,3 +1,4 @@
+from typing import cast
 from uuid import UUID
 
 from django.contrib.auth.decorators import login_required
@@ -39,7 +40,13 @@ def document_upload(request: AuthenticatedHttpRequest, patient_id: UUID):
         return JsonResponse({"success": False, "error": "No file uploaded."})
     if file.content_type != "application/pdf":
         return JsonResponse({"success": False, "error": "Only PDF files are allowed."})
-    Document.objects.create(patient=patient, file=file)
+    Document.objects.create(
+        patient=patient,
+        file=file,
+        content_type=file.content_type,
+        size=file.size,
+        original_filename=cast("str", file.name),
+    )
     documents = patient.document_set.all()
     return render(request, "patient/partials/documents_table.html", {"documents": documents})
 

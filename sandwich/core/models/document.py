@@ -29,6 +29,11 @@ class Document(BaseModel):
 
     file = PrivateFileField(upload_to="documents/")
 
+    # metadata about the uploaded file
+    content_type = models.CharField(max_length=255, blank=True)
+    size = models.BigIntegerField(null=True, blank=True)
+    original_filename = models.CharField(max_length=255, blank=True)
+
     def clean(self):
         if self.encounter and self.patient and self.encounter.patient != self.patient:
             msg = "Encounter and patient do not match."
