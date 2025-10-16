@@ -26,25 +26,27 @@
   </div>
 {% endblock topnav_items_start %}
 {% block topnav_items_center %}
-  {# TODO: just show the opened command palette inline, instead of this fakery #}
-  <div class="flex border rounded-lg border-gray-400 text-gray-400 px-4 py-2">
+  <label class="input">
     <svg xmlns="http://www.w3.org/2000/svg"
          fill="none"
          viewBox="0 0 24 24"
          stroke-width="2"
          stroke="currentColor"
-         class="size-5 self-center">
+         class="size-5 opacity-50">
       <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
     </svg>
-    <input class="mx-4 text-gray-500 w-96"
-           type="text"
+    <input class="grow"
+           type="search"
            id="command-palette-trigger"
            placeholder="Type a command or search..." />
-    <span class="text-sm self-center">(⌘ or CTRL) + K</span>
-  </div>
+    <span class="text-sm text-gray-400"></span>
+  </label>
   <script nonce="{{request.csp_nonce}}">
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('command-palette-trigger').addEventListener('focus', (event) => {
+      const trigger = document.getElementById('command-palette-trigger');
+      trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
+
+      trigger.addEventListener('focus', (event) => {
         document.querySelector('command-palette').isOpen = true;
         event.target.blur();
       });
