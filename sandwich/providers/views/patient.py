@@ -49,6 +49,7 @@ class PatientEdit(forms.ModelForm[Patient]):
             "date_of_birth",
             "province",
             "phn",
+            "email",
             Submit("submit", "Submit"),
         )
 
@@ -58,7 +59,7 @@ class PatientEdit(forms.ModelForm[Patient]):
 
     class Meta:
         model = Patient
-        fields = ("first_name", "last_name", "date_of_birth", "province", "phn")
+        fields = ("first_name", "last_name", "date_of_birth", "province", "phn", "email")
         widgets = {
             "date_of_birth": forms.DateInput(attrs={"type": "date"}),
         }
@@ -76,6 +77,7 @@ class PatientAdd(forms.ModelForm[Patient]):
             "date_of_birth",
             "province",
             "phn",
+            "email",
             Submit("submit", "Submit"),
         )
 
@@ -93,7 +95,7 @@ class PatientAdd(forms.ModelForm[Patient]):
 
     class Meta:
         model = Patient
-        fields = ("first_name", "last_name", "date_of_birth", "province", "phn")
+        fields = ("first_name", "last_name", "date_of_birth", "province", "phn", "email")
         widgets = {
             "date_of_birth": forms.DateInput(attrs={"type": "date"}),
         }
