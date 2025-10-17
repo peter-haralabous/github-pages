@@ -60,10 +60,10 @@ def test_account_notifications_post_decision_false(client: Client, user: User):
 def test_account_notifications_post_htmx(client: Client, user: User):
     client.force_login(user)
     url = reverse("core:account_notifications")
-    response = client.post(url, data={"decision": "on"}, HTTP_HX_REQUEST="true")
+    response = client.post(url, data={"decision": "on"}, headers={"HX-Request": "true"})
 
     assert response.status_code == 200
-    assert "partials/messages.html" in (t.name for t in response.templates)
+    assert "partials/message_item.html" in {t.name for t in response.templates}
 
     consent = Consent.objects.get(user=user, policy=ConsentPolicy.THRIVE_MARKETING_POLICY)
     assert consent.decision is True

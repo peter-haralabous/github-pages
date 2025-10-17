@@ -16,7 +16,7 @@ export class Message extends LitElement {
       <div
         class="alert ${this.tags
           ? `alert-${this.tags}`
-          : ''} mb-4 flex items-center justify-between"
+          : ''} flex items-center justify-between"
       >
         <span>${this.message}</span>
         <button

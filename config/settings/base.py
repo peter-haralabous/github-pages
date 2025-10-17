@@ -256,6 +256,7 @@ TEMPLATES = [
                 "sandwich.core.context_processors.settings_context",
                 "sandwich.core.context_processors.patients_context",
                 "sandwich.core.context_processors.providers_context",
+                "sandwich.core.context_processors.htmx_context",
                 "sandwich.users.context_processors.allauth_settings",
             ],
         },

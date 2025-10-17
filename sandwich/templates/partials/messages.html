@@ -1,10 +1,8 @@
 {% comment %}
-The hx-swap-oob here means that you can respond from the server with just this
-template, and it will append the new messages to the div#messages with the new
-ones from the server. Use that behaviour when you want the application to only
-'toast' a response.
+this is the *global* messages partial, included in the our base.html template.
+don't include it in targeted htmx responses; use the messages_oob.html partial instead.
 {% endcomment %}
-<div class="toast toast-end" id="messages" hx-swap-oob="beforeend">
+<div class="toast toast-end" id="messages">
   {% if messages %}
     {% for message in messages %}
       {% include 'partials/message_item.html' %}

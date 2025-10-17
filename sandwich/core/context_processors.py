@@ -12,6 +12,13 @@ def settings_context(request: HttpRequest):
     }
 
 
+def htmx_context(request: HttpRequest):
+    """Make some HTMX headers available to templates."""
+    return {
+        "hx_request": request.headers.get("HX-Request") == "true",
+    }
+
+
 def patients_context(request: HttpRequest):
     """Attaches all patients for the current user."""
 

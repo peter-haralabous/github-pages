@@ -2,7 +2,6 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.messages import get_messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -36,6 +35,6 @@ def account_notifications(request: AuthenticatedHttpRequest) -> HttpResponse:
 
         # If this is an htmx request, leverage the OOB swap capabilities of this partial.
         if request.headers.get("HX-Request") == "true":
-            return render(request, "partials/messages.html", {"messages": get_messages(request)})
+            return render(request, "partials/messages_oob.html")
 
     return render(request, "users/account_notifications.html", {"decision": decision})

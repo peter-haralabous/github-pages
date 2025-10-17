@@ -1,0 +1,19 @@
+{% comment %}
+The hx-swap-oob here means that you can respond from the server with just this
+template, and it will append the new messages to the #messages div with the new
+ones from the server. Use that behaviour when you want the application to only
+'toast' a response.
+
+to enable this fragment to be used inside other fragments that are rendered both
+for htmx and non-htmx requests, we only render this fragment if the HX-Request
+header is set on the request.
+{% endcomment %}
+{% if hx_request %}
+  <div hx-swap-oob="beforeend:#messages">
+    {% if messages %}
+      {% for message in messages %}
+        {% include 'partials/message_item.html' %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endif %}

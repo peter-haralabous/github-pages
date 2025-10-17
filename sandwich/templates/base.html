@@ -49,16 +49,15 @@
   <body class="{% block bodyclass %}bg-neutral-100 min-h-screen{% endblock bodyclass %}">
     {% block body %}
       <div class="container mx-auto">
-        {% include "partials/messages.html" %}
         {% block main %}
           {% block content %}
           {% endblock content %}
         {% endblock main %}
       </div>
     {% endblock body %}
-    <!-- /container -->
     {% block modal %}
     {% endblock modal %}
+    {% include "partials/messages.html" %}
     {% block inline_javascript %}
       {% comment %}
     Script tags with only code, no src (defer by default). To run
