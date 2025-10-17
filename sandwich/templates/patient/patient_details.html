@@ -58,7 +58,7 @@
     <h3 class="my-4">Tasks</h3>
     <div class="flex space-y-4 flex-col">
       {% for task in tasks %}
-        <div class="card card-border bg-base-100 rounded-2xl w-full">
+        <div class="card card-border bg-base-100 w-full">
           <div class="card-body">
             <h2 class="card-title">{{ task.name }}</h2>
             {% if task.active %}
