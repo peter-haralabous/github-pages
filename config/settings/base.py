@@ -428,8 +428,11 @@ PROCRASTINATE_IMPORT_PATHS = ["sandwich.core.service.procrastinate_service"]
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-# TODO-NG: write our own permission function
-PRIVATE_STORAGE_AUTH_FUNCTION = "private_storage.permissions.allow_staff"
+# NOTE-NG: this function guards access to the `/private-media` route, which should only be visible to admins.
+#          after adding a PrivateFileField to a model you probably want to create a matching PrivateStorageDetailView
+#          that will enforce the relevant object permissions to view that file.
+#          see `sandwich.patients.views.document.DocumentDownloadView` for an example.
+PRIVATE_STORAGE_AUTH_FUNCTION = "private_storage.permissions.allow_superuser"
 PRIVATE_STORAGE_ROOT = str(APPS_DIR / "private-media")
 
 # LLM API keys
