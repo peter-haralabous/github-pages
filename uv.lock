@@ -1246,6 +1246,15 @@ wheels = [
 ]
 
 [[package]]
+name = "markdown"
+version = "3.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/22/02/4785861427848cc11e452cc62bb541006a1087cf04a1de83aedd5530b948/Markdown-3.6.tar.gz", hash = "sha256:ed4f41f6daecbeeb96e576ce414c41d2d876daa9a16cb35fa8ed8c2ddfad0224", size = 354715, upload-time = "2024-03-14T15:37:59.775Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fc/b3/0c0c994fe49cd661084f8d5dc06562af53818cc0abefaca35bdc894577c3/Markdown-3.6-py3-none-any.whl", hash = "sha256:48f276f4d8cfb8ce6527c8f79e2ee29708508bf4d40aa410fbc3b4ee832c850f", size = 105381, upload-time = "2024-03-14T15:37:57.457Z" },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2166,6 +2175,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "heroicons", extra = ["django"] },
     { name = "langchain", extra = ["aws", "google-genai"] },
+    { name = "markdown" },
     { name = "markdown-it-py" },
     { name = "pillow" },
     { name = "procrastinate" },
@@ -2230,6 +2240,7 @@ requires-dist = [
     { name = "gunicorn", specifier = "==23.0.0" },
     { name = "heroicons", extras = ["django"], specifier = ">=2.13.0" },
     { name = "langchain", extras = ["aws", "google-genai"], specifier = ">=0.3.27" },
+    { name = "markdown", specifier = "==3.6.0" },
     { name = "markdown-it-py", specifier = "==4.0.0" },
     { name = "pillow", specifier = "==11.3.0" },
     { name = "procrastinate", specifier = ">=3.5.2" },
