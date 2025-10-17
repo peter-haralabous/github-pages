@@ -71,3 +71,18 @@ Gathers CSS, JS, and other static assets for deployment.
 ```
 docker compose up --build sandwich
 ```
+
+## Testing outputs of an LLM
+
+To run tests that use a real LLM (and record/replay HTTP interactions with VCR):
+
+```sh
+pytest --record-mode=all sandwich/core/services/ingest/extract_text_test.py
+```
+
+- The first run will record cassettes for all LLM calls.
+- Subsequent runs will replay the recorded responses for fast, deterministic tests **without hitting the LLM again**.
+- This avoids unnecessary API costs, rate limits, and unpredictable outputs from the LLM.
+- To re-record, delete the cassette files or use `--record-mode=all` again.
+
+See `extract_text_test.py` for example test cases and assertions.
