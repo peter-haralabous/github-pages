@@ -1,5 +1,7 @@
 {% extends "layout/onboarding.html" %}
 
+{% load heroicons %}
+
 {% block component_title %}
   <h1 class="text-center text-primary">HealthConnect</h1>
 {% endblock component_title %}
@@ -12,26 +14,12 @@
   <div class="flex flex-col sm:flex-row gap-4 justify-center">
     <a href="{% url 'patients:home' %}"
        class="btn btn-primary gap-3 py-10 px-6">
-      <svg class="w-10 h-10 flex-shrink-0"
-           fill="none"
-           stroke="currentColor"
-           viewBox="0 0 24 24"
-           xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-        </path>
-      </svg>
+      {% heroicon_outline "user" class="size-8" %}
       <span class="text-sm font-medium">Continue as Patient</span>
     </a>
     <a href="{% url 'providers:home' %}"
        class="btn btn-secondary gap-3 py-10 px-6">
-      <svg class="w-10 h-10 flex-shrink-0"
-           fill="none"
-           stroke="currentColor"
-           viewBox="0 0 24 24"
-           xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-        </path>
-      </svg>
+      {% heroicon_outline "clipboard-document-list" class="size-8" %}
       <span class="text-sm font-medium">Continue as Provider</span>
     </a>
   </div>
