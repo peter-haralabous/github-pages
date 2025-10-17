@@ -15,7 +15,7 @@ def extract_facts_from_text(
     temperature: float | None = None,
     patient=None,
     source_type=None,
-) -> int:
+) -> list[Triple]:
     """
     Extract facts from unstructured text using an LLM, validate output as Triples, and persist to DB.
     Args:
@@ -23,20 +23,21 @@ def extract_facts_from_text(
         llm_name: The LLM model to use.
         temperature: Optional temperature for the LLM.
     Returns:
-        Number of triples saved to DB.
+        List of validated triples.
     """
     llm_client = get_llm(llm_name, temperature=temperature)
     prompt = get_ingest_prompt(text)
     raw_output = llm_client.invoke(prompt)
-    # Extract content if output is an AIMessage or similar object
     output_text = getattr(raw_output, "content", raw_output)
     if not isinstance(output_text, str):
         output_text = str(output_text)
     try:
         triples_data = json.loads(output_text)
         triples = [Triple.model_validate(triple) for triple in triples_data]
-        return save_triples(triples, patient=patient, source_type=source_type)
+
+        save_triples(triples, patient=patient, source_type=source_type)
     except (json.JSONDecodeError, pydantic.ValidationError, TypeError) as e:
-        # FIXME-RG: this could potentially log PHI
         msg = f"Failed to parse or validate LLM output: {e}\nRaw output: {output_text}"
         raise ValueError(msg) from e
+    else:
+        return triples
