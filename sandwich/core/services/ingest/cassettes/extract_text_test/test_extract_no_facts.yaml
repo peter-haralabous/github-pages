@@ -1,0 +1,183 @@
+interactions:
+  - request:
+      body:
+        '{"anthropic_version": "bedrock-2023-05-31", "messages": [{"role": "user",
+        "content": "\nYou are extracting structured (subject, predicate, object) triples
+        from clinical text to create a knowledge graph.\n\nYou must structure your output
+        according to the schema below:\n\n For each triple:\n- Subjects and objects
+        must be valid node types and predicates must be valid predicates.\n- The relationship
+        between `subject`, `object`, and `predicate` must be one of the allowed patterns
+        in the schema.\n- If a sentence contains multiple facts (e.g., a symptom and
+        its cause), extract multiple triples.\n\nAttempt to capture all clinically relevant
+        data.\n\nRules for parsing:\n- For observations (vital signs, tests, etc.) with
+        multiple measurements over time, capture each recorded value as its\nown (triple)
+        to ensure we are capturing every Observation in the text.\n  - for example:\n      ```\n        His
+        weight has been monitored due to steroid use:\n        - July 2018: 175 lbs\n        -
+        August 2019: 183 lbs\n        - May 2021: 179 lbs\n        - May 2025: 171 lbs\n      ```\n    should
+        be captured as 4 distinct triples\n\n- No need to extract data verbatim, try
+        to use the most clinically valuable wording.\n- Each triple must have **exactly
+        one date value**. Do **not** group or merge dates into arrays or sets. If a
+        fact is\nobserved at multiple times, **extract a separate triple for each occurrence**,
+        each with its own object and date.\n- For condition or symptom checklists or
+        tables:\n    - If a row has a checkmark or ''X'' under the **No** column, the
+        patient does **not** have that condition.\n    - If the **Yes** column is checked,
+        the patient **does** have the condition.\n    - If neither is marked, skip the
+        row.\n\n- If the clinical fact is negated, hypothetical, or mentioned as past
+        history, include a traits object with keys like\nnegation, hypothetical, or
+        past_history, each set to true. Omit keys that are not relevant.\"\n\n- If present
+        in the text, include patient demographics on the Patient subject node: dateOfBirth
+        (YYYY-MM-DD), phn,\nemail.\n\nEnsure the generated triples are valid according
+        to the schema.\n\n---\n\n### Schema\n{\n  \"predicates\": [\n    {\n      \"label\":
+        \"HAS_CONDITION\",\n      \"properties\": [\n        {\n          \"name\":
+        \"date\",\n          \"type\": \"DATE\",\n          \"description\": \"Estimated
+        or actual date the condition started\"\n        }\n      ],\n      \"description\":
+        \"Subject has been diagnosed with a medical condition.\"\n    },\n    {\n      \"label\":
+        \"TAKES_MEDICATION\",\n      \"properties\": [\n        {\n          \"name\":
+        \"quantity\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        quantity of medication taken with this particular dosage.\"\n        },\n        {\n          \"name\":
+        \"unit\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        unit of measurement of the medication quantity.\"\n        },\n        {\n          \"name\":
+        \"form\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        form of the medication (eg. tablets, capsule, powder, etc.)\"\n        },\n        {\n          \"name\":
+        \"frequency\",\n          \"type\": \"STRING\",\n          \"description\":
+        \"How frequently the patient takes this medication.\"\n        },\n        {\n          \"name\":
+        \"date\",\n          \"type\": \"STRING\",\n          \"description\": \"Start
+        date of the current regimen (if stated)\"\n        }\n      ],\n      \"description\":
+        \"Subject currently takes a medication.\"\n    },\n    {\n      \"label\": \"HAS_LAB_RESULT\",\n      \"properties\":
+        [\n        {\n          \"name\": \"value\",\n          \"type\": \"STRING\",\n          \"required\":
+        true,\n          \"description\": \"The quantatitive value of the associated
+        observation.\"\n        },\n        {\n          \"name\": \"unit\",\n          \"type\":
+        \"STRING\",\n          \"description\": \"Unit of measurement.\"\n        },\n        {\n          \"name\":
+        \"date\",\n          \"type\": \"STRING\",\n          \"description\": \"When
+        the observation was made\"\n        }\n      ],\n      \"description\": \"Indicates
+        a recorded lab result.\"\n    },\n    {\n      \"label\": \"HAS_VITAL_SIGN\",\n      \"properties\":
+        [\n        {\n          \"name\": \"value\",\n          \"type\": \"STRING\",\n          \"required\":
+        true,\n          \"description\": \"The quantitative value of the associated
+        observation.\"\n        },\n        {\n          \"name\": \"unit\",\n          \"type\":
+        \"STRING\",\n          \"description\": \"Unit of measurement.\"\n        },\n        {\n          \"name\":
+        \"date\",\n          \"type\": \"STRING\",\n          \"description\": \"When
+        the observation was made\"\n        }\n      ],\n      \"description\": \"Indicates
+        a recorded vital sign.\"\n    },\n    {\n      \"label\": \"HAS_SYMPTOM\",\n      \"properties\":
+        [\n        {\n          \"name\": \"date\",\n          \"type\": \"STRING\",\n          \"description\":
+        \"When the symptom was exhibited.\"\n        }\n      ],\n      \"description\":
+        \"Indicates the subject has a symptom.\"\n    },\n    {\n      \"label\": \"HAS_ALLERGY\",\n      \"properties\":
+        [\n        {\n          \"name\": \"criticality\",\n          \"type\": \"STRING\",\n          \"description\":
+        \"The severity of the allergy reaction.\"\n        },\n        {\n          \"name\":
+        \"last_occurrence\",\n          \"type\": \"DATE\",\n          \"description\":
+        \"The date of the last known occurrence of the reaction.\"\n        },\n        {\n          \"name\":
+        \"onset\",\n          \"type\": \"DATE\",\n          \"description\": \"When
+        allergy or intolerance was identified\"\n        },\n        {\n          \"name\":
+        \"reaction\",\n          \"type\": \"STRING\",\n          \"description\": \"Clinical
+        symptoms/signs associated with the Event\"\n        }\n      ],\n      \"description\":
+        \"Subject has a known allergy or intolerance.\"\n    },\n    {\n      \"label\":
+        \"HAS_FAMILY_HISTORY\",\n      \"properties\": [\n        {\n          \"name\":
+        \"relationship\",\n          \"type\": \"STRING\",\n          \"required\":
+        true,\n          \"description\": \"The familial relationship to the subject
+        (e.g., ''father'', ''mother'').\"\n        },\n        {\n          \"name\":
+        \"name\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        name of the family member.\"\n        }\n      ],\n      \"description\": \"Subject
+        has a family member with a known medical history.\"\n    },\n    {\n      \"label\":
+        \"RECEIVED_IMMUNIZATION\",\n      \"properties\": [\n        {\n          \"name\":
+        \"date\",\n          \"type\": \"DATE\",\n          \"description\": \"The date
+        the immunization was administered.\"\n        },\n        {\n          \"name\":
+        \"status\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        status of the immunization (e.g., ''completed'').\"\n        },\n        {\n          \"name\":
+        \"route\",\n          \"type\": \"STRING\",\n          \"description\": \"Method
+        used to administer the immunization.\"\n        }\n      ],\n      \"description\":
+        \"Subject has received an immunization.\"\n    },\n    {\n      \"label\": \"UNDERWENT_PROCEDURE\",\n      \"properties\":
+        [\n        {\n          \"name\": \"date\",\n          \"type\": \"DATE\",\n          \"description\":
+        \"The date the procedure was performed.\"\n        },\n        {\n          \"name\":
+        \"status\",\n          \"type\": \"STRING\",\n          \"description\": \"The
+        status of the procedure (e.g., ''completed'').\"\n        },\n        {\n          \"name\":
+        \"location\",\n          \"type\": \"STRING\",\n          \"description\": \"Where
+        the procedure happened.\"\n        },\n        {\n          \"name\": \"performer\",\n          \"type\":
+        \"STRING\",\n          \"description\": \"Who performed the procedure.\"\n        }\n      ],\n      \"description\":
+        \"Subject underwent a clinical procedure.\"\n    }\n  ],\n  \"nodes\": [\n    {\n      \"label\":
+        \"Patient\",\n      \"properties\": [\n        {\n          \"name\": \"name\",\n          \"type\":
+        \"STRING\",\n          \"required\": true\n        },\n        {\n          \"name\":
+        \"dateOfBirth\",\n          \"type\": \"DATE\"\n        },\n        {\n          \"name\":
+        \"phn\",\n          \"type\": \"STRING\"\n        },\n        {\n          \"name\":
+        \"email\",\n          \"type\": \"STRING\"\n        }\n      ],\n      \"description\":
+        \"The patient entity\"\n    },\n    {\n      \"label\": \"Condition\",\n      \"properties\":
+        [\n        {\n          \"name\": \"name\",\n          \"type\": \"STRING\",\n          \"required\":
+        true\n        }\n      ],\n      \"description\": \"Clinical name of the condition.\"\n    },\n    {\n      \"label\":
+        \"Medication\",\n      \"properties\": [\n        {\n          \"name\": \"name\",\n          \"type\":
+        \"STRING\",\n          \"required\": true,\n          \"description\": \"The
+        clinical name of the medication.\"\n        }\n      ],\n      \"description\":
+        \"Medication a patient has taken or is taking.\"\n    },\n    {\n      \"label\":
+        \"Observation\",\n      \"properties\": [\n        {\n          \"name\": \"name\",\n          \"type\":
+        \"STRING\",\n          \"required\": true,\n          \"description\": \"clinical
+        name of the test type, symptom, imagining type, etc.\"\n        }\n      ],\n      \"description\":
+        \"A medical observation, such as vital signs, lab results, imaging results,
+        clinical findings, symptoms etc.\"\n    },\n    {\n      \"label\": \"AllergyIntolerance\",\n      \"properties\":
+        [\n        {\n          \"name\": \"name\",\n          \"type\": \"STRING\",\n          \"required\":
+        true,\n          \"description\": \"The substance or drug causing the allergy
+        or intolerance.\"\n        }\n      ],\n      \"description\": \"A reaction
+        to a substance.\"\n    },\n    {\n      \"label\": \"Immunization\",\n      \"properties\":
+        [\n        {\n          \"name\": \"name\",\n          \"type\": \"STRING\",\n          \"required\":
+        true,\n          \"description\": \"The name of the vaccine administered.\"\n        }\n      ],\n      \"description\":
+        \"A vaccine administered to the patient.\"\n    },\n    {\n      \"label\":
+        \"Procedure\",\n      \"properties\": [\n        {\n          \"name\": \"name\",\n          \"type\":
+        \"STRING\",\n          \"required\": true,\n          \"description\": \"The
+        clinical name of the procedure performed.\"\n        }\n      ],\n      \"description\":
+        \"A clinical or surgical procedure performed on the patient.\"\n    }\n  ],\n  \"patterns\":
+        [\n    [\n      \"Patient\",\n      \"HAS_CONDITION\",\n      \"Condition\"\n    ],\n    [\n      \"Patient\",\n      \"TAKES_MEDICATION\",\n      \"Medication\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_SYMPTOM\",\n      \"Observation\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_VITAL_SIGN\",\n      \"Observation\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_LAB_RESULT\",\n      \"Observation\"\n    ],\n    [\n      \"Medication\",\n      \"TAKES_FOR\",\n      \"Condition\"\n    ],\n    [\n      \"Medication\",\n      \"TAKES_FOR\",\n      \"Observation\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_ALLERGY\",\n      \"AllergyIntolerance\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_FAMILY_HISTORY\",\n      \"Condition\"\n    ],\n    [\n      \"Patient\",\n      \"HAS_FAMILY_HISTORY\",\n      \"Observation\"\n    ],\n    [\n      \"Patient\",\n      \"RECEIVED_IMMUNIZATION\",\n      \"Immunization\"\n    ],\n    [\n      \"Patient\",\n      \"UNDERWENT_PROCEDURE\",\n      \"Procedure\"\n    ]\n  ]\n}\n\n---\n\nReturn
+        a JSON array like:\n[\n{\n    \"subject\": {\"entityType\": \"Patient\", \"node\":
+        {...}},\n    \"predicate\": \"raw text\",\n    \"normalized_predicate\": {\"predicateType\":
+        \"CANONICAL_PREDICATE\", \"properties\": {...}, \"traits\": {...}},\n    \"object\":
+        {\"entityType\": \"Condition\", \"node\": {...}},\n},\n...\n]\n\nMake sure you
+        adhere to the following rules to produce valid JSON objects:\n- Do not return
+        any additional information other than the JSON in it.\n- Omit any backticks
+        around the JSON - simply output the JSON on its own.\n- Property names must
+        be enclosed in double quotes\n\nText to analyze:\nThe sky is blue.\n"}], "max_tokens":
+        16384}'
+      headers:
+        Accept:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        Content-Length:
+          - '12336'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC41LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9aLGIs
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTEwMTdUMjI1NDU0Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            ZDZjNTYxMTMtZDUxNS00ZGQwLTk1MmItYTAzYWY0NTc5Yjkz
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1%3A0/invoke
+    response:
+      body:
+        string: '{"id":"msg_bdrk_01URzWJzDG1sH9UvUYsZhvze","type":"message","role":"assistant","model":"claude-3-sonnet-20240229","content":[{"type":"text","text":"[]"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":3071,"output_tokens":4}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '247'
+        Content-Type:
+          - application/json
+        Date:
+          - Fri, 17 Oct 2025 22:54:56 GMT
+        X-Amzn-Bedrock-Input-Token-Count:
+          - '3071'
+        X-Amzn-Bedrock-Invocation-Latency:
+          - '1423'
+        X-Amzn-Bedrock-Output-Token-Count:
+          - '4'
+        x-amzn-RequestId:
+          - 51a34975-340c-4bcd-90dc-778fff32d23f
+      status:
+        code: 200
+        message: OK
+version: 1
