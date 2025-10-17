@@ -7,7 +7,7 @@ from django import forms
 logger = logging.getLogger(__name__)
 
 
-class AccountDeleteForm(forms.Form):
+class DeleteConfirmationForm(forms.Form):
     confirmation = forms.CharField(
         max_length=6, label="", widget=forms.TextInput(attrs={"placeholder": "Type 'DELETE' to confirm"})
     )

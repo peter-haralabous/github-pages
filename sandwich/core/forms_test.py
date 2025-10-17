@@ -1,14 +1,14 @@
 import pytest
 
-from sandwich.core.forms import AccountDeleteForm
+from sandwich.core.forms import DeleteConfirmationForm
 
 pytestmark = pytest.mark.django_db
 
 
 def test_account_delete_form_validation() -> None:
     """User must type DELETE exactly to delete their account."""
-    form = AccountDeleteForm(data={"confirmation": "delete"})
+    form = DeleteConfirmationForm(data={"confirmation": "delete"})
     assert form.is_valid() is False
 
-    form = AccountDeleteForm(data={"confirmation": "DELETE"})
+    form = DeleteConfirmationForm(data={"confirmation": "DELETE"})
     assert form.is_valid() is True

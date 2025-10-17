@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from sandwich.core.forms import AccountDeleteForm
+from sandwich.core.forms import DeleteConfirmationForm
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ def account_delete(request: AuthenticatedHttpRequest) -> HttpResponse:
 
     if request.method == "POST":
         logger.info("Processing account delete form", extra={"user_id": request.user.id})
-        form = AccountDeleteForm(request.POST)
+        form = DeleteConfirmationForm(request.POST)
         if not form.is_valid():
             return render(request, "users/account_delete.html", context={"form": form})
 
@@ -32,7 +32,7 @@ def account_delete(request: AuthenticatedHttpRequest) -> HttpResponse:
         return redirect(reverse("account_login"))
 
     logger.debug("Rendering account delete form", extra={"user_id": request.user.id})
-    form = AccountDeleteForm()
+    form = DeleteConfirmationForm()
 
     context = {"form": form}
     return render(request, "users/account_delete.html", context)
