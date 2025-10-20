@@ -90,3 +90,15 @@ def assign_organization_role(organization: Organization, role_name: str, user: U
         },
     )
     organization.role_set.get(name=role_name).group.user_set.add(user)
+
+
+def get_active_organization(user: User, organization_id: str | None) -> Organization | None:
+    if not organization_id:
+        return None
+    organizations = get_provider_organizations(user)
+
+    for organization in organizations:
+        if str(organization_id) == str(organization.id):
+            return organization
+
+    return None

@@ -29,7 +29,11 @@
               <a href="{% url "core:switcher" %}">
                 <div class="flex-col">
                   {% block avatar_menu_title %}
-                    Switch context
+                    {% if active_organization %}
+                      {{ active_organization.name }}
+                    {% else %}
+                      Switch context
+                    {% endif %}
                   {% endblock avatar_menu_title %}
                   <div class="text-xs text-secondary">{{ user.email }}</div>
                 </div>
@@ -37,9 +41,15 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'account_email' %}">{% translate "Settings" %}</a>
+              <a href="{% url 'account_email' %}">{% translate "Account Settings" %}</a>
             </li>
             {% block avatar_nav_items %}
+              {% if active_organization %}
+                {% comment %} Note: will need to swap this out for org perms {% endcomment %}
+                <li>
+                  <a href="{% url 'providers:organization_edit' organization_id=active_organization.id %}">Organization Settings</a>
+                </li>
+              {% endif %}
             {% endblock avatar_nav_items %}
             <li>
               <form action="{% url 'account_logout' %}" method="post">

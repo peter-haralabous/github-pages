@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.http import HttpRequest
 
+from sandwich.core.service.organization_service import get_active_organization
 from sandwich.core.service.organization_service import get_provider_organizations
 
 
@@ -40,4 +41,16 @@ def providers_context(request: HttpRequest):
     organizations = get_provider_organizations(request.user)
     return {
         "user_organizations": list(organizations),
+    }
+
+
+def active_organization_context(request: HttpRequest):
+    """Attaches current active organization for the current user."""
+
+    if not request.user.is_authenticated:
+        return {}
+
+    active_organization = get_active_organization(request.user, request.session.get("active_organization_id"))
+    return {
+        "active_organization": active_organization,
     }

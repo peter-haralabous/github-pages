@@ -115,7 +115,7 @@ def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, 
 @login_required
 def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> HttpResponse:
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-
+    request.session["active_organization_id"] = str(organization.id)
     search = request.GET.get("search", "").strip()
     sort = (
         validate_sort(
