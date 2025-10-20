@@ -6,7 +6,7 @@ from textwrap import dedent
 import pytest
 from django.template.exceptions import TemplateDoesNotExist
 
-from sandwich.core.factories import TemplateFactory
+from sandwich.core.factories.template import TemplateFactory
 from sandwich.core.models import Organization
 from sandwich.core.models import Template
 from sandwich.core.service.template_service import LoaderDefinitions

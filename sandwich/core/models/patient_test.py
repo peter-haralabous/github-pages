@@ -1,7 +1,7 @@
 import pytest
 
-from sandwich.core.factories import OrganizationFactory
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.organization import OrganizationFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient
 from sandwich.users.models import User

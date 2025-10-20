@@ -3,7 +3,7 @@ from typing import Any
 from django.conf import settings
 from django.core.management import CommandParser
 
-from sandwich.core.factories import TemplateFactory
+from sandwich.core.factories.template import TemplateFactory
 from sandwich.core.management.lib.generic import CreateListDeleteCommand
 from sandwich.core.management.lib.json import json_object_type
 from sandwich.core.management.types import template_type

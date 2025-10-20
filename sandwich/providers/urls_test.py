@@ -4,7 +4,7 @@ import pytest
 from django.test import Client
 from django.urls import reverse
 
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Encounter
 from sandwich.core.models import Task
 from sandwich.core.models.encounter import EncounterStatus

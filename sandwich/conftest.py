@@ -4,8 +4,8 @@ from collections.abc import Iterable
 import pytest
 from django.core.management import call_command
 
-from sandwich.core.factories import OrganizationFactory
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.organization import OrganizationFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient

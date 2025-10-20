@@ -1,7 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Document
 
 

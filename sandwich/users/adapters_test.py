@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 from django.core import mail
 
-from sandwich.core.factories import TemplateFactory
+from sandwich.core.factories.template import TemplateFactory
 from sandwich.core.models import Template
 from sandwich.users.adapters import AccountAdapter
 from sandwich.users.models import User

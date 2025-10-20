@@ -1,5 +1,5 @@
-from sandwich.core.factories import ConsentFactory
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.consent import ConsentFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Consent
 from sandwich.core.models import Encounter
 from sandwich.core.models import Organization

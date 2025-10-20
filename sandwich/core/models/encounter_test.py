@@ -1,5 +1,5 @@
-from sandwich.core.factories import OrganizationFactory
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.organization import OrganizationFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 

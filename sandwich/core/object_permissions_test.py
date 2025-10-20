@@ -1,7 +1,7 @@
 import pytest
 from guardian.shortcuts import assign_perm
 
-from sandwich.core.factories import OrganizationFactory
+from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.users.factories import UserFactory
 
 

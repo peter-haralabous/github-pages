@@ -6,7 +6,7 @@ import pytest
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from sandwich.core.factories import OrganizationFactory
+from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.util.testing import UserRequestFactory

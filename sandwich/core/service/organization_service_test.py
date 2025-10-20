@@ -1,6 +1,6 @@
 import pytest
 
-from sandwich.core.factories import OrganizationFactory
+from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.users.factories import UserFactory

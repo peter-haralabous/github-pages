@@ -2,7 +2,7 @@ from django.test import RequestFactory
 
 from sandwich.core.context_processors import patients_context
 from sandwich.core.context_processors import settings_context
-from sandwich.core.factories import PatientFactory
+from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.util.testing import UserRequestFactory
 from sandwich.users.models import User
 

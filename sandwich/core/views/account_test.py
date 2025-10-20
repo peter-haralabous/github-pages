@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.test import Client
 from django.urls import reverse
 
-from sandwich.core.factories import ConsentFactory
+from sandwich.core.factories.consent import ConsentFactory
 from sandwich.core.models import Organization
 from sandwich.core.models.consent import ConsentPolicy
 from sandwich.users.models import User
