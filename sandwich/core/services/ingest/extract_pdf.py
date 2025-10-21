@@ -54,6 +54,17 @@ def _provenance_dict(page_index: int, llm_client) -> dict:
     }
 
 
+def _validate_or_trim(parsed):
+    try:
+        return IngestPromptWithContextResponse.model_validate(parsed)
+    except pydantic.ValidationError:
+        if isinstance(parsed, dict) and "triples" in parsed and isinstance(parsed["triples"], list):
+            parsed["triples"] = parsed["triples"][:-1]
+            result = IngestPromptWithContextResponse.model_validate(parsed)
+            logger.warning("skipped invalid last record in triples extraction")
+            return result
+
+
 def _process_response(valid_response, patient, page_index: int, llm_client) -> tuple[list, list]:
     """
     Process LLM response to extract and validate triples, filtering out invalid ones.
@@ -64,31 +75,18 @@ def _process_response(valid_response, patient, page_index: int, llm_client) -> t
     filtered_triples = []
     try:
         parsed = json.loads(output_text)
-        # if parsed is a list, wrap it in a dict for validation
         if isinstance(parsed, list):
-            # pre-filter: drop triples missing subject.node
             filtered = []
             for t in parsed:
                 subject = t.get("subject")
                 node = subject.get("node") if isinstance(subject, dict) else None
                 if not isinstance(node, dict):
-                    logger.warning(
-                        "[extract_image_triples_from_pdf] Dropping triple missing subject.node before validation: %s",
-                        t,
-                    )
+                    continue
+                if t.get("normalized_predicate") is None or t.get("object") is None:
                     continue
                 filtered.append(t)
             parsed = {"triples": filtered}
-        try:
-            valid_response = IngestPromptWithContextResponse.model_validate(parsed)
-        except pydantic.ValidationError:
-            # the llm can run out of tokens, so we try to recover by trimming last triple if present
-            if isinstance(parsed, dict) and "triples" in parsed and isinstance(parsed["triples"], list):
-                parsed["triples"] = parsed["triples"][:-1]
-                valid_response = IngestPromptWithContextResponse.model_validate(parsed)
-                logger.warning("skipped invalid last record in triples extraction")
-            else:
-                raise
+        valid_response = _validate_or_trim(parsed)
         triples = valid_response.triples
         for t in triples:
             pred = getattr(t, "normalized_predicate", None)
