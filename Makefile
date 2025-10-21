@@ -85,12 +85,17 @@ data:
 
 .PHONY: save-fixtures
 save-fixtures:
-	uv run manage.py dumpdata --natural-primary --natural-foreign --indent 2 --format sandwich \
-		core.organization > sandwich/core/fixtures/organization.json
 	uv run manage.py dumpdata --natural-primary --natural-foreign --indent 2 --format sandwich  \
+		core.organization > sandwich/core/fixtures/organization.json
+	uv run manage.py dumpdata --natural-primary --natural-foreign --indent 2 --format sandwich \
 		core.template > sandwich/core/fixtures/template.json
+	uv run manage.py entity save-fixtures
 	uv run pre-commit run --all-files prettier || true
 
 .PHONY: load-fixtures
 load-fixtures:
-	uv run manage.py loaddata organization template --format sandwich
+	uv run manage.py loaddata \
+	 organization \
+	 template \
+	 entity_condition \
+	 --format sandwich
