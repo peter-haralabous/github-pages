@@ -274,6 +274,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (str(APPS_DIR / "fixtures"),)
+SERIALIZATION_MODULES = {
+    "sandwich": "sandwich.core.serializers.sandwich",
+}
 
 # SECURITY
 # ------------------------------------------------------------------------------
