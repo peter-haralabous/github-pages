@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from sandwich.core.models import Consent
+from sandwich.core.models.consent import ConsentPolicy as ConsentPolicyEnum
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
@@ -22,5 +23,6 @@ def legal_view(request: AuthenticatedHttpRequest) -> HttpResponse:
         "users/legal.html",
         {
             "consents": consents,
+            "ConsentPolicy": ConsentPolicyEnum,
         },
     )

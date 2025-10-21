@@ -6,7 +6,7 @@
     {% if consents %}
       {% for consent in consents %}
         {% if consent.decision %}
-          {% if consent.policy == "THRIVE_PRIVACY_POLICY" %}
+          {% if consent.policy == ConsentPolicy.THRIVE_PRIVACY_POLICY %}
             <li>
               <a href="{% url 'core:policy_detail' slug='privacy-notice' %}"
                  target="_blank"
@@ -22,7 +22,7 @@
                 <span class="text-primary">View Privacy Policy →</span>
               </a>
             </li>
-          {% elif consent.policy == "THRIVE_TERMS_OF_USE" %}
+          {% elif consent.policy == ConsentPolicy.THRIVE_TERMS_OF_USE %}
             <li>
               <a href="{% url 'core:policy_detail' slug='terms-of-use' %}"
                  target="_blank"
