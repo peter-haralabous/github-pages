@@ -55,8 +55,9 @@ observed at multiple times, **extract a separate triple for each occurrence**, e
 - If the clinical fact is negated, hypothetical, or mentioned as past history, include a traits object with keys like
 negation, hypothetical, or past_history, each set to true. Omit keys that are not relevant."
 
-- If present in the text, include patient demographics on the Patient subject node: dateOfBirth (YYYY-MM-DD), phn,
-email.
+- If present in the text, include patient demographics on the Patient subject node:
+    first_name, last_name, date_of_birth (YYYY-MM-DD), phn, email.
+    Do NOT use a single "name" field for Patient. Always use "first_name" and "last_name".
 
 Ensure the generated triples are valid according to the schema.
 

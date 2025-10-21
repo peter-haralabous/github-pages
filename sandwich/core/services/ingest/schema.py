@@ -2,7 +2,8 @@ NODES = [
     {
         "label": "Patient",
         "properties": [
-            {"name": "name", "type": "STRING", "required": True},
+            {"name": "first_name", "type": "STRING", "required": True},
+            {"name": "last_name", "type": "STRING", "required": True},
             {"name": "dateOfBirth", "type": "DATE"},
             {"name": "phn", "type": "STRING"},
             {"name": "email", "type": "STRING"},
