@@ -1,8 +1,94 @@
 import logging
+import uuid
 
+from sandwich.core.models import Entity
+from sandwich.core.models import Fact
+from sandwich.core.models import Patient
+from sandwich.core.models import Predicate
+from sandwich.core.models.provenance import Provenance
 from sandwich.core.services.ingest.types import Triple
 
 logger = logging.getLogger(__name__)
+
+
+def stringify_uuids(obj):
+    if isinstance(obj, dict):
+        return {k: stringify_uuids(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [stringify_uuids(v) for v in obj]
+    if isinstance(obj, uuid.UUID):
+        return str(obj)
+    return obj
+
+
+def get_or_create_entity(object_type, object_label, node):
+    node = stringify_uuids(node)
+    # for Patient, deduplicate by patient_id if present
+    if object_type == "Patient" and "patient_id" in node:
+        try:
+            entity = Entity.objects.get(type=object_type, metadata__patient_id=str(node["patient_id"]))
+            metadata = entity.metadata or {}
+            metadata.update(node)
+            entity.metadata = metadata
+            entity.save()
+        except Entity.DoesNotExist:
+            return Entity.objects.create(type=object_type, metadata=node)
+        else:
+            return entity
+    # for all other types, fall back to name-based lookup
+    try:
+        entity = Entity.objects.get(type=object_type, metadata__name=object_label)
+        metadata = entity.metadata or {}
+        metadata.update(node)
+        entity.metadata = metadata
+        entity.save()
+    except Entity.DoesNotExist:
+        entity = Entity.objects.create(
+            type=object_type,
+            metadata=node,
+        )
+    return entity
+
+
+def get_or_create_predicate(predicate_name, predicate_text):
+    predicate, _ = Predicate.objects.get_or_create(
+        name=predicate_name,
+        defaults={"description": predicate_text},
+    )
+    return predicate
+
+
+def create_provenance(provenance_data, source_type):
+    # FIXME: Use a default value for source_type and extracted_by if missing
+    stype = provenance_data.get("source_type") if provenance_data.get("source_type") else source_type
+    if stype is None:
+        stype = "unknown"
+    extracted_by = provenance_data.get("extracted_by")
+    if extracted_by is None:
+        extracted_by = "unknown"
+    return Provenance.objects.create(
+        page=provenance_data.get("page"),
+        extracted_by=extracted_by,
+        source_type=stype,
+    )
+
+
+def _create_patient_if_needed(subj_node, patient=None):
+    # if a patient is provided, use their id
+    if patient and hasattr(patient, "id"):
+        subj_node["patient_id"] = patient.id
+        return patient.id
+    patient_fields = {}
+    patient_fields["first_name"] = subj_node.get("first_name", "")
+    patient_fields["last_name"] = subj_node.get("last_name", "")
+    for key in ["date_of_birth", "email", "province", "phn", "user", "organization"]:
+        if key in subj_node:
+            patient_fields[key] = subj_node[key]
+    if "date_of_birth" not in patient_fields:
+        patient_fields["date_of_birth"] = "1900-01-01"
+    patient_obj = Patient.objects.create(**patient_fields)
+    subj_node["patient_id"] = patient_obj.id
+    return patient_obj.id
 
 
 def save_triples(
@@ -10,4 +96,57 @@ def save_triples(
     patient=None,
     source_type: str | None = None,
 ) -> int:
-    return 0
+    """
+    Persists triples into the database.
+    Responsibilities:
+    - Resolve or create subject/object entities.
+    - Create patient if not provided.
+    - Resolve or create predicates.
+    - Create Fact records.
+    """
+    count = 0
+    if not triples:
+        return 0
+    # assume all triples refer to the same patient
+    # this may need to be revisited in the future
+    subj = triples[0].subject
+    patient_id = _create_patient_if_needed(subj.node, patient=patient)
+    # inject patient_id into all subject nodes
+    for t in triples:
+        t.subject.node["patient_id"] = patient_id
+    for t in triples:
+        try:
+            subj = t.subject
+            obj = getattr(t, "obj", None) if hasattr(t, "obj") else getattr(t, "object", None)
+            if obj is None:
+                logger.warning("[save_triples] Skipping triple with no object: %r", t)
+                continue
+            pred = t.normalized_predicate
+            predicate_text = t.predicate
+            subject_entity = get_or_create_entity("Patient", subj.node.get("name", ""), subj.node)
+            object_type = obj.entity_type
+            object_label = obj.node["name"]
+            object_entity = get_or_create_entity(object_type, object_label, obj.node)
+            predicate_name = pred.predicate_type
+            predicate = get_or_create_predicate(predicate_name, predicate_text)
+            provenance_data = t.provenance or {}
+            provenance_obj = create_provenance(provenance_data, source_type)
+            fact = Fact.objects.create(
+                subject=subject_entity,
+                predicate=predicate,
+                object=object_entity,
+                provenance=provenance_obj,
+            )
+            # FIXME-RG: this is exposing PII/PHI
+            logger.info(
+                "[save_triples] Saved Fact: %r | %r -[%r]-> %r",
+                fact.id,
+                subject_entity.metadata.get("name", ""),
+                predicate.name,
+                object_entity.metadata.get("name", ""),
+            )
+            count += 1
+        except Exception:
+            logger.exception("[save_triples] Failed to save triple: %r", t)
+
+    return count
