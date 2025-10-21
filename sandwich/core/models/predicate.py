@@ -30,3 +30,7 @@ class Predicate(BaseModel):
 
     def __str__(self):
         return self.name.value
+
+    @staticmethod
+    def for_name(name: "PredicateName") -> "Predicate":
+        return Predicate.objects.get_or_create(name=name)[0]
