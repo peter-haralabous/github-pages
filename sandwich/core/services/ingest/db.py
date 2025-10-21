@@ -75,6 +75,7 @@ def _create_patient_if_needed(subj_node, patient=None):
         if key in subj_node:
             patient_fields[key] = subj_node[key]
     if "date_of_birth" not in patient_fields:
+        # FIXME-RG: this is a temporary fix to deal with missing DOBs
         patient_fields["date_of_birth"] = "1900-01-01"
     patient_obj = Patient.objects.create(**patient_fields)
     subj_node["patient_id"] = patient_obj.id
