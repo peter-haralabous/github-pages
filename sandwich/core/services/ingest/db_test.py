@@ -33,8 +33,8 @@ def test_stringify_uuids_dict():
 def test_stringify_uuids_list():
     u1 = uuid.uuid4()
     u2 = uuid.uuid4()
-    l = [u1, {"nested": u2}]
-    result = db.stringify_uuids(l)
+    lst = [u1, {"nested": u2}]
+    result = db.stringify_uuids(lst)
     assert result[0] == str(u1)
     assert result[1]["nested"] == str(u2)
 
