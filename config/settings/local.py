@@ -42,6 +42,7 @@ def update_env_from_ssm() -> None:
 update_env_from_ssm()
 
 from .base import *  # noqa: F403
+from .base import APPS_DIR
 from .base import INSTALLED_APPS
 from .base import LOGGING
 from .base import MIDDLEWARE
@@ -123,5 +124,9 @@ INSTALLED_APPS += ["django_extensions"]
 # django-webpack-loader
 # ------------------------------------------------------------------------------
 WEBPACK_LOADER["DEFAULT"]["CACHE"] = not DEBUG
+
 # Your stuff...
 # ------------------------------------------------------------------------------
+# when running locally, put uploads under ../data/
+MEDIA_ROOT = str(APPS_DIR / "../data/media")
+PRIVATE_STORAGE_ROOT = str(APPS_DIR / "../data/private-media")

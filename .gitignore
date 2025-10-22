@@ -273,8 +273,8 @@ tags
 # Redis dump file
 dump.rdb
 
-# local database
-data/*
+# local database and uploaded files
+data/
 
 ### Project template
 mailpit
