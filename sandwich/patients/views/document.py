@@ -58,7 +58,7 @@ class DocumentForm(forms.ModelForm):
 
 @require_POST
 @login_required
-def document_upload(request: AuthenticatedHttpRequest, patient_id: UUID):
+def document_upload_and_extract(request: AuthenticatedHttpRequest, patient_id: UUID):
     patient = get_object_or_404(request.user.patient_set, id=patient_id)
     form = DocumentForm({"patient": patient.id}, request.FILES)
     if form.is_valid():

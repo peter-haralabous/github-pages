@@ -28,11 +28,11 @@ def test_document_download_as_another_user(client, user):
     assert response.status_code == 404
 
 
-def test_document_upload(client, user):
+def test_document_upload_and_extract(client, user):
     client.force_login(user)
     patient = PatientFactory.create(user=user)
 
-    url = reverse("patients:document_upload", kwargs={"patient_id": patient.pk})
+    url = reverse("patients:document_upload_and_extract", kwargs={"patient_id": patient.pk})
     pdf_content = b"%PDF-1.4 test pdf file"
     file = SimpleUploadedFile("testfile.pdf", pdf_content, content_type="application/pdf")
     response = client.post(url, {"file": file})

@@ -4,7 +4,7 @@ from .api import api
 from .views.consent import patient_consent
 from .views.document import document_delete
 from .views.document import document_download
-from .views.document import document_upload
+from .views.document import document_upload_and_extract
 from .views.home import home
 from .views.invitation import accept_invite
 from .views.patient import get_phn_validation
@@ -24,7 +24,7 @@ urlpatterns = [
     path("patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
     path("invite/<str:token>/accept", accept_invite, name="accept_invite"),
     path("patient/<uuid:patient_id>/task/<uuid:task_id>", task, name="task"),
-    path("patient/<uuid:patient_id>/document/upload", document_upload, name="document_upload"),
+    path("patient/<uuid:patient_id>/document/upload", document_upload_and_extract, name="document_upload_and_extract"),
     path("patient/<uuid:patient_id>/document/<uuid:document_id>/delete/", document_delete, name="document_delete"),
     path("document/<uuid:document_id>", document_download, name="document_download"),
     path("api/", api.urls, name="api"),

@@ -20,7 +20,7 @@ EXCLUDED_URL_NAMES = {
     "home",  # Redirect
     "accept_invite",  # POST
     "document_delete",  # POST
-    "document_upload",  # POST
+    "document_upload_and_extract",  # POST
     "task",  # POST
     # Ninja api routes below
     "api-1.0.0:api-root",
