@@ -6,8 +6,8 @@ services:
     volumes:
       - ./data:/data
     ports:
-      - 8025:8025
-      - 1025:1025
+      - '8025:8025'
+      - '1025:1025'
     environment:
       MP_MAX_MESSAGES: 5000
       MP_DATABASE: /data/mailpit.db
@@ -31,6 +31,15 @@ services:
       timeout: 3s
       interval: 3s
       retries: 30
+
+  redis:
+    image: redis:8.2
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    ports:
+      - '6379:6379'
 
   # this configuration is for local validation of the Docker build step
   # it's not going to be fully functional without connection to AWS resources

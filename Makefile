@@ -34,8 +34,12 @@ mailpit:
 postgres:
 	docker compose up -d postgres
 
+.PHONY: redis
+redis:
+	docker compose up -d redis
+
 .PHONY: dev
-dev: init collectstatic migrate mailpit postgres
+dev: init collectstatic migrate mailpit postgres redis
 	yarn run dev
 
 .PHONY: test-unit

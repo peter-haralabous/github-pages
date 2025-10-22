@@ -221,6 +221,7 @@ dependencies = [
     "psycopg[binary]>=3.2.10",
     "pytest-xdist[psutil]>=3.8.0",
     "python-slugify==8.0.4",
+    "redis[hiredis]>=7.0.0",
     "tablib==3.9.0",
     "tablib[cli]==3.9.0",
     "tzlocal>=5.3.1",
