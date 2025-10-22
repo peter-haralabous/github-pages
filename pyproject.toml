@@ -182,6 +182,7 @@ dependencies = [
     "argon2-cffi==25.1.0",
     "boto3>=1.40.26",
     "crispy-tailwind>=1.0.3",
+    "daphne>=4.2.1",
     "ddtrace>=3.14.3",
     "django==5.2.7",
     "django-allauth[mfa,socialaccount]==65.12.0",

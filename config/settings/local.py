@@ -84,10 +84,15 @@ EMAIL_HOST = "localhost"
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
 EMAIL_PORT = 1025
 
-# WhiteNoise
+# runserver
 # ------------------------------------------------------------------------------
-# http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
-INSTALLED_APPS = ["whitenoise.runserver_nostatic", *INSTALLED_APPS]
+INSTALLED_APPS = [
+    # https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/daphne/
+    "daphne",
+    # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
+    "whitenoise.runserver_nostatic",
+    *INSTALLED_APPS,
+]
 
 
 # django-debug-toolbar

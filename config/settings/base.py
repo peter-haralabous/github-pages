@@ -70,6 +70,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "config.urls"
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 SERVE_DJDT = env.bool("DJANGO_SERVE_DJDT", default=DEBUG)
 SERVE_ERROR_VIEWS = env.bool("DJANGO_SERVE_ERROR_VIEWS", default=DEBUG)
