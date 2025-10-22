@@ -1,0 +1,108 @@
+{% extends "base_top_nav.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Create New Encounter</h2>
+    <a href="{% url "providers:encounter_list" organization_id=organization.id %}"
+       class="btn btn-secondary">Back to Encounters</a>
+  </div>
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h3 class="card-title mb-4">Select Patient and Encounter Type</h3>
+      <!-- Patient Search Section -->
+      <div class="form-control mb-6">
+        <label class="label">
+          <span class="label-text font-medium">Search for Patient</span>
+        </label>
+        <div class="relative">
+          <input type="text"
+                 id="patient-search"
+                 class="input input-bordered w-full"
+                 placeholder="Type patient name to search..."
+                 hx-get="{% url 'providers:encounter_create_search' organization_id=organization.id %}"
+                 hx-target="#patient-search-results"
+                 hx-trigger="keyup changed delay:300ms"
+                 name="q"
+                 autocomplete="off" />
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg class="w-4 h-4 text-gray-400"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+        <!-- Search Results -->
+        <div id="patient-search-results" class="mt-2"></div>
+        <!-- Selected Patient Display -->
+        <div id="selected-patient" class="mt-4 hidden">
+          <div class="alert alert-info">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h4 class="font-bold">Selected Patient:</h4>
+              <p id="selected-patient-name"></p>
+            </div>
+            <button type="button"
+                    onclick="clearSelectedPatient()"
+                    class="btn btn-sm btn-outline">Change</button>
+          </div>
+        </div>
+      </div>
+      <!-- Encounter Form -->
+      <div id="encounter-form-container" class="hidden">{% crispy form %}</div>
+    </div>
+  </div>
+  <script>
+    let selectedPatientId = null;
+
+    function selectPatient(patientId, patientName, patientEmail, patientDob) {
+      selectedPatientId = patientId;
+
+      // Hide search results and show selected patient
+      document.getElementById('patient-search-results').innerHTML = '';
+      document.getElementById('patient-search').value = '';
+      document.getElementById('selected-patient-name').textContent = `${patientName} (${patientEmail}) - DOB: ${patientDob}`;
+      document.getElementById('selected-patient').classList.remove('hidden');
+
+      // Show the encounter form and set the patient
+      const formContainer = document.getElementById('encounter-form-container');
+      formContainer.classList.remove('hidden');
+
+      // Set the hidden patient field
+      const patientField = document.querySelector('input[name="patient"]');
+      if (patientField) {
+        patientField.value = patientId;
+      }
+    }
+
+    function selectPatientFromData(element) {
+      const patientId = element.dataset.patientId;
+      const patientName = element.dataset.patientName;
+      const patientEmail = element.dataset.patientEmail;
+      const patientDob = element.dataset.patientDob;
+
+      selectPatient(patientId, patientName, patientEmail, patientDob);
+    }
+
+    function clearSelectedPatient() {
+      selectedPatientId = null;
+      document.getElementById('selected-patient').classList.add('hidden');
+      document.getElementById('encounter-form-container').classList.add('hidden');
+      document.getElementById('patient-search').focus();
+    }
+
+    // Initialize form when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // If there's already a patient selected (form errors), show the form
+      const patientField = document.querySelector('input[name="patient"]');
+      if (patientField && patientField.value) {
+        document.getElementById('encounter-form-container').classList.remove('hidden');
+      }
+    });
+  </script>
+{% endblock content %}

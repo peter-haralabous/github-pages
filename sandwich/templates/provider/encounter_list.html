@@ -3,8 +3,12 @@
 {% block content %}
   <div class="flex justify-between">
     <h2>Patient Encounters</h2>
-    <a href="{% url "providers:patient_add" organization_id=organization.id %}"
-       class="btn btn-primary">Add a Patient</a>
+    <div class="flex gap-2">
+      <a href="{% url "providers:encounter_create" organization_id=organization.id %}"
+         class="btn btn-primary">New Encounter</a>
+      <a href="{% url "providers:patient_add" organization_id=organization.id %}"
+         class="btn btn-secondary">Add a Patient</a>
+    </div>
   </div>
   <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
         hx-target="#encounter_table_container"

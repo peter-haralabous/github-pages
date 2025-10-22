@@ -1,5 +1,7 @@
 from django.urls import path
 
+from .views.encounter import encounter_create
+from .views.encounter import encounter_create_search
 from .views.encounter import encounter_details
 from .views.encounter import encounter_list
 from .views.home import home
@@ -27,6 +29,12 @@ urlpatterns = [
     path("organization/<uuid:organization_id>/delete", organization_delete, name="organization_delete"),
     path("organization/<uuid:organization_id>/search", search, name="search"),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),
+    path(
+        "organization/<uuid:organization_id>/encounter/create/search",
+        encounter_create_search,
+        name="encounter_create_search",
+    ),
+    path("organization/<uuid:organization_id>/encounter/create", encounter_create, name="encounter_create"),
     path("organization/<uuid:organization_id>/encounter/<uuid:encounter_id>", encounter_details, name="encounter"),
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>", patient_details, name="patient"),
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
