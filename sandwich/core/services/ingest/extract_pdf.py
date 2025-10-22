@@ -106,10 +106,7 @@ def _process_response(valid_response, patient, page_index: int, llm_client) -> t
             filtered_triples.append(t)
         triples_to_save = filtered_triples
     except (json.JSONDecodeError, TypeError, AttributeError, pydantic.ValidationError):
-        logger.exception(
-            "[extract_image_triples_from_pdf] Could not parse or validate content as triples. Raw content: %s",
-            output_text,
-        )
+        logger.exception("[extract_image_triples_from_pdf] Could not parse or validate content as triples.")
         return [], [
             {
                 "page": page_index,
