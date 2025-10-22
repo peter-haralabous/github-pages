@@ -1,22 +1,34 @@
 {% extends "patient/base.html" %}
 
+{% load heroicons %}
+
 {% block content %}
   <h1 class="mb-4">My Health Records</h1>
   {% include "patient/partials/personal_information.html" with patient=patient %}
-  <h3 class="my-2 flex items-center gap-2">
-    Documents
-    <button id="upload-btn" type="button" class="btn btn-sm btn-primary">Upload</button>
-    <form id="upload-form"
-          method="post"
-          action="{% url 'patients:document_upload' patient_id=patient.id %}"
-          hx-post="{% url 'patients:document_upload' patient_id=patient.id %}"
-          hx-target="#documents-table-container"
-          hx-encoding="multipart/form-data"
-          class="hidden">
-      <input type="file" id="file-input" name="file" accept="application/pdf" />
-      {% csrf_token %}
-    </form>
-  </h3>
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+      <span class="text-lg font-semibold">Documents</span>
+      <span class="badge badge-info badge-outline text-xs">PDF upload will extract clinical facts automatically</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="upload-btn"
+              type="button"
+              class="btn btn-primary btn-sm flex items-center gap-1">
+        {% heroicon_outline "arrow-up-on-square" class="size-4" %}
+        Upload
+      </button>
+      <form id="upload-form"
+            method="post"
+            action="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
+            hx-post="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
+            hx-target="#documents-table-container"
+            hx-encoding="multipart/form-data"
+            class="hidden">
+        <input type="file" id="file-input" name="file" accept="application/pdf" />
+        {% csrf_token %}
+      </form>
+    </div>
+  </div>
   <div id="documents-table-container">{% include "patient/partials/documents_table.html" %}</div>
   <script nonce="{{ request.csp_nonce }}">
     document.getElementById('upload-btn').addEventListener('click', () => {
