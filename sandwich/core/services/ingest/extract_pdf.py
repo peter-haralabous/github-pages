@@ -7,7 +7,11 @@ from io import BytesIO
 
 import pydantic
 from pdf2image import convert_from_path
+from procrastinate.contrib.django import app
 
+from sandwich.core.models.document import Document
+from sandwich.core.service.llm import ModelName
+from sandwich.core.service.llm import get_llm
 from sandwich.core.services.ingest.db import save_triples
 from sandwich.core.services.ingest.prompt import get_ingest_prompt
 from sandwich.core.services.ingest.response_models import IngestPromptWithContextResponse
@@ -130,18 +134,15 @@ def extract_facts_from_pdf(
         - Process and validate LLM response as triples.
         - Persist valid triples to DB.
         - Returns all extracted triples across pages.
-
     """
     images = convert_pages(pdf_path)
     all_triples: list = []
     for i, image_bytes in enumerate(images, start=1):
         base64_img = base64.b64encode(image_bytes).decode("utf-8")
         messages = _build_image_messages(i, base64_img)
-
         try:
             response = llm_client.invoke(messages)
             triples_to_save, entries = _process_response(response, patient, i, llm_client)
-
             if entries:
                 all_triples.extend(entries)
             if triples_to_save:
@@ -151,3 +152,11 @@ def extract_facts_from_pdf(
             logger.exception("[extract_image_triples_from_pdf] Failed to extract triples from page %d", i)
             continue
     return all_triples
+
+
+@app.task
+def extract_pdf_background(document_id: str, llm_name: str = "claude-3-sonnet"):
+    document = Document.objects.get(id=document_id)
+    patient = document.patient if hasattr(document, "patient") else None
+    llm_client = get_llm(ModelName(llm_name))
+    extract_facts_from_pdf(document.file.path, llm_client, patient=patient)
