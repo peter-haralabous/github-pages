@@ -32,9 +32,21 @@ def get_provider_organizations(user: User) -> QuerySet[Organization]:
 
 # TODO: Add org role permissions
 DEFAULT_ORGANIZATION_ROLES: dict[str, list[str]] = {
-    RoleName.OWNER: ["view_organization", "change_organization", "delete_organization", "create_encounter"],
-    RoleName.ADMIN: ["view_organization", "change_organization", "create_encounter"],
-    RoleName.STAFF: ["view_organization", "create_encounter"],
+    RoleName.OWNER: [
+        "view_organization",
+        "change_organization",
+        "delete_organization",
+        "create_encounter",
+    ],
+    RoleName.ADMIN: [
+        "view_organization",
+        "change_organization",
+        "create_encounter",
+    ],
+    RoleName.STAFF: [
+        "view_organization",
+        "create_encounter",
+    ],
     RoleName.PATIENT: ["view_organization"],
 }
 

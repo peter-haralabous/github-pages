@@ -1,6 +1,24 @@
 import logging
 
+from guardian.shortcuts import assign_perm
+
+from sandwich.core.models.patient import Patient
+from sandwich.core.models.role import RoleName
+
 logger = logging.getLogger(__name__)
+
+
+DEFAULT_ORGANIZATION_ROLE_PERMS = {
+    RoleName.OWNER: [
+        "assign_task",
+    ],
+    RoleName.ADMIN: [
+        "assign_task",
+    ],
+    RoleName.STAFF: [
+        "assign_task",
+    ],
+}
 
 
 def maybe_patient_name(q: str) -> list[str] | None:
@@ -40,3 +58,30 @@ def maybe_patient_name(q: str) -> list[str] | None:
     )
 
     return result
+
+
+def assign_default_provider_patient_permissions(patient: Patient) -> None:
+    """
+    Assigns the whole organization that the patient is linked to with patient task perms
+    """
+    # Patient doesn't belong to any organization
+    if not patient.organization:
+        logger.debug(
+            "Patient does not belong to organization",
+            extra={
+                "patient_id": patient.id,
+            },
+        )
+        return
+    # Apply org-wide role perms
+    for role_name, perms in DEFAULT_ORGANIZATION_ROLE_PERMS.items():
+        role = patient.organization.get_role(role_name)
+        for perm in perms:
+            assign_perm(perm, role.group, patient)
+    logger.debug(
+        "Provider has been given permissions to patient",
+        extra={
+            "patient_id": patient.id,
+            "organization_id": patient.organization.id,
+        },
+    )

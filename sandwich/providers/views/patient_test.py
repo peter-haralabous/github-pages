@@ -7,6 +7,7 @@ from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
+from sandwich.core.service.patient_service import assign_default_provider_patient_permissions
 from sandwich.users.models import User
 
 
@@ -63,6 +64,7 @@ def test_patient_add_deny_access(user: User, organization: Organization, patient
 def test_patient_add_task(provider: User, organization: Organization, patient: Patient) -> None:
     client = Client()
     client.force_login(provider)
+    assign_default_provider_patient_permissions(patient)
     res = client.post(
         reverse("providers:patient_add_task", kwargs={"organization_id": organization.id, "patient_id": patient.id})
     )

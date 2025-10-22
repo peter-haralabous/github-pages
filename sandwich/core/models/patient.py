@@ -120,6 +120,8 @@ class Patient(BaseModel):
             GinIndex(fields=["search_vector"]),
         ]
 
+        permissions = (("assign_task", "Can assign a task to this patient"),)
+
     def initials(self) -> str:
         """
         1 or 2-letter abbreviation for the Patient, to be used in places like avatars.

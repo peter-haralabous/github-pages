@@ -34,6 +34,7 @@ from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
 from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.service.patient_service import assign_default_provider_patient_permissions
 from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
@@ -278,6 +279,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
                     "encounter_id": encounter.id,
                 },
             )
+            assign_default_provider_patient_permissions(patient)
             messages.add_message(request, messages.SUCCESS, "Patient added successfully.")
             return HttpResponseRedirect(
                 reverse("providers:patient", kwargs={"patient_id": patient.id, "organization_id": organization.id})
@@ -426,6 +428,7 @@ def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, pat
 @login_required
 @require_POST
 @permission_required_or_403("create_encounter", (Organization, "id", "organization_id"))
+@permission_required_or_403("assign_task", (Patient, "id", "patient_id"))
 # TODO(MM): create task perms
 # TODO(MM): when we have org-patient perms check can view patient
 def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
