@@ -203,6 +203,7 @@ dependencies = [
     "django-stubs-ext>=5.2.2",
     "django-webpack-loader==3.2.1",
     "factory-boy==3.3.3",
+    "granian>=2.5.5",
     "gunicorn==23.0.0",
     "heroicons[django]>=2.13.0",
     "langchain[aws,google-genai]>=0.3.27",

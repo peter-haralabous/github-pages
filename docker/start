@@ -6,4 +6,4 @@ python /app/manage.py collectstatic --noinput
 
 python /app/manage.py migrate --noinput
 
-exec ddtrace-run gunicorn config.wsgi --bind 0.0.0.0:3000 --chdir=/app
+exec ddtrace-run granian config.asgi:application --interface asginl --host 0.0.0.0 --port 3000
