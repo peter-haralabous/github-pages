@@ -135,6 +135,7 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 
 @login_required
+@permission_required_or_403("delete_organization", (Organization, "id", "organization_id"))
 def organization_delete(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
     if request.method == "POST":
         logger.info("Processing organization deletion", extra={"user_id": request.user.id})
