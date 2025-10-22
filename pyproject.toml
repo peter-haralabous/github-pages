@@ -146,6 +146,9 @@ extend-unsafe-fixes = [
 [tool.ruff.lint.isort]
 force-single-line = true
 
+[tool.uv]
+required-version = ">=0.8.4"
+
 [dependency-groups]
 dev = [
     "coverage==7.10.7",
