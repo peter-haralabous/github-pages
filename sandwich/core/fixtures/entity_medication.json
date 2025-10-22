@@ -1,0 +1,535 @@
+[
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820001",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Paracetamol (substance)",
+        "snomed": "387517004"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820002",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Ibuprofen (substance)",
+        "snomed": "387207008"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820003",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Aspirin (substance)",
+        "snomed": "387458008"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820004",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Amoxicillin (substance)",
+        "snomed": "372687004"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820005",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Metformin (substance)",
+        "snomed": "109081006"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820006",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Simvastatin (substance)",
+        "snomed": "387584000"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820007",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Atorvastatin (substance)",
+        "snomed": "373444002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820008",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Omeprazole (substance)",
+        "snomed": "387137007"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820009",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Lisinopril (substance)",
+        "snomed": "386873009"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820010",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Levothyroxine sodium (substance)",
+        "snomed": "126202002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820011",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Amlodipine (substance)",
+        "snomed": "386864001"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820012",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Hydrochlorothiazide (substance)",
+        "snomed": "387525002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820013",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Losartan (substance)",
+        "snomed": "386876001"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820014",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Metoprolol (substance)",
+        "snomed": "372826007"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820015",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Sertraline (substance)",
+        "snomed": "372653009"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820016",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Citalopram (substance)",
+        "snomed": "372596005"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820017",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Alprazolam (substance)",
+        "snomed": "387558006"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820018",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Warfarin (substance)",
+        "snomed": "372756006"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820019",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Clopidogrel (substance)",
+        "snomed": "387247008"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820020",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Doxycycline (substance)",
+        "snomed": "372478003"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820021",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Prednisone (substance)",
+        "snomed": "116602009"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820022",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Furosemide (substance)",
+        "snomed": "387475002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820023",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Albuterol (substance)",
+        "snomed": "372897005"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820024",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Gabapentin (substance)",
+        "snomed": "386845007"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820025",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Tramadol (substance)",
+        "snomed": "386858008"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820026",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Carvedilol (substance)",
+        "snomed": "386870000"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820027",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Pantoprazole (substance)",
+        "snomed": "386963006"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820028",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Escitalopram (substance)",
+        "snomed": "404833000"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820029",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Rosuvastatin (substance)",
+        "snomed": "408036003"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820030",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Montelukast (substance)",
+        "snomed": "395892000"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820031",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Fluoxetine (substance)",
+        "snomed": "372767007"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820032",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Azithromycin (substance)",
+        "snomed": "387531004"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820033",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Cetirizine (substance)",
+        "snomed": "372523007"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820034",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Ciprofloxacin (substance)",
+        "snomed": "392412000"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820035",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Insulin (substance)",
+        "snomed": "67866001"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820036",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Morphine (substance)",
+        "snomed": "73572009"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820037",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Hydrocodone (substance)",
+        "snomed": "387365002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820038",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Oxycodone (substance)",
+        "snomed": "55452001"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820039",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Fentanyl (substance)",
+        "snomed": "373492002"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820040",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Digoxin (substance)",
+        "snomed": "387461009"
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b15ad924-be52-49ce-b61d-d1ab6d820041",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Medication",
+      "metadata": {
+        "label": "Clonazepam (substance)",
+        "snomed": "387383007"
+      }
+    }
+  }
+]

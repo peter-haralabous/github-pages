@@ -98,4 +98,5 @@ load-fixtures:
 	 organization \
 	 template \
 	 entity_condition \
+	 entity_medication \
 	 --format sandwich

@@ -12,6 +12,7 @@ from sandwich.core.models.predicate import PredicateName
 # Extend this to add support for other predicates
 predicate_entity_map = {
     PredicateName.HAS_CONDITION: {"type": EntityType.CONDITION},
+    PredicateName.TAKES_MEDICATION: {"type": EntityType.MEDICATION},
 }
 
 
