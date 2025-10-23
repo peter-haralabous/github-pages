@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 from private_storage.views import PrivateStorageDetailView
 
 from sandwich.core.models.document import Document
-from sandwich.core.service.procrastinate_service import extract_facts_from_pdf_job
+from sandwich.core.service.ingest_service import extract_facts_from_pdf_job
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 

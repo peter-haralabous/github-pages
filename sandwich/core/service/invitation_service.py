@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from procrastinate.contrib.django import app
 
 from sandwich.core.models.email import EmailType
 from sandwich.core.models.invitation import Invitation
@@ -137,5 +138,11 @@ def expire_invitations() -> int:
         .filter(status=InvitationStatus.PENDING)
         .update(status=InvitationStatus.EXPIRED)
     )
-    logger.debug("Expired %d invitations", expired_count)
+    logger.info("Expired %d invitations", expired_count)
     return expired_count
+
+
+@app.periodic(cron="0 * * * *")  # every hour
+@app.task(lock="expire_invitations_lock")
+def expire_invitations_job(timestamp: int) -> None:
+    expire_invitations()
