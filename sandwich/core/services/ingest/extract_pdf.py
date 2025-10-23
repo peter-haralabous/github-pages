@@ -65,29 +65,54 @@ def _validate_or_trim(parsed):
             return result
 
 
-def _process_response(valid_response, patient, page_index: int, llm_client) -> tuple[list, list]:
+def _strip_markdown_fences(text: str) -> str:
+    """Remove Markdown code fences (``` or ```json) from LLM output."""
+    stripped = text.strip()
+    if stripped.startswith("```"):
+        lines = stripped.splitlines()
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        return "\n".join(lines)
+    return text
+
+
+def _filter_triples(parsed):
+    """Filter out invalid triples from a list."""
+    filtered = []
+    for t in parsed:
+        subject = t.get("subject")
+        node = subject.get("node") if isinstance(subject, dict) else None
+        if not isinstance(node, dict):
+            continue
+        if t.get("normalized_predicate") is None or t.get("object") is None:
+            continue
+        filtered.append(t)
+    return {"triples": filtered}
+
+
+def _process_response(valid_response, patient, page_index: int, llm_client) -> list:
     """
     Process LLM response to extract and validate triples, filtering out invalid ones.
     Uses robust Pydantic validation and attempts to recover from partial output.
+    If the LLM output is empty, skip the page.
     """
     output_text = getattr(valid_response, "content", str(valid_response))
-    triples_to_save = []
-    filtered_triples = []
+    output_text = _strip_markdown_fences(output_text)
+    if not output_text or not output_text.strip():
+        logger.error(
+            "LLM output is empty for page %d. Skipping page.",
+            page_index,
+        )
+        return []
     try:
         parsed = json.loads(output_text)
         if isinstance(parsed, list):
-            filtered = []
-            for t in parsed:
-                subject = t.get("subject")
-                node = subject.get("node") if isinstance(subject, dict) else None
-                if not isinstance(node, dict):
-                    continue
-                if t.get("normalized_predicate") is None or t.get("object") is None:
-                    continue
-                filtered.append(t)
-            parsed = {"triples": filtered}
+            parsed = _filter_triples(parsed)
         valid_response = _validate_or_trim(parsed)
         triples = valid_response.triples
+        filtered_triples = []
         for t in triples:
             pred = getattr(t, "normalized_predicate", None)
             pred_label = pred.predicate_type if (pred is not None and hasattr(pred, "predicate_type")) else pred
@@ -100,19 +125,11 @@ def _process_response(valid_response, patient, page_index: int, llm_client) -> t
             t.subject.node["patient_id"] = str(getattr(patient, "id", "-1"))
             t.provenance = _provenance_dict(page_index, llm_client)
             filtered_triples.append(t)
-        triples_to_save = filtered_triples
-    except (json.JSONDecodeError, TypeError, AttributeError, pydantic.ValidationError):
+    except (json.JSONDecodeError, TypeError, AttributeError, pydantic.ValidationError, ValueError):
         logger.exception("[extract_image_triples_from_pdf] Could not parse or validate content as triples.")
-        return [], [
-            {
-                "page": page_index,
-                "content": output_text,
-                "extracted_at": datetime.now(UTC).isoformat() + "Z",
-                "extracted_by": llm_client.__class__.__name__,
-            }
-        ]
+        return []
     else:
-        return triples_to_save, filtered_triples
+        return filtered_triples
 
 
 def extract_facts_from_pdf(
@@ -135,13 +152,12 @@ def extract_facts_from_pdf(
         messages = _build_image_messages(i, base64_img)
         try:
             response = llm_client.invoke(messages)
-            triples_to_save, entries = _process_response(response, patient, i, llm_client)
-            if entries:
-                all_triples.extend(entries)
+            triples_to_save = _process_response(response, patient, i, llm_client)
             if triples_to_save:
+                all_triples.extend(triples_to_save)
                 save_triples(triples_to_save, patient=patient, source_type="pdf")
             continue
         except (ValueError, TypeError, AttributeError, RuntimeError, ConnectionError, TimeoutError, OSError):
-            logger.exception("[extract_image_triples_from_pdf] Failed to extract triples from page %d", i)
+            logger.exception("Failed to extract triples from page %d", i)
             continue
     return all_triples
