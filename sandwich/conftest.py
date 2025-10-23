@@ -5,17 +5,18 @@ import pytest
 from django.core.management import call_command
 
 from sandwich.core.factories.organization import OrganizationFactory
-from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.models import Organization
-from sandwich.core.models import Patient
 from sandwich.core.models.role import RoleName
 from sandwich.core.util.testing import UserRequestFactory
+from sandwich.fixtures.patient import patient
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
 # For playwright tests, it uses async internally.
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
+
+__all__ = ["patient"]
 
 
 @pytest.fixture(autouse=True)
@@ -36,18 +37,6 @@ def user(db) -> User:
 @pytest.fixture
 def user_wo_consent(db) -> User:
     return UserFactory.create(consents=None)
-
-
-@pytest.fixture
-def patient(organization: Organization, user: User) -> Patient:
-    """
-    Creates a user-owned patient
-    """
-    patient = PatientFactory.create(
-        first_name="John", last_name="Doe", email="jdoe@example.com", organization=organization, user=user
-    )
-    patient.assign_user_owner_perms(user)
-    return patient
 
 
 @pytest.fixture
