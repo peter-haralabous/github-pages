@@ -3,17 +3,16 @@ from collections.abc import Iterable
 from django.core.management import BaseCommand
 from django.core.management import CommandParser
 
+from sandwich.core.factories.errors import FactoryError
 from sandwich.core.factories.fact import generate_facts_for_predicate
-from sandwich.core.factories.fact import predicate_entity_map
+from sandwich.core.management.lib.logging import LoggingMixin
 from sandwich.core.management.lib.subcommand import SubcommandMixin
 from sandwich.core.management.types import patient_type
 from sandwich.core.models import Patient
 from sandwich.core.models.predicate import PredicateName
 
-supported_predicate_names = predicate_entity_map.keys()
 
-
-class Command(SubcommandMixin, BaseCommand):  # type: ignore[override]
+class Command(SubcommandMixin, LoggingMixin, BaseCommand):  # type: ignore[override]
     noun = "Fact"
 
     def add_arguments(self, parser: CommandParser) -> None:
@@ -29,7 +28,7 @@ class Command(SubcommandMixin, BaseCommand):  # type: ignore[override]
                         "nargs": "*",
                         "help": "Predicates to generate facts for; defaults to all valid choices",
                         "type": PredicateName,
-                        "choices": supported_predicate_names,
+                        "choices": PredicateName,
                     },
                 ),
                 (("--count",), {"help": "Number of facts to generate; default 5", "type": int, "default": 5}),
@@ -38,6 +37,12 @@ class Command(SubcommandMixin, BaseCommand):  # type: ignore[override]
 
     def generate(self, patient: Patient, predicate_names: Iterable[PredicateName], count: int, **_) -> None:
         if not predicate_names:
-            predicate_names = supported_predicate_names
+            predicate_names = PredicateName
         for predicate_name in predicate_names:
-            generate_facts_for_predicate(patient=patient, predicate_name=predicate_name, count=count)
+            try:
+                facts = generate_facts_for_predicate(patient=patient, predicate_name=predicate_name, count=count)
+            except FactoryError:
+                self.warning(f"{predicate_name} has no matching entities; skipping.")
+            else:
+                for fact in facts:
+                    self.info(f"{fact=}")

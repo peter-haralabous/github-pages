@@ -8,7 +8,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Disease (disorder)",
-        "snomed": "64572001"
+        "snomed": "64572001",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -21,7 +22,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Fetal finding (finding)",
-        "snomed": "106112009"
+        "snomed": "106112009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -34,7 +36,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding by site (finding)",
-        "snomed": "118234003"
+        "snomed": "118234003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -47,7 +50,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding by method (finding)",
-        "snomed": "118240005"
+        "snomed": "118240005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -60,7 +64,8 @@
       "type": "Condition",
       "metadata": {
         "label": "General clinical state finding (finding)",
-        "snomed": "248536006"
+        "snomed": "248536006",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -73,7 +78,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Neurological finding (finding)",
-        "snomed": "102957003"
+        "snomed": "102957003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -86,7 +92,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding related to physiologic substance (finding)",
-        "snomed": "127357005"
+        "snomed": "127357005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -99,7 +106,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abnormal structure (finding)",
-        "snomed": "396263004"
+        "snomed": "396263004",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -112,7 +120,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Accident or injury (finding)",
-        "snomed": "444109000"
+        "snomed": "444109000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -125,7 +134,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Infectious disease (disorder)",
-        "snomed": "363742007"
+        "snomed": "363742007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -138,7 +148,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Asthma (disorder)",
-        "snomed": "416431000"
+        "snomed": "416431000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -151,7 +162,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Hypertensive disorder (disorder)",
-        "snomed": "38341003"
+        "snomed": "38341003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -164,7 +176,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Diabetes mellitus (disorder)",
-        "snomed": "73211009"
+        "snomed": "73211009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -177,7 +190,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Myocardial infarction (disorder)",
-        "snomed": "44054006"
+        "snomed": "44054006",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -190,7 +204,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Fracture of bone (finding)",
-        "snomed": "40055000"
+        "snomed": "40055000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -203,7 +218,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abdominal pain (finding)",
-        "snomed": "233604007"
+        "snomed": "233604007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -216,7 +232,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Fatigue (finding)",
-        "snomed": "84227008"
+        "snomed": "84227008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -229,7 +246,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Edema (finding)",
-        "snomed": "267035008"
+        "snomed": "267035008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -242,7 +260,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Headache (finding)",
-        "snomed": "439401007"
+        "snomed": "439401007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -255,7 +274,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Cough (finding)",
-        "snomed": "422400008"
+        "snomed": "422400008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -268,7 +288,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Nausea (finding)",
-        "snomed": "162506004"
+        "snomed": "162506004",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -281,7 +302,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Vomiting (finding)",
-        "snomed": "162547009"
+        "snomed": "162547009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -294,7 +316,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Fever (finding)",
-        "snomed": "440620005"
+        "snomed": "440620005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -307,7 +330,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Jaundice (finding)",
-        "snomed": "267036009"
+        "snomed": "267036009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -320,7 +344,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Cyanosis (finding)",
-        "snomed": "267038005"
+        "snomed": "267038005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -333,7 +358,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Erythema (finding)",
-        "snomed": "267041001"
+        "snomed": "267041001",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -346,7 +372,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Swelling (finding)",
-        "snomed": "271168003"
+        "snomed": "271168003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -359,7 +386,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Stiffness (finding)",
-        "snomed": "271336007"
+        "snomed": "271336007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -372,7 +400,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding of grade (finding)",
-        "snomed": "247475003"
+        "snomed": "247475003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -385,7 +414,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding reported by subject or history provider (finding)",
-        "snomed": "47301000124102"
+        "snomed": "47301000124102",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -398,7 +428,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Drug action (finding)",
-        "snomed": "50974000"
+        "snomed": "50974000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -411,7 +442,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Prognosis/outlook finding (finding)",
-        "snomed": "409096001"
+        "snomed": "409096001",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -424,7 +456,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Bleeding (finding)",
-        "snomed": "443048008"
+        "snomed": "443048008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -437,7 +470,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Drug interaction (finding)",
-        "snomed": "116514007"
+        "snomed": "116514007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -450,7 +484,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Wound finding (finding)",
-        "snomed": "420399009"
+        "snomed": "420399009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -463,7 +498,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding related to urine (finding)",
-        "snomed": "260029007"
+        "snomed": "260029007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -476,7 +512,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Finding related to mental state (finding)",
-        "snomed": "129285004"
+        "snomed": "129285004",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -489,7 +526,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abnormal result (finding)",
-        "snomed": "312854002"
+        "snomed": "312854002",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -502,7 +540,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Pain (finding)",
-        "snomed": "105001003"
+        "snomed": "105001003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -515,7 +554,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abnormal posture (finding)",
-        "snomed": "249673005"
+        "snomed": "249673005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -528,7 +568,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Palpitations (finding)",
-        "snomed": "271327008"
+        "snomed": "271327008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -541,7 +582,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abdominal distension (finding)",
-        "snomed": "162607003"
+        "snomed": "162607003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -554,7 +596,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Abdominal tenderness (finding)",
-        "snomed": "162608008"
+        "snomed": "162608008",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -567,7 +610,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Rectal bleeding (finding)",
-        "snomed": "162610000"
+        "snomed": "162610000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -580,7 +624,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Melena (finding)",
-        "snomed": "162611001"
+        "snomed": "162611001",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -593,7 +638,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Hematemesis (finding)",
-        "snomed": "162614009"
+        "snomed": "162614009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -606,7 +652,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Hemoptysis (finding)",
-        "snomed": "162615005"
+        "snomed": "162615005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -619,7 +666,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Night sweats (finding)",
-        "snomed": "162619004"
+        "snomed": "162619004",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -632,7 +680,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Weight loss (finding)",
-        "snomed": "162620005"
+        "snomed": "162620005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -645,7 +694,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Weight gain (finding)",
-        "snomed": "162621009"
+        "snomed": "162621009",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -658,7 +708,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Polyuria (finding)",
-        "snomed": "162622002"
+        "snomed": "162622002",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -671,7 +722,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Polydipsia (finding)",
-        "snomed": "162623007"
+        "snomed": "162623007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -684,7 +736,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Polyphagia (finding)",
-        "snomed": "162624001"
+        "snomed": "162624001",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -697,7 +750,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Oliguria (finding)",
-        "snomed": "162625000"
+        "snomed": "162625000",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -710,7 +764,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Dizziness (finding)",
-        "snomed": "271442005"
+        "snomed": "271442005",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -723,7 +778,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Weakness (finding)",
-        "snomed": "271807003"
+        "snomed": "271807003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -736,7 +792,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Constipation (finding)",
-        "snomed": "162573006"
+        "snomed": "162573006",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -749,7 +806,9 @@
       "type": "Condition",
       "metadata": {
         "label": "Diarrhea (finding)",
-        "snomed": "162476003"
+        "snomed": "162476003",
+        "_predicates": ["HAS_CONDITION"],
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -762,7 +821,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Chest pain (finding)",
-        "snomed": "162397003"
+        "snomed": "162397003",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   },
@@ -775,7 +835,8 @@
       "type": "Condition",
       "metadata": {
         "label": "Shortness of breath (finding)",
-        "snomed": "422587007"
+        "snomed": "422587007",
+        "_predicates": ["HAS_CONDITION"]
       }
     }
   }

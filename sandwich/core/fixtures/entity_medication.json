@@ -8,7 +8,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Paracetamol (substance)",
-        "snomed": "387517004"
+        "snomed": "387517004",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -21,7 +22,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Ibuprofen (substance)",
-        "snomed": "387207008"
+        "snomed": "387207008",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -34,7 +36,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Aspirin (substance)",
-        "snomed": "387458008"
+        "snomed": "387458008",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -47,7 +50,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Amoxicillin (substance)",
-        "snomed": "372687004"
+        "snomed": "372687004",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -60,7 +64,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Metformin (substance)",
-        "snomed": "109081006"
+        "snomed": "109081006",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -73,7 +78,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Simvastatin (substance)",
-        "snomed": "387584000"
+        "snomed": "387584000",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -86,7 +92,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Atorvastatin (substance)",
-        "snomed": "373444002"
+        "snomed": "373444002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -99,7 +106,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Omeprazole (substance)",
-        "snomed": "387137007"
+        "snomed": "387137007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -112,7 +120,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Lisinopril (substance)",
-        "snomed": "386873009"
+        "snomed": "386873009",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -125,7 +134,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Levothyroxine sodium (substance)",
-        "snomed": "126202002"
+        "snomed": "126202002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -138,7 +148,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Amlodipine (substance)",
-        "snomed": "386864001"
+        "snomed": "386864001",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -151,7 +162,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Hydrochlorothiazide (substance)",
-        "snomed": "387525002"
+        "snomed": "387525002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -164,7 +176,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Losartan (substance)",
-        "snomed": "386876001"
+        "snomed": "386876001",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -177,7 +190,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Metoprolol (substance)",
-        "snomed": "372826007"
+        "snomed": "372826007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -190,7 +204,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Sertraline (substance)",
-        "snomed": "372653009"
+        "snomed": "372653009",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -203,7 +218,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Citalopram (substance)",
-        "snomed": "372596005"
+        "snomed": "372596005",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -216,7 +232,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Alprazolam (substance)",
-        "snomed": "387558006"
+        "snomed": "387558006",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -229,7 +246,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Warfarin (substance)",
-        "snomed": "372756006"
+        "snomed": "372756006",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -242,7 +260,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Clopidogrel (substance)",
-        "snomed": "387247008"
+        "snomed": "387247008",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -255,7 +274,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Doxycycline (substance)",
-        "snomed": "372478003"
+        "snomed": "372478003",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -268,7 +288,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Prednisone (substance)",
-        "snomed": "116602009"
+        "snomed": "116602009",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -281,7 +302,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Furosemide (substance)",
-        "snomed": "387475002"
+        "snomed": "387475002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -294,7 +316,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Albuterol (substance)",
-        "snomed": "372897005"
+        "snomed": "372897005",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -307,7 +330,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Gabapentin (substance)",
-        "snomed": "386845007"
+        "snomed": "386845007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -320,7 +344,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Tramadol (substance)",
-        "snomed": "386858008"
+        "snomed": "386858008",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -333,7 +358,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Carvedilol (substance)",
-        "snomed": "386870000"
+        "snomed": "386870000",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -346,7 +372,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Pantoprazole (substance)",
-        "snomed": "386963006"
+        "snomed": "386963006",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -359,7 +386,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Escitalopram (substance)",
-        "snomed": "404833000"
+        "snomed": "404833000",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -372,7 +400,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Rosuvastatin (substance)",
-        "snomed": "408036003"
+        "snomed": "408036003",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -385,7 +414,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Montelukast (substance)",
-        "snomed": "395892000"
+        "snomed": "395892000",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -398,7 +428,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Fluoxetine (substance)",
-        "snomed": "372767007"
+        "snomed": "372767007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -411,7 +442,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Azithromycin (substance)",
-        "snomed": "387531004"
+        "snomed": "387531004",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -424,7 +456,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Cetirizine (substance)",
-        "snomed": "372523007"
+        "snomed": "372523007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -437,7 +470,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Ciprofloxacin (substance)",
-        "snomed": "392412000"
+        "snomed": "392412000",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -450,7 +484,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Insulin (substance)",
-        "snomed": "67866001"
+        "snomed": "67866001",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -463,7 +498,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Morphine (substance)",
-        "snomed": "73572009"
+        "snomed": "73572009",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -476,7 +512,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Hydrocodone (substance)",
-        "snomed": "387365002"
+        "snomed": "387365002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -489,7 +526,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Oxycodone (substance)",
-        "snomed": "55452001"
+        "snomed": "55452001",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -502,7 +540,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Fentanyl (substance)",
-        "snomed": "373492002"
+        "snomed": "373492002",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -515,7 +554,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Digoxin (substance)",
-        "snomed": "387461009"
+        "snomed": "387461009",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   },
@@ -528,7 +568,8 @@
       "type": "Medication",
       "metadata": {
         "label": "Clonazepam (substance)",
-        "snomed": "387383007"
+        "snomed": "387383007",
+        "_predicates": ["TAKES_MEDICATION"]
       }
     }
   }

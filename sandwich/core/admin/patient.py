@@ -15,7 +15,6 @@ from django.utils.safestring import SafeString
 
 from sandwich.core.factories.errors import FactoryError
 from sandwich.core.factories.fact import generate_facts_for_predicate
-from sandwich.core.factories.fact import predicate_entity_map
 from sandwich.core.models import Fact
 from sandwich.core.models import Patient
 from sandwich.core.models.predicate import PredicateName
@@ -73,7 +72,7 @@ class GenerateFactsForm(forms.Form):
         self.helper = FormHelper()
         self.helper.add_input(Submit("save", "Generate"))
 
-        for predicate_name in predicate_entity_map:
+        for predicate_name in PredicateName:
             self.fields[predicate_field_name(predicate_name)] = forms.IntegerField(
                 initial=5,
                 min_value=0,
@@ -98,7 +97,7 @@ def generate_patient_facts(request: AuthenticatedHttpRequest) -> HttpResponse:
         for patient_id in form.cleaned_data["ids"].split(","):
             patient = Patient.objects.get(pk=patient_id)
             facts = []
-            for predicate_name in predicate_entity_map:
+            for predicate_name in PredicateName:
                 count = form.cleaned_data[predicate_field_name(predicate_name)]
                 if count:
                     try:
