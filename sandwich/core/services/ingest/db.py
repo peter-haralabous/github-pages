@@ -122,7 +122,7 @@ def save_triples(
             subj = t.subject
             obj = getattr(t, "obj", None) if hasattr(t, "obj") else getattr(t, "object", None)
             if obj is None:
-                logger.warning("[save_triples] Skipping triple with no object")
+                logger.warning("Skipping triple with no object")
                 continue
             pred = t.normalized_predicate
             predicate_text = t.predicate
@@ -140,9 +140,9 @@ def save_triples(
                 object=object_entity,
                 provenance=provenance_obj,
             )
-            logger.info("[save_triples] Saved Fact: %r", fact.id)
+            logger.info("Saved Fact: %r", fact.id)
             count += 1
         except Exception:
-            logger.exception("[save_triples] Failed to save triple: %r", t)
+            logger.exception("Failed to save triple: %r", t)
 
     return count

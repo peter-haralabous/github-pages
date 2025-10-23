@@ -118,7 +118,7 @@ def _process_response(valid_response, patient, page_index: int, llm_client) -> l
             pred_label = pred.predicate_type if (pred is not None and hasattr(pred, "predicate_type")) else pred
             if pred_label not in set(PREDICATE_NAMES):
                 logger.warning(
-                    "[extract_image_triples_from_pdf] Dropping triple with out-of-schema predicate: %s",
+                    "Dropping triple with out-of-schema predicate: %s",
                     pred_label,
                 )
                 continue
@@ -126,7 +126,7 @@ def _process_response(valid_response, patient, page_index: int, llm_client) -> l
             t.provenance = _provenance_dict(page_index, llm_client)
             filtered_triples.append(t)
     except (json.JSONDecodeError, TypeError, AttributeError, pydantic.ValidationError, ValueError):
-        logger.exception("[extract_image_triples_from_pdf] Could not parse or validate content as triples.")
+        logger.exception("Could not parse or validate content as triples.")
         return []
     else:
         return filtered_triples
