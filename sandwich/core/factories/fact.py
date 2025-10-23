@@ -7,6 +7,7 @@ from sandwich.core.models import Patient
 from sandwich.core.models import Predicate
 from sandwich.core.models.entity import EntityType
 from sandwich.core.models.predicate import PredicateName
+from sandwich.core.service.predicate_service import predicate_for_predicate_name
 
 # Map a predicate name to kwargs for Entity.objects.filter
 # Extend this to add support for other predicates
@@ -52,5 +53,5 @@ def generate_facts_for_predicate(patient: Patient, predicate_name: PredicateName
     return FactFactory.create_batch(
         size=count,
         subject=Entity.for_patient(patient),
-        predicate=Predicate.for_name(predicate_name),
+        predicate=predicate_for_predicate_name(predicate_name),
     )
