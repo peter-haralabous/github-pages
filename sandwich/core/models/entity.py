@@ -41,4 +41,6 @@ class Entity(BaseModel):
     def __str__(self) -> str:
         if self.metadata and "label" in self.metadata:
             return str(self.metadata["label"])
+        if self.metadata and "name" in self.metadata:
+            return str(self.metadata["name"])
         return str(self.pk)
