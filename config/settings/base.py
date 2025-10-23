@@ -427,11 +427,6 @@ WEBPACK_LOADER = {
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     },
 }
-# Procrastinate (Task queue)
-# ------------------------------------------------------------------------------
-# https://procrastinate.readthedocs.io/en/stable/howto/django/settings.html#customize-the-app-integration-through-settings
-# Dotted paths to additional modules containing tasks.
-PROCRASTINATE_IMPORT_PATHS = ["sandwich.core.service.procrastinate_service"]
 
 # Your stuff...
 # ------------------------------------------------------------------------------
