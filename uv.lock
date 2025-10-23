@@ -377,7 +377,7 @@ wheels = [
 
 [[package]]
 name = "ddtrace"
-version = "3.14.3"
+version = "3.16.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bytecode" },
@@ -385,21 +385,21 @@ dependencies = [
     { name = "legacy-cgi" },
     { name = "opentelemetry-api" },
     { name = "protobuf" },
-    { name = "typing-extensions" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/84/87/775b849a4b07b6f76d1eb3cb8c40785c170acda110d714d9449f0e2a9dd9/ddtrace-3.14.3.tar.gz", hash = "sha256:4fcff7fad04a45e604066a0ab9f410577a8aa4342b8573b67ad7aa22bf11a014", size = 7259119, upload-time = "2025-09-23T09:52:37.41Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c0/35/028fe174ec1a1da8977d4900297f4493a77e93dee1af700f473e692d010e/ddtrace-3.16.2.tar.gz", hash = "sha256:cfef021790635b6dda949e89298b7fed3b5e686c55b46afe9483cebcc0f10a86", size = 7408082, upload-time = "2025-10-21T19:29:32.004Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4e/72/6de345da2a526d760ca7514578667b9ac8701caa4d4744509e73c455acdc/ddtrace-3.14.3-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:134c88597a872b7accdfa619070a5fe47e28d45b3bc657719136f9bb16118ee4", size = 5978983, upload-time = "2025-09-23T09:51:16.721Z" },
-    { url = "https://files.pythonhosted.org/packages/0d/1a/4e91942b57e4430affcf1920a6d0845224d7a2d6870b2afff81612cd6813/ddtrace-3.14.3-cp313-cp313-macosx_12_0_x86_64.whl", hash = "sha256:d432b1706cc82bd2b9459ce435e3b48fae7bbdfbe1178c1044e5720f659a2d88", size = 6314731, upload-time = "2025-09-23T09:51:19.133Z" },
-    { url = "https://files.pythonhosted.org/packages/c4/53/f5c59ac26949f37fa2d6f16315bf59e8e561636568a741d04198b286ff91/ddtrace-3.14.3-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:21cfce7708822e731cae43d853874b33bc437e664fe5478710a76105dc574834", size = 6948529, upload-time = "2025-09-23T09:51:21.287Z" },
-    { url = "https://files.pythonhosted.org/packages/69/7a/8ab1dd14713af7210aebeff6ae86123682c0983643117299ec553cfcce8b/ddtrace-3.14.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:90a5f1c13467a067bd54a8bd1320d0652a4ca5fc10d63b1f1cc2530aa52d584c", size = 7229952, upload-time = "2025-09-23T09:51:23.464Z" },
-    { url = "https://files.pythonhosted.org/packages/cd/d7/cb4b6605601632c8bf09428f47c18a7e1be9d3b43a7facc10574e1d9be84/ddtrace-3.14.3-cp313-cp313-manylinux_2_28_i686.whl", hash = "sha256:0e9cd21569c16925b579284fb48d2128311ef2e535dcfd062e739f07e2cb1ff3", size = 5053001, upload-time = "2025-09-23T09:51:25.992Z" },
-    { url = "https://files.pythonhosted.org/packages/75/81/6df2644cff42a40cce97b53a6ba63f6fdf807e2e9c76731f0d6de98d06c6/ddtrace-3.14.3-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:df2d4f728e96f70c8fe22e0afd04414786ffc66acf44561593a74945c8e06cc6", size = 7962934, upload-time = "2025-09-23T09:51:28.335Z" },
-    { url = "https://files.pythonhosted.org/packages/2c/d2/4fb65ef1320460512e963532e34538fac44216e238797adf423c44b60949/ddtrace-3.14.3-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:ae4ee193dac22b0a906207962da7cc143417e2ab327c0585481126be90c2dd33", size = 6148469, upload-time = "2025-09-23T09:51:30.68Z" },
-    { url = "https://files.pythonhosted.org/packages/98/c2/4d6e52f3014c0ca53ea3df1037b805531ee531c7a5f28539ebe561e3ffbf/ddtrace-3.14.3-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:f3e4ea454cdd5cf03d09d8a39a42a98c65b43f77efa9ceafa98af580dd0bc7a9", size = 8293615, upload-time = "2025-09-23T09:51:33.038Z" },
-    { url = "https://files.pythonhosted.org/packages/a0/8d/e07a44a6adbe619d3b7fda6c62ee4d2490ddf5ca852c6a8ed772dd72b48e/ddtrace-3.14.3-cp313-cp313-win32.whl", hash = "sha256:e31590df73c1d9cff3883d3e875f9a18970192e675286a886f7926470a51f634", size = 4309489, upload-time = "2025-09-23T09:51:35.391Z" },
-    { url = "https://files.pythonhosted.org/packages/ae/d7/b0def531f4a4de9b6c44aaf4cfeefbf202325537b1f9b9ec67fa15b11750/ddtrace-3.14.3-cp313-cp313-win_amd64.whl", hash = "sha256:c89087ba2b133ba8229204b313b1de80f64e2e848e8597e5c63aca19b42da6f4", size = 4807515, upload-time = "2025-09-23T09:51:37.976Z" },
+    { url = "https://files.pythonhosted.org/packages/13/2e/a7dde061252cd565f92d627b0c372db2747874bdbc17333f154b2be6bb18/ddtrace-3.16.2-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:74c7b6c2ef0043b902c6cd7eda3cad5a866d1251c83f14b8c49abb8e1e67a2b1", size = 6329879, upload-time = "2025-10-21T19:27:21.968Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/ba/d6e486dc27f9ba04be4ad90789dfbceb394ea5960219ed83aef5c7878634/ddtrace-3.16.2-cp313-cp313-macosx_12_0_x86_64.whl", hash = "sha256:adfe6373014b9f37a99d894986c6117b7fb0486d52b4990c2647f93e838c540a", size = 6679188, upload-time = "2025-10-21T19:27:24.339Z" },
+    { url = "https://files.pythonhosted.org/packages/06/d5/2090abf84fe9cfc941b3a903c638b8157d7a15d016348df6ce7cad733e1c/ddtrace-3.16.2-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:66e68846b9b617a1311d8b76c1c5d7bee552cb0af68dc2ccf9af91abc55a74af", size = 7377794, upload-time = "2025-10-21T19:27:26.986Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/88/07bccc2d9b22ec6114015468772a3451697fcc3c1a39bfb357bdbdfb43e2/ddtrace-3.16.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:6822b1b9cd2f6ad3db4d76a05e22adad21878bcff6bd9ba7b7cd581c9136c00c", size = 7649664, upload-time = "2025-10-21T19:27:29.294Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/e7/433d8d2d5a9614a1adcadf54cf3c21afe151fa714208ff7fd40e3435496c/ddtrace-3.16.2-cp313-cp313-manylinux_2_28_i686.whl", hash = "sha256:9f4f5adedcfb1f42a02ac7c7370887001ce71826141885da49bb2da39a440125", size = 5498780, upload-time = "2025-10-21T19:27:31.703Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/a1/1339416eeeb39dab87f750038460f922e40681b3ca0089d6c6a5139c00ff/ddtrace-3.16.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:070cf3f7571a2b8640a6663f476c157b110b3a88b1c7f7941615b746bc4c6c99", size = 8394692, upload-time = "2025-10-21T19:27:34.52Z" },
+    { url = "https://files.pythonhosted.org/packages/75/24/a380640e605daebfb7791bdcc92bef8d7474ad913807276f9f21117aa323/ddtrace-3.16.2-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:873a06e21bd00a20d4453cea30bf44e877b657d0cf911aabbf6c8945cfbb31b6", size = 6584925, upload-time = "2025-10-21T19:27:37.209Z" },
+    { url = "https://files.pythonhosted.org/packages/15/80/6126563c16d9a28cb03f4318bde899e402662e14e97351569640ff833608/ddtrace-3.16.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:af28ecad6a6379bb5e18979baeb3defe5dea101bc0608e5032a18aa4c38340b2", size = 8727833, upload-time = "2025-10-21T19:27:39.584Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/9c/1b0aa8e0984e3d4f58e7ee9e6a5b938ae45645847f7ae52583fbaff1314e/ddtrace-3.16.2-cp313-cp313-win32.whl", hash = "sha256:a42fc81e7bd6a80c297ee891ac8169a0d1efcdd6b7b0ea5478f3bc3deb1aa8af", size = 5033513, upload-time = "2025-10-21T19:27:44.02Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/66/dfb088db59b580a6e1ff0a180029ff90dab684b6a60abfe4a5dad0f8e19b/ddtrace-3.16.2-cp313-cp313-win_amd64.whl", hash = "sha256:f61291e94d37ae1de5456e11e1f55a56eda6a622a0b4e6a1e59b481cc87e29ba", size = 5592118, upload-time = "2025-10-21T19:27:47.486Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/f4/164c40d8cd0392e86ea58194428fa1bd0fff7224ee01d5fa77abe4ae467c/ddtrace-3.16.2-cp313-cp313-win_arm64.whl", hash = "sha256:c3dedde96f9906556c20c76ef0e7f8a2fc24db394b5a095ce6c6dab21facf20f", size = 5311416, upload-time = "2025-10-21T19:27:50.107Z" },
 ]
 
 [[package]]
@@ -2361,7 +2361,7 @@ requires-dist = [
     { name = "boto3", specifier = ">=1.40.26" },
     { name = "crispy-tailwind", specifier = ">=1.0.3" },
     { name = "daphne", specifier = ">=4.2.1" },
-    { name = "ddtrace", specifier = ">=3.14.3" },
+    { name = "ddtrace", specifier = ">=3.16.2" },
     { name = "django", specifier = "==5.2.7" },
     { name = "django-allauth", extras = ["mfa", "socialaccount"], specifier = "==65.12.0" },
     { name = "django-anymail", extras = ["amazon-ses"], specifier = "==13.1" },
