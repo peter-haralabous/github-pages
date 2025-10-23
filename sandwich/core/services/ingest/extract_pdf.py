@@ -6,6 +6,7 @@ from io import BytesIO
 
 import pydantic
 from langchain_core.language_models import BaseChatModel
+from pdf2image import convert_from_bytes
 from pdf2image import convert_from_path
 
 from sandwich.core.services.ingest.db import save_triples
@@ -16,11 +17,15 @@ from sandwich.core.services.ingest.schema import PREDICATE_NAMES
 logger = logging.getLogger(__name__)
 
 
-def convert_pages(pdf_path: str) -> list[bytes]:
+def convert_pages(pdf_source: str | bytes) -> list[bytes]:
     """
     Convert each page of a PDF to PNG image bytes (for LLM image input).
+    Accepts either a filesystem path or raw PDF bytes.
     """
-    images = convert_from_path(pdf_path, fmt="png")
+    if isinstance(pdf_source, bytes | bytearray):
+        images = convert_from_bytes(pdf_source, fmt="png")
+    else:
+        images = convert_from_path(pdf_source, fmt="png")
     page_pngs = []
     for img in images:
         buf = BytesIO()
@@ -106,7 +111,7 @@ def _process_response(response, patient, page_index: int, llm_client) -> list:
 
 
 def extract_facts_from_pdf(
-    pdf_path: str,
+    pdf_source: str | bytes,
     llm_client: BaseChatModel,
     patient=None,
 ) -> list:
@@ -122,7 +127,7 @@ def extract_facts_from_pdf(
         schema=IngestPromptWithContextResponse, method="json_mode"
     )
 
-    images = convert_pages(pdf_path)
+    images = convert_pages(pdf_source)
     all_triples: list = []
     for i, image_bytes in enumerate(images, start=1):
         base64_img = base64.b64encode(image_bytes).decode("utf-8")
