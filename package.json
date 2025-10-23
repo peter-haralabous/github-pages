@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@datadog/browser-rum": "^6.21.1",
+    "htmx-ext-sse": "^2.2.4",
     "htmx.org": "^2.0.7"
   },
   "devDependencies": {

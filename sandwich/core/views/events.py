@@ -18,4 +18,12 @@ async def events(request: HttpRequest):
             yield f"data: {random.choice(emojis)} {i}\n\n"  # noqa: S311
             await asyncio.sleep(1)
 
-    return StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+    return StreamingHttpResponse(
+        event_stream(),
+        content_type="text/event-stream",
+        # without no-transform webpack-dev-server will buffer the stream
+        # https://github.com/chimurai/http-proxy-middleware/issues/371
+        headers={
+            "Cache-Control": "no-store, no-transform",
+        },
+    )

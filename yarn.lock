@@ -3379,7 +3379,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"htmx.org@npm:^2.0.7":
+"htmx-ext-sse@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "htmx-ext-sse@npm:2.2.4"
+  dependencies:
+    htmx.org: "npm:^2.0.2"
+  checksum: 10c0/d21b435a1746114f6ec1044e7b450346cf3171cb48a4046907e7ff43d58c06dea819fcb22944aef62e0eccf5b90664aa71c40ec473ba11a6c4339462328bae86
+  languageName: node
+  linkType: hard
+
+"htmx.org@npm:^2.0.2, htmx.org@npm:^2.0.7":
   version: 2.0.7
   resolution: "htmx.org@npm:2.0.7"
   checksum: 10c0/3b97e78cd28619574f34ab58d92aae201219cc02826292c535711c17768b7d9f05a4107192ea575651bc60d95a32afa084520d416696b4402beb95dfa715ac16
@@ -4981,6 +4990,7 @@ __metadata:
     concurrently: "npm:^9.0.0"
     css-loader: "npm:^7.1.2"
     daisyui: "npm:^5.1.10"
+    htmx-ext-sse: "npm:^2.2.4"
     htmx.org: "npm:^2.0.7"
     lit: "npm:^3.3.1"
     mini-css-extract-plugin: "npm:^2.4.5"
