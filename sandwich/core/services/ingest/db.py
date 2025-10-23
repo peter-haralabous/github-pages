@@ -140,7 +140,7 @@ def save_triples(
                 object=object_entity,
                 provenance=provenance_obj,
             )
-            logger.info("Saved Fact: %r", fact.id)
+            logger.info("Saved Fact", extra={"fact_id": fact.id})
             count += 1
         except Exception:
             logger.exception("Failed to save triple: %r", t)

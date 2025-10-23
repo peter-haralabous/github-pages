@@ -61,7 +61,7 @@ def _validate_or_trim(parsed):
         if isinstance(parsed, dict) and "triples" in parsed and isinstance(parsed["triples"], list):
             parsed["triples"] = parsed["triples"][:-1]
             result = IngestPromptWithContextResponse.model_validate(parsed)
-            logger.warning("skipped invalid last record in triples extraction")
+            logger.warning("Skipped invalid last record in triples extraction")
             return result
 
 
@@ -91,15 +91,15 @@ def _process_response(response, patient, page_index: int, llm_client) -> list:
             pred_label = pred.predicate_type if (pred is not None and hasattr(pred, "predicate_type")) else pred
             if pred_label not in set(PREDICATE_NAMES):
                 logger.warning(
-                    "Dropping triple with out-of-schema predicate: %s",
-                    pred_label,
+                    "Dropping triple with out-of-schema predicate",
+                    extra={"predicate": pred_label, "page_index": page_index},
                 )
                 continue
             t.subject.node["patient_id"] = str(getattr(patient, "id", "-1"))
             t.provenance = _provenance_dict(page_index, llm_client)
             filtered_triples.append(t)
     except (TypeError, AttributeError, pydantic.ValidationError, ValueError):
-        logger.exception("Could not validate structured triples for page %d", page_index)
+        logger.exception("Could not validate structured triples", extra={"page_index": page_index})
         return []
     else:
         return filtered_triples
@@ -135,6 +135,6 @@ def extract_facts_from_pdf(
                 save_triples(triples_to_save, patient=patient, source_type="pdf")
             continue
         except (ValueError, TypeError, AttributeError, RuntimeError, ConnectionError, TimeoutError, OSError):
-            logger.exception("Failed to extract triples from page %d", i)
+            logger.exception("Failed to extract triples", extra={"page_index": i})
             continue
     return all_triples
