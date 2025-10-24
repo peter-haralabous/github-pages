@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pytest
 
 from sandwich.core.service.llm import ModelName
 from sandwich.core.service.llm import get_llm
+from sandwich.core.services.ingest.extract_pdf import convert_pages
 from sandwich.core.services.ingest.extract_pdf import extract_facts_from_pdf
 
 
@@ -31,3 +34,22 @@ def test_extract_facts_from_pdf(tmp_path):
     # Check for at least one patient node with expected demographics (allow partials)
     has_name = any(n.get("first_name") == "Jane" and n.get("last_name") == "Doe" for n in patient_nodes)
     assert has_name, f"Expected patient name not found in any triple: {patient_nodes}"
+
+
+def test_convert_pages_from_path():
+    pdf_path = "sandwich/core/fixtures/mock_health_data.pdf"
+    pages = convert_pages(pdf_path)
+    assert isinstance(pages, list)
+    assert pages, "Expected at least one page image"
+    assert isinstance(pages[0], bytes | bytearray)
+
+
+def test_convert_pages_from_bytes():
+    pdf_path = "sandwich/core/fixtures/mock_health_data.pdf"
+    with Path(pdf_path).open("rb") as fh:
+        pdf_bytes = fh.read()
+    pages = convert_pages(pdf_bytes)
+    assert isinstance(pages, list)
+    assert pages, "Expected at least one page image when passing bytes"
+    assert isinstance(pages[0], bytes | bytearray)
+    assert isinstance(pages[0], bytes | bytearray)
