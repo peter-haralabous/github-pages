@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from django.test import Client
 from django.urls import reverse
+from guardian.shortcuts import assign_perm
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models.encounter import Encounter
@@ -70,7 +71,15 @@ def test_patient_add(provider: User, organization: Organization) -> None:
 
 
 @pytest.mark.django_db
-def test_patient_add_deny_access(user: User, organization: Organization, patient: Patient) -> None:
+def test_patient_add_deny_access_not_provider(user: User, organization: Organization) -> None:
+    data = {
+        "first_name": "Jacob",
+        "last_name": "Newpatient",
+        "date_of_birth": date(1961, 6, 6),
+        "province": "BC",
+        "phn": "9111111117",  # BC requires more specific PHN
+    }
+
     client = Client()
     client.force_login(user)
     res = client.post(
@@ -79,7 +88,36 @@ def test_patient_add_deny_access(user: User, organization: Organization, patient
             kwargs={
                 "organization_id": organization.id,
             },
-        )
+        ),
+        data=data,
+    )
+
+    assert res.status_code == 404
+
+
+@pytest.mark.django_db
+def test_patient_add_deny_access_missing_perms(user: User, organization: Organization) -> None:
+    data = {
+        "first_name": "Jacob",
+        "last_name": "Newpatient",
+        "date_of_birth": date(1961, 6, 6),
+        "province": "BC",
+        "phn": "9111111117",  # BC requires more specific PHN
+    }
+
+    # Has `create_encounter` but not `create_patient`
+    assign_perm("create_encounter", user, organization)
+
+    client = Client()
+    client.force_login(user)
+    res = client.post(
+        reverse(
+            "providers:patient_add",
+            kwargs={
+                "organization_id": organization.id,
+            },
+        ),
+        data=data,
     )
 
     assert res.status_code == 404

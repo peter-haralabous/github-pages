@@ -18,7 +18,7 @@ def get_provider_organizations(user: User) -> QuerySet[Organization]:
 
     # TODO: move to user.provider_organizations?
     organizations = Organization.objects.filter(
-        role__group__user=user, role__name__in=(RoleName.OWNER, RoleName.STAFF)
+        role__group__user=user, role__name__in=(RoleName.OWNER, RoleName.ADMIN, RoleName.STAFF)
     ).distinct()
 
     count = organizations.count()
