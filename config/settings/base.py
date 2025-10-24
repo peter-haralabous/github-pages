@@ -105,7 +105,7 @@ THIRD_PARTY_APPS = [
     "procrastinate.contrib.django",
     "private_storage",
     "guardian",
-    "heroicons",
+    "lucide",
 ]
 
 LOCAL_APPS = [

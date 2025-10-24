@@ -1,6 +1,6 @@
 {% extends "base_top_nav.html" %}
 
-{% load heroicons %}
+{% load lucide %}
 
 {% block topnav %}
   {% include 'partials/topnav.html' %}
@@ -13,7 +13,7 @@
         {% for patient in user_patients %}
           <li>
             <a href="{% url 'patients:patient_details' patient_id=patient.id %}">
-              {% heroicon_outline "user-circle" class="size-6" %}
+              {% lucide "circle-user" class="size-6" %}
               {{ patient.full_name }}
             </a>
           </li>
@@ -21,7 +21,7 @@
         {% for org in user_organizations %}
           <li>
             <a href="{% url 'providers:organization' organization_id=org.id %}">
-              {% heroicon_outline "building-office" class="size-6" %}
+              {% lucide "building-2" class="size-6" %}
               {{ org.name }}
             </a>
           </li>

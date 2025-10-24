@@ -1,6 +1,6 @@
 {% extends "patient/base.html" %}
 
-{% load heroicons %}
+{% load lucide %}
 
 {% block content %}
   <h1 class="mb-4">My Health Records</h1>
@@ -26,7 +26,7 @@
       <button id="upload-btn"
               type="button"
               class="btn btn-primary btn-sm flex items-center gap-1">
-        {% heroicon_outline "arrow-up-on-square" class="size-4" %}
+        {% lucide "file-up" class="size-4" %}
         Upload
       </button>
       <form id="upload-form"

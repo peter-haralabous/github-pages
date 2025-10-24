@@ -211,7 +211,7 @@ dependencies = [
     "freezegun>=1.5.5",
     "granian>=2.5.5",
     "gunicorn==23.0.0",
-    "heroicons[django]>=2.13.0",
+    "lucide[django]>=1.1.3",
     "langchain[aws,google-genai]>=0.3.27",
     "markdown==3.9",
     "markdown-it-py==4.0.0",

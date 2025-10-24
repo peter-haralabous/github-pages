@@ -1,6 +1,6 @@
 {% extends 'partials/sidenav.html' %}
 
-{% load heroicons %}
+{% load lucide %}
 
 {% block sidenav-items %}
   {% if user_patients %}
@@ -11,7 +11,7 @@
           <li>
             <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
                class="{% if patient.id == request.resolver_match.kwargs.patient_id %}menu-active{% endif %}">
-              {% heroicon_outline "user-circle" class="size-6" %}
+              {% lucide "circle-user" class="size-6" %}
               <span>{{ patient.full_name }}</span>
             </a>
           </li>
@@ -27,7 +27,7 @@
           <li>
             <a href="{% url "providers:organization_edit" organization_id=organization.id %}"
                class="{% if organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">
-              {% heroicon_outline "building-office" class="size-6" %}
+              {% lucide "building-2" class="size-6" %}
               <span>{{ organization.name }}</span>
             </a>
           </li>
@@ -38,35 +38,35 @@
   <li>
     <a href="{% url 'account_email' %}"
        class="{% if request.resolver_match.url_name == 'account_email' %}menu-active{% endif %}">
-      {% heroicon_outline "envelope" class="size-6" %}
+      {% lucide "mail" class="size-6" %}
       <span>Email addresses</span>
     </a>
   </li>
   <li>
     <a href="{% url 'core:account_notifications' %}"
        class="{% if request.resolver_match.url_name == 'account_notifications' %}menu-active{% endif %}">
-      {% heroicon_outline "bell-alert" class="size-6" %}
+      {% lucide "bell-ring" class="size-6" %}
       <span>Notifications</span>
     </a>
   </li>
   <li>
     <a href="{% url 'mfa_index' %}"
        class="{% if request.resolver_match.url_name == 'mfa_index' %}menu-active{% endif %}">
-      {% heroicon_outline "shield-check" class="size-6" %}
+      {% lucide "shield-check" class="size-6" %}
       <span>Multi-Factor Auth</span>
     </a>
   </li>
   <li>
     <a href="{% url "core:legal" %}"
        class="{% if request.resolver_match.url_name == 'legal' %}menu-active{% endif %}">
-      {% heroicon_outline "archive-box" class="size-6" %}
+      {% lucide "archive" class="size-6" %}
       <span>Legal</span>
     </a>
   </li>
   <li>
     <a href="{% url 'core:account_delete' %}"
        class="{% if request.resolver_match.url_name == 'account_delete' %}menu-active{% endif %}">
-      {% heroicon_outline "user" class="size-6" %}
+      {% lucide "user" class="size-6" %}
       <span>Delete Account</span>
     </a>
   </li>

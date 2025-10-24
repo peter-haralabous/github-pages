@@ -6,6 +6,6 @@
 {% block grid_card_grid %}
   {% include 'component/card/grid_card_item.html' with icon_name="user" label="Name" value=patient.full_name %}
   {% include 'component/card/grid_card_item.html' with icon_name="calendar" label="Date of Birth" value=patient.date_of_birth %}
-  {% include 'component/card/grid_card_item.html' with icon_name="envelope" label="Contact" value=patient.email|default:"--" %}
+  {% include 'component/card/grid_card_item.html' with icon_name="mail" label="Contact" value=patient.email|default:"--" %}
   {% include 'component/card/grid_card_item.html' with icon_name="credit-card" label="Health Card #" value=patient.phn|default:"--" %}
 {% endblock grid_card_grid %}

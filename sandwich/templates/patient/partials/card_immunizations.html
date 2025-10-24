@@ -1,8 +1,8 @@
 {% extends "patient/partials/card_facts.html" %}
 
-{% load heroicons %}
+{% load lucide %}
 
 {% block card_title %}
-  <div class="rounded-full p-3 bg-teal-200 text-teal-800">{% heroicon_outline "shield-check" class="size-6" %}</div>
+  <div class="rounded-full p-3 bg-teal-200 text-teal-800">{% lucide "shield-check" class="size-6" %}</div>
   {{ block.super }}
 {% endblock card_title %}

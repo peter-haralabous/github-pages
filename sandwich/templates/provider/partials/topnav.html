@@ -1,6 +1,6 @@
 {% extends 'partials/topnav.html' %}
 
-{% load static i18n heroicons %}
+{% load static i18n lucide %}
 
 {% block topnav_items_start %}
   <div class="flex items-center">
@@ -10,7 +10,7 @@
 {% endblock topnav_items_start %}
 {% block topnav_items_center %}
   <label class="input">
-    {% heroicon_outline "magnifying-glass" class="size-5 opacity-50" %}
+    {% lucide "search" class="size-5 opacity-50" %}
     <input class="grow"
            type="search"
            id="command-palette-trigger"
