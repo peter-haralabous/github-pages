@@ -3,6 +3,8 @@
 {% load lucide %}
 
 {% block card_title %}
-  <div class="rounded-full p-3 bg-slate-200 text-slate-800">{% lucide "file-text" class="size-6" %}</div>
+  <div class="rounded-full p-3 bg-slate-200 text-slate-800">
+    {% lucide "file-text" class="size-6 group-hover:animate-gelatine" %}
+  </div>
   {{ block.super }}
 {% endblock card_title %}

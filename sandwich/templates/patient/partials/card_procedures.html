@@ -3,6 +3,8 @@
 {% load lucide %}
 
 {% block card_title %}
-  <div class="rounded-full p-3 bg-emerald-200 text-emerald-800">{% lucide "clipboard-check" class="size-6" %}</div>
+  <div class="rounded-full p-3 bg-emerald-200 text-emerald-800">
+    {% lucide "clipboard-check" class="size-6 group-hover:animate-gelatine" %}
+  </div>
   {{ block.super }}
 {% endblock card_title %}

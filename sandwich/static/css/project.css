@@ -6,6 +6,26 @@
   themes: corporate --default;
 }
 
+@theme {
+  /* Custom animations */
+  --animate-gelatine: gelatine 1s ease-in-out 1;
+  @keyframes gelatine {
+    from,
+    to {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(0.9, 1.1);
+    }
+    50% {
+      transform: scale(1.1, 0.9);
+    }
+    75% {
+      transform: scale(0.95, 1.05);
+    }
+  }
+}
+
 /* base.html generates alert variants at runtime */
 @source inline("alert-{success,danger,warning,info}");
 
