@@ -1,6 +1,7 @@
 {% extends "provider/base.html" %}
 
 {% load crispy_forms_tags %}
+{% load heroicons %}
 
 {% block content %}
   <div class="flex justify-between items-center mb-6">
@@ -10,7 +11,7 @@
   </div>
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body" data-encounter-create-page>
-      <h3 class="card-title mb-4">New Interaction → Select patient</h3>
+      <h3 class="card-title mb-4">New Interaction {% heroicon_outline "arrow-right" class="size-4" %} Select patient</h3>
       <!-- Patient Search Section -->
       <div class="form-control mb-6">
         <label class="label">
