@@ -8,11 +8,17 @@ from sandwich.core.models.abstract import BaseModel
 
 class EntityType(enum.Enum):
     PATIENT = "Patient"
+    # https://hl7.org/fhir/condition.html
     CONDITION = "Condition"
+    # https://hl7.org/fhir/medication.html
     MEDICATION = "Medication"
+    # https://hl7.org/fhir/observation.html
     OBSERVATION = "Observation"
+    # https://hl7.org/fhir/allergyintolerance.html
     ALLERGY_INTOLERANCE = "AllergyIntolerance"
+    # https://hl7.org/fhir/immunization.html
     IMMUNIZATION = "Immunization"
+    # https://hl7.org/fhir/procedure.html
     PROCEDURE = "Procedure"
     FAMILY_MEMBER = "FamilyMember"
 

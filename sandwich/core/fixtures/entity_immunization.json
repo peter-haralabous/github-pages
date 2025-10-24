@@ -1,0 +1,4307 @@
+[
+  {
+    "model": "core.entity",
+    "pk": "79367642-b928-4bec-9654-34a2120299e3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "54",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "adenovirus vaccine, type 4, live, oral",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "23151016-bf12-4df4-8661-2dff8df51169",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "55",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "adenovirus vaccine, type 7, live, oral",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a86bdca6-74b6-4c1b-a8a6-4b4115463610",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "82",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "adenovirus vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4f6425bc-6f93-4681-9121-1c067bc22f40",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "24",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "anthrax vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2dc33dce-7ef1-47c3-ba4f-564b3f547778",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "19",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Bacillus Calmette-Guerin vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1d8953fc-17a8-4561-b8eb-ac22651979d7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "27",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "botulinum antitoxin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "eb2517e6-f5d0-43e8-98be-af6988d3b406",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "26",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "cholera vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e0ae8e44-a1b7-435b-86d3-3c4104bf2c48",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "29",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "cytomegalovirus immune globulin, intravenous",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9ecc4fe2-d70c-436d-8245-e12cb0ce0402",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "56",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "dengue fever vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d0057dcd-05ff-439a-84df-3611ea9f1472",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "12",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria antitoxin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "609fb761-5f8b-48f9-b958-a2d0ea4047b4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "28",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria and tetanus toxoids, adsorbed for pediatric use",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "53c86b3c-8639-4fdd-a63e-488df4105641",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "20",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria, tetanus toxoids and acellular pertussis vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7dffcf11-50ea-47ea-b5b7-91166b9e2bb1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "106",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria, tetanus toxoids and acellular pertussis vaccine, 5 pertussis antigens",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "db202087-4efd-4a53-9fde-d2b58258b421",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "107",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria, tetanus toxoids and acellular pertussis vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "76e566b0-9a8b-40b6-bf81-e778984ea3f3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "110",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "DTaP-hepatitis B and poliovirus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5843c520-f004-4027-9858-ddba929f74c3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "50",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "DTaP-Haemophilus influenzae type b conjugate vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e73ff7fe-1d9e-49ad-b524-9dc40841b07f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "120",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria, tetanus toxoids and acellular pertussis vaccine, Haemophilus influenzae type b conjugate, and poliovirus vaccine, inactivated (DTaP-Hib-IPV)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "07678cb8-ad11-4735-80f6-564fcceb9ef4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "130",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Diphtheria, tetanus toxoids and acellular pertussis vaccine, and poliovirus vaccine, inactivated",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8fecd6a8-6b21-4489-b1b6-befabeb94de9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "01",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "diphtheria, tetanus toxoids and pertussis vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3ede8abf-a34d-43ef-9b6b-6b9ff8ff8bd0",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "22",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "DTP-Haemophilus influenzae type b conjugate vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bbf01163-7b12-4d8b-a8e3-a4370cf3e9bd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "102",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "DTP- Haemophilus influenzae type b conjugate and hepatitis b vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "da31e2e5-7fc2-4927-8f41-60c63623854f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "57",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hantavirus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1e2b36b1-fed7-4739-ada7-1ed26ed8105d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "52",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A vaccine, adult dosage",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "58f303f6-66a0-4eb3-97c4-9ef1a3295025",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "83",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A vaccine, pediatric/adolescent dosage, 2 dose schedule",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c4229991-6c09-4f75-a160-5793ac0f8cbf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "84",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A vaccine, pediatric/adolescent dosage, 3 dose schedule",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "45538829-bfcd-421a-a306-a32b9dd44aab",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "31",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A vaccine, pediatric dosage, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fc2567e0-4659-40eb-9f94-bc1251a3e410",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "85",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "806b6fa9-1048-4c57-be1f-41c6191ec668",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "104",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A and hepatitis B vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "170ab097-baa4-4c81-8ef8-724752fe26a6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "30",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "64182d14-a41e-4fc8-8d01-658d67721ae3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "08",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B vaccine, pediatric or pediatric/adolescent dosage",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8f0f415a-3698-4c32-93c5-37310ccdbfc2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "42",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B vaccine, adolescent/high risk infant dosage",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "898d6a42-1fce-4bbe-8731-2cf3924786cd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "43",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B vaccine, adult dosage",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9951c985-ee13-4e9d-9759-522fca99212d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "44",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B vaccine, dialysis patient dosage",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "65595f53-9bab-4c06-a938-c8e5e75a0ccf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "45",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis B vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "72eefef0-7f7a-4aec-8270-a971c0934282",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "58",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis C vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b74121da-7dc5-497b-839a-9149c4544824",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "59",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis E vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fc1031f0-0a17-4e91-aca5-bce200d582bf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "60",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "herpes simplex virus, type 2 vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9c2e470a-7677-4fd5-bb2d-0413db29008a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "46",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b vaccine, PRP-D conjugate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1f4a0d76-8250-434e-98d3-3c67c5dd9d65",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "47",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b vaccine, HbOC conjugate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6cfa1088-50ed-4170-943d-b3a2e36dd40f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "48",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b vaccine, PRP-T conjugate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "cd2f3f6f-4183-42fd-9e8b-55a877a07767",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "49",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b vaccine, PRP-OMP conjugate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f3f9370f-4b0c-4f2f-9002-2df37aa4fbda",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "17",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b vaccine, conjugate unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "64117c4d-08bf-43e0-ba99-3af12b38700f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "51",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Haemophilus influenzae type b conjugate and Hepatitis B vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4fc2ac90-327b-48a3-8adc-0e479190893d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "61",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "human immunodeficiency virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9b242b6f-12d0-4409-84a2-8b02fee2e166",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "118",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "human papilloma virus vaccine, bivalent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d52ffe23-03a4-4308-8a8a-dcd12584a35f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "62",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "human papilloma virus vaccine, quadrivalent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5de85dd1-3486-4189-8861-b17bd16a6b85",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "86",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "immune globulin, intramuscular",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d21bf733-1743-4166-aa16-b29711b9ecee",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "87",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "immune globulin, intravenous",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5dc4fbf4-78ed-4828-9759-c0db9cc836d0",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "14",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "immune globulin, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "788f8c79-0f1b-4bd7-8532-f49c5dba0758",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "111",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza virus vaccine, live, attenuated, for intranasal use",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "78653952-ce6a-4444-aa1e-9dbe26b8f7e9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "15",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza virus vaccine, split virus (incl. purified surface antigen)-retired CODE",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "aefa7617-0695-483e-b32f-906a0d902a69",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "16",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza virus vaccine, whole virus",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6f0f15cc-2a55-467d-8377-b51430c329a9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "88",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza virus vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ecf88f62-dfcc-4651-a683-8a97752e2ee9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "123",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza virus vaccine, H5N1, A/Vietnam/1203/2004 (national stockpile)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1a9b0525-ce13-42bd-a37e-ba5af13a89aa",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "10",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "poliovirus vaccine, inactivated",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0b9120d1-adab-47f7-b3a3-f35de98bff48",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "02",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "trivalent poliovirus vaccine, live, oral",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b6efb77f-e357-4129-a5e2-0da91aa0630f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "89",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "poliovirus vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "691cd76d-ecdb-4ad0-ad86-0d0dfae3c345",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "39",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Japanese Encephalitis Vaccine SC",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3983da68-e871-4f7a-b0ef-c4dd8aaf4cc4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "63",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Junin virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7ee5d52a-f821-43d4-80f7-51f5e3173718",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "64",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "leishmaniasis vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f60b06a7-f9af-4e66-85d3-1bb4cd0a079f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "65",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "leprosy vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f0ca131c-5537-4c75-b781-f1583025289a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "66",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Lyme disease vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0a63c8b8-9731-414a-9b46-2f206fad6847",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "03",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "measles, mumps and rubella virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9c76a889-0d68-4e59-9c35-f2678aa6d889",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "04",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "measles and rubella virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1abd6a0a-0869-4ec4-8c03-8d265f36fc4a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "94",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "measles, mumps, rubella, and varicella virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1b467e8c-e025-4d1e-ad27-b45af35f7a2a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "67",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "malaria vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6a80f213-cd62-43f8-a387-edf172e30589",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "05",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "measles virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c122a3b6-fc67-4b70-9ab6-271bd4736317",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "68",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "melanoma vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2616cc89-3dbf-460a-ab18-b3850de51267",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "32",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal polysaccharide vaccine (MPSV4)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ee5c8faf-0dd9-464a-bba9-25208b038041",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "103",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal C conjugate vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2b303cb6-1878-4f8a-818c-73cb8afbb663",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "114",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal polysaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4P)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7f75a4b1-20a8-4cae-b381-8e6739fdc89e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "108",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal ACWY vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0be3e706-bbdc-42f5-b93e-5e946df50788",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "07",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "mumps virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0c2cb450-32eb-418c-97a7-4347b85aa6cd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "69",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "parainfluenza-3 virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "04118772-b912-4af3-b46f-c2ec6fda9d5a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "11",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pertussis vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d35a586d-b6f3-476d-9370-ef6ad8e20e1a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "23",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "plague vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "32b2f225-155c-4c9d-ba4c-7ff72fa1cf46",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "33",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pneumococcal polysaccharide vaccine, 23 valent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3a5211e9-1c5b-42d7-8c39-fd823130cc2a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "100",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pneumococcal conjugate vaccine, 7 valent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "72d8107d-a3a6-45a1-b9bd-4e8d2d099786",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "109",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pneumococcal vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a59cf520-b120-4c94-ba5c-8cf7f1c43806",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "70",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Q fever vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a5623437-21ee-4baf-b02c-1f28a40e3a2e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "18",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rabies vaccine, for intramuscular injection RETIRED CODE",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "36904849-f3ca-4208-94b1-638bfe533c03",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "40",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rabies vaccine, for intradermal injection",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c44db182-bcf6-4d00-a859-da678b994489",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "90",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rabies vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4a067bd3-9f9e-4e38-a1d7-2c641f9b0b65",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "72",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rheumatic fever vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f3d26358-2dbb-4128-b160-593366f0cb00",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "73",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Rift Valley fever vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "231dfe7b-1088-4d7d-a89c-514a304527d4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "34",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rabies immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "479e90c5-efbd-4f5a-ab43-8e2bf9006529",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "119",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rotavirus, live, monovalent vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "63434ca7-1c30-4841-ad57-4729ac68604b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "122",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rotavirus vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7cb8cf45-8c00-4bdd-ba7b-b189ade48f7c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "116",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rotavirus, live, pentavalent vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "46ec5102-efa8-4e79-9337-0644af2fc66c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "74",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rotavirus, live, tetravalent vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c89f7b80-eacb-4482-a29c-a25d0d4136b1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "71",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "respiratory syncytial virus immune globulin, intravenous",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3b84d06a-4f9d-42c0-988e-40b2bbb39da2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "93",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "respiratory syncytial virus monoclonal antibody (palivizumab), intramuscular",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "017fa244-5070-4a9a-90a3-0c0d21cfb220",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "06",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rubella virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "11bba748-ee88-4846-8ae8-712a34dec093",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "38",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "rubella and mumps virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "53678253-8778-42ae-880c-00d7a2cce9da",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "76",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Staphylococcus bacteriophage lysate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "557d7695-0f64-4a3d-a2dd-5e7bb54b8818",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "113",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus and diphtheria toxoids, adsorbed, preservative free, for adult use (5 Lf of tetanus toxoid and 2 Lf of diphtheria toxoid)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c6a617c0-3ce8-42f7-9547-5c412fcde7f0",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "09",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus and diphtheria toxoids, adsorbed, preservative free, for adult use (2 Lf of tetanus toxoid and 2 Lf of diphtheria toxoid)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "04d06f62-b556-4001-9945-f3c02acfadfe",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "115",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus toxoid, reduced diphtheria toxoid, and acellular pertussis vaccine, adsorbed",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "717e4b09-02cb-4338-89ab-c632b9b91c0b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "35",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus toxoid, adsorbed",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1e46327e-234a-4c15-8aea-709df7f60f5b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "112",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus toxoid, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "27477073-b1ed-471e-92dc-084dba0556a2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "77",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tick-borne encephalitis vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d2a000cd-6c4f-4885-9fca-4192bc80dadd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "13",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "04589f5e-913b-4a36-8a8f-7fb1575ec208",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "95",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tuberculin skin test; old tuberculin, multipuncture device",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "46d0854d-d8fc-47d6-882d-a6925c5d7d69",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "96",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tuberculin skin test; purified protein derivative solution, intradermal",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "27a2384b-6359-45e1-b0e5-396a0d0c8826",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "97",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tuberculin skin test; purified protein derivative, multipuncture device",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7615f543-f612-441f-ab7a-42e86c54fc57",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "98",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tuberculin skin test; unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1bfae3e1-6588-4bcf-88f5-b706c1dc2cb3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "78",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tularemia vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "37307382-69ca-41c2-8617-593a90b5ce30",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "91",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "typhoid vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "696193f7-8b74-483f-bf12-76e513f7ead5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "25",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "typhoid vaccine, live, oral",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4e5544e0-1cdf-4915-b12e-051d220180df",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "41",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "typhoid vaccine, parenteral, other than acetone-killed, dried",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5b2af7fe-ed28-4914-8840-a0d9ec023be5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "53",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "typhoid vaccine, parenteral, acetone-killed, dried (U.S. military)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bc3c17e6-c16b-4d52-b2c1-09a92a02fd7b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "101",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "typhoid Vi capsular polysaccharide vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "10544680-4444-4f14-8ee1-d2edac102c16",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "75",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "vaccinia (smallpox) vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "574382a6-3e28-4faf-8d11-c22bc694fe99",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "105",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "vaccinia (smallpox) vaccine, diluted",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "53064bab-633c-4446-9552-d6e29b45ca94",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "79",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "vaccinia immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5a0bd4a6-39b3-4e84-af5f-5f5b80f31f28",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "21",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "varicella virus vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c1ccada9-2e9a-437a-aad3-8a83a46f89f1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "81",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Venezuelan equine encephalitis, inactivated",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7dfc92bb-57ae-4bf1-9686-9d6097a384e6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "80",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Venezuelan equine encephalitis, live, attenuated",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a2648dc0-ce05-40fd-ab80-53ebca0c6d4e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "92",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Venezuelan equine encephalitis vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3346089f-1a45-484f-a44f-316d20b1f355",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "36",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "varicella zoster immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d3bb4524-e78b-4615-9780-582c27fb558f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "117",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "varicella zoster immune globulin (Investigational New Drug)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "095cd534-98a8-4047-af3a-ac167081f968",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "37",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "yellow fever vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "53d10fd2-9095-4d03-a395-ade5ae1eb822",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "121",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "zoster vaccine, live",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8c000b00-852f-4e90-acfd-b17dfe9812d9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "998",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "no vaccine administered",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "087286a8-acba-4a66-b7ce-53a6e28ea4cb",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "999",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "unknown vaccine or immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a55bea94-4f54-4811-bcac-dfe9e9c6f160",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "99",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "RESERVED - do not use",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3079c558-2de9-4828-8549-a35469df76d1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "133",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pneumococcal conjugate vaccine, 13 valent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7246813f-012a-4437-b2f2-6d81c431554e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "134",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Japanese Encephalitis vaccine for intramuscular administration",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "753f86f9-1ac4-4342-909f-a4af03381eb4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "137",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "HPV, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "56f9867a-57ae-4865-a633-5beed43cac03",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "136",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal oligosaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4O)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7d0b2170-5a07-4379-8ce3-6ec47e2e921f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "135",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, high dose seasonal, preservative-free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b7d6d7d3-06a6-45d6-8fda-9796202fb262",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "131",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Historical record of a typhus vaccination",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f5fe42e2-b0cc-47f4-8f9b-4f591443b14b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "132",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Historical diphtheria and tetanus toxoids and acellular pertussis, poliovirus, Haemophilus b conjugate and hepatitis B (recombinant) vaccine.",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b267d014-432f-40d7-963c-4d4260e2fc0d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "128",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Novel influenza-H1N1-09, all formulations",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d8036b29-9fbe-430b-98d4-ac285b362adc",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "125",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Novel Influenza-H1N1-09, live virus for nasal administration",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3dbf6a05-3518-49f6-80d0-f1784bf81f11",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "126",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Novel influenza-H1N1-09, preservative-free, injectable",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6b7b5fbf-69f9-4103-9c1a-8f5f3dbd1a4b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "127",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Novel influenza-H1N1-09, injectable",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "15a9d4a5-fd18-4510-81d7-4a3701a42350",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "138",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus and diphtheria toxoids, not adsorbed, for adult use",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "113667f2-ac07-45fa-9f8b-93d0df68ca28",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "139",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Td(adult) unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "68e009fb-6345-4e9e-aab6-860dddc0f15e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "140",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, seasonal, injectable, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1ad10220-5866-4d72-a547-2c78ceafd4ae",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "129",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Japanese Encephalitis vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "940761d5-ffb6-46f7-bfe5-5fda992a391d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "141",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, seasonal, injectable",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8597f601-7996-48e7-9a45-b8a949ff01d1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "142",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus toxoid, not adsorbed",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ae423cb8-2dc6-49a2-a63e-b838bcb2eeb5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "143",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Adenovirus, type 4 and type 7, live, oral",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "74a0c8ca-528f-44c0-98ef-7d44c753455b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "144",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "seasonal influenza, intradermal, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4dc0b8c5-7c6c-4799-ae40-912e74980ae8",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "145",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "respiratory syncytial virus monoclonal antibody (motavizumab), intramuscular",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "556988d7-eee2-4e69-a659-3669c91ddf2f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "146",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Diphtheria and Tetanus Toxoids and Acellular Pertussis Adsorbed, Inactivated Poliovirus, Haemophilus b Conjugate (Meningococcal Protein Conjugate), and Hepatitis B (Recombinant) Vaccine.",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e54bbdeb-128c-411f-8ce9-23c75c8c6558",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "147",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Meningococcal, MCV4, unspecified conjugate formulation(groups A, C, Y and W-135)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b37e9e78-3d84-4031-a887-84be5592f88f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "148",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Meningococcal Groups C and Y and Haemophilus b Tetanus Toxoid Conjugate Vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "61d7b183-2ea7-4c71-a5db-26f5336b6cc4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "149",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, live, intranasal, quadrivalent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "416db106-d124-40e5-87b9-c4b66c83df2e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "150",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, injectable, quadrivalent, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "39791ba6-9100-470b-b315-060d48592e13",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "151",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza nasal, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6ff96f16-2ce2-4ae6-9691-f911aba293be",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "152",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Pneumococcal Conjugate, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "dc9c6c1d-594f-4549-918e-b72c933f061c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "153",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, injectable, Madin Darby Canine Kidney, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c7bc8c00-2059-4f40-8d79-3785d00196d7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "154",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Hepatitis A immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6243af65-baa3-4c4e-84d1-cd65d189b582",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "155",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Seasonal, trivalent, recombinant, injectable influenza vaccine, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "aa3f15b6-b895-4ca9-98b2-854834b46ec4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "156",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Rho(D) Immune globulin- IV or IM",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "14eaa2f6-caf9-4e77-9d3d-0152a15ac02a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "157",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Rho(D) Immune globulin - IM",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5eeded51-f19a-4271-8b9b-fbaba9abe5af",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "158",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, injectable, quadrivalent, contains preservative",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "01034271-4f99-414d-9928-87100654e1d4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "159",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Rho(D) Unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c04add3e-0235-497c-97a1-492ad46bfb36",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "160",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza A monovalent (H5N1), adjuvanted, National stockpile 2013",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0da81af3-997a-403a-bb1a-b1ac62addb2b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "801",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "AS03 Adjuvant",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3d08e503-3202-487a-9987-4896513edb7c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "161",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, injectable,quadrivalent, preservative free, pediatric",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4a576662-626f-4568-b3f4-6991bbd15730",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "162",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal B vaccine, fully recombinant",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6325ab8d-20c2-4980-a586-2ff19d82d0fa",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "163",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal B vaccine, recombinant, OMV, adjuvanted",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3b030d6b-c37d-4d9f-b7e4-e28aa808f0ca",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "164",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal B, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5d7db259-2cf3-4190-9cf5-b0d596909304",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "165",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Human Papillomavirus 9-valent vaccine",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "dbb3fb61-88ff-44d2-9b9d-fa8a307bdfe7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "166",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, intradermal, quadrivalent, preservative free, injectable",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e29a9ecd-dcb6-42dd-93d5-0a915c61c1bc",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "167",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal vaccine of unknown formulation and unknown serogroups",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fecf3a40-4c6e-42a9-88ec-5806980b0df9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "168",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Seasonal trivalent influenza vaccine, adjuvanted, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2e36f114-1e24-45fa-aceb-6c134c09aa6b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "169",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Hep A, live attenuated-IM",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0290c137-8eb2-4294-8bce-2679856453c7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "170",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "non-US diphtheria, tetanus toxoids and acellular pertussis vaccine, Haemophilus influenzae type b conjugate, and poliovirus vaccine, inactivated (DTaP-Hib-IPV)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "74bb663b-c27f-4886-b611-796eaa10ba52",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "171",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, injectable, Madin Darby Canine Kidney, preservative free, quadrivalent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0c667221-38e0-4805-be25-68a14903729c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "172",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "cholera, WC-rBS",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "536062d0-650c-49bf-b92a-cfe2a09ad7a8",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "173",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "cholera, BivWC",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0487a4dc-36d5-4a0d-96a5-35e88aab4939",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "174",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "cholera, live attenuated",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bf620175-750c-41ff-884b-a871ce4bf5c5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "175",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Human Rabies vaccine from human diploid cell culture",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d1fc40ab-eee1-4073-a8eb-b279b9aa2009",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "176",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Human rabies vaccine from Chicken fibroblast culture",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2b73f485-38ef-48be-a507-50d8f0db6d26",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "177",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "pneumococcal conjugate vaccine, 10 valent",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2c92c603-4904-481e-84ba-a5ec342e48a1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "178",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Non-US bivalent oral polio vaccine (types 1 and 3)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "eca06287-b9e6-4dff-84ce-4856e85705b2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "179",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Non-US monovalent oral polio vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a2e4cf14-a41c-4fa4-81e2-91fbcfd8b005",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "180",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6490ccc8-7fe8-4e78-98ed-3fc361f5dec9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "181",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "anthrax immune globulin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "23a9880f-0d08-4547-a3c7-17f1e14dc083",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "182",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Oral Polio Vaccine, Unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6e3025c7-3d32-4f90-9296-0a8aa08c149d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "183",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Yellow fever vaccine alternative formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ae4165da-8556-4f30-95c1-73ca3953696a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "184",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Yellow fever vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a7d8a5e2-4531-4d8c-976d-5241e2529397",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "185",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Seasonal, quadrivalent, recombinant, injectable influenza vaccine, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9742bbd1-f51b-4531-a3de-37f85fe62dbd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "186",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Influenza, injectable, Madin Darby Canine Kidney, quadrivalent with preservative",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4d19574e-9894-409e-9993-2d652047c54d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "187",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "zoster vaccine recombinant",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5a9b48c3-1445-4a31-adaa-05b573ca2a07",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "188",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "zoster vaccine, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5af8db29-2223-44f8-b69a-eafef0d1dd09",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "189",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Hepatitis B vaccine (recombinant), CpG adjuvanted",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "567e569f-9eaa-42a1-8389-fd0799ac544e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "190",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Typhoid conjugate vaccine (non-US)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "dea56e5e-ab57-4651-8b37-086986de214e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "191",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal A polysaccharide vaccine (non-US)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bdd42e3a-8fa1-40bc-a0c3-0a24f4b27395",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "192",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal AC polysaccharide vaccine (non-US)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1a3fa6c2-18d1-48fe-a3a6-5a18e42983d4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "193",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "hepatitis A and hepatitis B vaccine, pediatric/adolescent (non-US)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9b26c3cd-ce6b-41ec-b8ca-dc5b8f41ff59",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "194",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, Southern Hemisphere, unspecified formulation",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "83bbcb72-778c-4e8d-9c5a-f517e9184066",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "195",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Diphtheria, Tetanus, Poliomyelitis adsorbed",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "aafc05f4-2707-4bae-961d-876fa607f479",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "196",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "tetanus and diphtheria toxoids, adsorbed, preservative free, for adult use, Lf unspecified",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "41ea585f-53ff-4c9b-a59d-744efcebc5a5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "197",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, high-dose seasonal, quadrivalent, .7mL dose, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8f484b76-bf12-47dc-b8ea-3c157afd36a9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "200",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, seasonal, Southern Hemisphere, quadrivalent, pediatric 0.25mL dose, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "06398adb-ae57-42a6-9e27-243d7b4b4719",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "201",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, seasonal, Southern Hemisphere, quadrivalent, 0.5mL dose, no preservative",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f77f1af8-152e-4b86-83d7-b88d7891d7c0",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "202",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, seasonal, Southern Hemisphere, quadrivalent, 0.5mL dose, with preservative",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9a56f25c-d794-4763-b33d-9284805c9680",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "198",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Diphtheria, pertussis, tetanus, hepatitis B, Haemophilus Influenza Type b, (Pentavalent)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a1a022d2-a001-452f-ae2d-40afc23a7e4a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "203",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "meningococcal polysaccharide (groups A, C, Y, W-135) tetanus toxoid conjugate vaccine .5mL dose, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "84fe021f-a096-4631-b5d1-a6f51ed84bc7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "205",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "influenza, seasonal vaccine, quadrivalent, adjuvanted, .5mL dose, preservative free",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "cac71343-87e7-4878-9a3c-d745fc967de4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "206",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "smallpox monkeypox vaccine, live attenuated, preservative free (National Stockpile)",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "203fe16c-087a-4751-95c1-70f9a7d7c863",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "207",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, mRNA, spike protein, LNP, preservative free, 100 mcg/0.5mL dose",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "642ac253-422f-4915-bb6f-6081b468b415",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "208",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, mRNA, spike protein, LNP, preservative free, 30 mcg/0.3mL dose",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "efe049c9-b944-4f79-82c1-07d55f06e13a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "213",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, UNSPECIFIED",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "66091e0e-9332-4a38-9a2a-95c62135ba05",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "210",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-ChAdOx1, preservative free, 0.5 mL",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "85a7c784-37d4-40a0-9da6-1d1fb9ddf6ae",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "212",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 ml",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "267b39e2-d7a4-497c-8bc1-f50d75c4b727",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "204",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Ebola Zaire vaccine, live, recombinant, 1mL dose",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "32c5b05d-f39b-4e0a-acd6-c3d2c6d6bd79",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "214",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "Ebola, unspecified",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ac14eea5-f3a6-43d6-8a61-0de47626b650",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "211",
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "name": "SARS-COV-2 (COVID-19) vaccine, Subunit, recombinant spike protein-nanoparticle+Matrix-M1 Adjuvant, preservative free, 0.5mL per dose",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b7323505-1265-4a5e-aedc-c40bc56b7e84",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "AGRPAL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Agrippal",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7b726a9d-0311-4a78-9edd-7b4d8f8e5904",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "AVAXM",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Avaxim",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3787f353-910e-48a5-adc1-dc18bd5c7921",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "BCG",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "BCG",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a74b5fb6-2c0c-4330-9dd7-bd92cb3ec0f5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "CDT",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "CDT",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "df13a2b2-2570-4b6d-ae1e-82ebd2195f83",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "CMX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "COMVAX",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8bd651bf-09fe-4b44-8622-28e60323f836",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "DTP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Triple Antigen",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "98ae0fd7-6ad7-4dd9-84f1-4a35e222508f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "DTPA",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "DTPa",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8f0b297b-7460-4c43-ab12-650e3ea4c21d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "ENGP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Engerix B",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0f85607d-2145-4ffd-bbbe-a10228646428",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "FLRIX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Fluarix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b5ae8764-8cf5-4281-91b9-30a5060512da",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "FLUVAX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Fluvax",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1a9e0bce-4fc4-4a95-87c6-79e218d3f379",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "FLVRN",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Fluvirin",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "289dbbc2-6321-46e5-8996-17362db7d323",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "FVXJNR",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Fluvax Junior",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "292715e5-a62b-48f2-a491-af1a47618260",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNDIP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Diphtheria",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b6c7ffb7-669b-4849-9cbd-a074f44f87bc",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNFLU",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Influenza",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7448804f-8afd-4f51-9ae1-48cfa7f41595",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNHEP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Hepatitis B",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a90a1019-208d-4a17-aa9e-f597b1f7bff5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNHIB",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "HIB",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "54d4caed-0674-4bfd-981a-5d25260054e4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNHPA",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Hepatitis A",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e3daabeb-f17c-4627-b6d4-5381d346b7b3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNJEN",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Japanese Encephalitis",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "79b2ec08-3749-42bc-ab00-6be8811e6438",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNMEA",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Measles",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1557057d-8fbb-405f-9707-a65abe01abfe",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNMEN",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Meningococcal C",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b2d17e20-609e-481e-b6a0-5c41f12c635b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNMUM",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Mumps",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5f115815-cbde-47eb-8c93-760b875566ec",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNPNE",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Pneumococcal",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "92eb9d01-582b-41c7-91f2-2da695f19988",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNPOL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Polio",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bf32cd06-2ac0-4a55-b393-e61f5a24dbd2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNROX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Rotavirus",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "12d94ff0-9bbc-44ad-8539-423244b96dbf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNRUB",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Rubella",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b6ccac58-b076-4be1-aae1-e215e0e76702",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNTET",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Tetanus",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2d6fd573-bde2-4f00-8a07-9e32dd4f65fe",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "GNVAR",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Varicella",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ec02a700-672e-417f-9244-c00b8ee98095",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HATWNJ",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Twinrix Junior",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ee033d85-848c-49a3-97c6-7b09e901690e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HAVAQ",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Vaqta Paed/Adol",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a3c1ccd0-dbb5-4aa8-89cf-845972bf36bd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HAVJ",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Havrix Junior",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1f222e14-9fde-4dd2-ab08-f8b6d0fd1c8c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HBOC",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "HibTITER",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f26a1a8a-0d4b-428c-9c55-5c008380d25c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HBV",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "HBV",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "468b6488-1c1c-4a36-ad3b-f2d213032977",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HBVP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "HBVAX II",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "76e0f726-085d-47f4-aa10-5fc9ee370f1f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "HBX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Hiberix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "62c7c8a7-8d2c-4365-9902-cf00483b5a08",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IFHX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Infanrix Hexa",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "12e49828-94cc-41d8-b253-e90c4737c66f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IFIP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Infanrix-IPV",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c763b2ef-4d91-44d3-bc20-defaadcc6abf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IFPA",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Infanrix Penta",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b3fb3337-5283-48e9-a110-98681bfcaa9e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IFX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Infanrix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8776afd1-6ceb-4802-944a-58d36e66d47c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IFXB",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "InfanrixHepB",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "533fa242-226e-46fd-b22f-5979b0e7565e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "INFLUV",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Influvac",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "53e8320c-6e23-49f1-850b-db88fc9b58f7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "IPV",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "IPOL",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9d4da109-27c6-4212-ab85-2042fc1c88e7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "JEVAX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "JE-VAX",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b2c53d86-287d-4605-b305-d771a13fb309",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MENJUG",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Menjugate",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "369c97ed-4920-4c8c-a347-04ac1c267408",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MENTEC",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Meningitec",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5f84a504-7300-4687-ae82-dc156046e528",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MENUME",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Menomune",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8d5d741a-5010-4bd0-9bd2-6ccb5f3e18d5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MENVAX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Mencevax ACWY",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d1f77324-a1fd-4d6b-b565-aca50b8232db",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MMR",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "MMR",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9ee9e1a3-9b97-4902-8f11-90bb55d217cf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MMRCSL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "MMR II",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "20babe19-759a-4996-835b-fdee537ee56e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MMRSKB",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Priorix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b589e5e9-59f6-4287-af22-f4d150a431e6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "MNTRX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Menitorix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fcf6ac3b-bb58-4d38-a88d-8e82b6979807",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "NEISVC",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "NeisVac-C",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e7520f40-09ba-4957-b936-0e22fd18c3f7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "OPV",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Polio",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "917ed49a-b53a-4227-913f-514e5cb98975",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "P",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Pertussis",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9e14e573-cc11-443c-91b5-52f958c73f13",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PANVAX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Panvax",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "54d81505-8a0b-4463-b1fc-449d729cc338",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PDCL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Pediacel",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a7a4f266-e70c-4f88-8f2e-e9f013446a2a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PLCL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Poliacel",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5e1063ad-1cc7-4f3c-9efa-ea396c83dd4c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PNEUMO",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Pneumovax",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "093c4b3b-c41e-4a0a-a1f4-7386972c5aa5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRPD",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "ProHIBit",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "466565d7-6a8f-4d40-9d6b-2212753631b1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PROQAD",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "ProQuad",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e40d1bd8-5fdd-40d3-8f80-c66006d5ba7d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRPOMP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "PedvaxHIB",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "6ac59829-e658-4c4d-a560-a31fb4f48c25",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRPT",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "ActHIB",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "005e2432-c8e3-4301-9283-453f848173aa",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRVNR",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Prevenar 7",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3c1a0986-da69-45ec-9cc5-e56e5913165b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRVTH",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Prevenar 13",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d04960dc-38ed-4da3-8132-c6d0b22fac9a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "PRXTEX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Priorix-Tetra",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "11d44abb-969b-4774-88e5-cab2249b9c01",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "QDCL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Quadracel",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ab52877d-84bf-4f01-ba52-c9a27eb66947",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "ROTRIX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Rotarix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7efa526a-59fa-4c25-8d74-f7e744ab24b3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "ROTTEQ",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Rotateq",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c8089cf0-16ee-464c-a713-5b12d170d434",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "SYNFLX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Synflorix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c97869bc-af22-453f-b991-8b3ef5712d74",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "TCL",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Tripacel",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f64eb059-712c-4b08-a8cc-2c953ddc282c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "VAXGRP",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Vaxigrip",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3e863d8d-fbc5-4bf1-8741-7ec03e18c201",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "VGRJNR",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Vaxigrip Junior",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "040d47fd-bef6-4f87-a538-0e8ed7c4798c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "VLRIX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Varilrix",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9a9f6160-deea-4bf5-9722-345b06dfddc8",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Immunization",
+      "metadata": {
+        "code": "VRVAX",
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "name": "Varivax",
+        "_predicates": ["RECEIVED_IMMUNIZATION"]
+      }
+    }
+  }
+]

@@ -99,4 +99,8 @@ load-fixtures:
 	 template \
 	 entity_condition \
 	 entity_medication \
+	 entity_observation \
+	 entity_allergy_intolerance \
+	 entity_immunization \
+	 entity_procedure \
 	 --format sandwich

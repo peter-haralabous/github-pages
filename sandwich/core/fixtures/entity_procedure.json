@@ -1,0 +1,617 @@
+[
+  {
+    "model": "core.entity",
+    "pk": "a2ad18e7-e0d1-4912-b71d-7f32cf310018",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Triad knee repair",
+        "system": "snomed",
+        "code": "1104006",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "1c2b5062-70b0-4b1d-9165-1c7c2fb5af96",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Appendectomy",
+        "system": "snomed",
+        "code": "80146002",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a3830f3e-2251-4832-bec3-e757c8c795af",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Cholecystectomy",
+        "system": "snomed",
+        "code": "38102005",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "bc484ddc-14a7-4543-aa4e-df4dbce1c4bf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Coronary artery bypass graft",
+        "system": "snomed",
+        "code": "232717009",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a5a01469-2150-4c7f-befb-5f410a7a042e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Total hip replacement",
+        "system": "snomed",
+        "code": "52734007",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9a0a5538-dafd-44ad-adad-69a78a7f4b4b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Total knee replacement",
+        "system": "snomed",
+        "code": "609588000",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c0b187bf-370e-408a-81f8-aa2eac3a634e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Cesarean section",
+        "system": "snomed",
+        "code": "11466000",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7d7eeab1-fd7a-45f4-8a61-f20c6f5647e6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Hysterectomy",
+        "system": "snomed",
+        "code": "236886002",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "62000023-a65e-456a-91a6-3d69c0c281fe",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Colonoscopy",
+        "system": "snomed",
+        "code": "73761001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "07605310-6dfd-4749-ba5d-8f24a5da1b61",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Endoscopy",
+        "system": "snomed",
+        "code": "423827005",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "02e00284-0e3c-4648-97d2-cc2d484322b1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Cataract surgery",
+        "system": "snomed",
+        "code": "385468004",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "32e30818-27b0-4d9d-aa7b-0514b6a6e770",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Tonsillectomy",
+        "system": "snomed",
+        "code": "173422009",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e845e624-b775-4b02-81bc-77a3f1c5e31b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Mastectomy",
+        "system": "snomed",
+        "code": "172043006",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0b715b20-a673-4c78-ac9d-3a634e845efe",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Hernia repair",
+        "system": "snomed",
+        "code": "112737000",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4f4266d7-07bf-4ecd-bb9a-8ae746ad9173",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Spinal fusion",
+        "system": "snomed",
+        "code": "55705006",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "05a36062-b65b-42c7-b5ee-d18314bd286e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Angioplasty",
+        "system": "snomed",
+        "code": "81266008",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "94dc949d-66b7-47c5-86f7-51fe62402c69",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Cardiac catheterization",
+        "system": "snomed",
+        "code": "41976001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "55cdea30-6ba7-4252-8036-47ec0c2e8d6b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Bronchoscopy",
+        "system": "snomed",
+        "code": "10847001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "56082c0f-8aff-4dbb-8321-c181eb33e268",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Biopsy of skin",
+        "system": "snomed",
+        "code": "240977001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e5124bac-d487-49b3-9607-b210df43bde2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Dental extraction",
+        "system": "snomed",
+        "code": "128477000",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "5fb4a48d-420c-4b32-852f-d5df70bcb6a8",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Arthroscopy",
+        "system": "snomed",
+        "code": "423827005",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b702a3fc-46d4-4eca-bfc3-83254f8ad392",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Prostatectomy",
+        "system": "snomed",
+        "code": "176258007",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3ca266e8-8a4e-4142-8109-4c669ec8eec6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Mammography",
+        "system": "snomed",
+        "code": "71651007",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b40877d0-9d8e-4fed-add6-21fcf181cd1f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Thyroidectomy",
+        "system": "snomed",
+        "code": "174899007",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "86c0a4ad-b5ff-4f94-b423-2cca9a1983ac",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Lumbar puncture",
+        "system": "snomed",
+        "code": "277762005",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2fa1b4c8-4d01-4029-9340-633bdd1ca62a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Dialysis",
+        "system": "snomed",
+        "code": "108241001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7e7d151d-99eb-4b2a-921e-db8f4425a552",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Blood transfusion",
+        "system": "snomed",
+        "code": "116859006",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3e520503-da4c-42f8-8048-4de4fde710e4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Bone marrow biopsy",
+        "system": "snomed",
+        "code": "14088003",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "695fc572-9004-48b8-bce7-d4ec24da89b9",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Pacemaker insertion",
+        "system": "snomed",
+        "code": "25267002",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d01160c1-459b-4287-89f7-a14bd2945397",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Kidney transplant",
+        "system": "snomed",
+        "code": "70536003",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c54b5ee6-d56d-418e-bc0d-2b6186d6d554",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Liver transplant",
+        "system": "snomed",
+        "code": "18027006",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8e04278d-0007-4b17-9094-0c3e69384ab6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Heart valve replacement",
+        "system": "snomed",
+        "code": "107963000",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4b91e9a9-d322-42a0-a157-13483d9dacec",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Electroconvulsive therapy",
+        "system": "snomed",
+        "code": "64915003",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "59cfff01-6c7e-4690-96ce-7764c677fe7c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Gastric bypass",
+        "system": "snomed",
+        "code": "442338001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d03e59b8-345e-4ece-a17e-a58631e8ff56",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Amputation of lower limb",
+        "system": "snomed",
+        "code": "79733001",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ec85a634-914b-40b5-8850-078eafe5c96f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Craniotomy",
+        "system": "snomed",
+        "code": "25353009",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3f0e2f0c-bf40-4586-b248-f50998eca7d6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Tracheostomy",
+        "system": "snomed",
+        "code": "48387007",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8eaf33c6-ea2b-440a-b068-7aa08ba6259c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Coronary stent placement",
+        "system": "snomed",
+        "code": "36969009",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0c70af4b-7849-4582-ab55-a98990d9c142",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Lithotripsy",
+        "system": "snomed",
+        "code": "397207004",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "79b3e87c-1397-47d3-82d4-a1daa55cf128",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Laminectomy",
+        "system": "snomed",
+        "code": "387647008",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3372b292-2a25-45bb-9246-82f749deaecf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Procedure",
+      "metadata": {
+        "name": "Vasectomy",
+        "system": "snomed",
+        "code": "22523008",
+        "_predicates": ["UNDERWENT_PROCEDURE"]
+      }
+    }
+  }
+]

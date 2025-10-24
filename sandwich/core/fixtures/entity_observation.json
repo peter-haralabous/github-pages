@@ -1,0 +1,1292 @@
+[
+  {
+    "model": "core.entity",
+    "pk": "16894ddb-9299-480d-941e-7bc054cf4e33",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Creatinine [Mass/volume] in Serum or Plasma",
+        "code": "2160-0",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f46ed99d-c7bd-4065-9fe3-5e788d316b0f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Sodium [Moles/volume] in Serum or Plasma",
+        "code": "2951-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e66e09eb-6164-4673-b1cc-ebe80c64a167",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Serum or Plasma",
+        "code": "2345-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9ba3ed38-9017-408b-ba67-5358fd7807ec",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Potassium [Moles/volume] in Serum or Plasma",
+        "code": "2823-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "739dfe9c-9c23-4161-bdb0-7b5dba01a11c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Chloride [Moles/volume] in Serum or Plasma",
+        "code": "2075-0",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a2e3f84f-cc34-4441-a9f5-7d9f1f5fe3ec",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+        "code": "3094-0",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "33ad1ba3-ccaa-421f-80c6-a5efedcaaaef",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Calcium [Mass/volume] in Serum or Plasma",
+        "code": "17861-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "002c367b-e1e5-466f-88d6-c31c8570337a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Carbon dioxide, total [Moles/volume] in Serum or Plasma",
+        "code": "2028-9",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4ab500ef-998a-45ca-bcaa-bdd42ccc3964",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Erythrocytes [#/volume] in Blood by Automated count",
+        "code": "789-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "78a8dc69-a88c-4f1b-8ba8-7c8d90179f7f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Hemoglobin [Mass/volume] in Blood",
+        "code": "718-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b46dbe33-fb76-4dc9-8d09-0afd731452f5",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Platelets [#/volume] in Blood by Automated count",
+        "code": "777-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "d07309be-1725-432f-bef8-3e5bb438d199",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Leukocytes [#/volume] in Blood by Automated count",
+        "code": "6690-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "34533c99-3f17-4039-b734-1a98e991dc2d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Bilirubin.total [Mass/volume] in Serum or Plasma",
+        "code": "1975-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4a2b5a6e-fca9-426d-8b24-0bd24941d5fc",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Protein [Mass/volume] in Serum or Plasma",
+        "code": "2885-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c93a3b80-fac2-4653-8baa-293b3d8b29bd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "code": "1742-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ace0d65c-3b97-49e0-8172-3e5cc76d6bb3",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
+        "code": "6768-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9c6e1b5d-3d41-42f6-9d1b-3e2e97b0ee5f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "code": "1920-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "89dbed84-06ca-4212-b741-df72a94aa305",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Hematocrit [Volume Fraction] of Blood by Automated count",
+        "code": "4544-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ed9cca37-9686-45d4-81e1-113f4b07e32b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Anion gap in Serum or Plasma by Calculated.3Ions",
+        "code": "10466-1",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a8bce712-98c3-4cce-ad7f-fa190b7c558f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Eosinophils [#/volume] in Blood by Automated count",
+        "code": "711-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "9991083f-1d6a-41a0-a31a-2d5eb61a0e41",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+        "code": "33914-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0b8fbd68-82f5-40f8-8fca-359fd84d97b2",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Albumin [Mass/volume] in Serum or Plasma",
+        "code": "1751-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a5912884-916b-4631-a1c0-bd27b871e2a4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Hematocrit [Volume Fraction] of Blood by calculation",
+        "code": "20570-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "95086686-c12e-4fbf-82de-d7a2c04f0d5c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Oxygen [Partial pressure] in Blood",
+        "code": "11556-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a9bb3f78-5a4f-472f-ad16-e359cc8f241b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Magnesium [Mass/volume] in Serum or Plasma",
+        "code": "19123-9",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "75d41d3b-2369-4450-83dc-8489a40c5d81",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Blood",
+        "code": "2339-0",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "60c1a1c5-7aa6-492b-8b1e-0c6d2e78fc86",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Prothrombin time (PT)",
+        "code": "5902-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3ccb333f-134f-4251-ad0f-6f549983fdb8",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Phosphate [Mass/volume] in Serum or Plasma",
+        "code": "2777-1",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0983a580-dfc2-4848-af1f-380cca475c45",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Capillary blood by Glucometer",
+        "code": "41653-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0120d2ab-f91b-4718-ab20-3a3844f3aca1",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Hemoglobin [Mass/volume] in Venous cord blood",
+        "code": "30353-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "67957450-c385-41c1-90f7-76c548b3d3da",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Serum, Plasma or Blood",
+        "code": "74774-1",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c6791948-bfcc-404c-be50-9b706e60d324",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Cholesterol [Mass/volume] in Serum or Plasma",
+        "code": "2093-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7d66fd06-cc17-4197-9a54-e74c303fd471",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+        "code": "2085-9",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "73892406-e271-4f4d-a6e8-b224a8454e07",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Ketones [Presence] in Urine by Test strip",
+        "code": "2514-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2b108965-67c8-489f-98c5-e4500f0a4bda",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory system specimen by NAA with probe detection",
+        "code": "94500-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "43cd6849-0601-47da-95e7-756e24e3e942",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Triglyceride [Mass/volume] in Serum or Plasma",
+        "code": "2571-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "773335b2-23c0-45a4-a4a7-109df4c29f61",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Leukocytes [#/volume] in Blood",
+        "code": "26464-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f23ac2d5-431e-4395-8aea-700c9d5e3ccc",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Platelets [#/volume] in Blood",
+        "code": "26515-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4ca51b0c-cf1e-46fd-bc87-b4638db1076b",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Albumin [Mass/volume] in Serum or Plasma by Bromocresol green (BCG) dye binding method",
+        "code": "61151-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "8c42f0e9-0200-434f-9cf3-62306ff65f49",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Immature granulocytes [#/volume] in Blood",
+        "code": "51584-1",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a7c2bc7f-a89c-46fc-93c5-243ba55162fb",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Bacteria identified in Urine by Culture",
+        "code": "630-4",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fb865072-60de-40dd-879e-ebde4ac30ae7",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Blood by Test strip manual",
+        "code": "2341-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b19537c5-b82e-434e-a9c5-c9f36a911137",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Basic metabolic 2000 panel - Serum or Plasma",
+        "code": "24321-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "b35c91a3-4087-4424-a507-ee9080ff93cf",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma",
+        "code": "9830-1",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c3309062-f3e5-4f94-a7aa-a36040ca076d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Comprehensive metabolic 2000 panel - Serum or Plasma",
+        "code": "24323-8",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7f739700-9440-4768-a12f-63a570403d0f",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Hemoglobin A1c/Hemoglobin.total in Blood",
+        "code": "4548-4",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "e41aac78-3c0f-4e19-b1d8-263acf583c8e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "pH of Urine by Test strip",
+        "code": "5803-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "a74db0ff-c68b-447d-8fa9-6ed77e246a95",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Glucose [Mass/volume] in Urine by Test strip",
+        "code": "5792-7",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "60f830c8-f2b3-447b-a2ef-9416c8fb8c60",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "INR in Platelet poor plasma by Coagulation assay",
+        "code": "6301-6",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "ce859955-2936-441f-9176-afdf175117cb",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "aPTT in Platelet poor plasma by Coagulation assay",
+        "code": "14979-9",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "27a93d02-1ffd-4b42-be99-5103650ae584",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Specific gravity of Urine",
+        "code": "2965-2",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c8280c40-b777-458c-91da-c65b58536eff",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Anion gap in Serum or Plasma by calculation",
+        "code": "33037-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fb5e55ed-bcf4-4e98-969e-77e953396201",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Thyrotropin [Units/volume] in Serum or Plasma",
+        "code": "3016-3",
+        "system": "loinc",
+        "_predicates": ["HAS_LAB_RESULT"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "3ac71c61-9fcb-41f9-b621-c6639df28ea6",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Vital signs, weight, height, head circumference, oxygen saturation and BMI panel",
+        "code": "85353-1",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "429d2105-9455-4a6d-80b6-197670413a78",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Respiratory rate",
+        "code": "9279-1",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c2648623-d9fb-4682-b0bb-749bded4c679",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Heart rate",
+        "code": "8867-4",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "c1446074-a5d6-47ee-83dd-3628fa84d48d",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Oxygen saturation in Arterial blood",
+        "code": "2708-6",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "95802861-8807-4946-8b9b-837b6f749a52",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Body temperature",
+        "code": "8310-5",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "0688b51e-9022-4354-891c-fd558d2d7448",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Body height",
+        "code": "8302-2",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2f3035b6-c47a-43bc-bbce-aa50abbd9cdd",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Head Occipital-frontal circumference",
+        "code": "9843-4",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "31628ebb-5e45-47cd-b42f-e42e9f1b707a",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Body weight",
+        "code": "29463-7",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "f52303cf-d906-49c3-ab63-97b292e46e0c",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Body mass index (BMI) [Ratio]",
+        "code": "39156-5",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "2d87ee76-eb85-475d-90ab-f5d0c499a7ee",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Blood pressure panel with all children optional",
+        "code": "85354-9",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "fdb1056b-4c7a-4f65-abee-9eb1fd75c902",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Systolic blood pressure",
+        "code": "8480-6",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "7eb20271-70d7-49b6-bdea-95a057de699e",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Diastolic blood pressure",
+        "code": "8462-4",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "4aad420c-9684-41a3-881c-4eb96d4470d4",
+    "fields": {
+      "created_at": "2025-10-21T13:35:10.973Z",
+      "updated_at": "2025-10-21T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Mean blood pressure",
+        "code": "8478-0",
+        "system": "loinc",
+        "_predicates": ["HAS_VITAL_SIGN"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730001",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Fatigue",
+        "code": "84229001",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730002",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Headache",
+        "code": "25064002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730003",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Fever",
+        "code": "386661006",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730004",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Cough",
+        "code": "49727002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730005",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Abdominal pain",
+        "code": "21522001",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730006",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Nausea",
+        "code": "422587007",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730007",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Vomiting",
+        "code": "307200004",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730008",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Diarrhea",
+        "code": "62315008",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730009",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Dyspnea",
+        "code": "267036007",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730010",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Dizziness",
+        "code": "40917007",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730011",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Chest pain",
+        "code": "29857009",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730012",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Back pain",
+        "code": "161891005",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730013",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Rash",
+        "code": "409747005",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730014",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Sore throat",
+        "code": "33033007",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730015",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Arthralgia",
+        "code": "57676002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730016",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Edema",
+        "code": "79685002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730017",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Insomnia",
+        "code": "1934007",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730018",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Malaise",
+        "code": "30551000000103",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730019",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Weight loss",
+        "code": "89362002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  },
+  {
+    "model": "core.entity",
+    "pk": "515ad924-be52-49ce-b61d-d1ab6d730020",
+    "fields": {
+      "created_at": "2025-10-24T13:35:10.973Z",
+      "updated_at": "2025-10-24T13:35:10.973Z",
+      "type": "Observation",
+      "metadata": {
+        "name": "Anxiety",
+        "code": "48694002",
+        "system": "snomed",
+        "_predicates": ["HAS_SYMPTOM"]
+      }
+    }
+  }
+]
