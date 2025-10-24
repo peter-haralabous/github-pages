@@ -6,11 +6,37 @@
   {{ category }}
 {% endblock card_title %}
 {% block card_body_content %}
-  <ul>
-    {% for fact in facts %}
-      <li class="mb-2 pt-2 border-t-neutral-200 border-t">{{ fact.object }}</li>
-    {% empty %}
-      <li>No records for {{ category|lower }}</li>
-    {% endfor %}
-  </ul>
+  {% if facts %}
+    <table class="table">
+      {% for fact in facts %}
+        <tr>
+          <td class="w-80">{{ fact.object }}</td>
+          <td class="w-48 text-base-content/30">
+            {% if fact.start_datetime %}
+              <div class="tooltip tooltip-neutral"
+                   data-tip="{{ fact.start_datetime|timesince }} ago">
+                {% lucide "timer" size=15 class="inline mb-1" %}
+              </div>
+              {{ fact.start_datetime|date }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td class="w-48 text-base-content/30">
+            {% if fact.end_datetime %}
+              <div class="tooltip tooltip-neutral"
+                   data-tip="{{ fact.end_datetime|timesince }} ago">
+                {% lucide "timer" size=15 class="inline mb-1" %}
+              </div>
+              {{ fact.end_datetime|date }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    No records for {{ category|lower }}
+  {% endif %}
 {% endblock card_body_content %}
