@@ -1,6 +1,1 @@
-{# djlint:off #}
-<message-alert
-  tags="{% if message.tags %}{{ message.tags }}{% endif %}"
-  message="{{ message }}">
-</message-alert>
-{# djlint:on #}
+<message-alert tags="{{ message.tags }}" closeable>{{ message }}</message-alert>

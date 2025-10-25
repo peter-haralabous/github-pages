@@ -1,6 +1,6 @@
 import '../css/project.css';
 import './components/command-palette';
-import './components/message';
+import './components/message-alert';
 import './modules/encounter-create';
 import { initializeDatadog } from './lib/datadog';
 

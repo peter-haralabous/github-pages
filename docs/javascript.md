@@ -66,7 +66,7 @@ Decision flow:
 Source JS/TS lives under:
 
 - `sandwich/static/js/` – author your modules & components here.
-- `sandwich/static/js/components/` – Lit components (e.g. `command-palette.ts`, `message.ts`).
+- `sandwich/static/js/components/` – Lit components (e.g. `command-palette.ts`, `message-alert.ts`).
 
 Built assets are output by webpack; the template includes them via:
 
@@ -92,11 +92,11 @@ Template (`partials/messages.html`):
 <message-alert tags="{{ message.tags }}" message="{{ message }}"></message-alert>
 ```
 
-Component (`message.ts`):
+Component (`message-alert.ts`):
 
 ```
 @customElement('message-alert')
-export class Message extends LitElement {
+export class MessageAlert extends LitElement {
   @property({ type: String, attribute: 'tags' }) accessor tags = '';
   @property({ type: String, attribute: 'message' }) accessor message = '';
   ...
