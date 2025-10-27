@@ -17,6 +17,40 @@ export class EncounterCreateController {
     this.initialize();
   }
 
+  /**
+   * Attach the create patient button click handler (for initial and HTMX updates)
+   */
+  private attachCreatePatientHandler(): void {
+    const createButton = document.querySelector('.patient-create-btn');
+    if (createButton) {
+      createButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const searchInput = document.getElementById(
+          'patient-search',
+        ) as HTMLInputElement;
+        const query = searchInput ? searchInput.value : '';
+        // You may want to pass organization id as a data attribute on the button for full decoupling
+        const orgId = (createButton as HTMLElement).getAttribute(
+          'data-organization-id',
+        );
+        if (orgId) {
+          window.location.href = `/providers/organization/${orgId}/patient/add?maybe_name=${encodeURIComponent(query)}&from_encounter=1`;
+        }
+      });
+    }
+  }
+
+  /**
+   * Re-attach the create patient button handler after HTMX swaps content
+   */
+  private attachHTMXAfterSwapHandler(): void {
+    document.body.addEventListener('htmx:afterSwap', (evt: any) => {
+      if (evt.target && evt.target.id === 'patient-search-results') {
+        this.attachCreatePatientHandler();
+      }
+    });
+  }
+
   private initialize(): void {
     // Add event listener for clear patient button
     const clearButton = document.getElementById('clear-patient-btn');
@@ -37,6 +71,10 @@ export class EncounterCreateController {
       });
     }
 
+    // Attach create patient button handler (for initial and HTMX updates)
+    this.attachCreatePatientHandler();
+    this.attachHTMXAfterSwapHandler();
+
     // If there's already a patient selected (form errors), show the form
     const patientField = document.querySelector(
       'input[name="patient"]',
@@ -46,6 +84,14 @@ export class EncounterCreateController {
       if (formContainer) {
         formContainer.classList.remove('hidden');
       }
+    }
+
+    // Auto-select patient if auto-select-patient button exists (for new patient flow)
+    const autoSelectBtn = document.querySelector(
+      '.auto-select-patient',
+    ) as HTMLButtonElement | null;
+    if (autoSelectBtn) {
+      autoSelectBtn.click();
     }
   }
 

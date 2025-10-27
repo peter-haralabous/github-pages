@@ -273,11 +273,18 @@ def encounter_create(request: AuthenticatedHttpRequest, organization: Organizati
             },
         )
     else:
-        form = EncounterCreateForm(organization)
+        # Preselect patient if patient_id is provided in query string
+        initial = {}
+        patient = None
+        if patient_id := request.GET.get("patient_id"):
+            patient = get_object_or_404(organization.patient_set, id=patient_id)
+            initial["patient"] = patient
+        form = EncounterCreateForm(organization, initial=initial)
 
     context = {
         "organization": organization,
         "form": form,
+        "patient": patient if patient_id else None,
     }
 
     return render(request, "provider/encounter_create.html", context)
@@ -315,5 +322,6 @@ def encounter_create_search(request: AuthenticatedHttpRequest, organization: Org
     context = {
         "patients": patients_page,
         "query": query,
+        "organization": organization,
     }
     return render(request, "provider/partials/encounter_create_search_results.html", context)

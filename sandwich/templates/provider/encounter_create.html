@@ -37,7 +37,17 @@
           </div>
         </div>
         <!-- Search Results -->
-        <div id="patient-search-results" class="mt-2"></div>
+        <div id="patient-search-results" class="mt-2">
+          {% if patient %}
+            <button type="button"
+                    class="patient-select-btn auto-select-patient hidden"
+                    data-patient-id="{{ patient.id }}"
+                    data-patient-name="{{ patient.last_name }}, {{ patient.first_name }}"
+                    data-patient-email="{{ patient.email }}"
+                    data-patient-dob="{{ patient.date_of_birth|date:'M d, Y' }}"
+                    data-patient-phn="{{ patient.phn }}"></button>
+          {% endif %}
+        </div>
         <!-- Selected Patient Display -->
         <div id="selected-patient" class="mt-4 hidden">
           <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 flex items-center justify-between">

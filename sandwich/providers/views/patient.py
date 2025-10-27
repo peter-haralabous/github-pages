@@ -270,6 +270,14 @@ def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -
         form = PatientAdd(request.POST)
         if form.is_valid():
             patient = form.save(organization=organization)
+            # Check if this patient was created via the encounter flow (by checking for a GET param or session flag)
+            if request.GET.get("from_encounter"):
+                # Redirect to encounter create page with patient preselected
+                return HttpResponseRedirect(
+                    reverse("providers:encounter_create", kwargs={"organization_id": organization.id})
+                    + f"?patient_id={patient.id}"
+                )
+            # Default: create encounter and redirect to patient details
             encounter = Encounter.objects.create(
                 patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
             )
