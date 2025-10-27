@@ -46,4 +46,4 @@ def test_task_view_deny_access(
         )
     )
 
-    assert res.status_code == 403
+    assert res.status_code == 404

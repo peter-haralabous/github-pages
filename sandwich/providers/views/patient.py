@@ -36,7 +36,7 @@ from sandwich.core.service.organization_service import get_provider_organization
 from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
-from sandwich.core.service.task_service import assign_default_provider_task_perms
+from sandwich.core.service.task_service import assign_default_task_perms
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -464,7 +464,7 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization: Organizati
         )
 
     task = Task.objects.create(encounter=current_encounter, patient=patient, status=TaskStatus.REQUESTED)
-    assign_default_provider_task_perms(task)
+    assign_default_task_perms(task)
     send_task_added_email(task)
 
     logger.info(

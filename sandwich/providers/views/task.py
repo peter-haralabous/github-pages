@@ -9,11 +9,12 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
-from guardian.decorators import permission_required_or_403
 
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import terminal_task_status
 from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
@@ -38,15 +39,14 @@ logger = logging.getLogger(__name__)
     }
 )
 @login_required
-@permission_required_or_403("view_task", (Task, "id", "task_id"))
-def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: UUID, task_id: UUID) -> HttpResponse:
+@authorize_objects([ObjPerm(Task, "task_id", ["view_task"])])
+def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: UUID, task: Task) -> HttpResponse:
     logger.info(
-        "Accessing patient task", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task_id}
+        "Accessing patient task", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task.id}
     )
 
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     patient = get_object_or_404(organization.patient_set, id=patient_id)
-    task = get_object_or_404(patient.task_set, id=task_id)
 
     # NOTE-NG: we're using the task ID here as the form name
     # patients don't have permission to load arbitrary forms
@@ -56,7 +56,7 @@ def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: U
         extra={
             "user_id": request.user.id,
             "patient_id": patient_id,
-            "task_id": task_id,
+            "task_id": task.id,
             "task_status": task.status.value,
             "read_only": read_only,
             "has_submission": bool(task.formio_submission),
@@ -68,7 +68,7 @@ def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: U
         form_url = request.build_absolute_uri(
             reverse(
                 "patients:api-1.0.0:get_formio_form_submission",
-                kwargs={"name": str(task_id), "submission_id": str(task.formio_submission.id)},
+                kwargs={"name": str(task.id), "submission_id": str(task.formio_submission.id)},
             )
         )
         logger.debug(
@@ -76,16 +76,16 @@ def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: U
             extra={
                 "user_id": request.user.id,
                 "patient_id": patient_id,
-                "task_id": task_id,
+                "task_id": task.id,
                 "submission_id": task.formio_submission.id,
             },
         )
     else:
         form_url = request.build_absolute_uri(
-            reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task_id)})
+            reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task.id)})
         )
         logger.debug(
-            "Using new form", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task_id}
+            "Using new form", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task.id}
         )
 
     formio_user = {"_id": request.user.id}

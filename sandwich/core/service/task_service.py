@@ -95,7 +95,7 @@ def send_task_added_email(task: Task) -> None:
     logger.info("Task notification email sent", extra={"task_id": task.id, "patient_id": task.patient.id})
 
 
-def assign_default_provider_task_perms(task: Task) -> None:
+def assign_default_task_perms(task: Task) -> None:
     # Apply org-wide role perms
     if task.patient.organization:
         for role_name in [RoleName.OWNER, RoleName.ADMIN, RoleName.STAFF]:
