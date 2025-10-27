@@ -31,7 +31,6 @@ class Triple(pydantic.BaseModel):
     predicate: str
     normalized_predicate: NormalizedPredicate = pydantic.Field(..., alias="normalizedPredicate")
     obj: Entity = pydantic.Field(..., alias="object")
-    provenance: dict[str, object] | None = None
 
     class Config:
         populate_by_name = True

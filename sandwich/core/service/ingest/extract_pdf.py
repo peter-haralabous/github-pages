@@ -3,16 +3,22 @@ import logging
 from datetime import UTC
 from datetime import datetime
 from io import BytesIO
+from typing import cast
 
 import pydantic
+from django.utils import timezone
 from langchain_core.language_models import BaseChatModel
 from pdf2image import convert_from_bytes
 from pdf2image import convert_from_path
 
+from sandwich.core.models import Document
+from sandwich.core.models import Patient
+from sandwich.core.models import Provenance
 from sandwich.core.service.ingest.db import save_triples
 from sandwich.core.service.ingest.prompt import get_ingest_prompt
 from sandwich.core.service.ingest.response_models import IngestPromptWithContextResponse
 from sandwich.core.service.ingest.schema import PREDICATE_NAMES
+from sandwich.core.service.ingest.types import Triple
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +65,9 @@ def _provenance_dict(page_index: int, llm_client) -> dict:
     }
 
 
-def _process_response(response, patient, page_index: int, llm_client) -> list:
+def _process_response(
+    response: IngestPromptWithContextResponse, patient: Patient | None, page_index: int
+) -> list[Triple]:
     """
     Process LLM response to extract and validate triples, filtering out invalid ones.
     """
@@ -76,7 +84,6 @@ def _process_response(response, patient, page_index: int, llm_client) -> list:
                 )
                 continue
             t.subject.node["patient_id"] = str(getattr(patient, "id", "-1"))
-            t.provenance = _provenance_dict(page_index, llm_client)
             filtered_triples.append(t)
     except (TypeError, AttributeError, pydantic.ValidationError, ValueError):
         logger.exception("Could not validate structured triples", extra={"page_index": page_index})
@@ -88,7 +95,8 @@ def _process_response(response, patient, page_index: int, llm_client) -> list:
 def extract_facts_from_pdf(
     pdf_source: str | bytes,
     llm_client: BaseChatModel,
-    patient=None,
+    document: Document | None = None,
+    patient: Patient | None = None,
 ) -> list:
     """
     PDF image-based triple extraction pipeline.
@@ -108,12 +116,18 @@ def extract_facts_from_pdf(
         base64_img = base64.b64encode(image_bytes).decode("utf-8")
         messages = _build_image_messages(i, base64_img)
         try:
-            response = structured_llm_client.invoke(messages)
-            triples_to_save = _process_response(response, patient, i, structured_llm_client)
+            response = cast("IngestPromptWithContextResponse", structured_llm_client.invoke(messages))
+            triples_to_save = _process_response(response, patient, i)
             if triples_to_save:
+                provenance = Provenance.objects.create(
+                    document=document,
+                    page=i,
+                    source_type="pdf",
+                    extracted_at=timezone.now(),
+                    extracted_by=llm_client.__class__.__name__,
+                )
+                save_triples(triples_to_save, provenance, patient=patient)
                 all_triples.extend(triples_to_save)
-                save_triples(triples_to_save, patient=patient, source_type="pdf")
-            continue
         except (ValueError, TypeError, AttributeError, RuntimeError, ConnectionError, TimeoutError, OSError):
             logger.exception("Failed to extract triples", extra={"page_index": i})
             continue

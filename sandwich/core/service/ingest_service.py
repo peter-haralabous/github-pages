@@ -27,7 +27,7 @@ def extract_facts_from_pdf_job(document_id: str, llm_name: str = ModelName.CLAUD
         logger.exception("Failed to read document file", extra={"document_id": str(document_id)})
         return
 
-    triples = extract_facts_from_pdf(pdf_bytes, llm_client, patient=patient)
+    triples = extract_facts_from_pdf(pdf_bytes, llm_client, patient=patient, document=document)
     send_ingest_progress(
         patient.id, text=f"Extracted {len(triples)} facts from {document.original_filename}", done=True
     )

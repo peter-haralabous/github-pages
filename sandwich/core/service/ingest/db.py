@@ -1,9 +1,6 @@
 import logging
 import uuid
 
-from dateutil.parser import isoparse
-from django.utils import timezone
-
 from sandwich.core.models import Entity
 from sandwich.core.models import Fact
 from sandwich.core.models import Patient
@@ -51,30 +48,6 @@ def get_or_create_predicate(predicate_name, predicate_text):
     return predicate
 
 
-def create_provenance(provenance_data, source_type):
-    stype = provenance_data.get("source_type") if provenance_data.get("source_type") else source_type
-    if stype is None:
-        stype = "unknown"
-    extracted_by = provenance_data.get("extracted_by") or "unknown"
-    page = provenance_data.get("page")
-    extracted_at = provenance_data.get("extracted_at")
-    dt = None
-    if extracted_at:
-        try:
-            dt = isoparse(extracted_at)
-        except (ValueError, TypeError):
-            dt = timezone.now()
-    else:
-        dt = timezone.now()
-    provenance_kwargs = {
-        "page": page,
-        "extracted_by": extracted_by,
-        "source_type": stype,
-        "extracted_at": dt,
-    }
-    return Provenance.objects.create(**provenance_kwargs)
-
-
 def _create_patient_if_needed(subj_node, patient=None) -> Patient:
     # if a patient is provided, use their id
     if patient and hasattr(patient, "id"):
@@ -96,8 +69,8 @@ def _create_patient_if_needed(subj_node, patient=None) -> Patient:
 
 def save_triples(
     triples: list[Triple],
-    patient=None,
-    source_type: str | None = None,
+    provenance: Provenance,
+    patient: Patient | None = None,
 ) -> int:
     """
     Persists triples into the database.
@@ -132,14 +105,12 @@ def save_triples(
             object_entity = get_or_create_entity(object_type, object_label, obj.node)
             predicate_name = pred.predicate_type
             predicate = get_or_create_predicate(predicate_name, predicate_text)
-            provenance_data = t.provenance or {}
-            provenance_obj = create_provenance(provenance_data, source_type)
             fact = Fact.objects.create(
                 patient=patient,  # type: ignore[misc]
                 subject=subject_entity,
                 predicate=predicate,
                 object=object_entity,
-                provenance=provenance_obj,
+                provenance=provenance,
             )
             logger.info("Saved Fact", extra={"fact_id": fact.id})
             count += 1

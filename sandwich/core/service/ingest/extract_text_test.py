@@ -1,13 +1,14 @@
 import pytest
 
 from sandwich.core.service.ingest.extract_text import extract_facts_from_text
+from sandwich.core.service.llm import get_claude_3_sonnet
 
 
 @pytest.mark.vcr
 @pytest.mark.django_db
 def test_extract_facts_from_text():
     input_text = "Jane has a fever and a cough."
-    triples = extract_facts_from_text(input_text)
+    triples = extract_facts_from_text(input_text, llm_client=get_claude_3_sonnet())
     assert len(triples) > 0
     assert triples[0].subject.node["name"] == "Jane"
     assert triples[0].obj.node["name"] in {"Fever", "Cough"}
@@ -17,7 +18,7 @@ def test_extract_facts_from_text():
 @pytest.mark.django_db
 def test_extract_single_symptom():
     input_text = "John has a headache."
-    triples = extract_facts_from_text(input_text)
+    triples = extract_facts_from_text(input_text, llm_client=get_claude_3_sonnet())
     assert len(triples) > 0
     assert triples[0].subject.node["name"] == "John"
     assert triples[0].obj.node["name"] == "Headache"
@@ -27,7 +28,7 @@ def test_extract_single_symptom():
 @pytest.mark.django_db
 def test_extract_medication():
     input_text = "Alice is taking ibuprofen."
-    triples = extract_facts_from_text(input_text)
+    triples = extract_facts_from_text(input_text, llm_client=get_claude_3_sonnet())
     assert len(triples) > 0
     assert triples[0].subject.node["name"] == "Alice"
     assert "ibuprofen" in str(triples[0].obj.node["name"])
@@ -37,5 +38,5 @@ def test_extract_medication():
 @pytest.mark.django_db
 def test_extract_no_facts():
     input_text = "The sky is blue."
-    triples = extract_facts_from_text(input_text)
+    triples = extract_facts_from_text(input_text, llm_client=get_claude_3_sonnet())
     assert triples == []

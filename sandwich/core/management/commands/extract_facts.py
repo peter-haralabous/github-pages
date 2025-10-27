@@ -39,5 +39,5 @@ class Command(BaseCommand):
             result = extract_facts_from_pdf(input_value, llm_client, patient=patient)
         else:
             self.stdout.write(self.style.NOTICE(f"Extracting facts from text using {llm_name}..."))
-            result = extract_facts_from_text(input_value, llm_name=llm_name, temperature=temperature, patient=None)
+            result = extract_facts_from_text(input_value, llm_client, patient=patient)
         self.stdout.write(self.style.SUCCESS(f"LLM result: {result}"))

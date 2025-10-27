@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 from sandwich.core.models.abstract import BaseModel
@@ -74,9 +75,8 @@ class Provenance(BaseModel):
         return f"Provenance for (page {self.page}) from {doc_str}"
 
     @property
-    def url(self) -> str | None:
+    def patient_url(self) -> str | None:
         if self.document and hasattr(self.document, "file"):
-            if self.page:
-                return f"{self.document.file.url}#page={self.page}"
-            return self.document.file.url
+            fragment = f"page={self.page}" if self.page else None
+            return reverse("patients:document_download", kwargs={"document_id": self.document.id}, fragment=fragment)
         return None

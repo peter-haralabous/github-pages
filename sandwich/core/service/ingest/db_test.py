@@ -2,11 +2,11 @@ import uuid
 
 import pytest
 from django.utils import timezone
-from freezegun import freeze_time
 
 from sandwich.core.models import Entity
 from sandwich.core.models import Fact
 from sandwich.core.models import Patient
+from sandwich.core.models import Provenance
 from sandwich.core.models.entity import EntityType
 from sandwich.core.service.ingest import db
 from sandwich.core.service.ingest.types import Entity as TripleEntity
@@ -56,19 +56,24 @@ def triple_factory():
         subj = TripleEntity(entityType="Patient", node={"first_name": first_name, "last_name": last_name})
         obj = TripleEntity(entityType="Observation", node={"name": obs_name})
         pred = NormalizedPredicate(predicateType="HAS_SYMPTOM", traits=None, properties={})
-        return Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj, provenance=None)
+        return Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj)
 
     return _make_triple
 
 
+@pytest.fixture
+def provenance() -> Provenance:
+    return Provenance.objects.create(source_type="unknown", extracted_by="test", extracted_at=timezone.now())
+
+
 @pytest.mark.django_db
-def test_save_triples_creates_patient_and_fact():
+def test_save_triples_creates_patient_and_fact(provenance: Provenance):
     subj = TripleEntity(entityType="Patient", node={"first_name": "Jane", "last_name": "Doe"})
     obj = TripleEntity(entityType="Observation", node={"name": "Fever"})
     pred = NormalizedPredicate(predicateType="HAS_SYMPTOM", traits=None, properties={})
-    triple = Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj, provenance=None)
+    triple = Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj)
 
-    count = db.save_triples([triple])
+    count = db.save_triples([triple], provenance)
     assert count == 1
     assert Patient.objects.count() == 1
     assert Fact.objects.count() == 1
@@ -77,15 +82,15 @@ def test_save_triples_creates_patient_and_fact():
 
 
 @pytest.mark.django_db
-def test_save_triples_with_provided_patient():
+def test_save_triples_with_provided_patient(provenance: Provenance):
     # Create a patient up front
     patient = Patient.objects.create(first_name="Jane", last_name="Doe", date_of_birth="1980-01-01")
     subj = TripleEntity(entityType="Patient", node={"first_name": "Jane", "last_name": "Doe"})
     obj = TripleEntity(entityType="Observation", node={"name": "Cough"})
     pred = NormalizedPredicate(predicateType="HAS_SYMPTOM", traits=None, properties={})
-    triple = Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj, provenance=None)
+    triple = Triple(subject=subj, predicate="has a symptom", normalizedPredicate=pred, object=obj)
 
-    count = db.save_triples([triple], patient=patient)
+    count = db.save_triples([triple], provenance, patient=patient)
     assert count == 1
     # Should not create a new patient
     assert Patient.objects.count() == 1
@@ -97,7 +102,7 @@ def test_save_triples_with_provided_patient():
 
 
 @pytest.mark.django_db
-def test_save_triples_reuses_existing_object_entity(triple_factory):
+def test_save_triples_reuses_existing_object_entity(triple_factory, provenance: Provenance):
     patient = Patient.objects.create(first_name="Jane", last_name="Doe", date_of_birth="1980-01-01")
     # Create an Entity for the Observation object (use metadata field)
     obs_name = "Headache"
@@ -105,7 +110,7 @@ def test_save_triples_reuses_existing_object_entity(triple_factory):
 
     # Create a triple with the same observation info
     triple = triple_factory(first_name="Jane", last_name="Doe", obs_name=obs_name)
-    count = db.save_triples([triple], patient=patient)
+    count = db.save_triples([triple], provenance, patient=patient)
     assert count == 1
     # Should create only one patient and reuse the observation entity
     assert Patient.objects.count() == 1
@@ -114,48 +119,3 @@ def test_save_triples_reuses_existing_object_entity(triple_factory):
     fact = Fact.objects.first()
     assert fact is not None
     assert fact.object_id == observation_entity.id
-
-
-@pytest.mark.django_db
-def test_save_triples_with_provenance(triple_factory):
-    patient = Patient.objects.create(first_name="Jane", last_name="Doe", date_of_birth="1980-01-01")
-
-    # Add provenance to the triple
-    provenance = {"source_type": "pdf", "extracted_by": "claude", "timestamp": "2025-10-21T12:00:00Z"}
-    triple = triple_factory(first_name="Jane", last_name="Doe", obs_name="Fever")
-    triple.provenance = provenance
-    count = db.save_triples([triple], patient=patient)
-    assert count == 1
-    fact = Fact.objects.first()
-    assert fact is not None
-    assert fact.provenance is not None
-    assert fact.provenance.source_type == provenance["source_type"]
-    assert fact.provenance.extracted_by == provenance["extracted_by"]
-
-
-@pytest.mark.parametrize(
-    "input_str",
-    [
-        "2025-10-22T18:24:01.232704+00:00Z",
-        "2025-10-22T18:24:01.232704+00:00",
-        "2025-10-22T18:24:01+00:00",
-        "2025-10-22T18:24:01Z",
-        "2025-10-22T18:24:01",
-    ],
-)
-@pytest.mark.django_db
-def test_create_provenance_date_parsing_valid(input_str):
-    provenance_data = {"extracted_at": input_str}
-    prov = db.create_provenance(provenance_data, source_type="pdf")
-    assert prov.extracted_at is not None
-    assert hasattr(prov.extracted_at, "year")
-    assert prov.extracted_at.year == 2025
-
-
-@pytest.mark.django_db
-def test_create_provenance_date_parsing_invalid():
-    with freeze_time("2025-01-01T12:00:00Z"):
-        for input_str in ["not-a-date", None]:
-            provenance_data = {"extracted_at": input_str}
-            prov = db.create_provenance(provenance_data, source_type="pdf")
-            assert prov.extracted_at == timezone.now()
