@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from guardian.shortcuts import assign_perm
 from procrastinate.contrib.django import app
 
 from sandwich.core.models.email import EmailType
@@ -55,6 +56,7 @@ def find_or_create_patient_invitation(patient: Patient) -> Invitation:
 
     if not invitation:
         invitation = Invitation.objects.create(patient=patient)
+        assign_default_invitation_perms(invitation)
         logger.info(
             "Created new patient invitation",
             extra={
@@ -153,3 +155,31 @@ def expire_invitations() -> int:
 @app.task(lock="expire_invitations_lock")
 def expire_invitations_job(timestamp: int) -> None:
     expire_invitations()
+
+
+DEFAULT_ORGANIZATION_ROLE_PERMS = {
+    RoleName.OWNER: ["change_invitation", "view_invitation"],
+    RoleName.ADMIN: ["change_invitation", "view_invitation"],
+    RoleName.STAFF: ["change_invitation", "view_invitation"],
+}
+
+
+def assign_default_invitation_perms(invitation: Invitation) -> None:
+    """
+    Assign permissisions to an invitation.
+    A patient should have view and change permissions on the invitation.
+
+    roles in the invited patient's org should have permissions to view and change the invitation.
+    """
+    if invitation.patient.user:
+        assign_perm("view_invitation", invitation.patient.user, invitation)
+        assign_perm("change_invitation", invitation.patient.user, invitation)
+
+    # An invited patient _should_ be a part of the org
+    # but just in case they're not let's add this guard.
+    organization = invitation.patient.organization
+    if organization:
+        for role_name, perms in DEFAULT_ORGANIZATION_ROLE_PERMS.items():
+            role = organization.get_role(role_name)
+            for perm in perms:
+                assign_perm(perm, role.group, invitation)

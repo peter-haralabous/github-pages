@@ -38,9 +38,21 @@ DEFAULT_ORGANIZATION_ROLES: dict[str, list[str]] = {
         "delete_organization",
         "create_encounter",
         "create_patient",
+        "create_invitation",
     ],
-    RoleName.ADMIN: ["view_organization", "change_organization", "create_encounter", "create_patient"],
-    RoleName.STAFF: ["view_organization", "create_encounter", "create_patient"],
+    RoleName.ADMIN: [
+        "view_organization",
+        "change_organization",
+        "create_encounter",
+        "create_patient",
+        "create_invitation",
+    ],
+    RoleName.STAFF: [
+        "view_organization",
+        "create_encounter",
+        "create_patient",
+        "create_invitation",
+    ],
     RoleName.PATIENT: ["view_organization"],
 }
 

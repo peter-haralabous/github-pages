@@ -13,11 +13,6 @@ from sandwich.core.models.task import TaskStatus
 
 
 @pytest.fixture
-def encounter(organization: Organization, patient: Patient):
-    return Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS)
-
-
-@pytest.fixture
 def document(patient: Patient, encounter: Encounter) -> Document:
     return Document.objects.create(
         patient=patient,

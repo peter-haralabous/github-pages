@@ -434,7 +434,7 @@ def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, pat
 @require_POST
 @authorize_objects(
     [
-        ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"]),
+        ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter", "create_invitation"]),
         ObjPerm(Patient, "patient_id", ["view_patient", "assign_task"]),
     ]
 )

@@ -6,7 +6,10 @@ from django.core.management import call_command
 
 from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.middleware import ConsentMiddleware
-from sandwich.core.models import Organization
+from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.models.organization import Organization
+from sandwich.core.models.patient import Patient
 from sandwich.core.models.role import RoleName
 from sandwich.core.util.testing import UserRequestFactory
 from sandwich.fixtures.patient import patient
@@ -29,6 +32,11 @@ def _media_storage(settings, tmpdir) -> None:
 @pytest.fixture
 def urf() -> UserRequestFactory:
     return UserRequestFactory()
+
+
+@pytest.fixture
+def encounter(organization: Organization, patient: Patient):
+    return Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS)
 
 
 @pytest.fixture

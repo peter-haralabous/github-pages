@@ -10,7 +10,9 @@ from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
+from sandwich.core.models.role import RoleName
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
+from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.users.models import User
 
 
@@ -56,6 +58,8 @@ def test_patient_list_filter_allowed_patients(provider: User, organization: Orga
 
 @pytest.mark.django_db
 def test_patient_add(provider: User, organization: Organization) -> None:
+    assign_organization_role(organization=organization, role_name=RoleName.STAFF, user=provider)
+
     client = Client()
     client.force_login(provider)
     res = client.post(

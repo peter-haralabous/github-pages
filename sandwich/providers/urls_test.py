@@ -7,8 +7,11 @@ from django.urls import reverse
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Encounter
+from sandwich.core.models import Invitation
 from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.role import RoleName
+from sandwich.core.service.invitation_service import assign_default_invitation_perms
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.urls_test import UrlRegistration
 from sandwich.core.urls_test import get_all_urls
@@ -48,6 +51,8 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     encounter = Encounter.objects.create(
         patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
     )
+    invitation = Invitation.objects.create(patient=patient, status=InvitationStatus.PENDING, token="")
+    assign_default_invitation_perms(invitation)
 
     # Need a task for the task route
     task = TaskFactory.create(patient=patient, encounter=encounter)
