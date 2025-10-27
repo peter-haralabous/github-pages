@@ -30,6 +30,12 @@
               {% lucide "building-2" class="size-6" %}
               <span>{{ organization.name }}</span>
             </a>
+            <ul class="menu menu-sm">
+              <li>
+                <a href="{% url 'providers:custom_attribute_list' organization_id=organization.id %}"
+                   class="{% if 'custom_attribute_' in request.resolver_match.url_name %}menu-active{% endif %}">Custom Attributes</a>
+              </li>
+            </ul>
           </li>
         {% endfor %}
       </ul>

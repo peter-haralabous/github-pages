@@ -1,0 +1,56 @@
+{% load sortable %}
+
+<div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% sortable_column "Name" "name" %}</th>
+        <th>Type</th>
+        <th>Multi values</th>
+        <th>{% sortable_column "Created" "created_at" %}</th>
+        <th>{% sortable_column "Updated" "updated_at" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attribute in attributes %}
+        <tr>
+          <td>{{ attribute.name }}</td>
+          <td>{{ attribute.data_type.label }}</td>
+          <td>{{ attribute.is_multi|yesno:"Yes,No" }}</td>
+          <td>{{ attribute.created_at }}</td>
+          <td>{{ attribute.updated_at }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center">No attributes found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- Pagination controls -->
+<nav aria-label="Custom attribute pagination" class="join mt-2">
+  {% if attributes.has_previous %}
+    <a class="join-item btn"
+       href="{% querystring page=attributes.previous_page_number %}"
+       aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </button>
+  {% endif %}
+  <span class="join-item btn">Page {{ attributes.number }} of {{ attributes.paginator.num_pages }}</span>
+  {% if attributes.has_next %}
+    <a class="join-item btn"
+       href="{% querystring page=attributes.next_page_number %}"
+       aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </button>
+  {% endif %}
+</nav>

@@ -15,7 +15,7 @@ class CustomAttribute(BaseModel):
     class DataType(models.TextChoices):
         """Data type choices for custom attributes."""
 
-        ENUM = "enum", _("Enum")
+        ENUM = "enum", _("Select")
         DATE = "date", _("Date")
 
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)

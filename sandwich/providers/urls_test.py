@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+from django.contrib.contenttypes.models import ContentType
 from django.test import Client
 from django.urls import reverse
 
@@ -8,6 +9,7 @@ from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Encounter
 from sandwich.core.models import Invitation
+from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.role import RoleName
@@ -57,6 +59,14 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     # Need a task for the task route
     task = TaskFactory.create(patient=patient, encounter=encounter)
 
+    # Need an attribute definition for the attribute routes
+    attribute = CustomAttribute.objects.create(
+        organization=organization,
+        content_type=ContentType.objects.get_for_model(Encounter),
+        name="Test Date Attribute",
+        data_type=CustomAttribute.DataType.DATE,
+    )
+
     kwargs = {}
 
     if ":encounter_id>" in url.pattern:
@@ -67,6 +77,8 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
         kwargs["patient_id"] = patient.pk
     if ":task_id>" in url.pattern:
         kwargs["task_id"] = task.pk
+    if ":attribute_id>" in url.pattern:
+        kwargs["attribute_id"] = attribute.pk
 
     response = client.get(reverse("providers:" + url.name, kwargs=kwargs))
     assert response.status_code == HTTPStatus.OK

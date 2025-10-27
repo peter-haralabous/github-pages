@@ -12,16 +12,6 @@ from sandwich.core.models.encounter import EncounterStatus
 
 
 @pytest.fixture
-def organization():
-    return OrganizationFactory.create()
-
-
-@pytest.fixture
-def patient(organization):
-    return PatientFactory.create(organization=organization, first_name="Test", last_name="Patient")
-
-
-@pytest.fixture
 def encounter(patient, organization):
     return Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.UNKNOWN)
 

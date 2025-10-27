@@ -1,5 +1,9 @@
 from django.urls import path
 
+from .views.custom_attribute import custom_attribute_add
+from .views.custom_attribute import custom_attribute_archive
+from .views.custom_attribute import custom_attribute_edit
+from .views.custom_attribute import custom_attribute_list
 from .views.encounter import encounter_create
 from .views.encounter import encounter_create_search
 from .views.encounter import encounter_details
@@ -28,6 +32,18 @@ urlpatterns = [
     path("organization/<uuid:organization_id>/edit", organization_edit, name="organization_edit"),
     path("organization/<uuid:organization_id>/delete", organization_delete, name="organization_delete"),
     path("organization/<uuid:organization_id>/search", search, name="search"),
+    path("organization/<uuid:organization_id>/attributes", custom_attribute_list, name="custom_attribute_list"),
+    path("organization/<uuid:organization_id>/attributes/add", custom_attribute_add, name="custom_attribute_add"),
+    path(
+        "organization/<uuid:organization_id>/attributes/<uuid:attribute_id>/edit",
+        custom_attribute_edit,
+        name="custom_attribute_edit",
+    ),
+    path(
+        "organization/<uuid:organization_id>/attributes/<uuid:attribute_id>/archive",
+        custom_attribute_archive,
+        name="custom_attribute_archive",
+    ),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),
     path(
         "organization/<uuid:organization_id>/encounter/create/search",
