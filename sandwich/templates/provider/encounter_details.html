@@ -5,7 +5,7 @@
 {% block content %}
   <h2>Patient Details</h2>
   <p>
-    <strong>Name:</strong> {{ patient.full_name }}
+    <strong>Name:</strong> {{ patient.last_name }}, {{ patient.first_name }}
   </p>
   <p>
     <strong>Email:</strong> {{ patient.email|default:"—" }}

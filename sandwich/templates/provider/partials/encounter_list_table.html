@@ -17,7 +17,7 @@
         <tr>
           <td>
             <a class="link"
-               href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">{{ encounter.patient.full_name }}</a>
+               href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</a>
           </td>
           <td>{{ encounter.patient.email|default:"—" }}</td>
           <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
