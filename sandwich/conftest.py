@@ -3,6 +3,8 @@ from collections.abc import Iterable
 
 import pytest
 from django.core.management import call_command
+from django.core.management.base import CommandError
+from django.test import override_settings
 
 from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.middleware import ConsentMiddleware
@@ -93,3 +95,26 @@ def vcr_config():
         "filter_headers": [("Authorization", None), ("X-Amz-Security-Token", None)],
         "before_record_request": before_record_request,
     }
+
+
+def pytest_collection_modifyitems(session, config, items):
+    if not any(item.get_closest_marker("e2e") for item in items):
+        return
+
+    try:
+        call_command("collectstatic_with_build")
+    except CommandError as exc:  # pragma: no cover - management command failures are rare
+        pytest.exit(f"Failed to prepare static files for tests: {exc}")
+
+
+@pytest.fixture(autouse=True)
+def _maybe_enable_real_webpack_loader(request, settings):
+    """Enable the real django-webpack-loader for tests that opt-in."""
+    if not request.node.get_closest_marker("e2e"):
+        yield
+        return
+
+    with override_settings(
+        WEBPACK_LOADER=settings.WEBPACK_LOADER | {"DEFAULT": {"LOADER_CLASS": "webpack_loader.loaders.WebpackLoader"}}
+    ):
+        yield

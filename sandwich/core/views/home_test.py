@@ -38,3 +38,30 @@ def test_home_page_buttons(live_server, page: Page):
     popup = popup_info.value
     popup.wait_for_load_state("domcontentloaded")
     assert "/policy/privacy-notice" in popup.url
+
+
+@pytest.mark.e2e
+def test_home_page_has_webpack_bundle(live_server, page: Page):
+    """
+    Smoke test that a webpack-built bundle is included and loaded on the home page.
+    """
+    page.goto(f"{live_server.url}{reverse('core:home')}")
+    page.wait_for_load_state("networkidle")
+    page.set_default_timeout(3000)
+
+    # Wait for the bundle link rendered by {% render_bundle 'project' 'css' %}
+    # link elements are not visible, so wait for it to be attached to the DOM.
+    page.wait_for_selector("#global_styles", state="attached")
+
+    # Check that at least one stylesheet with a webpack_bundles href has accessible CSS rules.
+    expr = (
+        "() => Array.from(document.styleSheets).some(s => {"
+        " try { return s.href && s.href.includes('webpack_bundles') && s.cssRules && s.cssRules.length > 0 }"
+        " catch (e) { return false }"
+        " })"
+    )
+
+    # Wait for the stylesheet to be parsed.
+    page.wait_for_function(expr)
+    has_loaded_webpack_css = page.evaluate(expr)
+    assert has_loaded_webpack_css, "Project CSS bundle not parsed/loaded into document.styleSheets"
