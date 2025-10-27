@@ -43,7 +43,8 @@ class UserFactory(DjangoModelFactory[User]):
                 lower_case=True,
             ).evaluate(None, None, extra={"locale": None})
         )
-        self.password = password
+        self.set_password(password)  # type: ignore[arg-type]
+        self.raw_password = password
 
     @post_generation
     def consents(self: User, create: bool, extracted: Sequence[Any], **kwargs):  # noqa: FBT001
