@@ -1,0 +1,37 @@
+{% load lucide %}
+
+<tr id="fact-{{ fact.id }}" {% if oob %}hx-swap-oob="true"{% endif %}>
+  <td class="w-80">
+    <a class="link link-hover text-primary"
+       hx-get="{% url "patients:fact_edit" fact_id=fact.id %}"
+       hx-target="#form-modal"
+       data-testid="fact-{{ fact.id }}-edit">{{ fact.object }}</a>
+  </td>
+  <td class="w-48 text-base-content/30"
+      data-testid="fact-{{ fact.id }}-start-datetime">
+    {% if fact.start_datetime %}
+      <div class="tooltip tooltip-neutral"
+           data-tip="{{ fact.start_datetime|timesince }} ago">{% lucide "timer" size=15 class="inline mb-1" %}</div>
+      {{ fact.start_datetime|date }}
+    {% else %}
+      —
+    {% endif %}
+  </td>
+  <td class="w-48 text-base-content/30"
+      data-testid="fact-{{ fact.id }}-end-datetime">
+    {% if fact.end_datetime %}
+      <div class="tooltip tooltip-neutral"
+           data-tip="{{ fact.end_datetime|timesince }} ago">{% lucide "timer" size=15 class="inline mb-1" %}</div>
+      {{ fact.end_datetime|date }}
+    {% else %}
+      —
+    {% endif %}
+  </td>
+  <td>
+    {% if fact.provenance %}
+      <a class="tooltip"
+         href="{{ fact.provenance.patient_url }}"
+         data-tip="{{ fact.provenance }}">{% lucide "arrow-up-right" size=15 class="inline mb-1" %}</a>
+    {% endif %}
+  </td>
+</tr>

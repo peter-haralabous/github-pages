@@ -5,7 +5,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from django.urls import reverse
 
+from sandwich.core.factories.fact import FactFactory
 from sandwich.core.models import Document
+from sandwich.core.models import Entity
+from sandwich.core.models.entity import EntityType
+from sandwich.core.models.predicate import PredicateName
+from sandwich.core.service.entity_service import entity_for_patient
+from sandwich.core.service.predicate_service import predicate_for_predicate_name
 from sandwich.core.urls_test import UrlRegistration
 from sandwich.core.urls_test import get_all_urls
 from sandwich.patients.urls import urlpatterns as patients_urlspatterns
@@ -54,6 +60,14 @@ def test_patient_http_get_urls_return_status_200(db, user, url, patient) -> None
     if ":document_id>" in url.pattern:
         kwargs["document_id"] = Document.objects.create(
             patient=patient, file=SimpleUploadedFile(name="empty", content=b"")
+        ).pk
+
+    if ":fact_id>" in url.pattern:
+        kwargs["fact_id"] = FactFactory.create(
+            patient=patient,
+            subject=entity_for_patient(patient),
+            predicate=predicate_for_predicate_name(PredicateName.HAS_SYMPTOM),
+            object=Entity.objects.create(type=EntityType.OBSERVATION),
         ).pk
 
     response = client.get(reverse("patients:" + url.name, kwargs=kwargs))

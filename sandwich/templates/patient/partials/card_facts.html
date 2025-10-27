@@ -9,38 +9,7 @@
   {% if facts %}
     <table class="table">
       {% for fact in facts %}
-        <tr>
-          <td class="w-80">{{ fact.object }}</td>
-          <td class="w-48 text-base-content/30">
-            {% if fact.start_datetime %}
-              <div class="tooltip tooltip-neutral"
-                   data-tip="{{ fact.start_datetime|timesince }} ago">
-                {% lucide "timer" size=15 class="inline mb-1" %}
-              </div>
-              {{ fact.start_datetime|date }}
-            {% else %}
-              —
-            {% endif %}
-          </td>
-          <td class="w-48 text-base-content/30">
-            {% if fact.end_datetime %}
-              <div class="tooltip tooltip-neutral"
-                   data-tip="{{ fact.end_datetime|timesince }} ago">
-                {% lucide "timer" size=15 class="inline mb-1" %}
-              </div>
-              {{ fact.end_datetime|date }}
-            {% else %}
-              —
-            {% endif %}
-          </td>
-          <td>
-            {% if fact.provenance %}
-              <a class="tooltip"
-                 href="{{ fact.provenance.patient_url }}"
-                 data-tip="{{ fact.provenance }}">{% lucide "arrow-up-right" size=15 class="inline mb-1" %}</a>
-            {% endif %}
-          </td>
-        </tr>
+        {% include "patient/partials/card_fact.html" %}
       {% endfor %}
     </table>
   {% else %}

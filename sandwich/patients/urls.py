@@ -9,6 +9,7 @@ from .views.home import home
 from .views.invitation import accept_invite
 from .views.patient.add import patient_add
 from .views.patient.add import patient_onboarding_add
+from .views.patient.details import fact_edit
 from .views.patient.details import patient_details
 from .views.patient.edit import get_phn_validation
 from .views.patient.edit import patient_edit
@@ -29,4 +30,5 @@ urlpatterns = [
     path("document/<uuid:document_id>", document_download, name="document_download"),
     path("api/", api.urls, name="api"),
     path("get_phn_validation/", get_phn_validation, name="get_phn_validation"),
+    path("fact/<uuid:fact_id>/edit", fact_edit, name="fact_edit"),
 ]

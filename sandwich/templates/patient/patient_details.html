@@ -6,6 +6,7 @@
   {# the sse-swap here is misleading -- the messages themselves have hx-swap-oob set to their actual target #}
   <div sse-connect="{% url "core:events" %}?channel=patient/{{ patient.id }}"
        sse-swap="ingest_progress"></div>
+  <div id="form-modal"></div>
   <h2 id="health-records" class="mb-4">My Health Records</h2>
   {% include "patient/partials/personal_information.html" with patient=patient %}
   {% include "patient/partials/card_conditions.html" with category="Conditions" facts=facts.conditions %}
