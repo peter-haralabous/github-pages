@@ -10,12 +10,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
-from guardian.decorators import permission_required_or_403
 
 from sandwich.core.models import Patient
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.core.validators.phn import clean_phn
@@ -70,25 +70,24 @@ class PatientEdit(forms.ModelForm[Patient]):
 
 
 @login_required
-@permission_required_or_403("change_patient", (Patient, "id", "patient_id"))
-def patient_edit(request: AuthenticatedHttpRequest, patient_id: int) -> HttpResponse:
-    logger.info("Accessing patient edit", extra={"user_id": request.user.id, "patient_id": patient_id})
+@authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient", "change_patient"])])
+def patient_edit(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
+    logger.info("Accessing patient edit", extra={"user_id": request.user.id, "patient_id": patient.id})
 
-    patient = get_object_or_404(request.user.patient_set, id=patient_id)
     if request.method == "POST":
-        logger.info("Processing patient edit form", extra={"user_id": request.user.id, "patient_id": patient_id})
+        logger.info("Processing patient edit form", extra={"user_id": request.user.id, "patient_id": patient.id})
         form = PatientEdit(request.POST, instance=patient)
         if form.is_valid():
             form.save()
-            logger.info("Patient updated successfully", extra={"user_id": request.user.id, "patient_id": patient_id})
+            logger.info("Patient updated successfully", extra={"user_id": request.user.id, "patient_id": patient.id})
             messages.add_message(request, messages.SUCCESS, "Patient updated successfully.")
-            return HttpResponseRedirect(reverse("patients:patient_edit", kwargs={"patient_id": patient_id}))
+            return HttpResponseRedirect(reverse("patients:patient_edit", kwargs={"patient_id": patient.id}))
         logger.warning(
             "Invalid patient edit form",
-            extra={"user_id": request.user.id, "patient_id": patient_id, "form_errors": list(form.errors.keys())},
+            extra={"user_id": request.user.id, "patient_id": patient.id, "form_errors": list(form.errors.keys())},
         )
     else:
-        logger.debug("Rendering patient edit form", extra={"user_id": request.user.id, "patient_id": patient_id})
+        logger.debug("Rendering patient edit form", extra={"user_id": request.user.id, "patient_id": patient.id})
         form = PatientEdit(instance=patient)
 
     context = {"form": form} | _patient_context(request, patient=patient)

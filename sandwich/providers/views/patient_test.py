@@ -82,7 +82,7 @@ def test_patient_add_deny_access(user: User, organization: Organization, patient
         )
     )
 
-    assert res.status_code == 403
+    assert res.status_code == 404
 
 
 @pytest.mark.django_db
@@ -176,7 +176,7 @@ def test_patient_edit_deny_access(provider: User, patient: Patient, organization
         data=data,
     )
 
-    assert res.status_code == 403
+    assert res.status_code == 404
 
 
 # TODO(MM): Backfill with Task perm tests
@@ -209,7 +209,7 @@ def test_patient_add_task_deny_access(user: User, organization: Organization, pa
         )
     )
 
-    assert res.status_code == 403
+    assert res.status_code == 404
 
 
 @pytest.mark.django_db

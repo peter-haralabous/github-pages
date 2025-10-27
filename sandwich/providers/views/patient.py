@@ -19,8 +19,6 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from guardian.decorators import permission_required_or_403
-from guardian.decorators import permission_required_or_404
 from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models.encounter import Encounter
@@ -37,6 +35,8 @@ from sandwich.core.service.invitation_service import resend_patient_invitation_e
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.patient_service import assign_default_provider_patient_permissions
 from sandwich.core.service.patient_service import maybe_patient_name
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.service.task_service import assign_default_provider_task_perms
 from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import send_task_added_email
@@ -110,16 +110,15 @@ class PatientAdd(forms.ModelForm[Patient]):
 
 
 @login_required
-@permission_required_or_404("view_patient", (Patient, "id", "patient_id"))
-@permission_required_or_404("view_organization", (Organization, "id", "organization_id"))
-def patient_details(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_details(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
     logger.info(
         "Accessing provider patient details",
-        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
 
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-    patient = get_object_or_404(organization.patient_set, id=patient_id)
     current_encounter = get_current_encounter(patient)
     tasks = current_encounter.task_set.all() if current_encounter else []
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
@@ -129,8 +128,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
         "Patient details loaded",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
-            "patient_id": patient_id,
+            "organization_id": organization.id,
+            "patient_id": patient.id,
             "has_current_encounter": bool(current_encounter),
             "task_count": len(list(tasks)),
             "past_encounter_count": past_encounters.count(),
@@ -145,8 +144,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
                 "Processing encounter update form",
                 extra={
                     "user_id": request.user.id,
-                    "organization_id": organization_id,
-                    "patient_id": patient_id,
+                    "organization_id": organization.id,
+                    "patient_id": patient.id,
                     "encounter_id": current_encounter.id,
                 },
             )
@@ -157,8 +156,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
                     "Encounter updated successfully",
                     extra={
                         "user_id": request.user.id,
-                        "organization_id": organization_id,
-                        "patient_id": patient_id,
+                        "organization_id": organization.id,
+                        "patient_id": patient.id,
                         "encounter_id": current_encounter.id,
                     },
                 )
@@ -173,8 +172,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
                 "Invalid encounter update form",
                 extra={
                     "user_id": request.user.id,
-                    "organization_id": organization_id,
-                    "patient_id": patient_id,
+                    "organization_id": organization.id,
+                    "patient_id": patient.id,
                     "encounter_id": current_encounter.id,
                     "form_errors": list(current_encounter_form.errors.keys()),
                 },
@@ -184,8 +183,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
                 "Rendering encounter form",
                 extra={
                     "user_id": request.user.id,
-                    "organization_id": organization_id,
-                    "patient_id": patient_id,
+                    "organization_id": organization.id,
+                    "patient_id": patient.id,
                     "encounter_id": current_encounter.id,
                 },
             )
@@ -206,28 +205,29 @@ def patient_details(request: AuthenticatedHttpRequest, organization_id: int, pat
 
 
 @login_required
-@permission_required_or_403("change_patient", (Patient, "id", "patient_id"))
-@permission_required_or_404("view_organization", (Organization, "id", "organization_id"))
-def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+@authorize_objects(
+    [
+        ObjPerm(Patient, "patient_id", ["view_patient"]),
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+    ]
+)
+def patient_edit(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
     logger.info(
         "Accessing provider patient edit",
-        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
-
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-    patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     if request.method == "POST":
         logger.info(
             "Processing provider patient edit form",
-            extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+            extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
         )
         form = PatientEdit(request.POST, instance=patient)
         if form.is_valid():
             form.save()
             logger.info(
                 "Provider patient updated successfully",
-                extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+                extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
             )
             messages.add_message(request, messages.SUCCESS, "Patient updated successfully.")
             return HttpResponseRedirect(
@@ -240,15 +240,15 @@ def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patien
             "Invalid provider patient edit form",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
-                "patient_id": patient_id,
+                "organization_id": organization.id,
+                "patient_id": patient.id,
                 "form_errors": list(form.errors.keys()),
             },
         )
     else:
         logger.debug(
             "Rendering provider patient edit form",
-            extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+            extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
         )
         form = PatientEdit(instance=patient)
 
@@ -257,17 +257,16 @@ def patient_edit(request: AuthenticatedHttpRequest, organization_id: int, patien
 
 
 @login_required
-@permission_required_or_403("create_encounter", (Organization, "id", "organization_id"))
-def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"])])
+def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
     logger.info(
-        "Accessing provider patient add", extra={"user_id": request.user.id, "organization_id": organization_id}
+        "Accessing provider patient add", extra={"user_id": request.user.id, "organization_id": organization.id}
     )
 
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     if request.method == "POST":
         logger.info(
             "Processing provider patient add form",
-            extra={"user_id": request.user.id, "organization_id": organization_id},
+            extra={"user_id": request.user.id, "organization_id": organization.id},
         )
         form = PatientAdd(request.POST)
         if form.is_valid():
@@ -281,7 +280,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
                 "Provider patient and encounter created successfully",
                 extra={
                     "user_id": request.user.id,
-                    "organization_id": organization_id,
+                    "organization_id": organization.id,
                     "patient_id": patient.id,
                     "encounter_id": encounter.id,
                 },
@@ -294,7 +293,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
             "Invalid provider patient add form",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
+                "organization_id": organization.id,
                 "form_errors": list(form.errors.keys()),
             },
         )
@@ -303,7 +302,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
         if maybe_name:
             logger.debug(
                 "Pre-filling patient form with parsed name",
-                extra={"user_id": request.user.id, "organization_id": organization_id, "has_parsed_name": True},
+                extra={"user_id": request.user.id, "organization_id": organization.id, "has_parsed_name": True},
             )
             form = PatientAdd()
             form.fields["first_name"].initial = maybe_name[0]
@@ -311,7 +310,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization_id: int) -> Http
         else:
             logger.debug(
                 "Rendering empty provider patient add form",
-                extra={"user_id": request.user.id, "organization_id": organization_id},
+                extra={"user_id": request.user.id, "organization_id": organization.id},
             )
             form = PatientAdd()
 
@@ -435,16 +434,17 @@ def patient_archive(request: AuthenticatedHttpRequest, organization_id: int, pat
 
 @login_required
 @require_POST
-@permission_required_or_403("create_encounter", (Organization, "id", "organization_id"))
-@permission_required_or_403("assign_task", (Patient, "id", "patient_id"))
-def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"]),
+        ObjPerm(Patient, "patient_id", ["view_patient", "assign_task"]),
+    ]
+)
+def patient_add_task(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
     logger.info(
         "Adding task to patient",
-        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
-
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-    patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     current_encounter = get_current_encounter(patient)
     if current_encounter and not request.user.has_perm("view_encounter", current_encounter):
@@ -459,8 +459,8 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, pa
             "Created new encounter for task",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
-                "patient_id": patient_id,
+                "organization_id": organization.id,
+                "patient_id": patient.id,
                 "encounter_id": current_encounter.id,
             },
         )
@@ -473,8 +473,8 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization_id: int, pa
         "Task added successfully",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
-            "patient_id": patient_id,
+            "organization_id": organization.id,
+            "patient_id": patient.id,
             "task_id": task.id,
             "encounter_id": current_encounter.id,
         },
