@@ -33,7 +33,6 @@ from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
 from sandwich.core.service.organization_service import get_provider_organizations
-from sandwich.core.service.patient_service import assign_default_provider_patient_permissions
 from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
@@ -271,7 +270,6 @@ def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -
         form = PatientAdd(request.POST)
         if form.is_valid():
             patient = form.save(organization=organization)
-            assign_default_provider_patient_permissions(patient)
             encounter = Encounter.objects.create(
                 patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
             )

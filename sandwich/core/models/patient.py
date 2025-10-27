@@ -12,6 +12,7 @@ from guardian.shortcuts import assign_perm
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.organization import Organization
+from sandwich.core.service.patient_service import assign_default_patient_permissions
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -56,6 +57,11 @@ class PatientManager(models.Manager["Patient"]):
     # able to call Patient.objects.search() directly as a shortcut.
     def search(self, query: str):
         return self.get_queryset().search(query)
+
+    def create(self, **kwargs) -> "Patient":
+        patient = super().create(**kwargs)
+        assign_default_patient_permissions(patient)
+        return patient
 
 
 # Provinces/Territories for phn validation used for patients
