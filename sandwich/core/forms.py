@@ -17,7 +17,7 @@ class DeleteConfirmationForm(forms.Form):
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Delete"))
+        self.helper.add_input(Submit("submit", "Delete", css_class="!btn-error"))
 
         if form_action:
             self.helper.form_action = form_action
