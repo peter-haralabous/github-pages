@@ -75,11 +75,11 @@ def create_provenance(provenance_data, source_type):
     return Provenance.objects.create(**provenance_kwargs)
 
 
-def _create_patient_if_needed(subj_node, patient=None):
+def _create_patient_if_needed(subj_node, patient=None) -> Patient:
     # if a patient is provided, use their id
     if patient and hasattr(patient, "id"):
         subj_node["patient_id"] = patient.id
-        return patient.id
+        return patient
     patient_fields = {}
     patient_fields["first_name"] = subj_node.get("first_name", "")
     patient_fields["last_name"] = subj_node.get("last_name", "")
@@ -91,7 +91,7 @@ def _create_patient_if_needed(subj_node, patient=None):
         patient_fields["date_of_birth"] = "1900-01-01"
     patient_obj = Patient.objects.create(**patient_fields)
     subj_node["patient_id"] = patient_obj.id
-    return patient_obj.id
+    return patient_obj
 
 
 def save_triples(
@@ -113,10 +113,10 @@ def save_triples(
     # assume all triples refer to the same patient
     # this may need to be revisited in the future
     subj = triples[0].subject
-    patient_id = _create_patient_if_needed(subj.node, patient=patient)
+    patient = _create_patient_if_needed(subj.node, patient=patient)
     # inject patient_id into all subject nodes
     for t in triples:
-        t.subject.node["patient_id"] = patient_id
+        t.subject.node["patient_id"] = patient.id
     for t in triples:
         try:
             subj = t.subject
@@ -135,6 +135,7 @@ def save_triples(
             provenance_data = t.provenance or {}
             provenance_obj = create_provenance(provenance_data, source_type)
             fact = Fact.objects.create(
+                patient=patient,  # type: ignore[misc]
                 subject=subject_entity,
                 predicate=predicate,
                 object=object_entity,

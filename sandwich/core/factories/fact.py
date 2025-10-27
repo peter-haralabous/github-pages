@@ -65,6 +65,7 @@ def generate_facts_for_predicate(patient: Patient, predicate_name: PredicateName
     See: _entities_for_predicate
     """
     return FactFactory.create_batch(
+        patient=patient,
         size=count,
         subject=entity_for_patient(patient),
         predicate=predicate_for_predicate_name(predicate_name),

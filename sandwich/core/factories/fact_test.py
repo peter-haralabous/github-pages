@@ -4,6 +4,7 @@ from sandwich.core.factories.fact import EntityFactory
 from sandwich.core.factories.fact import FactFactory
 from sandwich.core.factories.fact import _entities_for_predicate
 from sandwich.core.models import Entity
+from sandwich.core.models import Patient
 from sandwich.core.models import Predicate
 from sandwich.core.models.predicate import PredicateName
 from sandwich.core.service.predicate_service import predicate_for_predicate_name
@@ -15,8 +16,9 @@ def predicate(db) -> Predicate:
 
 
 @pytest.fixture
-def entity_in_use(patient_entity: Entity, predicate: Predicate) -> Entity:
+def entity_in_use(patient: Patient, patient_entity: Entity, predicate: Predicate) -> Entity:
     return FactFactory.create(
+        patient=patient,
         subject=patient_entity,
         predicate=predicate,
         object=EntityFactory.create(),

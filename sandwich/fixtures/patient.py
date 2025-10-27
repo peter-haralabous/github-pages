@@ -32,49 +32,58 @@ def patient_entity(patient: Patient) -> Entity:
 
 
 @pytest.fixture
-def patient_knowledge_graph(patient_entity: Entity) -> list[Fact]:
+def patient_knowledge_graph(patient: Patient, patient_entity: Entity) -> list[Fact]:
     return [
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.HAS_CONDITION),
             object=EntityFactory.create(type=EntityType.CONDITION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.TAKES_MEDICATION),
             object=EntityFactory.create(type=EntityType.MEDICATION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.HAS_CONDITION),
             object=EntityFactory.create(type=EntityType.OBSERVATION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.HAS_VITAL_SIGN),
             object=EntityFactory.create(type=EntityType.OBSERVATION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.HAS_SYMPTOM),
             object=EntityFactory.create(type=EntityType.CONDITION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.HAS_ALLERGY),
             object=EntityFactory.create(type=EntityType.ALLERGY_INTOLERANCE),
         ),
         # FactFactory.create(
+        #     patient=patient,
         #     subject=patient_entity,
         #     predicate=predicate_for_predicate_name(PredicateName.HAS_FAMILY_HISTORY),
         #     object=EntityFactory.create(),
         # ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.RECEIVED_IMMUNIZATION),
             object=EntityFactory.create(type=EntityType.IMMUNIZATION),
         ),
         FactFactory.create(
+            patient=patient,
             subject=patient_entity,
             predicate=predicate_for_predicate_name(PredicateName.UNDERWENT_PROCEDURE),
             object=EntityFactory.create(type=EntityType.PROCEDURE),
