@@ -130,6 +130,7 @@ select = [
     "RUF",
 ]
 ignore = [
+    "EM101", # Checks for the use of string literals in exception constructors.
     "EM102", # Checks for the use of f-strings in exception constructors.
     "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
     "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/

@@ -26,6 +26,6 @@ class DeleteConfirmationForm(forms.Form):
         confirmation = self.cleaned_data["confirmation"]
 
         if confirmation != "DELETE":
-            raise forms.ValidationError("Must type 'DELETE' to confirm.")  # noqa: EM101
+            raise forms.ValidationError("Must type 'DELETE' to confirm.")
 
         return confirmation
