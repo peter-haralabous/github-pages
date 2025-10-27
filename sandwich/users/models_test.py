@@ -1,5 +1,6 @@
 from sandwich.core.factories.consent import ConsentFactory
 from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Consent
 from sandwich.core.models import Encounter
 from sandwich.core.models import Organization
@@ -7,7 +8,6 @@ from sandwich.core.models import Patient
 from sandwich.core.models.consent import ConsentPolicy
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.task import Task
-from sandwich.core.models.task import TaskStatus
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
@@ -28,10 +28,8 @@ def test_users_delete_account(user: User, organization: Organization) -> None:
     my_childs_encounter = Encounter.objects.create(
         patient=my_child_patient, organization=organization, status=EncounterStatus.IN_PROGRESS
     )
-    my_task = Task.objects.create(encounter=my_encounter, patient=my_patient, status=TaskStatus.REQUESTED)
-    my_childs_task = Task.objects.create(
-        encounter=my_childs_encounter, patient=my_child_patient, status=TaskStatus.REQUESTED
-    )
+    my_task = TaskFactory.create(patient=my_patient, encounter=my_encounter)
+    my_childs_task = TaskFactory.create(patient=my_child_patient, encounter=my_childs_encounter)
 
     my_id = user.id
     user.delete_account()
@@ -58,7 +56,7 @@ def test_users_delete_account_doesnt_delete_another_users_data(user: User, organ
     your_encounter = Encounter.objects.create(
         patient=your_patient, organization=organization, status=EncounterStatus.IN_PROGRESS
     )
-    your_task = Task.objects.create(encounter=your_encounter, patient=your_patient, status=TaskStatus.REQUESTED)
+    your_task = TaskFactory.create(patient=your_patient, encounter=your_encounter)
 
     my_id = user.id
     user.delete_account()

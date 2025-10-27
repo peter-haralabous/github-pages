@@ -15,13 +15,6 @@ from sandwich.core.service.invitation_service import find_or_create_patient_invi
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_ORGANIZATION_ROLE_PERMS = {
-    RoleName.OWNER: ["change_task", "view_task", "complete_task"],
-    RoleName.ADMIN: ["change_task", "view_task", "complete_task"],
-    RoleName.STAFF: ["change_task", "view_task", "complete_task"],
-}
-
-
 def cancel_task(task: Task) -> None:
     """Cancel a pending task."""
     logger.info(
@@ -103,27 +96,45 @@ def send_task_added_email(task: Task) -> None:
 
 
 def assign_default_provider_task_perms(task: Task) -> None:
-    if not task.patient.organization:
+    # Apply org-wide role perms
+    if task.patient.organization:
+        for role_name in [RoleName.OWNER, RoleName.ADMIN, RoleName.STAFF]:
+            role = task.patient.organization.get_role(role_name)
+            assign_perm("view_task", role.group, task)
+            assign_perm("change_task", role.group, task)
+            assign_perm("complete_task", role.group, task)
         logger.info(
-            "Task from patient does not belong to organization",
+            "Providers from org have been given task permissions",
+            extra={
+                "organization_id": task.patient.organization.id,
+                "patient_id": task.patient.id,
+                "task_id": task.id,
+            },
+        )
+    else:
+        logger.info(
+            "Patient assigned to task does not have org",
             extra={
                 "patient_id": task.patient.id,
                 "task_id": task.id,
             },
         )
-        return
-
-    # Apply org-wide role perms
-    for role_name, perms in DEFAULT_ORGANIZATION_ROLE_PERMS.items():
-        role = task.patient.organization.get_role(role_name)
-        for perm in perms:
-            assign_perm(perm, role.group, task)
-
-    logger.info(
-        "Providers from org have been given task permissions",
-        extra={
-            "organization_id": task.patient.organization.id,
-            "patient_id": task.patient.id,
-            "task_id": task.id,
-        },
-    )
+    # Apply patient task perms
+    if task.patient.user:
+        assign_perm("view_task", task.patient.user, task)
+        assign_perm("complete_task", task.patient.user, task)
+        logger.info(
+            "Patient has been given task permissions",
+            extra={
+                "patient_id": task.patient.id,
+                "task_id": task.id,
+            },
+        )
+    else:
+        logger.info(
+            "Patient has no associated user for task permissions",
+            extra={
+                "patient_id": task.patient.id,
+                "task_id": task.id,
+            },
+        )

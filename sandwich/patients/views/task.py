@@ -9,7 +9,10 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from sandwich.core.models.task import Task
 from sandwich.core.models.task import terminal_task_status
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.patients.views.patient import _patient_context
 
@@ -18,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 # formio is here being loaded by CDN, which would cut down on requiring us to add the script/style/font src
 # but that unsafe-eval seems to be a core function of how formio works
-@csp_update(  # type: ignore[arg-type]
+@csp_update(
     {
         "script-src-elem": "https://cdn.form.io/js/formio.form.js",
         "script-src": UNSAFE_EVAL,
@@ -37,13 +40,13 @@ logger = logging.getLogger(__name__)
     }
 )
 @login_required
-def task(request: AuthenticatedHttpRequest, patient_id: int, task_id: int) -> HttpResponse:
+@authorize_objects([ObjPerm(Task, "task_id", ["view_task"])])
+def task(request: AuthenticatedHttpRequest, patient_id: int, task: Task) -> HttpResponse:
     logger.info(
-        "Accessing patient task", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task_id}
+        "Accessing patient task", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task.id}
     )
 
     patient = get_object_or_404(request.user.patient_set, id=patient_id)
-    task = get_object_or_404(patient.task_set, id=task_id)
 
     # NOTE-NG: we're using the task ID here as the form name
     # patients don't have permission to load arbitrary forms
@@ -53,7 +56,7 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task_id: int) -> Ht
         extra={
             "user_id": request.user.id,
             "patient_id": patient_id,
-            "task_id": task_id,
+            "task_id": task.id,
             "task_status": task.status.value,
             "read_only": read_only,
             "has_submission": bool(task.formio_submission),
@@ -65,7 +68,7 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task_id: int) -> Ht
         form_url = request.build_absolute_uri(
             reverse(
                 "patients:api-1.0.0:get_formio_form_submission",
-                kwargs={"name": str(task_id), "submission_id": str(task.formio_submission.id)},
+                kwargs={"name": str(task.id), "submission_id": str(task.formio_submission.id)},
             )
         )
         logger.debug(
@@ -73,16 +76,16 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task_id: int) -> Ht
             extra={
                 "user_id": request.user.id,
                 "patient_id": patient_id,
-                "task_id": task_id,
+                "task_id": task.id,
                 "submission_id": task.formio_submission.id,
             },
         )
     else:
         form_url = request.build_absolute_uri(
-            reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task_id)})
+            reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task.id)})
         )
         logger.debug(
-            "Using new form", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task_id}
+            "Using new form", extra={"user_id": request.user.id, "patient_id": patient_id, "task_id": task.id}
         )
 
     formio_user = {"_id": request.user.id}

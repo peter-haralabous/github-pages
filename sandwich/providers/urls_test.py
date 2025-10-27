@@ -5,13 +5,11 @@ from django.test import Client
 from django.urls import reverse
 
 from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Encounter
-from sandwich.core.models import Task
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.role import RoleName
-from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.organization_service import assign_organization_role
-from sandwich.core.service.task_service import assign_default_provider_task_perms
 from sandwich.core.urls_test import UrlRegistration
 from sandwich.core.urls_test import get_all_urls
 from sandwich.providers.urls import urlpatterns as providers_urlpatterns
@@ -52,8 +50,7 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     )
 
     # Need a task for the task route
-    task = Task.objects.create(encounter=encounter, patient=patient, status=TaskStatus.REQUESTED)
-    assign_default_provider_task_perms(task)
+    task = TaskFactory.create(patient=patient, encounter=encounter)
 
     kwargs = {}
 

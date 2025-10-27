@@ -1,14 +1,12 @@
 import pytest
 from django.test import Client
 from django.urls import reverse
+from guardian.shortcuts import remove_perm
 
-from sandwich.core.models.encounter import Encounter
-from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
-from sandwich.core.models.task import Task
-from sandwich.core.models.task import TaskStatus
-from sandwich.core.service.task_service import assign_default_provider_task_perms
+from sandwich.core.models.role import RoleName
 from sandwich.users.models import User
 
 
@@ -20,14 +18,7 @@ def test_task_view(
 ) -> None:
     client = Client()
     client.force_login(provider)
-    task = Task.objects.create(
-        patient=patient,
-        status=TaskStatus.IN_PROGRESS,
-        encounter=Encounter.objects.create(
-            organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS
-        ),
-    )
-    assign_default_provider_task_perms(task)
+    task = TaskFactory.create(patient=patient)
     res = client.post(
         reverse(
             "providers:task", kwargs={"organization_id": organization.id, "patient_id": patient.id, "task_id": task.id}
@@ -45,13 +36,10 @@ def test_task_view_deny_access(
 ) -> None:
     client = Client()
     client.force_login(provider)
-    task = Task.objects.create(
-        patient=patient,
-        status=TaskStatus.IN_PROGRESS,
-        encounter=Encounter.objects.create(
-            organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS
-        ),
-    )
+    task = TaskFactory.create(patient=patient)
+    # Gets the group of the provider (Staff) to remove the perm
+    provider_group = organization.get_role(RoleName.STAFF).group
+    remove_perm("view_task", provider_group, task)
     res = client.post(
         reverse(
             "providers:task", kwargs={"organization_id": organization.id, "patient_id": patient.id, "task_id": task.id}
