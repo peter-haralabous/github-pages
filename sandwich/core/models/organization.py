@@ -37,6 +37,13 @@ class OrganizationManager(models.Manager["Organization"]):
     def get_by_natural_key(self, slug: str) -> "Organization":
         return self.get(slug=slug)
 
+    def create(self, **kwargs) -> "Organization":
+        from sandwich.core.service.organization_service import create_default_roles_and_perms  # noqa: PLC0415
+
+        created = super().create(**kwargs)
+        create_default_roles_and_perms(created)
+        return created
+
 
 def is_slug_collision(exc_info: Exception):
     return "Key (slug)=" in exc_info.args[0]

@@ -110,6 +110,9 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
                 "Organization created successfully",
                 extra={"user_id": request.user.id, "organization_id": organization.id},
             )
+            # Note: form.save() does not call the create method for the
+            # associated model. This means we need to explicitly call
+            # create_default_roles_and_perms.
             create_default_roles_and_perms(organization)
             assign_organization_role(organization, RoleName.OWNER, request.user)
             logger.debug(
