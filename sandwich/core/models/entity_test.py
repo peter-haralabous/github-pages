@@ -53,3 +53,15 @@ def test_entity_type_enum():
     assert e_condition.type == EntityType.CONDITION
     assert e_medication.type == EntityType.MEDICATION
     assert e_observation.type == EntityType.OBSERVATION
+
+
+@pytest.mark.django_db
+def test_patient_entity_deleted_when_patient_deleted():
+    # Create a patient and its associated patient Entity
+    p = Patient.objects.create(first_name="Jane", last_name="Doe", date_of_birth="1992-02-02")
+    ent = Entity.objects.create(type=EntityType.PATIENT, patient=p)
+    assert ent.pk is not None
+
+    # Deleting the patient should remove the associated Entity via cascade
+    p.delete()
+    assert not Entity.objects.filter(pk=ent.pk).exists()

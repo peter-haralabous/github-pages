@@ -63,3 +63,21 @@ def test_fact_patient_omitted(
             predicate=arbitrary_predicate,
             object=arbitrary_object,
         )
+
+
+def test_fact_deleted_when_patient_deleted(
+    db, patient: Patient, patient_entity: Entity, arbitrary_predicate: Predicate, arbitrary_object: Entity
+) -> None:
+    """Creating a Fact for a Patient via a Patient Entity then deleting the Patient should remove the Fact."""
+
+    fact = Fact.objects.create(
+        patient=patient,  # type: ignore[misc]
+        subject=patient_entity,
+        predicate=arbitrary_predicate,
+        object=arbitrary_object,
+    )
+    assert Fact.objects.filter(pk=fact.pk).exists()
+
+    # Delete the patient and assert the fact is removed by cascading deletes
+    patient.delete()
+    assert not Fact.objects.filter(pk=fact.pk).exists()
