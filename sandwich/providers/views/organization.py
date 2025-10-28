@@ -9,13 +9,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django_jsonform.widgets import JSONFormWidget
 from django_pydantic_field.forms import SchemaField
-from guardian.decorators import permission_required_or_403
 
 from sandwich.core.forms import DeleteConfirmationForm
 from sandwich.core.models.organization import Organization
@@ -23,7 +21,8 @@ from sandwich.core.models.organization import PatientStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.service.organization_service import create_default_roles_and_perms
-from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
@@ -56,38 +55,36 @@ class OrganizationAdd(forms.ModelForm[Organization]):
 # The JSONFormWidget for PatientStatuses uses this method for style
 @csp_update({"style-src-attr": UNSAFE_INLINE})
 @login_required
-@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
-def organization_edit(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
-    logger.info("Accessing organization edit", extra={"user_id": request.user.id, "organization_id": organization_id})
-
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "change_organization"])])
+def organization_edit(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
+    logger.info("Accessing organization edit", extra={"user_id": request.user.id, "organization_id": organization.id})
 
     if request.method == "POST":
         logger.info(
-            "Processing organization edit form", extra={"user_id": request.user.id, "organization_id": organization_id}
+            "Processing organization edit form", extra={"user_id": request.user.id, "organization_id": organization.id}
         )
         form = OrganizationEdit(request.POST, instance=organization)
         if form.is_valid():
             form.save()
             logger.info(
                 "Organization updated successfully",
-                extra={"user_id": request.user.id, "organization_id": organization_id},
+                extra={"user_id": request.user.id, "organization_id": organization.id},
             )
             messages.add_message(request, messages.SUCCESS, "Organization updated successfully.")
             return HttpResponseRedirect(
-                reverse("providers:organization_edit", kwargs={"organization_id": organization_id})
+                reverse("providers:organization_edit", kwargs={"organization_id": organization.id})
             )
         logger.warning(
             "Invalid organization edit form",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
+                "organization_id": organization.id,
                 "form_errors": list(form.errors.keys()),
             },
         )
     else:
         logger.debug(
-            "Rendering organization edit form", extra={"user_id": request.user.id, "organization_id": organization_id}
+            "Rendering organization edit form", extra={"user_id": request.user.id, "organization_id": organization.id}
         )
         form = OrganizationEdit(instance=organization)
 
@@ -135,19 +132,19 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 
 @login_required
-@permission_required_or_403("delete_organization", (Organization, "id", "organization_id"))
-def organization_delete(request: AuthenticatedHttpRequest, organization_id: int) -> HttpResponse:
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "delete_organization"])])
+def organization_delete(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
     if request.method == "POST":
         logger.info("Processing organization deletion", extra={"user_id": request.user.id})
         form = DeleteConfirmationForm(request.POST)
         if form.is_valid():
-            org = Organization.objects.get(id=str(organization_id))
+            org = Organization.objects.get(id=str(organization.id))
             logger.info("Deleting organization", extra={"org_id": org.id})
             org.delete()
             return redirect(reverse("providers:home"))
 
     form = DeleteConfirmationForm(
-        form_action=reverse("providers:organization_delete", kwargs={"organization_id": organization_id})
+        form_action=reverse("providers:organization_delete", kwargs={"organization_id": organization.id})
     )
     context = {"form": form}
     return render(request, "provider/partials/organization_delete_modal.html", context)

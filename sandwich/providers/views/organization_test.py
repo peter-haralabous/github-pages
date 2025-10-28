@@ -35,7 +35,7 @@ def test_organization_edit_deny_access(user: User, organization: Organization) -
     data = {"name": "new org name", "verification_type": VerificationType.DATE_OF_BIRTH}
     res = client.post(url, data)
 
-    assert res.status_code == 403
+    assert res.status_code == 404
 
 
 @pytest.mark.django_db
@@ -63,7 +63,7 @@ def test_organization_delete_deny_access(user: User, organization: Organization)
     data = {"confirmation": "DELETE"}
     res = client.post(url, data)
 
-    assert res.status_code == 403
+    assert res.status_code == 404
 
 
 @pytest.mark.django_db
