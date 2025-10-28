@@ -3,10 +3,7 @@
 {% load static i18n lucide %}
 
 {% block topnav_items_start %}
-  <div class="flex items-center">
-    {# FIXME: Remove "secret" link once provider vs patient accounts delineated #}
-    {% include 'partials/logo.html' with size='md' link_url='/' %}
-  </div>
+  <div class="flex items-center">{% include 'partials/logo.html' with size='md' link_url='/' %}</div>
 {% endblock topnav_items_start %}
 {% block topnav_items_center %}
   <label class="input">
