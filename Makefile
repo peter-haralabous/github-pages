@@ -53,7 +53,11 @@ test-unit: .venv postgres redis
 .PHONY: test-e2e
 test-e2e: .playwright-browsers collectstatic
 	# https://pytest-xdist.readthedocs.io/en/stable/distribution.html
-	uv run pytest -m e2e --numprocesses logical --exitfirst
+	uv run pytest -m e2e --screenshot only-on-failure --numprocesses logical --exitfirst
+
+.PHONY: record-test-e2e
+record-test-e2e: .playwright-browsers collectstatic
+	uv run playwright codegen http://localhost:3000
 
 .PHONY: test
 test: test-frontend test-unit test-e2e
