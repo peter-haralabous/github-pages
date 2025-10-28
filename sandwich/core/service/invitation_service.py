@@ -121,7 +121,6 @@ def accept_patient_invitation(invitation: Invitation, user: User) -> None:
     patient.save()
     patient.assign_user_owner_perms(user)
 
-    invitation.refresh_from_db()
     if patient.organization:
         assign_organization_role(patient.organization, RoleName.PATIENT, patient.user)
 

@@ -5,6 +5,15 @@ from private_storage.fields import PrivateFileField
 from sandwich.core.models.abstract import BaseModel
 
 
+class DocumentManager(models.Manager["Document"]):
+    def create(self, **kwargs) -> "Document":
+        from sandwich.core.service.document_service import assign_default_document_permissions  # noqa: PLC0415
+
+        document = super().create(**kwargs)
+        assign_default_document_permissions(document)
+        return document
+
+
 class Document(BaseModel):
     """
     A document associated with a patient.
@@ -33,6 +42,8 @@ class Document(BaseModel):
     content_type = models.CharField(max_length=255, blank=True)
     size = models.BigIntegerField(null=True, blank=True)
     original_filename = models.CharField(max_length=255, blank=True)
+
+    objects = DocumentManager()
 
     def clean(self):
         if self.encounter and self.patient and self.encounter.patient != self.patient:

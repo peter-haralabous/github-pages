@@ -152,3 +152,4 @@ class Patient(BaseModel):
         assign_perm("view_patient", user, self)
         assign_perm("change_patient", user, self)
         assign_perm("delete_patient", user, self)
+        assign_perm("create_document", user, self)

@@ -16,16 +16,19 @@ DEFAULT_ORGANIZATION_ROLE_PERMS = {
         "assign_task",
         "view_patient",
         "change_patient",
+        "create_document",
     ],
     RoleName.ADMIN: [
         "assign_task",
         "view_patient",
         "change_patient",
+        "create_document",
     ],
     RoleName.STAFF: [
         "assign_task",
         "view_patient",
         "change_patient",
+        "create_document",
     ],
 }
 
