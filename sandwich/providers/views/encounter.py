@@ -10,7 +10,6 @@ from django.core.paginator import Paginator
 from django.db.models import Exists
 from django.db.models import OuterRef
 from django.http import HttpResponse
-from django.http import HttpResponseNotFound
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -96,7 +95,7 @@ def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, 
     pending_invitation = get_unaccepted_invitation(patient)
 
     if not request.user.has_perm("view_invitation", pending_invitation):
-        return HttpResponseNotFound()
+        pending_invitation = None
 
     EncounterForm = build_encounter_form_class(organization)  # noqa: N806
     if request.method == "POST":
