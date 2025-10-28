@@ -222,12 +222,17 @@ def test_patient_edit_deny_access(provider: User, patient: Patient, organization
 def test_patient_add_task(provider: User, organization: Organization, patient: Patient) -> None:
     client = Client()
     client.force_login(provider)
+    assert patient.task_set.count() == 0
     res = client.post(
         reverse(
             "providers:patient_add_task",
             kwargs={"organization_id": organization.id, "patient_id": patient.id},
         )
     )
+    assert patient.task_set.count() == 1
+    task = patient.task_set.first()
+    assert task is not None
+    assert task.form_version is None  # No form associated yet. Formio still hardcoded in.
 
     assert res.status_code == 302
     assert res.url == reverse(  # type:ignore [attr-defined]
