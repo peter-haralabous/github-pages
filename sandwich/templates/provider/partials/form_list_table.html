@@ -1,0 +1,59 @@
+{% load sortable %}
+
+<div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% sortable_column "Name" "name" %}</th>
+        <th>Latest Version</th>
+        <th>{% sortable_column "Created" "created_at" %}</th>
+        <th>{% sortable_column "Updated" "updated_at" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for form in forms %}
+        <tr>
+          <td>
+            {# TODO: add link to view form and its past versions #}
+            <a class="link" href="#">{{ form.name }}</a>
+          </td>
+          <td>
+            <span class="badge badge-info">{{ form.current_version }}</span>
+          </td>
+          <td>{{ form.created_at }}</td>
+          <td>{{ form.updated_at }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No form templates found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- Pagination controls -->
+<nav aria-label="Form template pagination" class="join mt-2">
+  {% if forms.has_previous %}
+    <a class="join-item btn"
+       href="{% querystring page=forms.previous_page_number %}"
+       aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </button>
+  {% endif %}
+  <span class="join-item btn">Page {{ forms.number }} of {{ forms.paginator.num_pages }}</span>
+  {% if forms.has_next %}
+    <a class="join-item btn"
+       href="{% querystring page=forms.next_page_number %}"
+       aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </button>
+  {% endif %}
+</nav>

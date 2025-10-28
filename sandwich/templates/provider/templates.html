@@ -1,0 +1,37 @@
+{% extends "users/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <h1 class="mb-4">Templates</h1>
+  <p class="mb-5">Manage the templates used across your organization for forms and summaries.</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+    <a href="{% url 'providers:form_templates_list' organization_id=organization.id %}">
+      <div class="card bg-base-100 shadow-sm border border-base-300 hover:shadow-md hover:border-primary transition-all">
+        <div class="card-body">
+          <div class="flex items-center space-x-4">
+            <div class="p-3 bg-primary/10 rounded-lg">{% lucide "file-text" class="w-6 h-6 text-primary" %}</div>
+            <div>
+              <h3 class="card-title text-lg">Forms</h3>
+              <p class="text-sm text-base-content/70">Create and manage patient-facing questionnaires.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {# TODO: Uncomment below when Summary Templates are ready to be worked on #}
+    {#    <div class="card bg-base-100 shadow-sm border border-base-300">#}
+    {#      <div class="card-body">#}
+    {#        <div class="flex items-center space-x-4">#}
+    {#          <div class="p-3 bg-primary/10 rounded-lg">#}
+    {#            {% lucide "clipboard-list" class="w-6 h-6 text-primary" %}#}
+    {#          </div>#}
+    {#          <div>#}
+    {#            <h3 class="card-title text-lg">Summaries</h3>#}
+    {#            <p class="text-sm text-base-content/70">Design templates for AI-generated patient summaries.</p>#}
+    {#          </div>#}
+    {#        </div>#}
+    {#      </div>#}
+    {#    </div>#}
+  </div>
+{% endblock content %}

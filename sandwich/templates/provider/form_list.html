@@ -1,0 +1,16 @@
+{% extends "users/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center">
+      <a href="{% url 'providers:templates' organization_id=organization.id %}"
+         class="btn btn-ghost btn-circle mr-2">{% lucide "arrow-left" class="w-5 h-5" %}</a>
+      <h1>Form Templates</h1>
+    </div>
+    {# TODO: link to builder #}
+    <a href="#" class="btn btn-primary" disabled>New form</a>
+  </div>
+  <div id="form_table_container">{% include "provider/partials/form_list_table.html" %}</div>
+{% endblock content %}

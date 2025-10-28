@@ -24,3 +24,6 @@ class Form(VersionMixin, BaseModel):
         constraints = [
             models.UniqueConstraint(fields=["organization", "name"], name="unique_form_name_per_organization")
         ]
+
+    def current_version(self) -> int:
+        return self.get_current_version_id()
