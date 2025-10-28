@@ -4,6 +4,7 @@ from django.db import models
 from django_enum import EnumField
 
 from sandwich.core.models.abstract import BaseModel
+from sandwich.core.models.patient import Patient
 
 
 class EntityType(enum.Enum):
@@ -31,6 +32,15 @@ class Entity(BaseModel):
     type: models.Field[EntityType, EntityType] = EnumField(
         EntityType, null=True, blank=True, help_text="Type of the entity in the knowledge graph."
     )
+
+    patient = models.ForeignKey(
+        Patient,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text="Only populated when `Entity.type` == PATIENT",
+    )
+
     metadata = models.JSONField(blank=True, null=True, help_text="e.g., FHIR codes, LOINC, etc.")
 
     class Meta:
