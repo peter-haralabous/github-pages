@@ -9,7 +9,9 @@ from sandwich.core.models.email import EmailType
 from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.patient import Patient
+from sandwich.core.models.role import RoleName
 from sandwich.core.service.email_service import send_templated_email
+from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -113,9 +115,14 @@ def accept_patient_invitation(invitation: Invitation, user: User) -> None:
     assert invitation.status == InvitationStatus.PENDING, "Invitation is not pending"
     assert invitation.patient.user is None, "Patient already has a user"
 
-    invitation.patient.user = user
-    invitation.patient.save()
-    invitation.patient.assign_user_owner_perms(user)
+    patient = invitation.patient
+    patient.user = user
+    patient.save()
+    patient.assign_user_owner_perms(user)
+
+    invitation.refresh_from_db()
+    if patient.organization:
+        assign_organization_role(patient.organization, RoleName.PATIENT, patient.user)
 
     invitation.status = InvitationStatus.ACCEPTED
     invitation.accepted_at = timezone.now()

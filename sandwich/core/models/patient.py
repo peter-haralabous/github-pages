@@ -12,6 +12,8 @@ from guardian.shortcuts import assign_perm
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.organization import Organization
+from sandwich.core.models.role import RoleName
+from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.service.patient_service import assign_default_patient_permissions
 from sandwich.users.models import User
 
@@ -60,6 +62,9 @@ class PatientManager(models.Manager["Patient"]):
 
     def create(self, **kwargs) -> "Patient":
         patient = super().create(**kwargs)
+        if patient.organization and patient.user:
+            assign_organization_role(patient.organization, RoleName.PATIENT, patient.user)
+
         assign_default_patient_permissions(patient)
         return patient
 
