@@ -1,0 +1,24 @@
+{% extends "users/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold mb-2">{% trans "List Preferences" %}</h2>
+  </div>
+  <div class="space-y-4">
+    {% for list_type_info in list_types %}
+      <div class="card bg-base-100 border border-base-300">
+        <div class="card-body">
+          <div class="flex justify-between items-center">
+            <h3 class="card-title">{{ list_type_info.label }}</h3>
+            <button hx-get="{% url 'providers:organization_preference_settings_detail' organization_id=organization.id list_type=list_type_info.value %}"
+                    hx-target="#preference-modal-container"
+                    class="btn btn-primary">{% trans "Configure" %}</button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div id="preference-modal-container"></div>
+{% endblock content %}

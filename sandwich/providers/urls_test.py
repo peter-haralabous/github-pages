@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Any
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
@@ -24,12 +25,18 @@ def get_provider_urls() -> list[UrlRegistration]:
 
 
 EXCLUDED_URL_NAMES = {
-    "home",  # Redirect
-    "organization",  # Redirect
-    "patient_archive",  # POST
-    "patient_add_task",  # POST
-    "patient_resend_invite",  # POST
-    "patient_cancel_task",  # POST
+    # Redirects (not meaningful to GET test harness as they don't return 200 OK page content)
+    "home",
+    "organization",
+    # POST-only endpoints (test harness only issues GET requests)
+    "patient_archive",
+    "patient_add_task",
+    "patient_resend_invite",
+    "patient_cancel_task",
+    "save_list_preference",
+    "reset_list_preference",
+    "save_organization_preference",
+    "reset_organization_preference",
 }
 
 
@@ -65,7 +72,7 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
         data_type=CustomAttribute.DataType.DATE,
     )
 
-    kwargs = {}
+    kwargs: dict[str, Any] = {}
 
     if ":encounter_id>" in url.pattern:
         kwargs["encounter_id"] = encounter.pk
@@ -77,6 +84,8 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
         kwargs["task_id"] = task.pk
     if ":attribute_id>" in url.pattern:
         kwargs["attribute_id"] = attribute.pk
+    if url.name in {"list_preference_settings", "organization_preference_settings_detail"}:
+        kwargs["list_type"] = "encounter_list"
 
     response = client.get(reverse("providers:" + url.name, kwargs=kwargs))
     assert response.status_code == HTTPStatus.OK

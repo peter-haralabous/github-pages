@@ -10,6 +10,13 @@ from .views.encounter import encounter_details
 from .views.encounter import encounter_list
 from .views.home import home
 from .views.home import organization_home
+from .views.list_preferences import list_preference_settings
+from .views.list_preferences import organization_list_preference_settings
+from .views.list_preferences import organization_preference_settings_detail
+from .views.list_preferences import reset_list_preference
+from .views.list_preferences import reset_organization_preference
+from .views.list_preferences import save_list_preference
+from .views.list_preferences import save_organization_preference
 from .views.organization import organization_add
 from .views.organization import organization_delete
 from .views.organization import organization_edit
@@ -77,4 +84,41 @@ urlpatterns = [
     ),
     path("organization/<uuid:organization_id>/patients", patient_list, name="patient_list"),
     path("organization/<uuid:organization_id>/patient/add", patient_add, name="patient_add"),
+    # List preference management endpoints
+    path(
+        "organization/<uuid:organization_id>/preferences/<str:list_type>/settings",
+        list_preference_settings,
+        name="list_preference_settings",
+    ),
+    path(
+        "organization/<uuid:organization_id>/preferences/<str:list_type>/save",
+        save_list_preference,
+        name="save_list_preference",
+    ),
+    path(
+        "organization/<uuid:organization_id>/preferences/<str:list_type>/reset",
+        reset_list_preference,
+        name="reset_list_preference",
+    ),
+    # Organization-level preference management
+    path(
+        "organization/<uuid:organization_id>/preferences",
+        organization_list_preference_settings,
+        name="organization_list_preferences",
+    ),
+    path(
+        "organization/<uuid:organization_id>/preferences/org/<str:list_type>/settings",
+        organization_preference_settings_detail,
+        name="organization_preference_settings_detail",
+    ),
+    path(
+        "organization/<uuid:organization_id>/preferences/org/<str:list_type>/save",
+        save_organization_preference,
+        name="save_organization_preference",
+    ),
+    path(
+        "organization/<uuid:organization_id>/preferences/org/<str:list_type>/reset",
+        reset_organization_preference,
+        name="reset_organization_preference",
+    ),
 ]

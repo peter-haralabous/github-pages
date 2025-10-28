@@ -2339,6 +2339,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sortablejs@npm:^1.15.8":
+  version: 1.15.9
+  resolution: "@types/sortablejs@npm:1.15.9"
+  checksum: 10c0/d8ddf3da28a84a023d3003aa64b6495a7112e3945ac05d937afdb7c182b04a1025f126b2977ed8d5a9ede229b4bab85f037efbc97fde8a71128e056ac3122fa9
+  languageName: node
+  linkType: hard
+
 "@types/tough-cookie@npm:*":
   version: 4.0.5
   resolution: "@types/tough-cookie@npm:4.0.5"
@@ -4839,6 +4846,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide@npm:^0.548.0":
+  version: 0.548.0
+  resolution: "lucide@npm:0.548.0"
+  checksum: 10c0/53066f3c02ce4d224909319f5981af6d14b9c844c10ba11caec95bad59844e09e33d827992bb96b17d1cb1ea49c235d9a1ba467d43981347f892260aeafca5d5
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:^0.30.19":
   version: 0.30.19
   resolution: "magic-string@npm:0.30.19"
@@ -5934,6 +5948,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:^4.1.13"
     "@tailwindcss/typography": "npm:^0.5.16"
     "@types/jsdom": "npm:^27"
+    "@types/sortablejs": "npm:^1.15.8"
     "@vitest/ui": "npm:^4.0.4"
     babel-loader: "npm:^10.0.0"
     concurrently: "npm:^9.0.0"
@@ -5943,10 +5958,12 @@ __metadata:
     htmx.org: "npm:^2.0.7"
     jsdom: "npm:^27.0.1"
     lit: "npm:^3.3.1"
+    lucide: "npm:^0.548.0"
     mini-css-extract-plugin: "npm:^2.4.5"
     node-sass-tilde-importer: "npm:^1.0.2"
     postcss: "npm:^8.3.11"
     postcss-loader: "npm:^8.0.0"
+    sortablejs: "npm:^1.15.6"
     tailwindcss: "npm:^4.1.13"
     typescript: "npm:^5.9.2"
     vitest: "npm:^4.0.4"
@@ -6226,6 +6243,13 @@ __metadata:
     ip-address: "npm:^10.0.1"
     smart-buffer: "npm:^4.2.0"
   checksum: 10c0/2805a43a1c4bcf9ebf6e018268d87b32b32b06fbbc1f9282573583acc155860dc361500f89c73bfbb157caa1b4ac78059eac0ef15d1811eb0ca75e0bdadbc9d2
+  languageName: node
+  linkType: hard
+
+"sortablejs@npm:^1.15.6":
+  version: 1.15.6
+  resolution: "sortablejs@npm:1.15.6"
+  checksum: 10c0/a75dcf53e5613b4106d46434e40114830f9c6449b3b439bc1925c1fbf0a0c1f044727a8f3d4ae1759fa7beaa33e7eb0c4a413e6aa88d6026577b59f3658ff727
   languageName: node
   linkType: hard
 

@@ -1,33 +1,67 @@
 {% load sortable %}
+{% load i18n %}
+{% load lucide %}
 
 <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
   <table class="table">
     <thead>
       <tr>
-        <th>{% sortable_column "Name" "patient__first_name" %}</th>
-        <th>{% sortable_column "Email" "patient__email" %}</th>
-        <th>{% sortable_column "Status" "patient_status" %}</th>
-        <th>{% sortable_column "Active" "active" %}</th>
-        <th>{% sortable_column "Created" "created_at" %}</th>
-        <th>{% sortable_column "Updated" "updated_at" %}</th>
+        {% for col in visible_column_meta %}
+          {% if col.value == "patient__first_name" %}
+            <th>{% sortable_column "Name" "patient__first_name" %}</th>
+          {% elif col.value == "patient__email" %}
+            <th>{% sortable_column "Email" "patient__email" %}</th>
+          {% elif col.value == "patient__date_of_birth" %}
+            <th>{% sortable_column "Date of Birth" "patient__date_of_birth" %}</th>
+          {% elif col.value == "patient_status" %}
+            <th>{% sortable_column "Status" "patient_status" %}</th>
+          {% elif col.value == "active" %}
+            <th>{% sortable_column "Active" "active" %}</th>
+          {% elif col.value == "created_at" %}
+            <th>{% sortable_column "Created" "created_at" %}</th>
+          {% elif col.value == "updated_at" %}
+            <th>{% sortable_column "Updated" "updated_at" %}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="w-px">
+          <button hx-get="{% url 'providers:list_preference_settings' organization_id=organization.id list_type='encounter_list' %}"
+                  hx-target="#preference-modal-container"
+                  class="btn btn-xs btn-ghost gap-1"
+                  title="{% trans 'Customize list preferences' %}"
+                  aria-label="{% trans 'List Settings' %}"
+                  data-test="list-settings-button"
+                  id="list-settings-button">{% lucide "settings" class="size-3" %}</button>
+        </th>
       </tr>
     </thead>
     <tbody>
       {% for encounter in encounters %}
         <tr>
-          <td>
-            <a class="link"
-               href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</a>
-          </td>
-          <td>{{ encounter.patient.email|default:"—" }}</td>
-          <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
-          <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
-          <td>{{ encounter.created_at }}</td>
-          <td>{{ encounter.updated_at }}</td>
+          {% for col in visible_column_meta %}
+            {% if col.value == "patient__first_name" %}
+              <td>
+                <a class="link"
+                   href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</a>
+              </td>
+            {% elif col.value == "patient__email" %}
+              <td>{{ encounter.patient.email|default:"—" }}</td>
+            {% elif col.value == "patient__date_of_birth" %}
+              <td>{{ encounter.patient.date_of_birth|default:"—" }}</td>
+            {% elif col.value == "patient_status" %}
+              <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
+            {% elif col.value == "active" %}
+              <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
+            {% elif col.value == "created_at" %}
+              <td>{{ encounter.created_at }}</td>
+            {% elif col.value == "updated_at" %}
+              <td>{{ encounter.updated_at }}</td>
+            {% endif %}
+          {% endfor %}
+          <td></td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="6" class="text-center">No encounters found.</td>
+          <td colspan="{{ visible_column_meta|length|add:1 }}" class="text-center">No encounters found.</td>
         </tr>
       {% endfor %}
     </tbody>

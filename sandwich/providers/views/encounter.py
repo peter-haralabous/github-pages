@@ -15,12 +15,15 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
+from sandwich.core.service.list_preference_service import get_available_columns
+from sandwich.core.service.list_preference_service import get_list_view_preference
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
@@ -156,6 +159,13 @@ def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, 
 def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> HttpResponse:
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
     request.session["active_organization_id"] = str(organization.id)
+
+    preference = get_list_view_preference(
+        request.user,
+        organization,
+        ListViewType.ENCOUNTER_LIST,
+    )
+
     search = request.GET.get("search", "").strip()
     sort = (
         validate_sort(
@@ -170,7 +180,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
                 "updated_at",
             ],
         )
-        or "-updated_at"
+        or preference.default_sort
     )
     page = request.GET.get("page", 1)
     active_filter = request.GET.get("active", "").lower()
@@ -210,8 +220,12 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
     if sort:
         encounters = encounters.order_by(sort)
 
-    paginator = Paginator(encounters, 25)
+    paginator = Paginator(encounters, preference.items_per_page)
     encounters_page = paginator.get_page(page)
+
+    available_columns = get_available_columns(ListViewType.ENCOUNTER_LIST)
+    available_index = {c["value"]: c for c in available_columns}
+    visible_column_meta = [available_index[v] for v in preference.visible_columns if v in available_index]
 
     logger.debug(
         "Encounter list results",
@@ -221,6 +235,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
             "total_count": paginator.count,
             "page_count": len(encounters_page),
             "is_htmx": bool(request.headers.get("HX-Request")),
+            "has_saved_preference": preference.pk is not None,
         },
     )
 
@@ -232,6 +247,9 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         "page": page,
         "active_filter": active_filter,
         "patient_status_filter": patient_status_filter,
+        "visible_columns": preference.visible_columns,
+        "visible_column_meta": visible_column_meta,
+        "preference": preference,
     }
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/encounter_list_table.html", context)

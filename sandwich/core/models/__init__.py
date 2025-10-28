@@ -10,6 +10,9 @@ from .fact import Fact
 from .form import Form
 from .formio_submission import FormioSubmission
 from .invitation import Invitation
+from .list_preference import ListViewPreference
+from .list_preference import ListViewType
+from .list_preference import PreferenceScope
 from .organization import Organization
 from .patient import Patient
 from .predicate import Predicate
@@ -31,9 +34,12 @@ __all__ = [
     "Form",
     "FormioSubmission",
     "Invitation",
+    "ListViewPreference",
+    "ListViewType",
     "Organization",
     "Patient",
     "Predicate",
+    "PreferenceScope",
     "Provenance",
     "Role",
     "Task",

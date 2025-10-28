@@ -11,6 +11,7 @@ from .consent import ConsentAdmin as ConsentAdmin
 from .email import EmailAdmin as EmailAdmin
 from .entity import EntityAdmin as EntityAdmin
 from .fact import FactAdmin as FactAdmin
+from .list_preference import ListViewPreferenceAdmin as ListViewPreferenceAdmin
 from .organization import OrganizationAdmin as OrganizationAdmin
 from .patient import PatientAdmin as PatientAdmin
 from .predicate import PredicateAdmin as PredicateAdmin

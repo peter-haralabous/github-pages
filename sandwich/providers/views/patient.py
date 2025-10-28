@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
+from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
@@ -31,6 +32,8 @@ from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
+from sandwich.core.service.list_preference_service import get_available_columns
+from sandwich.core.service.list_preference_service import get_list_view_preference
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.permissions_service import ObjPerm
@@ -327,13 +330,19 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
 
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
 
+    preference = get_list_view_preference(
+        request.user,
+        organization,
+        ListViewType.PATIENT_LIST,
+    )
+
     search = request.GET.get("search", "").strip()
     sort = (
         validate_sort(
             request.GET.get("sort"),
             ["first_name", "last_name", "email", "date_of_birth", "has_active_encounter", "created_at", "updated_at"],
         )
-        or "-updated_at"
+        or preference.default_sort
     )
     page = request.GET.get("page", 1)
     has_active_encounter_filter = request.GET.get("has_active_encounter", "").lower()
@@ -374,8 +383,12 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
     if sort:
         patients = patients.order_by(sort)
 
-    paginator = Paginator(patients, 25)
+    paginator = Paginator(patients, preference.items_per_page)
     patients_page = paginator.get_page(page)
+
+    available_columns = get_available_columns(ListViewType.PATIENT_LIST)
+    available_index = {c["value"]: c for c in available_columns}
+    visible_column_meta = [available_index[v] for v in preference.visible_columns if v in available_index]
 
     logger.debug(
         "Patient list results",
@@ -385,6 +398,7 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
             "total_count": paginator.count,
             "page_count": len(patients_page),
             "is_htmx": bool(request.headers.get("HX-Request")),
+            "has_saved_preference": preference.pk is not None,
         },
     )
 
@@ -396,6 +410,9 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
         "page": page,
         "has_active_encounter_filter": has_active_encounter_filter,
         "patient_status_filter": patient_status_filter,
+        "visible_columns": preference.visible_columns,
+        "visible_column_meta": visible_column_meta,
+        "preference": preference,
     }
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/patient_list_table.html", context)
