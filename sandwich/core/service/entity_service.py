@@ -10,9 +10,10 @@ if typing.TYPE_CHECKING:
 def entity_for_patient(patient: "Patient") -> Entity:
     return Entity.objects.get_or_create(
         type=EntityType.PATIENT,
-        metadata__patient_id=str(patient.id),
+        patient=patient,
         defaults={
             "type": EntityType.PATIENT,
-            "metadata": {"patient_id": str(patient.id), "label": patient.full_name},
+            "patient": patient,
+            "metadata": {"label": patient.full_name},
         },
     )[0]

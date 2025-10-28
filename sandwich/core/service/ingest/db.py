@@ -21,16 +21,18 @@ def stringify_uuids(obj):
     return obj
 
 
-def get_or_create_entity(object_type, object_label, node):
+def get_or_create_entity(object_type, object_label, node, patient=None):
     node_str = stringify_uuids(node)
+
     # for Patient, deduplicate by patient_id if present
-    if object_type == "Patient" and "patient_id" in node_str:
-        entity, _ = Entity.objects.update_or_create(
-            type=object_type,
-            metadata__patient_id=str(node_str["patient_id"]),
-            defaults={"metadata": node_str},
-        )
-        return entity
+    if object_type == "Patient":
+        if patient is not None:
+            entity, _ = Entity.objects.update_or_create(
+                type=object_type,
+                patient=patient,
+                defaults={"metadata": node_str},
+            )
+            return entity
     # for all other types, fall back to name-based lookup
     entity, _ = Entity.objects.update_or_create(
         type=object_type,
@@ -51,7 +53,6 @@ def get_or_create_predicate(predicate_name, predicate_text):
 def _create_patient_if_needed(subj_node, patient=None) -> Patient:
     # if a patient is provided, use their id
     if patient and hasattr(patient, "id"):
-        subj_node["patient_id"] = patient.id
         return patient
     patient_fields = {}
     patient_fields["first_name"] = subj_node.get("first_name", "")
@@ -62,9 +63,7 @@ def _create_patient_if_needed(subj_node, patient=None) -> Patient:
     if "date_of_birth" not in patient_fields:
         # FIXME-RG: this is a temporary fix to deal with missing DOBs
         patient_fields["date_of_birth"] = "1900-01-01"
-    patient_obj = Patient.objects.create(**patient_fields)
-    subj_node["patient_id"] = patient_obj.id
-    return patient_obj
+    return Patient.objects.create(**patient_fields)
 
 
 def save_triples(
@@ -87,9 +86,6 @@ def save_triples(
     # this may need to be revisited in the future
     subj = triples[0].subject
     patient = _create_patient_if_needed(subj.node, patient=patient)
-    # inject patient_id into all subject nodes
-    for t in triples:
-        t.subject.node["patient_id"] = patient.id
     for t in triples:
         try:
             subj = t.subject
@@ -99,7 +95,7 @@ def save_triples(
                 continue
             pred = t.normalized_predicate
             predicate_text = t.predicate
-            subject_entity = get_or_create_entity("Patient", subj.node.get("name", ""), subj.node)
+            subject_entity = get_or_create_entity("Patient", subj.node.get("name", ""), subj.node, patient=patient)
             object_type = obj.entity_type
             object_label = obj.node["name"]
             object_entity = get_or_create_entity(object_type, object_label, obj.node)

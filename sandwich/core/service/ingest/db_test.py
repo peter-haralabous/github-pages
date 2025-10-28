@@ -98,8 +98,9 @@ def test_save_triples_with_provided_patient(provenance: Provenance):
     assert Fact.objects.count() == 1
     assert Entity.objects.filter(type=EntityType.PATIENT.value).count() == 1
     assert Entity.objects.filter(type=EntityType.OBSERVATION.value).count() == 1
-    # The triple's subject node should have the correct patient_id
-    assert subj.node["patient_id"] == patient.id
+    fact = Fact.objects.first()
+    assert fact is not None
+    assert fact.subject.patient_id == patient.id
 
 
 @pytest.mark.django_db
