@@ -74,7 +74,7 @@ def authorize_objects(rules: list[ObjPerm]):
             return view_func(request, *args, **objects, **kwargs)
 
         if len(rules) > 0:
-            # This attribute is used by `protect_views_test` to ensure views
+            # This attribute is used by `permissioned_views_test` to ensure views
             # are being permissioned.
             setattr(view_wrapper, "authorize_objects", True)  # noqa: B010
         return view_wrapper
