@@ -6,8 +6,15 @@ module.exports = {
   target: 'web',
   context: path.join(__dirname, '../'),
   entry: {
-    project: path.resolve(__dirname, '../sandwich/static/js/project'),
     vendors: path.resolve(__dirname, '../sandwich/static/js/vendors'),
+    project: {
+      import: path.resolve(__dirname, '../sandwich/static/js/project'),
+      dependOn: 'vendors',
+    },
+    survey: {
+      import: path.resolve(__dirname, '../sandwich/static/js/survey'),
+      dependOn: 'vendors',
+    },
   },
   output: {
     path: path.resolve(__dirname, '../sandwich/static/webpack_bundles/'),
@@ -49,5 +56,9 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
+  optimization: {
+    // Use a single runtime chunk so shared modules are deduped into common runtime
+    runtimeChunk: 'single',
   },
 };

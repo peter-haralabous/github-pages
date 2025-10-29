@@ -5964,6 +5964,8 @@ __metadata:
     postcss: "npm:^8.3.11"
     postcss-loader: "npm:^8.0.0"
     sortablejs: "npm:^1.15.6"
+    survey-core: "npm:2.3.12"
+    survey-js-ui: "npm:^2.3.12"
     tailwindcss: "npm:^4.1.13"
     typescript: "npm:^5.9.2"
     vitest: "npm:^4.0.4"
@@ -6421,6 +6423,24 @@ __metadata:
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
   checksum: 10c0/6c4032340701a9950865f7ae8ef38578d8d7053f5e10518076e6554a9381fa91bd9c6850193695c141f32b21f979c985db07265a758867bac95de05f7d8aeb39
+  languageName: node
+  linkType: hard
+
+"survey-core@npm:2.3.12":
+  version: 2.3.12
+  resolution: "survey-core@npm:2.3.12"
+  checksum: 10c0/071da33f2d0e4b8be9f2e661eec8a115291925ec32b36263452f75765ab3682ebb09dd73c3642d9700a799bf1285f5931a70a2a0668c03b921e55a244a1b3bb9
+  languageName: node
+  linkType: hard
+
+"survey-js-ui@npm:^2.3.12":
+  version: 2.3.12
+  resolution: "survey-js-ui@npm:2.3.12"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    survey-core: 2.3.12
+  checksum: 10c0/d35765d15bf3127419281c729c5350489a5b80d083402b5fb01d66b9d750e089ceb1140f98b4e9114fd031178d59404859abb1e9db3381da995d4388a6ef3f41
   languageName: node
   linkType: hard
 
