@@ -65,7 +65,7 @@ class PatientEdit(forms.ModelForm[Patient]):
         fields = ("first_name", "last_name", "date_of_birth", "province", "phn")
 
         widgets = {
-            "date_of_birth": forms.DateInput(attrs={"type": "date"}),
+            "date_of_birth": forms.DateInput(attrs={"type": "date", "max": "9999-12-31"}),
         }
 
 
