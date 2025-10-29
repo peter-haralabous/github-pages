@@ -45,7 +45,7 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
 
         # Set up form helper
         self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Create Interaction", css_class="btn btn-primary"))
+        self.helper.add_input(Submit("submit", "Create Encounter", css_class="btn btn-primary"))
 
     class Meta:
         model = Encounter

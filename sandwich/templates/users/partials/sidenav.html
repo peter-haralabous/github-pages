@@ -34,7 +34,7 @@
             <ul class="menu menu-sm">
               <li>
                 <a href="{% url 'providers:custom_attribute_list' organization_id=organization.id %}"
-                   class="{% if 'custom_attribute_' in request.resolver_match.url_name %}menu-active{% endif %}">Custom Attributes</a>
+                   class="{% if 'custom_attribute_' in request.resolver_match.url_name %}menu-active{% endif %}">Custom Fields</a>
               </li>
               <li>
                 <a href="{% url "providers:templates" organization_id=organization.id %}"

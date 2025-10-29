@@ -22,14 +22,14 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="5" class="text-center">No attributes found.</td>
+          <td colspan="5" class="text-center">No fields found.</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 <!-- Pagination controls -->
-<nav aria-label="Custom attribute pagination" class="join mt-2">
+<nav aria-label="Custom field pagination" class="join mt-2">
   {% if attributes.has_previous %}
     <a class="join-item btn"
        href="{% querystring page=attributes.previous_page_number %}"

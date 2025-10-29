@@ -5,7 +5,7 @@
     <h2>Patient Encounters</h2>
     <div class="pb-2">
       <a href="{% url "providers:encounter_create" organization_id=organization.id %}"
-         class="btn btn-primary">New Interaction</a>
+         class="btn btn-primary">New Encounter</a>
     </div>
   </div>
   <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
