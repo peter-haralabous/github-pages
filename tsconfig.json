@@ -52,5 +52,12 @@
     "noEmit": true
   },
   // Exclude built/static artifact directory from type checking to avoid duplicate decorator processing
-  "exclude": ["staticfiles"]
+  "exclude": [
+    "staticfiles",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "vitest.config.ts",
+    "**/vitest.config.ts",
+    "node_modules"
+  ]
 }

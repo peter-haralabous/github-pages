@@ -42,6 +42,10 @@ redis:
 dev: init collectstatic migrate mailpit postgres redis
 	yarn run dev
 
+.PHONY: test-frontend
+test-frontend: node_modules
+	yarn test:unit
+
 .PHONY: test-unit
 test-unit: .venv postgres redis
 	uv run pytest -m "not e2e and not smoke_test" --exitfirst # --snapshot-update
@@ -52,7 +56,7 @@ test-e2e: .playwright-browsers collectstatic
 	uv run pytest -m e2e --numprocesses logical --exitfirst
 
 .PHONY: test
-test: test-unit test-e2e
+test: test-frontend test-unit test-e2e
 
 .PHONY: coverage
 coverage:
