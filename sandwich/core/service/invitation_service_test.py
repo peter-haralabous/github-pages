@@ -3,11 +3,14 @@ from datetime import timedelta
 
 import pytest
 from django.utils import timezone
+from guardian.shortcuts import get_group_perms
+from guardian.shortcuts import get_perms
 
 from sandwich.core.factories.invitation import InvitationFactory
-from sandwich.core.models import Invitation
-from sandwich.core.models import Patient
+from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
+from sandwich.core.models.patient import Patient
+from sandwich.core.models.role import RoleName
 from sandwich.core.service.invitation_service import expire_invitations
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
@@ -91,3 +94,19 @@ def test_expire_invitations(db, expires_at, expected_status, expected_expiry_cou
     invite.refresh_from_db()
     assert invite.status == expected_status
     assert expiry_count == expected_expiry_count
+
+
+@pytest.mark.django_db
+def test_assign_default_invitation_perms(patient: Patient) -> None:
+    created = Invitation.objects.create(patient=patient, token="")
+    user_permissions = get_perms(patient.user, created)
+
+    assert "view_invitation" in user_permissions
+    assert "change_invitation" in user_permissions
+
+    assert patient.organization is not None
+    for role in [RoleName.OWNER, RoleName.ADMIN, RoleName.STAFF]:
+        group = patient.organization.get_role(role).group
+        group_permissions = get_group_perms(group, created)
+        assert group_permissions.filter(codename="view_invitation").exists()
+        assert group_permissions.filter(codename="change_invitation").exists()
