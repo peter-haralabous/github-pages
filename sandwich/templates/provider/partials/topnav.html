@@ -42,12 +42,5 @@
         <p>Organization Settings</p>
       </a>
     </li>
-    <li>
-      <a href="{% url 'providers:templates_home' organization_id=organization.id %}"
-         class="flex gap-2">
-        <div>{% lucide "file-text" class="size-4" %}</div>
-        <p>Templates</p>
-      </a>
-    </li>
   {% endif %}
 {% endblock avatar_nav_items %}
