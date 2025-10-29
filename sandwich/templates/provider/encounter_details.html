@@ -1,8 +1,14 @@
 {% extends "provider/base.html" %}
 
+{% load lucide %}
 {% load crispy_forms_tags %}
 
 {% block content %}
+  <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
+     href="{% url "providers:encounter_list" organization_id=organization.id %}">
+    {% lucide "chevron-left" class="size-4" %}
+    Back
+  </a>
   <h2>Patient Details</h2>
   <p>
     <strong>Name:</strong> {{ patient.last_name }}, {{ patient.first_name }}
