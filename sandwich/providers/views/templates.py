@@ -6,24 +6,26 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
 from sandwich.core.models import Form
+from sandwich.core.models import Organization
 from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
 
 
-# TODO: Permission checks.
 @login_required
-def templates_home(request: AuthenticatedHttpRequest, organization_id: int):
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization"])])
+def templates_home(request: AuthenticatedHttpRequest, organization: Organization):
     """Provider template landing page to choose to manage form or summary templates."""
     logger.info(
-        "Accessing organization templates", extra={"user_id": request.user.id, "organization_id": organization_id}
+        "Accessing organization templates", extra={"user_id": request.user.id, "organization_id": organization.id}
     )
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-
     return render(request, "provider/templates.html", {"organization": organization})
 
 
+# TODO: Permissions
 @login_required
 def form_list(request: AuthenticatedHttpRequest, organization_id: int):
     """Provider view of form templates for an organization.
