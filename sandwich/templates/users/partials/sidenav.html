@@ -40,14 +40,12 @@
                 <a href="{% url "providers:templates" organization_id=organization.id %}"
                    class="{% if 'templates' in request.resolver_match.url_name %}menu-active{% endif %}">Templates</a>
               </li>
+              <li>
+                <a href="{% url 'providers:organization_list_preferences' organization_id=organization.id %}"
+                   class="{% if 'organization_list_preferences' in request.resolver_match.url_name or 'organization_preference_settings' in request.resolver_match.url_name %}menu-active{% endif %}">{% trans "List Preferences" %}</a>
+              </li>
             </ul>
           </li>
-          <ul class="menu menu-sm">
-            <li>
-              <a href="{% url 'providers:organization_list_preferences' organization_id=organization.id %}"
-                 class="{% if 'organization_list_preferences' in request.resolver_match.url_name or 'organization_preference_settings' in request.resolver_match.url_name %}menu-active{% endif %}">{% trans "List Preferences" %}</a>
-            </li>
-          </ul>
         {% endfor %}
       </ul>
     </li>
