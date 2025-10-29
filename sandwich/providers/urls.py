@@ -31,7 +31,7 @@ from .views.patient import patient_resend_invite
 from .views.search import search
 from .views.task import task
 from .views.templates import form_list
-from .views.templates import templates
+from .views.templates import templates_home
 
 app_name = "providers"
 urlpatterns = [
@@ -53,7 +53,7 @@ urlpatterns = [
         custom_attribute_archive,
         name="custom_attribute_archive",
     ),
-    path("organization/<uuid:organization_id>/templates", templates, name="templates"),
+    path("organization/<uuid:organization_id>/templates", templates_home, name="templates_home"),
     # name must contain 'templates' for sidenav active link highlighting to work.
     path("organization/<uuid:organization_id>/templates/forms", form_list, name="form_templates_list"),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: Permission checks.
 @login_required
-def templates(request: AuthenticatedHttpRequest, organization_id: int):
+def templates_home(request: AuthenticatedHttpRequest, organization_id: int):
     """Provider template landing page to choose to manage form or summary templates."""
     logger.info(
         "Accessing organization templates", extra={"user_id": request.user.id, "organization_id": organization_id}
