@@ -15,12 +15,8 @@ class VersionMixin:
         """Return the current snapshot version of the model instance."""
         return self.events.order_by("-pgh_id").first()
 
-    def get_current_version_id(self) -> int:
-        """Return the ID of the current version"""
-        return self.get_current_version().pgh_id
-
     def get_version(self, version_id: int):
-        """Retrieve a specific version by its ID."""
+        """Retrieve a specific version by its pgh_id."""
         return self.events.get(pk=version_id)
 
     def get_versions(self):
@@ -42,5 +38,7 @@ class VersionMixin:
         https://django-pghistory.readthedocs.io/en/3.8.3/reversion/
 
         revert() raises a RuntimeError if the event model doesn't track all fields.
+
+        previous_version_id: The pgh_id of the version to revert to.
         """
         return self.get_version(previous_version_id).revert()

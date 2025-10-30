@@ -65,16 +65,6 @@ def test_mixin_get_current_version(db: Any, organization: Organization) -> None:
     assert current_version.schema == {"q1": "yes/no", "q2": "text"}
 
 
-def test_mixin_get_current_version_id(db: Any, organization: Organization) -> None:
-    """VersionMixin.get_current_version_id() returns the ID of the latest version."""
-    form = Form.objects.create(name="Survey", schema={"q1": "yes/no"}, organization=organization)
-    form.name = "Customer Survey"
-    form.save()
-    form.schema = {"q1": "yes/no", "q2": "text"}
-    form.save()
-    assert form.get_current_version_id() == form.events.last().pgh_id
-
-
 def test_mixin_get_version(db: Any, organization: Organization) -> None:
     """VersionMixin.get_version() retrieves the expected historical version of the model."""
     # Version 1.
