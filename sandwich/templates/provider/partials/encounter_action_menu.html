@@ -1,0 +1,16 @@
+{% load lucide %}
+
+<div class="dropdown dropdown-end">
+  <button tabindex="0" class="btn btn-ghost btn-sm rounded-full cursor-pointer">
+    {% lucide "ellipsis-vertical" class="size-4" %}
+  </button>
+  <ul tabindex="0"
+      class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+    <li>
+      <a href="{% url 'providers:patient' organization_id=encounter.organization.id patient_id=encounter.patient.id %}">
+        Patient Details ({{ encounter.patient.last_name }}, {{ encounter.patient.first_name }})
+      </a>
+    </li>
+    <li>Encounter Details</li>
+  </ul>
+</div>
