@@ -3,6 +3,7 @@ from django.urls import path
 from .views.custom_attribute import custom_attribute_add
 from .views.custom_attribute import custom_attribute_archive
 from .views.custom_attribute import custom_attribute_edit
+from .views.custom_attribute import custom_attribute_enum_fields
 from .views.custom_attribute import custom_attribute_list
 from .views.encounter import encounter_create
 from .views.encounter import encounter_create_search
@@ -54,6 +55,11 @@ urlpatterns = [
     path("organization/<uuid:organization_id>/search", search, name="search"),
     path("organization/<uuid:organization_id>/fields", custom_attribute_list, name="custom_attribute_list"),
     path("organization/<uuid:organization_id>/fields/add", custom_attribute_add, name="custom_attribute_add"),
+    path(
+        "organization/<uuid:organization_id>/fields/enum-fields",
+        custom_attribute_enum_fields,
+        name="custom_attribute_enum_fields",
+    ),
     path(
         "organization/<uuid:organization_id>/fields/<uuid:attribute_id>/edit",
         custom_attribute_edit,

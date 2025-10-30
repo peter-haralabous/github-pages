@@ -1,0 +1,42 @@
+{% load crispy_forms_tags %}
+
+<div class="mb-4">
+  <h5>Options</h5>
+  {{ formset.management_form }}
+  <div id="enum-forms">
+    {% for form in formset %}
+      <div class="enum-form-row mb-2 border p-3">
+        {{ form.id }}
+        <div class="row">{% crispy form %}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <button type="button" class="btn btn-secondary" id="add-option-btn">Add Option</button>
+</div>
+<script>
+  document
+    .getElementById("add-option-btn")
+    ?.addEventListener("click", function() {
+      const formset = document.getElementById("enum-forms");
+      const totalForms = document.querySelector('[name="enums-TOTAL_FORMS"]');
+      const formCount = parseInt(totalForms.value);
+
+      // Clone first form and update indices
+      const templateForm = formset.querySelector(".enum-form-row");
+      const newForm = templateForm.cloneNode(true);
+
+      // Update all name/id attributes
+      newForm.innerHTML = newForm.innerHTML.replace(
+        /enums-\d+-/g,
+        `enums-${formCount}-`
+      );
+
+      // Clear values
+      newForm.querySelectorAll("input").forEach((input) => {
+        if (!input.name.includes("DELETE")) input.value = "";
+      });
+
+      formset.appendChild(newForm);
+      totalForms.value = formCount + 1;
+    });
+</script>
