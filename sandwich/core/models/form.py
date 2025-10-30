@@ -26,4 +26,4 @@ class Form(VersionMixin, BaseModel):
         ]
 
     def current_version(self) -> int:
-        return self.get_current_version_id()
+        return self.get_total_versions()
