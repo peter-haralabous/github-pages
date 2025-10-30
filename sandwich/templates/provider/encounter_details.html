@@ -7,38 +7,54 @@
   <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
      href="{% url "providers:encounter_list" organization_id=organization.id %}">
     {% lucide "chevron-left" class="size-4" %}
-    Back
+    Encounters list
   </a>
-  <h2>Patient Details</h2>
-  <p>
-    <strong>Name:</strong> {{ patient.last_name }}, {{ patient.first_name }}
-  </p>
-  <p>
-    <strong>Email:</strong> {{ patient.email|default:"—" }}
-  </p>
+  <div class="flex justify-between mb-4">
+    <div>
+      <div class="flex items-center space-x-2">
+        <h1>{{ patient.last_name }}, {{ patient.first_name }}</h1>
+        {% if encounter.active %}
+          <span class="badge badge-md badge-success">Active</span>
+        {% else %}
+          <span class="badge badge-md badge-error">Archived</span>
+        {% endif %}
+      </div>
+      <p class="text-sm tracking-wide">{{ patient.email|default:"—" }}</p>
+    </div>
+    <div>
+      <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
+         class="btn btn-primary">Edit patient record</a>
+      <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+            class="inline"
+            method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-error">Archive</button>
+      </form>
+    </div>
+  </div>
+  <hr />
   {% if pending_invitation %}
-    <p>
-      <strong>Invitation:</strong> {{ pending_invitation.get_status_display }}, last sent at {{ pending_invitation.last_invited_at }}
-    </p>
-  {% endif %}
-  <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
-     class="btn btn-primary">Edit</a>
-  {% if pending_invitation %}
-    <form action="{% url "providers:patient_resend_invite" organization_id=organization.id patient_id=patient.id %}"
-          class="inline"
-          method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-outline-primary">Resend Invitation</button>
-    </form>
+    <div class="mb-4 space-y-2">
+      <h2>Invitation</h2>
+      <p>
+        <strong>Status:</strong> {{ pending_invitation.get_status_display }}, last sent at {{ pending_invitation.last_invited_at }}
+      </p>
+      <form action="{% url "providers:patient_resend_invite" organization_id=organization.id patient_id=patient.id %}"
+            class="inline"
+            method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary">Resend Invitation</button>
+      </form>
+    </div>
   {% endif %}
   <hr />
-  <h2>Encounter</h2>
-  <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
-        class="inline"
-        method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Archive</button>
-  </form>
+  <div class="space-y-2">
+    <h2>Encounter</h2>
+    <p>
+      <strong>Patient Status:</strong> {{ encounter.get_patient_status_display|default:"—" }}
+    </p>
+  </div>
+  <hr />
   {% include 'provider/partials/encounter_tasks.html' %}
   {% if other_encounters %}
     <hr />
