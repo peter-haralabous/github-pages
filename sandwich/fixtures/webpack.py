@@ -40,4 +40,7 @@ def conditional_webpack(request: FixtureRequest, settings: SettingsWrapper):
     if is_e2e(request):
         if not all_webpack_files_exist(settings):
             subprocess.run(["make", "collectstatic"], check=True, cwd=settings.BASE_DIR)  # noqa: S607
-        del settings.WEBPACK_LOADER["DEFAULT"]["LOADER_CLASS"]
+
+        if "DEFAULT" in settings.WEBPACK_LOADER and "LOADER_CLASS" in settings.WEBPACK_LOADER["DEFAULT"]:
+            # This should always be set from the test settings, but wasn't in at CI test run
+            del settings.WEBPACK_LOADER["DEFAULT"]["LOADER_CLASS"]
