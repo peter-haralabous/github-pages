@@ -1,18 +1,24 @@
 """Unit tests for list preference model and service."""
 
 import pytest
+from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
 
 from sandwich.core.factories.organization import OrganizationFactory
+from sandwich.core.models import CustomAttribute
 from sandwich.core.models import ListViewPreference
 from sandwich.core.models import ListViewType
 from sandwich.core.models import PreferenceScope
+from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.patient import Patient
+from sandwich.core.service.list_preference_service import _get_custom_attribute_columns
 from sandwich.core.service.list_preference_service import get_available_columns
 from sandwich.core.service.list_preference_service import get_default_columns
 from sandwich.core.service.list_preference_service import get_default_sort
 from sandwich.core.service.list_preference_service import get_list_view_preference
 from sandwich.core.service.list_preference_service import reset_list_view_preference
 from sandwich.core.service.list_preference_service import save_list_view_preference
+from sandwich.core.service.list_preference_service import validate_sort_field
 from sandwich.users.factories import UserFactory
 
 
@@ -390,3 +396,110 @@ class TestListPreferenceService:
         # Different preferences for different orgs
         assert pref1.id != pref2.id
         assert len(pref1.visible_columns) != len(pref2.visible_columns)
+
+
+@pytest.mark.django_db
+class TestCustomAttributeColumns:
+    def test_get_custom_attribute_columns_for_encounter(self):
+        org = OrganizationFactory.create()
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        attr1 = CustomAttribute.objects.create(
+            organization=org,
+            content_type=content_type,
+            name="Priority",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+        attr2 = CustomAttribute.objects.create(
+            organization=org,
+            content_type=content_type,
+            name="Follow-up Date",
+            data_type=CustomAttribute.DataType.DATE,
+        )
+
+        columns = _get_custom_attribute_columns(ListViewType.ENCOUNTER_LIST, org)
+
+        assert len(columns) == 2
+        # Find columns by ID since order is alphabetical by name
+        column_values = {col["value"] for col in columns}
+        assert str(attr1.id) in column_values
+        assert str(attr2.id) in column_values
+
+        # Verify all columns have required fields
+        for col in columns:
+            assert "value" in col
+            assert "label" in col
+            assert "data_type" in col
+            assert col["is_custom"] == "true"
+
+        # Verify labels are correct
+        labels = {col["label"] for col in columns}
+        assert "Priority" in labels
+        assert "Follow-up Date" in labels
+
+    def test_get_available_columns_includes_custom_attributes_when_org_provided(self):
+        org = OrganizationFactory.create()
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        CustomAttribute.objects.create(
+            organization=org,
+            content_type=content_type,
+            name="Custom Field",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+
+        # Without organization
+        columns_without_org = get_available_columns(ListViewType.ENCOUNTER_LIST)
+        assert all(not col.get("is_custom") for col in columns_without_org)
+
+        # With organization
+        columns_with_org = get_available_columns(ListViewType.ENCOUNTER_LIST, org)
+        assert len(columns_with_org) > len(columns_without_org)
+        custom_cols = [col for col in columns_with_org if col.get("is_custom")]
+        assert len(custom_cols) == 1
+        assert custom_cols[0]["label"] == "Custom Field"
+
+    def test_custom_attributes_filtered_by_content_type(self):
+        org = OrganizationFactory.create()
+        encounter_ct = ContentType.objects.get_for_model(Encounter)
+        patient_ct = ContentType.objects.get_for_model(Patient)
+
+        # Create attribute for encounters
+        CustomAttribute.objects.create(
+            organization=org,
+            content_type=encounter_ct,
+            name="Encounter Field",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+
+        # Create attribute for patients
+        CustomAttribute.objects.create(
+            organization=org,
+            content_type=patient_ct,
+            name="Patient Field",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+
+        encounter_columns = _get_custom_attribute_columns(ListViewType.ENCOUNTER_LIST, org)
+        patient_columns = _get_custom_attribute_columns(ListViewType.PATIENT_LIST, org)
+
+        assert len(encounter_columns) == 1
+        assert encounter_columns[0]["label"] == "Encounter Field"
+        assert len(patient_columns) == 1
+        assert patient_columns[0]["label"] == "Patient Field"
+
+    def test_validate_sort_field_accepts_custom_attributes(self):
+        org = OrganizationFactory.create()
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        attr = CustomAttribute.objects.create(
+            organization=org,
+            content_type=content_type,
+            name="Priority",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+
+        assert validate_sort_field(str(attr.id), ListViewType.ENCOUNTER_LIST, org)
+        assert validate_sort_field(f"-{attr.id}", ListViewType.ENCOUNTER_LIST, org)
+        assert validate_sort_field("patient__first_name", ListViewType.ENCOUNTER_LIST, org)
+        assert not validate_sort_field("nonexistent_field", ListViewType.ENCOUNTER_LIST, org)

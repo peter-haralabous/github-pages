@@ -4,12 +4,16 @@ import logging
 from typing import Any
 from uuid import UUID
 
+from django.contrib.contenttypes.models import ContentType
 from guardian.shortcuts import assign_perm
 
+from sandwich.core.models import CustomAttribute
 from sandwich.core.models import ListViewPreference
 from sandwich.core.models import ListViewType
 from sandwich.core.models import Organization
 from sandwich.core.models import PreferenceScope
+from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.patient import Patient
 from sandwich.core.models.role import RoleName
 from sandwich.users.models import User
 
@@ -140,7 +144,6 @@ def get_list_view_preference(
                 "preference_id": user_pref.id,
             },
         )
-        _fill_missing_defaults(user_pref, list_type)
         return user_pref
 
     org_pref = (
@@ -162,7 +165,6 @@ def get_list_view_preference(
                 "preference_id": org_pref.id,
             },
         )
-        _fill_missing_defaults(org_pref, list_type)
         return org_pref
 
     # No saved preference exists, return unsaved default
@@ -285,11 +287,7 @@ def reset_list_view_preference(
 
 
 def get_default_columns(list_type: ListViewType) -> list[str]:
-    """
-    Get hardcoded default columns for a list type.
-
-    These are used when no preferences are saved.
-    """
+    """Get hardcoded default columns for a list type."""
     defaults = {
         ListViewType.ENCOUNTER_LIST: [
             "patient__first_name",
@@ -310,9 +308,7 @@ def get_default_columns(list_type: ListViewType) -> list[str]:
 
 
 def get_default_sort(list_type: ListViewType) -> str:
-    """
-    Get hardcoded default sort for a list type.
-    """
+    """Get hardcoded default sort for a list type."""
     defaults = {
         ListViewType.ENCOUNTER_LIST: DEFAULT_SORT,
         ListViewType.PATIENT_LIST: DEFAULT_SORT,
@@ -320,11 +316,78 @@ def get_default_sort(list_type: ListViewType) -> str:
     return defaults.get(list_type, DEFAULT_SORT)
 
 
-def get_available_columns(list_type: ListViewType) -> list[dict[str, str]]:
+def _get_list_type_content_type(list_type: ListViewType) -> ContentType | None:
+    """Map list type to the corresponding Django ContentType."""
+    content_type_map = {
+        ListViewType.ENCOUNTER_LIST: ContentType.objects.get_for_model(Encounter),
+        ListViewType.PATIENT_LIST: ContentType.objects.get_for_model(Patient),
+    }
+    return content_type_map.get(list_type)
+
+
+def _get_custom_attribute_columns(
+    list_type: ListViewType,
+    organization: Organization,
+) -> list[dict[str, str]]:
+    """
+    Get custom attribute columns for a list type within an organization.
+
+    Custom attribute columns use the UUID as the value.
+    """
+    content_type = _get_list_type_content_type(list_type)
+    if not content_type:
+        return []
+
+    custom_attributes = CustomAttribute.objects.filter(
+        organization=organization,
+        content_type=content_type,
+    ).order_by("name")
+
+    columns = [
+        {
+            "value": str(attr.id),
+            "label": attr.name,
+            "data_type": attr.data_type,
+            "is_custom": "true",
+        }
+        for attr in custom_attributes
+    ]
+
+    logger.debug(
+        "Found custom attribute columns",
+        extra={
+            "list_type": list_type,
+            "organization_id": organization.id,
+            "count": len(columns),
+        },
+    )
+
+    return columns
+
+
+def validate_sort_field(
+    sort_field: str,
+    list_type: ListViewType,
+    organization: Organization,
+) -> bool:
+    """Validate that a sort field is valid for the given list type and organization."""
+    # Strip leading '-' for descending sorts
+    field = sort_field.lstrip("-")
+
+    available_columns = get_available_columns(list_type, organization)
+    available_values = {col["value"] for col in available_columns}
+
+    return field in available_values
+
+
+def get_available_columns(
+    list_type: ListViewType,
+    organization: Organization | None = None,
+) -> list[dict[str, str]]:
     """
     Get all available columns for a list type with their labels.
 
-    Returns list of dicts with 'value' and 'label' keys.
+    If organization is provided, includes custom attributes.
     """
     columns = {
         ListViewType.ENCOUNTER_LIST: [
@@ -344,4 +407,11 @@ def get_available_columns(list_type: ListViewType) -> list[dict[str, str]]:
             {"value": "updated_at", "label": "Last Updated"},
         ],
     }
-    return columns.get(list_type, [])
+    base_columns = columns.get(list_type, [])
+
+    # Add custom attribute columns if organization provided
+    if organization:
+        custom_columns = _get_custom_attribute_columns(list_type, organization)
+        return base_columns + custom_columns
+
+    return base_columns

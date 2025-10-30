@@ -79,7 +79,7 @@ def list_preference_settings(
         return HttpResponse("Invalid list type", status=400)
 
     preference = get_list_view_preference(request.user, organization, list_type_enum)
-    available_columns = get_available_columns(list_type_enum)
+    available_columns = get_available_columns(list_type_enum, organization)
 
     has_user_preference = preference.pk is not None and preference.scope == PreferenceScope.USER
 
@@ -97,6 +97,7 @@ def list_preference_settings(
     form = ListPreferenceForm(
         list_type=list_type_enum,
         available_columns=available_columns,
+        organization=organization,
         initial={
             "visible_columns": preference.visible_columns,
             "default_sort": preference.default_sort,
@@ -143,12 +144,13 @@ def save_list_preference(
     except ValueError:
         return HttpResponse("Invalid list type", status=400)
 
-    available_columns = get_available_columns(list_type_enum)
+    available_columns = get_available_columns(list_type_enum, organization)
 
     form = ListPreferenceForm(
         request.POST,
         list_type=list_type_enum,
         available_columns=available_columns,
+        organization=organization,
     )
 
     if not form.is_valid():
@@ -321,7 +323,7 @@ def organization_preference_settings_detail(
         .first()
     )
 
-    available_columns = get_available_columns(list_type_enum)
+    available_columns = get_available_columns(list_type_enum, organization)
 
     if org_preference:
         visible_column_values = org_preference.visible_columns
@@ -345,6 +347,7 @@ def organization_preference_settings_detail(
     form = ListPreferenceForm(
         list_type=list_type_enum,
         available_columns=available_columns,
+        organization=organization,
         initial={
             "visible_columns": visible_column_values,
             "default_sort": current_sort,
@@ -393,12 +396,13 @@ def save_organization_preference(
     except ValueError:
         return HttpResponse("Invalid list type", status=400)
 
-    available_columns = get_available_columns(list_type_enum)
+    available_columns = get_available_columns(list_type_enum, organization)
 
     form = ListPreferenceForm(
         request.POST,
         list_type=list_type_enum,
         available_columns=available_columns,
+        organization=organization,
     )
 
     if not form.is_valid():
@@ -522,6 +526,7 @@ class ListPreferenceForm(forms.Form):
     )
 
     def __init__(self, *args, list_type: ListViewType, available_columns: list[dict[str, str]], **kwargs) -> None:
+        kwargs.pop("organization", None)
         super().__init__(*args, **kwargs)
 
         column_choices: list[tuple[str, str]] = [(col["value"], col["label"]) for col in available_columns]

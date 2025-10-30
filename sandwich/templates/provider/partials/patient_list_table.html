@@ -1,6 +1,7 @@
 {% load sortable %}
 {% load i18n %}
 {% load lucide %}
+{% load list_helpers %}
 
 <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
   <table class="table">
@@ -19,6 +20,8 @@
             <th>{% sortable_column "Created" "created_at" %}</th>
           {% elif col.value == "updated_at" %}
             <th>{% sortable_column "Updated" "updated_at" %}</th>
+          {% elif col.is_custom %}
+            <th>{% sortable_column col.label col.value %}</th>
           {% endif %}
         {% endfor %}
         <th class="w-px">
@@ -51,6 +54,10 @@
               <td>{{ patient.created_at }}</td>
             {% elif col.value == "updated_at" %}
               <td>{{ patient.updated_at }}</td>
+            {% elif col.is_custom %}
+              {% with annotation_name=col.value|custom_attr_name %}
+                <td>{{ patient|get_attr:annotation_name|default:"—" }}</td>
+              {% endwith %}
             {% endif %}
           {% endfor %}
           <td></td>

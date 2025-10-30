@@ -5,6 +5,7 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.db.models import Exists
 from django.db.models import OuterRef
@@ -20,6 +21,8 @@ from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
+from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
+from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.list_preference_service import get_available_columns
@@ -100,18 +103,14 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
         ListViewType.ENCOUNTER_LIST,
     )
 
+    available_columns = get_available_columns(ListViewType.ENCOUNTER_LIST, organization)
+    valid_sort_fields = [col["value"] for col in available_columns]
+
     search = request.GET.get("search", "").strip()
     sort = (
         validate_sort(
             request.GET.get("sort"),
-            [
-                "patient__first_name",
-                "patient__last_name",
-                "patient__email",
-                "patient__date_of_birth",
-                "created_at",
-                "updated_at",
-            ],
+            valid_sort_fields,
         )
         or preference.default_sort
     )
@@ -147,13 +146,25 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
     if search:
         encounters = encounters.search(search)  # type: ignore[attr-defined]
 
+    content_type = ContentType.objects.get_for_model(Encounter)
+    encounters = annotate_custom_attributes(
+        encounters,
+        preference.visible_columns,
+        organization,
+        content_type,
+    )
+
     if sort:
-        encounters = encounters.order_by(sort)
+        encounters = apply_sort_with_custom_attributes(
+            encounters,
+            sort,
+            organization,
+            content_type,
+        )
 
     paginator = Paginator(encounters, preference.items_per_page)
     encounters_page = paginator.get_page(page)
 
-    available_columns = get_available_columns(ListViewType.ENCOUNTER_LIST)
     available_index = {c["value"]: c for c in available_columns}
     visible_column_meta = [available_index[v] for v in preference.visible_columns if v in available_index]
 

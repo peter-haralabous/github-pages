@@ -8,6 +8,7 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 from django.db.models import Exists
 from django.db.models import OuterRef
@@ -28,6 +29,8 @@ from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
+from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
+from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
 from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
@@ -281,11 +284,14 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
         ListViewType.PATIENT_LIST,
     )
 
+    available_columns = get_available_columns(ListViewType.PATIENT_LIST, organization)
+    valid_sort_fields = [col["value"] for col in available_columns]
+
     search = request.GET.get("search", "").strip()
     sort = (
         validate_sort(
             request.GET.get("sort"),
-            ["first_name", "last_name", "email", "date_of_birth", "has_active_encounter", "created_at", "updated_at"],
+            valid_sort_fields,
         )
         or preference.default_sort
     )
@@ -320,13 +326,25 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
     if search:
         patients = patients.search(search)
 
+    content_type = ContentType.objects.get_for_model(Patient)
+    patients = annotate_custom_attributes(
+        patients,
+        preference.visible_columns,
+        organization,
+        content_type,
+    )
+
     if sort:
-        patients = patients.order_by(sort)
+        patients = apply_sort_with_custom_attributes(
+            patients,
+            sort,
+            organization,
+            content_type,
+        )
 
     paginator = Paginator(patients, preference.items_per_page)
     patients_page = paginator.get_page(page)
 
-    available_columns = get_available_columns(ListViewType.PATIENT_LIST)
     available_index = {c["value"]: c for c in available_columns}
     visible_column_meta = [available_index[v] for v in preference.visible_columns if v in available_index]
 
