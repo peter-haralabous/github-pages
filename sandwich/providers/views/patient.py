@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
+from sandwich.core.models import Form
 from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
@@ -488,7 +489,16 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization: Organizati
             },
         )
 
-    task = Task.objects.create(encounter=current_encounter, patient=patient, status=TaskStatus.REQUESTED)
+    # TODO(JL): accept user's chosen form for the new task
+    form = Form.objects.filter(organization=organization).last()
+    form_version = form.get_current_version() if form is not None else None
+
+    task = Task.objects.create(
+        encounter=current_encounter,
+        patient=patient,
+        status=TaskStatus.REQUESTED,
+        form_version=form_version,
+    )
     send_task_added_email(task)
 
     logger.info(

@@ -11,7 +11,7 @@
       {% block topnav %}
         {% include 'partials/topnav.html' %}
       {% endblock topnav %}
-      <div class="p-6 max-w-7xl mx-auto">
+      <div class="{% block main_padding %}p-6{% endblock main_padding %} max-w-7xl mx-auto">
         {% block main %}
           {% block content %}
           {% endblock content %}

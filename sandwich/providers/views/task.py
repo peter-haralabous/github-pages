@@ -1,15 +1,13 @@
 import logging
 from uuid import UUID
 
-from csp.constants import UNSAFE_EVAL
-from csp.constants import UNSAFE_INLINE
-from csp.decorators import csp_update
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import terminal_task_status
 from sandwich.core.service.organization_service import get_provider_organizations
@@ -20,24 +18,7 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 logger = logging.getLogger(__name__)
 
 
-@csp_update(
-    {
-        "script-src-elem": "https://cdn.form.io/js/formio.form.js",
-        "script-src": UNSAFE_EVAL,
-        "style-src-attr": UNSAFE_INLINE,
-        # Allow required external stylesheets.
-        "style-src-elem": (
-            "https://cdn.form.io/js/formio.form.min.css",
-            "https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css",
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css",
-        ),
-        # Allow required icon fonts (exact font file paths). Using explicit paths keeps scope narrow.
-        "font-src": (
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff2",
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff",
-        ),
-    }
-)
+@surveyjs_csp
 @login_required
 @authorize_objects([ObjPerm(Task, "task_id", ["view_task"])])
 def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: UUID, task: Task) -> HttpResponse:
@@ -90,6 +71,8 @@ def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: U
 
     formio_user = {"_id": request.user.id}
 
+    form_schema = task.form_version.schema if task.form_version else {}
+
     return render(
         request,
         "provider/task.html",
@@ -97,6 +80,7 @@ def task(request: AuthenticatedHttpRequest, organization_id: UUID, patient_id: U
             "organization": organization,
             "patient": patient,
             "task": task,
+            "form_schema": form_schema,  # could be removed if we offload to api
             "form_url": form_url,
             "formio_user": formio_user,
             "read_only": read_only,

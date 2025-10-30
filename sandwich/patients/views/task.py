@@ -1,14 +1,12 @@
 import logging
 
-from csp.constants import UNSAFE_EVAL
-from csp.constants import UNSAFE_INLINE
-from csp.decorators import csp_update
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 
+from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import terminal_task_status
 from sandwich.core.service.permissions_service import ObjPerm
@@ -19,26 +17,7 @@ from sandwich.patients.views.patient import _patient_context
 logger = logging.getLogger(__name__)
 
 
-# formio is here being loaded by CDN, which would cut down on requiring us to add the script/style/font src
-# but that unsafe-eval seems to be a core function of how formio works
-@csp_update(
-    {
-        "script-src-elem": "https://cdn.form.io/js/formio.form.js",
-        "script-src": UNSAFE_EVAL,
-        "style-src-attr": UNSAFE_INLINE,
-        # Allow required external stylesheets.
-        "style-src-elem": (
-            "https://cdn.form.io/js/formio.form.min.css",
-            "https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css",
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css",
-        ),
-        # Allow required icon fonts (exact font file paths). Using explicit paths keeps scope narrow.
-        "font-src": (
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff2",
-            "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/fonts/bootstrap-icons.woff",
-        ),
-    }
-)
+@surveyjs_csp
 @login_required
 @authorize_objects([ObjPerm(Task, "task_id", ["view_task"])])
 def task(request: AuthenticatedHttpRequest, patient_id: int, task: Task) -> HttpResponse:
@@ -64,6 +43,7 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task: Task) -> Http
     )
 
     # no, I don't want to catch RelatedObjectDoesNotExist if there's no submission yet
+    # TODO(JL): add survey submission handling
     if task.formio_submission:
         form_url = request.build_absolute_uri(
             reverse(
@@ -81,6 +61,7 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task: Task) -> Http
             },
         )
     else:
+        # TODO(JL): offload form schema query to api for performance
         form_url = request.build_absolute_uri(
             reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task.id)})
         )
@@ -90,7 +71,12 @@ def task(request: AuthenticatedHttpRequest, patient_id: int, task: Task) -> Http
 
     formio_user = {"_id": request.user.id}
 
-    context = {"form_url": form_url, "formio_user": formio_user, "read_only": read_only} | _patient_context(
-        request, patient
-    )
+    form_schema = task.form_version.schema if task.form_version else {}
+
+    context = {
+        "form_schema": form_schema,  # could be removed if we offload to api
+        "form_url": form_url,
+        "formio_user": formio_user,
+        "read_only": read_only,
+    } | _patient_context(request, patient)
     return render(request, "patient/form.html", context=context)
