@@ -32,6 +32,7 @@ def test_form_versions(db: Any, organization: Organization) -> None:
     assert first_version.schema == {"initial": True}
     assert first_version.organization_id == organization.pk
     assert first_version.pgh_label == "insert"  # These can be customized
+    assert form.get_total_versions() == 1  # v1
 
     # Update form1 and check that a new event (i.e. version) is created.
     form.name = "Updated Versioned Form"
@@ -42,16 +43,13 @@ def test_form_versions(db: Any, organization: Organization) -> None:
     assert latest_version.name == "Updated Versioned Form"
     assert latest_version.schema == {"foo": "bar"}
     assert latest_version.pgh_label == "update"
+    assert form.get_total_versions() == 2  # v2
 
     form2 = Form.objects.create(name="Another Form", schema={"another": True}, organization=organization)
 
     # Shouldn't pick up a different form's events
     assert form.events.count() == 2
     assert form2.events.count() == 1
-
-    # Get current version
-    version_id = form.get_current_version_id()
-    assert version_id == latest_version.pk
 
 
 def test_mixin_get_current_version(db: Any, organization: Organization) -> None:
@@ -133,6 +131,31 @@ def test_mixin_get_past_versions(db: Any, organization: Organization) -> None:
     assert second_version.schema == {"step1": True}
 
     first_version = past_versions[1]
+    assert first_version.name == "Registration"
+    assert first_version.schema == {"step1": True}
+
+
+def test_mixin_get_versions(db: Any, organization: Organization) -> None:
+    """VersionMixin.get_versions() retrieves all versions, including the current version."""
+    form = Form.objects.create(name="Registration", schema={"step1": True}, organization=organization)
+    form.name = "User Registration"
+    form.save()
+    form.schema = {"step1": True, "step2": True}
+    form.save()
+
+    past_versions = form.get_versions()
+    assert past_versions.count() == 3
+
+    # list is returned in descending order (newest first).
+    third_version = past_versions[0]
+    assert third_version.name == "User Registration"
+    assert third_version.schema == {"step1": True, "step2": True}
+
+    second_version = past_versions[1]
+    assert second_version.name == "User Registration"
+    assert second_version.schema == {"step1": True}
+
+    first_version = past_versions[2]
     assert first_version.name == "Registration"
     assert first_version.schema == {"step1": True}
 

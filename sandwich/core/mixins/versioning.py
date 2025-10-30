@@ -23,6 +23,10 @@ class VersionMixin:
         """Retrieve a specific version by its ID."""
         return self.events.get(pk=version_id)
 
+    def get_versions(self):
+        """Retrieve all versions, including the current one."""
+        return self.events.order_by("-pgh_id")
+
     def get_past_versions(self):
         """Retrieve past versions, excluding the current one."""
         return self.events.order_by("-pgh_id")[1:]
