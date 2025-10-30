@@ -40,7 +40,7 @@
                 {% lucide "arrow-right-left" class="size-4" %}
               </a>
             </li>
-            <hr class="divider my-1" />
+            <hr class="!my-1" />
             <li>
               <a href="{% url 'account_email' %}" class="flex gap-2">
                 <div>{% lucide "user" class="size-4" %}</div>
@@ -59,7 +59,7 @@
                 </li>
               {% endif %}
             {% endblock avatar_nav_items %}
-            <hr class="divider my-1" />
+            <hr class="!my-1" />
             <li>
               <form action="{% url 'account_logout' %}" method="post">
                 {% csrf_token %}

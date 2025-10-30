@@ -45,11 +45,6 @@
     @apply text-lg;
     @apply font-semibold;
   }
-
-  hr {
-    border-top: none;
-    @apply divider;
-  }
 }
 
 /* django-jsonform styles don't really match anything in the app */
@@ -86,6 +81,11 @@
       margin: 1em 0;
       height: 1px;
     }
+  }
+
+  hr {
+    border-top: none;
+    @apply divider;
   }
 
   /* Fix alignment on checkboxes */
