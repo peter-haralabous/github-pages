@@ -14,7 +14,6 @@
       {% for form in forms %}
         <tr>
           <td>
-            {# TODO: add link to view form and its past versions #}
             <a class="link"
                href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
           </td>

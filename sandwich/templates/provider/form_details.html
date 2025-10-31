@@ -14,26 +14,22 @@
       <thead>
         <tr>
           <th>Version</th>
-          <th>pgh_id</th>
           <th>Created</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        {# TODO: link to details about past forms #}
-        {# TODO: revert to a previous form #}
+        {# TODO: form version actions #}
         {% for form_version in forms %}
           <tr>
-            <td>
+            <td data-form-version-id="{{ form_version.pgh_id }}">
               v{{ forloop.revcounter }}
               {% if forloop.first %}<span class="badge badge-success badge-xs ml-2">Latest</span>{% endif %}
             </td>
-            <td>{{ form_version.pgh_id }}</td>
             <td>{{ form_version.pgh_created_at }}</td>
             <td>
               {# TODO: swap to kebab menu of actions #}
               <a class="btn btn-sm" href="#" disabled>View</a>
-              <a class="btn btn-sm" href="#" disabled>Diff</a>
               <a class="btn btn-sm" href="#" disabled>Restore</a>
             </td>
           </tr>
