@@ -80,7 +80,7 @@ def test_all_views_permissioned() -> None:
         "providers/organization/<uuid:organization_id>/preferences/org/<str:list_type>/settings",
         "providers/organization/<uuid:organization_id>/preferences/org/<str:list_type>/save",
         "providers/organization/<uuid:organization_id>/preferences/org/<str:list_type>/reset",
-        "providers/organization/<uuid:organization_id>/form/<uuid:form_id>",
+        "providers/organization/<uuid:organization_id>/form_template/<uuid:form_id>",
         # Formio endpoints to be removed after SurveyJS implemented
         "patients/api/formio/<name>",
         "patients/api/formio/<name>/submission",
