@@ -45,6 +45,10 @@ def test_document_upload_and_extract(client, user):
     assert document.size == len(pdf_content)
     assert document.original_filename == "testfile.pdf"
 
+    assert user.has_perm("view_document", document)
+    assert user.has_perm("change_document", document)
+    assert user.has_perm("delete_document", document)
+
 
 def test_document_upload_and_extract_deny_access(client, user, patient):
     client.force_login(user)
