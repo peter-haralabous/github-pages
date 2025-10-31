@@ -9,6 +9,7 @@ from private_storage.views import PrivateStorageDetailView
 
 from sandwich.core.models.document import Document
 from sandwich.core.models.patient import Patient
+from sandwich.core.service.document_service import assign_default_document_permissions
 from sandwich.core.service.ingest_service import extract_facts_from_document_job
 from sandwich.core.service.ingest_service import send_ingest_progress
 from sandwich.core.service.permissions_service import ObjPerm
@@ -70,6 +71,7 @@ def document_upload_and_extract(request: AuthenticatedHttpRequest, patient: Pati
     form = DocumentForm({"patient": patient.id}, request.FILES)
     if form.is_valid():
         document = form.save()
+        assign_default_document_permissions(document)  # ModelForm calls Document.save(), not Document.objects.save()
         try:
             # enqueue background extraction task
             extract_facts_from_document_job.defer(document_id=str(document.id))
