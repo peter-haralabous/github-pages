@@ -59,6 +59,8 @@ def test_all_views_permissioned() -> None:
         "patients/get_phn_validation/",
         "providers/",
         "providers/organization/add",
+        # These views are permissioned but not using the decorator
+        "patients/document/<uuid:document_id>",
     }
 
     # TODO(MM): These views should be secured.
@@ -67,7 +69,6 @@ def test_all_views_permissioned() -> None:
     # from this list when they are properly permissioned.
     unpermissioned_routes = {
         "patients/invite/<str:token>/accept",
-        "patients/document/<uuid:document_id>",
         "providers/organization/<uuid:organization_id>",
         "providers/organization/<uuid:organization_id>/search",
         "providers/organization/<uuid:organization_id>/encounters",

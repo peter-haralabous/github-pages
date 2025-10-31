@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
+from guardian.shortcuts import get_objects_for_user
 from private_storage.views import PrivateStorageDetailView
 
 from sandwich.core.models.document import Document
@@ -29,7 +30,8 @@ class DocumentDownloadView(PrivateStorageDetailView):
             return Document.objects.none()
 
         # I can only download files for my patients
-        return super().get_queryset().filter(patient__in=self.request.user.patient_set.all())
+        authorized_documents = get_objects_for_user(self.request.user, ["view_document"], super().get_queryset())
+        return authorized_documents.filter(patient__in=self.request.user.patient_set.all())
 
     def can_access_file(self, private_file):
         return True
