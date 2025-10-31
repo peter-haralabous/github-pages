@@ -45,7 +45,6 @@ from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
-from sandwich.providers.views.encounter import build_encounter_form_class
 
 logger = logging.getLogger(__name__)
 
@@ -139,66 +138,10 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         },
     )
 
-    EncounterForm = build_encounter_form_class(organization)  # noqa: N806
-    if current_encounter:
-        if request.method == "POST":
-            logger.info(
-                "Processing encounter update form",
-                extra={
-                    "user_id": request.user.id,
-                    "organization_id": organization.id,
-                    "patient_id": patient.id,
-                    "encounter_id": current_encounter.id,
-                },
-            )
-            current_encounter_form = EncounterForm(request.POST, instance=current_encounter)
-            if current_encounter_form.is_valid():
-                current_encounter_form.save()
-                logger.info(
-                    "Encounter updated successfully",
-                    extra={
-                        "user_id": request.user.id,
-                        "organization_id": organization.id,
-                        "patient_id": patient.id,
-                        "encounter_id": current_encounter.id,
-                    },
-                )
-                messages.add_message(request, messages.SUCCESS, "Encounter updated successfully.")
-                return HttpResponseRedirect(
-                    reverse(
-                        "providers:patient",
-                        kwargs={"patient_id": patient.id, "organization_id": organization.id},
-                    )
-                )
-            logger.warning(
-                "Invalid encounter update form",
-                extra={
-                    "user_id": request.user.id,
-                    "organization_id": organization.id,
-                    "patient_id": patient.id,
-                    "encounter_id": current_encounter.id,
-                    "form_errors": list(current_encounter_form.errors.keys()),
-                },
-            )
-        else:
-            logger.debug(
-                "Rendering encounter form",
-                extra={
-                    "user_id": request.user.id,
-                    "organization_id": organization.id,
-                    "patient_id": patient.id,
-                    "encounter_id": current_encounter.id,
-                },
-            )
-            current_encounter_form = EncounterForm(instance=current_encounter)
-    else:
-        current_encounter_form = None
-
     context = {
         "patient": patient,
         "organization": organization,
         "current_encounter": current_encounter,
-        "current_encounter_form": current_encounter_form,
         "past_encounters": past_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
@@ -351,7 +294,6 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
     )
     page = request.GET.get("page", 1)
     has_active_encounter_filter = request.GET.get("has_active_encounter", "").lower()
-    patient_status_filter = request.GET.get("patient_status", "").lower()
 
     logger.debug(
         "Patient list filters applied",
@@ -362,7 +304,6 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
             "sort": sort,
             "page": page,
             "has_active_encounter_filter": has_active_encounter_filter,
-            "patient_status_filter": patient_status_filter,
         },
     )
 
@@ -378,9 +319,6 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
 
     if has_active_encounter_filter in ("true", "false"):
         patients = patients.filter(has_active_encounter=(has_active_encounter_filter == "true"))
-
-    if patient_status_filter:
-        patients = patients.filter(encounter__patient_status=patient_status_filter)
 
     if search:
         patients = patients.search(search)
@@ -414,7 +352,6 @@ def patient_list(request: AuthenticatedHttpRequest, organization_id: int) -> Htt
         "sort": sort,
         "page": page,
         "has_active_encounter_filter": has_active_encounter_filter,
-        "patient_status_filter": patient_status_filter,
         "visible_columns": preference.visible_columns,
         "visible_column_meta": visible_column_meta,
         "preference": preference,

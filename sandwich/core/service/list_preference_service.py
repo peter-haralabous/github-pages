@@ -294,7 +294,6 @@ def get_default_columns(list_type: ListViewType) -> list[str]:
         ListViewType.ENCOUNTER_LIST: [
             "patient__first_name",
             "patient__email",
-            "patient_status",
             "active",
             "created_at",
             "updated_at",
@@ -332,7 +331,6 @@ def get_available_columns(list_type: ListViewType) -> list[dict[str, str]]:
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "patient__email", "label": "Email"},
             {"value": "patient__date_of_birth", "label": "Date of Birth"},
-            {"value": "patient_status", "label": "Status"},
             {"value": "active", "label": "Active/Archived"},
             {"value": "created_at", "label": "Created"},
             {"value": "updated_at", "label": "Last Updated"},

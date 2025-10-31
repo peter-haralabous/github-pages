@@ -33,16 +33,12 @@
   {% endif %}
   <hr />
   <h2>Encounter</h2>
-  <p>
-    <strong>Patient Status:</strong> {{ current_encounter.get_patient_status_display|default:"—" }}
-  </p>
   <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
         class="inline"
         method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Archive</button>
   </form>
-  {% crispy encounter_form %}
   {% include 'provider/partials/encounter_tasks.html' %}
   {% if other_encounters %}
     <hr />
@@ -54,7 +50,6 @@
             <th>Started</th>
             <th>Ended</th>
             <th>Status</th>
-            <th>Patient Status</th>
           </tr>
         </thead>
         <tbody>
@@ -64,7 +59,6 @@
               <td>{{ encounter.created_at }}</td>
               <td>{{ encounter.ended_at|default:"—" }}</td>
               <td>{{ encounter.get_status_display }}</td>
-              <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
               <td>
                 <a class="btn btn-sm"
                    href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">Details</a>
@@ -72,7 +66,7 @@
             </tr>
           {% empty %}
             <tr>
-              <td colspan="4" class="text-center">No past encounters.</td>
+              <td colspan="3" class="text-center">No past encounters.</td>
             </tr>
           {% endfor %}
         </tbody>

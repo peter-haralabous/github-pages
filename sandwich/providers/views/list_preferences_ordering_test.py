@@ -10,13 +10,13 @@ from sandwich.providers.views.list_preferences import build_columns_data
 def test_build_columns_data_orders_visible_first():
     """Visible columns should appear first preserving saved order."""
     available = get_available_columns(ListViewType.ENCOUNTER_LIST)
-    # simulate user re-ordered columns: last updated first, then status, then email
-    visible = ["updated_at", "patient_status", "patient__email"]
+    # simulate user re-ordered columns: last updated first, then email
+    visible = ["updated_at", "patient__email"]
     data = build_columns_data(available, visible)
-    # First three entries correspond to visible list in same order
-    assert [d["value"] for d in data[:3]] == visible
+    # First two entries correspond to visible list in same order
+    assert [d["value"] for d in data[:2]] == visible
     # Remaining available but not visible columns appear afterwards in original available order
-    remaining_values = [d["value"] for d in data[3:]]
+    remaining_values = [d["value"] for d in data[2:]]
     expected_remaining = [v for v in [c["value"] for c in available] if v not in set(visible)]
     assert remaining_values == expected_remaining
 

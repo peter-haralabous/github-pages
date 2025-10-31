@@ -2,24 +2,17 @@ import datetime
 import logging
 from typing import TYPE_CHECKING
 
-import pydantic
 from django.db import IntegrityError
 from django.db import models
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
-from django_pydantic_field import SchemaField
 from slugify import slugify
 
 from sandwich.core.models.abstract import BaseModel
 
 if TYPE_CHECKING:
     from sandwich.core.models.role import Role
-
-
-class PatientStatus(pydantic.BaseModel):
-    value: str
-    label: str
 
 
 class VerificationType(models.TextChoices):
@@ -61,8 +54,6 @@ class Organization(BaseModel):  # type: ignore[django-manager-missing] # see doc
     name = models.CharField(max_length=255)
 
     slug = models.SlugField(max_length=255, unique=True)
-
-    patient_statuses: list[PatientStatus] = SchemaField(schema=list[PatientStatus], default=[], blank=True)
 
     verification_type: models.Field[VerificationType, VerificationType] = EnumField(
         VerificationType,

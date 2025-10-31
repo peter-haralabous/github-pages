@@ -61,28 +61,6 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
         return encounter
 
 
-def build_encounter_form_class(organization: Organization) -> type[forms.ModelForm[Encounter]]:
-    patient_status_choices = [(s.value, s.label) for s in organization.patient_statuses]
-    patient_status_choices.insert(0, ("", "—"))
-
-    # TODO-NG: there's got to be a better way to pass the patient status choices through
-    #          without creating a new class for each organization
-    class EncounterForm(forms.ModelForm[Encounter]):
-        def __init__(self, *args, **kwargs) -> None:
-            super().__init__(*args, **kwargs)
-            self.helper = FormHelper()
-            self.helper.add_input(Submit("submit", "Submit"))
-
-        class Meta:
-            model = Encounter
-            fields = ("patient_status",)
-            widgets = {
-                "patient_status": forms.Select(choices=patient_status_choices),
-            }
-
-    return EncounterForm
-
-
 @login_required
 def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, encounter_id: UUID) -> HttpResponse:
     organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
@@ -95,54 +73,10 @@ def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, 
     if not request.user.has_perm("view_invitation", pending_invitation):
         pending_invitation = None
 
-    EncounterForm = build_encounter_form_class(organization)  # noqa: N806
-    if request.method == "POST":
-        current_encounter_form = EncounterForm(request.POST, instance=encounter)
-        if current_encounter_form.is_valid():
-            current_encounter_form.save()
-            logger.info(
-                "Encounter updated successfully",
-                extra={
-                    "user_id": request.user.id,
-                    "organization_id": organization_id,
-                    "patient_id": patient.id,
-                    "encounter_id": encounter.id,
-                },
-            )
-            messages.add_message(request, messages.SUCCESS, "Encounter updated successfully.")
-            return HttpResponseRedirect(
-                reverse(
-                    "providers:patient",
-                    kwargs={"patient_id": patient.id, "organization_id": organization.id},
-                )
-            )
-        logger.warning(
-            "Invalid encounter update form",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization_id,
-                "patient_id": patient.id,
-                "encounter_id": encounter.id,
-                "form_errors": list(current_encounter_form.errors.keys()),
-            },
-        )
-    else:
-        logger.debug(
-            "Rendering encounter form",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization_id,
-                "patient_id": patient.id,
-                "encounter_id": encounter.id,
-            },
-        )
-        current_encounter_form = EncounterForm(instance=encounter)
-
     context = {
         "patient": patient,
         "organization": organization,
         "encounter": encounter,
-        "encounter_form": current_encounter_form,
         "other_encounters": other_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
@@ -170,7 +104,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
                 "patient__last_name",
                 "patient__email",
                 "patient__date_of_birth",
-                "patient_status",
                 "created_at",
                 "updated_at",
             ],
@@ -179,7 +112,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
     )
     page = request.GET.get("page", 1)
     active_filter = request.GET.get("active", "").lower()
-    patient_status_filter = request.GET.get("patient_status", "").lower()
 
     logger.debug(
         "Encounter list filters applied",
@@ -190,7 +122,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
             "sort": sort,
             "page": page,
             "active_filter": active_filter,
-            "patient_status_filter": patient_status_filter,
         },
     )
 
@@ -205,9 +136,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         encounters = encounters.filter(status=EncounterStatus.IN_PROGRESS)
     elif active_filter == "false":
         encounters = encounters.exclude(status=EncounterStatus.IN_PROGRESS)
-
-    if patient_status_filter:
-        encounters = encounters.filter(patient_status=patient_status_filter)
 
     if search:
         encounters = encounters.search(search)  # type: ignore[attr-defined]
@@ -241,7 +169,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         "sort": sort,
         "page": page,
         "active_filter": active_filter,
-        "patient_status_filter": patient_status_filter,
         "visible_columns": preference.visible_columns,
         "visible_column_meta": visible_column_meta,
         "preference": preference,

@@ -88,10 +88,6 @@ class Encounter(BaseModel):
     # in the Jira model, this is "Resolution"; "Status" is below
     status: models.Field[EncounterStatus, EncounterStatus] = EnumField(EncounterStatus)
 
-    # this is Encounter.subjectStatus in FHIR (https://www.hl7.org/fhir/R5/encounter.html#8.11.1.1)
-    # we can use a client-defined ontology for these statuses
-    patient_status = models.CharField(max_length=255, blank=True)
-
     # this is Encounter.actualPeriod.end in FHIR
     ended_at = models.DateTimeField(blank=True, null=True)
 
@@ -110,12 +106,3 @@ class Encounter(BaseModel):
     @property
     def active(self) -> bool:
         return not terminal_encounter_status(self.status)
-
-    def get_patient_status_display(self) -> str:
-        # NOTE-NG: the name of this method matches the magic one that Django would normally generate
-        # https://docs.djangoproject.com/en/5.2/ref/models/instances/#django.db.models.Model.get_FOO_display
-        if self.patient_status:
-            for option in self.organization.patient_statuses:
-                if option.value == self.patient_status:
-                    return option.label
-        return self.patient_status

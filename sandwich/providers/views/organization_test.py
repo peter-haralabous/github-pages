@@ -118,7 +118,6 @@ def test_organization_add_form() -> None:
 
 minimal_form_data = {
     "name": "Test Organization",
-    "patient_statuses": "[]",
     "verification_type": "DATE_OF_BIRTH",
 }
 
@@ -129,7 +128,6 @@ def test_organization_add_form_no_statuses() -> None:
     assert form.is_valid(), f"Form errors: {form.errors}"
     organization = form.save()
     assert organization.name == "Test Organization"
-    assert len(organization.patient_statuses) == 0
 
 
 @pytest.mark.django_db

@@ -12,12 +12,9 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
-from django_jsonform.widgets import JSONFormWidget
-from django_pydantic_field.forms import SchemaField
 
 from sandwich.core.forms import DeleteConfirmationForm
 from sandwich.core.models.organization import Organization
-from sandwich.core.models.organization import PatientStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.service.organization_service import create_default_roles_and_perms
@@ -29,8 +26,6 @@ logger = logging.getLogger(__name__)
 
 
 class OrganizationEdit(forms.ModelForm[Organization]):
-    patient_statuses = SchemaField(schema=list[PatientStatus], widget=JSONFormWidget, required=False)
-
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -38,7 +33,7 @@ class OrganizationEdit(forms.ModelForm[Organization]):
 
     class Meta:
         model = Organization
-        fields = ("name", "patient_statuses", "verification_type")
+        fields = ("name", "verification_type")
 
 
 class OrganizationAdd(forms.ModelForm[Organization]):

@@ -3,9 +3,14 @@
 import django.core.serializers.json
 import django_pydantic_field.compat.django
 import django_pydantic_field.fields
+import pydantic
 from django.db import migrations
 
-import sandwich.core.models.organization
+
+# Local definition for migration compatibility
+class PatientStatus(pydantic.BaseModel):
+    value: str
+    label: str
 
 
 class Migration(migrations.Migration):
@@ -22,9 +27,7 @@ class Migration(migrations.Migration):
                 config=None,
                 default=[],
                 encoder=django.core.serializers.json.DjangoJSONEncoder,
-                schema=django_pydantic_field.compat.django.GenericContainer(
-                    list, (sandwich.core.models.organization.PatientStatus,)
-                ),
+                schema=django_pydantic_field.compat.django.GenericContainer(list, (PatientStatus,)),
             ),
         ),
     ]
