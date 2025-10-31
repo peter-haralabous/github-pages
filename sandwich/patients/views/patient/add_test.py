@@ -54,6 +54,16 @@ def test_patient_onboarding_add(db, user: User) -> None:
     assert user.has_perm("change_patient", created_patient)
 
 
+@pytest.mark.django_db
+def test_patient_onboarding_add_not_accessible(db, user: User, patient: Patient) -> None:
+    client = Client()
+    client.force_login(user)
+    url = reverse("patients:patient_onboarding_add")
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.FOUND
+    assert response.headers.get("Location") == reverse("patients:home")
+
+
 @pytest.mark.parametrize(
     ("data", "is_valid"),
     [

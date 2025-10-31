@@ -28,6 +28,7 @@ EXCLUDED_URL_NAMES = {
     "document_delete",  # POST
     "document_upload_and_extract",  # POST
     "task",  # POST
+    "patient_onboarding_add",  # redirects if there's already a patient for the user
     # Ninja api routes below
     "api-1.0.0:api-root",
     "api-1.0.0:openapi-json",

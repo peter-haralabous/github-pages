@@ -105,6 +105,10 @@ def patient_add(request: AuthenticatedHttpRequest) -> HttpResponse:
 def patient_onboarding_add(request: AuthenticatedHttpRequest) -> HttpResponse:
     logger.info("Accessing patient add", extra={"user_id": request.user.id})
 
+    if request.user.patient_set.exists():
+        logger.info("User already has a patient, redirecting to home", extra={"user_id": request.user.id})
+        return HttpResponseRedirect(reverse("patients:home"))
+
     if request.method == "POST":
         logger.info("Processing patient add form", extra={"user_id": request.user.id})
         form = PatientAdd(request.POST)
