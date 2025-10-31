@@ -1,5 +1,4 @@
 import logging
-from uuid import UUID
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -14,6 +13,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
+from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
@@ -24,7 +24,6 @@ from sandwich.core.service.encounter_service import assign_default_encounter_per
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.list_preference_service import get_available_columns
 from sandwich.core.service.list_preference_service import get_list_view_preference
-from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -62,12 +61,18 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
 
 
 @login_required
-def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, encounter_id: UUID) -> HttpResponse:
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-    encounter = get_object_or_404(organization.encounter_set, id=encounter_id)
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter"]),
+    ]
+)
+def encounter_details(
+    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
+) -> HttpResponse:
     patient = encounter.patient
     tasks = encounter.task_set.all()
-    other_encounters = patient.encounter_set.exclude(id=encounter_id)
+    other_encounters = patient.encounter_set.exclude(id=encounter.id)
     pending_invitation = get_unaccepted_invitation(patient)
 
     if not request.user.has_perm("view_invitation", pending_invitation):
@@ -85,8 +90,8 @@ def encounter_details(request: AuthenticatedHttpRequest, organization_id: UUID, 
 
 
 @login_required
-def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> HttpResponse:
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization"])])
+def encounter_list(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
     request.session["active_organization_id"] = str(organization.id)
 
     preference = get_list_view_preference(
@@ -117,7 +122,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         "Encounter list filters applied",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
             "search_length": len(search),
             "sort": sort,
             "page": page,
@@ -125,11 +130,13 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         },
     )
 
-    encounters = Encounter.objects.filter(organization=organization)
+    encounters = get_objects_for_user(
+        request.user,
+        "view_encounter",
+        Encounter.objects.filter(organization=organization),
+    )
     encounters = encounters.annotate(
-        has_active_encounter=Exists(
-            Encounter.objects.filter(patient=OuterRef("pk"), status=EncounterStatus.IN_PROGRESS)
-        )
+        has_active_encounter=Exists(encounters.filter(patient=OuterRef("pk"), status=EncounterStatus.IN_PROGRESS))
     )
 
     if active_filter == "true":
@@ -154,7 +161,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
         "Encounter list results",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
             "total_count": paginator.count,
             "page_count": len(encounters_page),
             "is_htmx": bool(request.headers.get("HX-Request")),
@@ -179,7 +186,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization_id: UUID) -> 
 
 
 @login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization"])])
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"])])
 def encounter_create(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
     """View for creating a new encounter."""
     if request.method == "POST":
@@ -204,7 +211,10 @@ def encounter_create(request: AuthenticatedHttpRequest, organization: Organizati
             return HttpResponseRedirect(
                 reverse(
                     "providers:encounter",
-                    kwargs={"encounter_id": encounter.id, "organization_id": organization.id},
+                    kwargs={
+                        "encounter_id": encounter.id,
+                        "organization_id": organization.id,
+                    },
                 )
             )
         logger.warning(
@@ -247,7 +257,12 @@ def encounter_create_search(request: AuthenticatedHttpRequest, organization: Org
     if not query:
         paginator = Paginator(Patient.objects.none(), page_size)
     else:
-        patients_queryset = Patient.objects.filter(organization=organization).search(query)  # type: ignore[attr-defined]
+        authorized_patients = get_objects_for_user(
+            request.user,
+            "view_patient",
+            Patient.objects.filter(organization=organization),
+        )
+        patients_queryset = authorized_patients.search(query)  # type: ignore[attr-defined]
         paginator = Paginator(patients_queryset, page_size)
 
     logger.debug(

@@ -69,8 +69,6 @@ def test_all_views_permissioned() -> None:
     # This list acts as a registery of unpermissioned views. Remove entries
     # from this list when they are properly permissioned.
     unpermissioned_routes = {
-        "providers/organization/<uuid:organization_id>/encounters",
-        "providers/organization/<uuid:organization_id>/encounter/<uuid:encounter_id>",
         "providers/organization/<uuid:organization_id>/patient/<uuid:patient_id>/archive",
         "providers/organization/<uuid:organization_id>/patient/<uuid:patient_id>/resend_invite",
         "providers/organization/<uuid:organization_id>/patient/<uuid:patient_id>/task/<uuid:task_id>/cancel",
