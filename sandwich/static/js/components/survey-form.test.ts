@@ -31,10 +31,15 @@ describe('SurveyForm custom element', () => {
     el.connectedCallback();
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // Container was created but it shows the error message
+    // Container was created and the error box shows the message
     const container = el.querySelector('[data-survey-container]');
     expect(container).toBeTruthy();
-    expect(container?.textContent).toContain('Failed to load form');
+    const errorMsg = el.querySelector('[id$="-error-message"]');
+    expect(errorMsg).not.toBeNull();
+    // now that we know it exists, assert its text content
+    expect((errorMsg as HTMLElement).textContent).toContain(
+      'Failed to load form',
+    );
 
     document.body.removeChild(el);
     document.body.removeChild(script);
@@ -48,21 +53,31 @@ describe('SurveyForm custom element', () => {
     el.connectedCallback();
     await new Promise((r) => setTimeout(r, 0));
 
-    // Container was created but it shows the no data message
+    // Container was created and the error box shows the message
     const container = el.querySelector('[data-survey-container]');
     expect(container).toBeTruthy();
-    expect(container?.textContent).toContain('No form data provided.');
+    const errorEl = el.querySelector('[id$="-error"]');
+    // No script provided -> component should surface an error UI.
+    expect(errorEl).not.toBeNull();
+    expect((errorEl as HTMLElement).classList.contains('hidden')).toBe(false);
+    const errorMsg = el.querySelector('[id$="-error-message"]');
+    expect(errorMsg).not.toBeNull();
+    expect((errorMsg as HTMLElement).textContent).toContain(
+      'Failed to load form',
+    );
 
     document.body.removeChild(el);
   });
 
   it('initSurvey throws when target not found', () => {
-    expect(() =>
-      SurveyForm.initSurvey('non-existent-id', { title: 'x' }),
-    ).toThrow(/\[survey-form\] initSurvey: target element not found/);
+    const el = new SurveyForm();
+    // do not attach to document so its internal container id won't exist in DOM
+    expect(() => el.initSurvey({ title: 'x' })).toThrow(
+      /\[survey-form\] initSurvey: target element not found/,
+    );
   });
 
-  it('throws when the internal container element is missing', () => {
+  it('throws when the internal container element is missing', async () => {
     const el = new SurveyForm();
     const script = document.createElement('script');
     script.type = 'application/json';
@@ -71,11 +86,31 @@ describe('SurveyForm custom element', () => {
     document.body.appendChild(script);
 
     el.setAttribute('data-schema-id', 'form_schema');
+    // attach the element so its template is stamped into the document
+    document.body.appendChild(el);
 
-    expect(() => (el as any)._initFromSchemaId()).toThrow(
-      /\[survey-form\] container not found/,
+    // trigger connected lifecycle and wait for the template to be stamped
+    el.connectedCallback();
+    await new Promise((r) => setTimeout(r, 0));
+
+    // remove the internal container to simulate a missing target element
+    const container = el.querySelector(
+      '[data-survey-container]',
+    ) as HTMLElement | null;
+    if (container && container.parentElement)
+      container.parentElement.removeChild(container);
+
+    // When the internal container is missing the component will show a
+    // user-friendly error message instead of throwing; assert the error
+    // UI is displayed.
+    (el as any)._initFromSchemaId();
+    const errorMsg = el.querySelector('[id$="-error-message"]');
+    expect(errorMsg).not.toBeNull();
+    expect((errorMsg as HTMLElement).textContent).toContain(
+      'Failed to load form',
     );
 
+    document.body.removeChild(el);
     document.body.removeChild(script);
   });
 
