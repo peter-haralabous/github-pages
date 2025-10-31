@@ -303,3 +303,38 @@ def test_patient_archive_deny_access(user: User, organization: Organization, pat
     )
 
     assert res.status_code == 404
+
+
+def test_patient_resend_invite(template_fixture, provider: User, organization: Organization, mailoutbox) -> None:
+    client = Client()
+    client.force_login(provider)
+    unclaimed_patient = PatientFactory.create(organization=organization, email="test@example.com")
+
+    res = client.post(
+        reverse(
+            "providers:patient_resend_invite",
+            kwargs={"organization_id": organization.id, "patient_id": unclaimed_patient.id},
+        )
+    )
+
+    assert len(mailoutbox) == 1
+    assert mailoutbox[0].to == [unclaimed_patient.email]
+    assert res.status_code == 302
+    assert res.url == reverse(  # type: ignore[attr-defined]
+        "providers:patient",
+        kwargs={"organization_id": organization.id, "patient_id": unclaimed_patient.id},
+    )
+
+
+def test_patient_resend_invite_deny_access(user: User, organization: Organization, mailoutbox) -> None:
+    client = Client()
+    client.force_login(user)
+    unclaimed_patient = PatientFactory.create(organization=organization, email="test@example.com")
+    res = client.post(
+        reverse(
+            "providers:patient_resend_invite",
+            kwargs={"organization_id": organization.id, "patient_id": unclaimed_patient.id},
+        )
+    )
+    assert len(mailoutbox) == 0
+    assert res.status_code == HTTPStatus.NOT_FOUND

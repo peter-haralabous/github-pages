@@ -498,21 +498,26 @@ def patient_cancel_task(
 
 @login_required
 @require_POST
-def patient_resend_invite(request: AuthenticatedHttpRequest, organization_id: int, patient_id: int) -> HttpResponse:
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization", "create_invitation"]),
+        ObjPerm(Patient, "patient_id", ["view_patient"]),
+    ]
+)
+def patient_resend_invite(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
     logger.info(
         "Resending patient invitation",
-        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
-
-    organization = get_object_or_404(get_provider_organizations(request.user), id=organization_id)
-    patient = get_object_or_404(organization.patient_set, id=patient_id)
 
     assert patient.user is None, "Patient already has a user"
     resend_patient_invitation_email(patient)
 
     logger.info(
         "Patient invitation resent successfully",
-        extra={"user_id": request.user.id, "organization_id": organization_id, "patient_id": patient_id},
+        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
 
     messages.add_message(request, messages.SUCCESS, "Invitation resent successfully.")

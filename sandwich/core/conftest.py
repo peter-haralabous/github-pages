@@ -1,7 +1,6 @@
 import pytest
 from django.core.files.base import ContentFile
 
-from sandwich.conftest import django_session_fixtures
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Document
 from sandwich.core.models import Encounter
@@ -43,6 +42,3 @@ def task_wo_user(encounter_wo_user: Encounter):
     return Task.objects.create(
         patient=encounter_wo_user.patient, encounter=encounter_wo_user, status=TaskStatus.REQUESTED
     )
-
-
-template_fixture = django_session_fixtures(["template"])

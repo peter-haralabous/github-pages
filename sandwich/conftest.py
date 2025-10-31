@@ -124,3 +124,6 @@ def vcr_config():
         "filter_headers": [("Authorization", None), ("X-Amz-Security-Token", None)],
         "before_record_request": before_record_request,
     }
+
+
+template_fixture = django_session_fixtures(["template"])
