@@ -13,7 +13,6 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-from guardian.decorators import permission_required_or_403
 
 from sandwich.core.models import ListViewPreference
 from sandwich.core.models import ListViewType
@@ -27,6 +26,8 @@ from sandwich.core.service.list_preference_service import reset_list_view_prefer
 from sandwich.core.service.list_preference_service import save_list_view_preference
 from sandwich.core.service.list_preference_service import validate_list_type
 from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.service.permissions_service import ObjPerm
+from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
@@ -246,24 +247,20 @@ def reset_list_preference(
 
 
 @login_required
-@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
+@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
 def organization_list_preference_settings(
     request: AuthenticatedHttpRequest,
-    organization_id: UUID,
+    organization: Organization,
 ) -> HttpResponse:
     """
     View for organization admins to manage default list preferences.
     """
-    organization = get_object_or_404(
-        get_provider_organizations(request.user),
-        id=organization_id,
-    )
 
     logger.debug(
         "Loading organization list preference settings",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
         },
     )
 
@@ -288,25 +285,21 @@ def organization_list_preference_settings(
 
 
 @login_required
-@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
+@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
 def organization_preference_settings_detail(
     request: AuthenticatedHttpRequest,
-    organization_id: UUID,
+    organization: Organization,
     list_type: str,
 ) -> HttpResponse:
     """
     HTMX endpoint to show organization preference settings modal.
     """
-    organization = get_object_or_404(
-        get_provider_organizations(request.user),
-        id=organization_id,
-    )
 
     try:
         list_type_enum = validate_list_type(
             list_type,
             user_id=request.user.id,
-            organization_id=organization_id,
+            organization_id=organization.id,
         )
     except ValueError:
         return HttpResponse("Invalid list type", status=400)
@@ -338,7 +331,7 @@ def organization_preference_settings_detail(
         "Loading organization preference settings",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
             "list_type": list_type,
             "has_org_preference": org_preference is not None,
         },
@@ -372,26 +365,22 @@ def organization_preference_settings_detail(
 
 
 @login_required
-@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
+@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
 @require_POST
 def save_organization_preference(
     request: AuthenticatedHttpRequest,
-    organization_id: UUID,
+    organization: Organization,
     list_type: str,
 ) -> HttpResponse:
     """
     Save organization's default list preferences.
     """
-    organization = get_object_or_404(
-        get_provider_organizations(request.user),
-        id=organization_id,
-    )
 
     try:
         list_type_enum = validate_list_type(
             list_type,
             user_id=request.user.id,
-            organization_id=organization_id,
+            organization_id=organization.id,
         )
     except ValueError:
         return HttpResponse("Invalid list type", status=400)
@@ -410,7 +399,7 @@ def save_organization_preference(
             "Invalid form data for organization preference",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
+                "organization_id": organization.id,
                 "list_type": list_type,
                 "errors": form.errors,
             },
@@ -426,7 +415,7 @@ def save_organization_preference(
         "Saving organization default list preference",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
             "list_type": list_type,
             "num_visible_columns": len(visible_columns),
             "items_per_page": items_per_page,
@@ -453,26 +442,22 @@ def save_organization_preference(
 
 
 @login_required
-@permission_required_or_403("change_organization", (Organization, "id", "organization_id"))
+@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
 @require_POST
 def reset_organization_preference(
     request: AuthenticatedHttpRequest,
-    organization_id: UUID,
+    organization: Organization,
     list_type: str,
 ) -> HttpResponse:
     """
     Reset organization's default list preferences to system defaults.
     """
-    organization = get_object_or_404(
-        get_provider_organizations(request.user),
-        id=organization_id,
-    )
 
     try:
         list_type_enum = validate_list_type(
             list_type,
             user_id=request.user.id,
-            organization_id=organization_id,
+            organization_id=organization.id,
         )
     except ValueError:
         return HttpResponse("Invalid list type", status=400)
@@ -481,7 +466,7 @@ def reset_organization_preference(
         "Resetting organization default list preference",
         extra={
             "user_id": request.user.id,
-            "organization_id": organization_id,
+            "organization_id": organization.id,
             "list_type": list_type,
         },
     )
