@@ -132,7 +132,7 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
     encounters = get_objects_for_user(
         request.user,
         "view_encounter",
-        Encounter.objects.filter(organization=organization),
+        Encounter.objects.filter(organization=organization).select_related("patient"),
     )
     encounters = encounters.annotate(
         has_active_encounter=Exists(encounters.filter(patient=OuterRef("pk"), status=EncounterStatus.IN_PROGRESS))
