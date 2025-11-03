@@ -6,6 +6,15 @@ from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.organization import Organization
 
 
+class FormManager(models.Manager["Form"]):
+    def create(self, **kwargs) -> "Form":
+        from sandwich.core.service.form_service import assign_default_form_permissions  # noqa: PLC0415
+
+        form = super().create(**kwargs)
+        assign_default_form_permissions(form)
+        return form
+
+
 @pghistory.track()
 class Form(VersionMixin, BaseModel):
     """A form that can be rendered using the surveyjs library."""
@@ -16,6 +25,8 @@ class Form(VersionMixin, BaseModel):
         help_text="The surveyjs JSON schema of the form",
     )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+
+    objects = FormManager()
 
     def __str__(self) -> str:
         return self.name
