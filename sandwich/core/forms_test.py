@@ -1,6 +1,5 @@
 import pytest
 
-from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.forms import DeleteConfirmationForm
 from sandwich.core.models import ListViewType
 from sandwich.providers.views.list_preferences import ListPreferenceForm
@@ -19,7 +18,6 @@ def test_account_delete_form_validation() -> None:
 
 class TestListPreferenceForm:
     def test_form_with_valid_data(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "patient__email", "label": "Email"},
@@ -34,7 +32,6 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert form.is_valid()
@@ -43,7 +40,6 @@ class TestListPreferenceForm:
         assert form.cleaned_data["items_per_page"] == 25
 
     def test_form_with_invalid_column(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "patient__email", "label": "Email"},
@@ -57,14 +53,12 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert not form.is_valid()
         assert "visible_columns" in form.errors
 
     def test_form_with_invalid_sort_field(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "patient__email", "label": "Email"},
@@ -78,14 +72,12 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert not form.is_valid()
         assert "default_sort" in form.errors
 
     def test_form_with_descending_sort(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "created_at", "label": "Created"},
@@ -99,14 +91,12 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert form.is_valid()
         assert form.cleaned_data["default_sort"] == "-created_at"
 
     def test_form_with_empty_sort(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
         ]
@@ -119,14 +109,12 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert form.is_valid()
         assert form.cleaned_data["default_sort"] == ""
 
     def test_form_with_invalid_items_per_page(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
         ]
@@ -139,14 +127,12 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert not form.is_valid()
         assert "items_per_page" in form.errors
 
     def test_form_with_empty_visible_columns(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
         ]
@@ -159,7 +145,6 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert form.is_valid()
@@ -167,7 +152,6 @@ class TestListPreferenceForm:
         assert form.cleaned_data["items_per_page"] == 50
 
     def test_form_preserves_column_order(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "patient__first_name", "label": "Patient Name"},
             {"value": "patient__email", "label": "Email"},
@@ -182,7 +166,6 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.ENCOUNTER_LIST,
             available_columns=available_columns,
-            organization=org,
         )
 
         assert form.is_valid()
@@ -193,7 +176,6 @@ class TestListPreferenceForm:
         ]
 
     def test_form_preserves_patient_list_order(self) -> None:
-        org = OrganizationFactory.create()
         available_columns = [
             {"value": "first_name", "label": "Name"},
             {"value": "email", "label": "Email"},
@@ -209,7 +191,6 @@ class TestListPreferenceForm:
             },
             list_type=ListViewType.PATIENT_LIST,
             available_columns=available_columns,
-            organization=org,
         )
         assert form.is_valid(), form.errors
         assert form.cleaned_data["visible_columns"] == submitted
