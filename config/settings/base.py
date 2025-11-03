@@ -81,6 +81,7 @@ SERVE_MEDIA = env.bool("DJANGO_SERVE_MEDIA", default=DEBUG)
 # ------------------------------------------------------------------------------
 PRIORITY_APPS = [
     "modeltranslation",  # < django.contrib.admin
+    "pghistory.admin",
 ]
 DJANGO_APPS = [
     "django.contrib.auth",
@@ -210,6 +211,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "csp.middleware.CSPMiddleware",
+    "pghistory.middleware.HistoryMiddleware",
     "sandwich.core.middleware.TimezoneMiddleware",
     "sandwich.core.middleware.ConsentMiddleware",
     "sandwich.patients.middleware.patient_access.PatientAccessMiddleware",
