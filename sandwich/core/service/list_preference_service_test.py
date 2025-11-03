@@ -16,9 +16,12 @@ from sandwich.core.models import PreferenceScope
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.list_preference_service import _get_custom_attribute_columns
+from sandwich.core.service.list_preference_service import encode_filters_to_url_params
+from sandwich.core.service.list_preference_service import enrich_filters_with_display_values
 from sandwich.core.service.list_preference_service import get_available_columns
 from sandwich.core.service.list_preference_service import get_list_view_preference
-from sandwich.core.service.list_preference_service import parse_filters_from_request
+from sandwich.core.service.list_preference_service import has_unsaved_filters
+from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.list_preference_service import reset_list_view_preference
 from sandwich.core.service.list_preference_service import save_filters_to_preference
 from sandwich.core.service.list_preference_service import save_list_view_preference
@@ -630,63 +633,202 @@ class TestFilterPersistence:
 
         assert updated_pref.saved_filters == filters
 
-    def test_parse_filters_from_request_with_saved(self, user, organization):
-        content_type = ContentType.objects.get_for_model(Encounter)
-
-        attr = CustomAttribute.objects.create(
-            organization=organization,
-            content_type=content_type,
-            name="Priority",
-            data_type=CustomAttribute.DataType.ENUM,
-        )
-
-        saved_filters = {"custom_attributes": {str(attr.id): {"values": ["high"]}}, "model_fields": {}}
-
-        pref = ListViewPreference.objects.create(
-            user=user,
-            organization=organization,
-            list_type=ListViewType.ENCOUNTER_LIST,
-            scope=PreferenceScope.USER,
-            visible_columns=["patient__first_name"],
-            saved_filters=saved_filters,
-        )
-
+    def test_parse_filters_from_query_params_empty(self):
         factory = RequestFactory()
         request = factory.get("/")
 
-        filters = parse_filters_from_request(request, pref)
+        filters = parse_filters_from_query_params(request.GET)
 
-        assert str(attr.id) in filters["custom_attributes"]
-        assert filters["custom_attributes"][str(attr.id)]["values"] == ["high"]
+        assert filters == {"custom_attributes": {}, "model_fields": {}}
 
-    def test_parse_filters_request_overrides_saved(self, user, organization):
+    def test_parse_filters_from_query_params_custom_attribute(self, organization):
         content_type = ContentType.objects.get_for_model(Encounter)
-
         attr = CustomAttribute.objects.create(
             organization=organization,
             content_type=content_type,
             name="Priority",
             data_type=CustomAttribute.DataType.ENUM,
-        )
-
-        saved_filters = {"custom_attributes": {str(attr.id): {"values": ["high"]}}, "model_fields": {}}
-
-        pref = ListViewPreference.objects.create(
-            user=user,
-            organization=organization,
-            list_type=ListViewType.ENCOUNTER_LIST,
-            scope=PreferenceScope.USER,
-            visible_columns=["patient__first_name"],
-            saved_filters=saved_filters,
         )
 
         factory = RequestFactory()
         attr_id_underscore = str(attr.id).replace("-", "_")
         request = factory.get(f"/?filter_attr_{attr_id_underscore}=low,medium")
 
-        filters = parse_filters_from_request(request, pref)
+        filters = parse_filters_from_query_params(request.GET)
 
-        assert str(attr.id) in filters["custom_attributes"]
-        assert "low" in filters["custom_attributes"][str(attr.id)]["values"]
-        assert "medium" in filters["custom_attributes"][str(attr.id)]["values"]
-        assert "high" not in filters["custom_attributes"][str(attr.id)]["values"]
+        assert filters["custom_attributes"][str(attr.id)]["values"] == ["low", "medium"]
+
+    def test_parse_filters_from_query_params_model_field(self):
+        factory = RequestFactory()
+        request = factory.get("/?filter_active=true")
+
+        filters = parse_filters_from_query_params(request.GET)
+
+        assert filters["model_fields"]["active"] == "true"
+
+    def test_parse_filters_from_query_params_multi_value_model_field(self):
+        factory = RequestFactory()
+        request = factory.get("/?filter_priority=high,medium")
+
+        filters = parse_filters_from_query_params(request.GET)
+
+        assert filters["model_fields"]["priority"] == ["high", "medium"]
+
+    def test_parse_filters_from_query_params_date_range(self):
+        factory = RequestFactory()
+        request = factory.get("/?filter_created_at_start=2024-01-01&filter_created_at_end=2024-01-31")
+
+        filters = parse_filters_from_query_params(request.GET)
+
+        assert filters["model_fields"]["created_at_range"] == {
+            "type": "date",
+            "start": "2024-01-01",
+            "end": "2024-01-31",
+        }
+
+    def test_parse_filters_url_with_updated_at_range(self):
+        """Test parsing the specific URL pattern from the user's example."""
+        factory = RequestFactory()
+        request = factory.get(
+            "/?page=1&filter_mode=custom&filter_updated_at_start=2025-10-30&filter_updated_at_end=2025-11-06"
+        )
+
+        filters = parse_filters_from_query_params(request.GET)
+
+        assert "updated_at_range" in filters["model_fields"]
+        assert filters["model_fields"]["updated_at_range"] == {
+            "type": "date",
+            "start": "2025-10-30",
+            "end": "2025-11-06",
+        }
+
+    def test_encode_filters_to_url_params_simple(self):
+        filters = {
+            "model_fields": {"active": "true"},
+            "custom_attributes": {},
+        }
+
+        params = encode_filters_to_url_params(filters)
+
+        assert params["filter_active"] == "true"
+
+    def test_encode_filters_to_url_params_multi_value(self):
+        filters = {
+            "model_fields": {"priority": ["high", "medium"]},
+            "custom_attributes": {},
+        }
+
+        params = encode_filters_to_url_params(filters)
+
+        assert params["filter_priority"] == "high,medium"
+
+    def test_encode_filters_to_url_params_custom_attr(self, organization):
+        content_type = ContentType.objects.get_for_model(Encounter)
+        attr = CustomAttribute.objects.create(
+            organization=organization,
+            content_type=content_type,
+            name="Status",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+
+        filters = {
+            "model_fields": {},
+            "custom_attributes": {str(attr.id): {"values": ["urgent", "routine"]}},
+        }
+
+        params = encode_filters_to_url_params(filters)
+
+        attr_key = f"filter_attr_{str(attr.id).replace('-', '_')}"
+        assert attr_key in params
+        assert params[attr_key] == "urgent,routine"
+
+    def test_has_unsaved_filters_no_url_filters(self, user, organization):
+        pref = ListViewPreference.objects.create(
+            user=user,
+            organization=organization,
+            list_type=ListViewType.ENCOUNTER_LIST,
+            scope=PreferenceScope.USER,
+            visible_columns=["patient__first_name"],
+            saved_filters={"model_fields": {"active": "true"}, "custom_attributes": {}},
+        )
+
+        factory = RequestFactory()
+        request = factory.get("/")
+
+        assert has_unsaved_filters(request, pref) is True
+
+    def test_has_unsaved_filters_matching_url_and_saved(self, user, organization):
+        pref = ListViewPreference.objects.create(
+            user=user,
+            organization=organization,
+            list_type=ListViewType.ENCOUNTER_LIST,
+            scope=PreferenceScope.USER,
+            visible_columns=["patient__first_name"],
+            saved_filters={"model_fields": {"active": "true"}, "custom_attributes": {}},
+        )
+
+        factory = RequestFactory()
+        request = factory.get("/?filter_active=true")
+
+        assert has_unsaved_filters(request, pref) is False
+
+    def test_has_unsaved_filters_different_values(self, user, organization):
+        pref = ListViewPreference.objects.create(
+            user=user,
+            organization=organization,
+            list_type=ListViewType.ENCOUNTER_LIST,
+            scope=PreferenceScope.USER,
+            visible_columns=["patient__first_name"],
+            saved_filters={"model_fields": {"active": "true"}, "custom_attributes": {}},
+        )
+
+        factory = RequestFactory()
+        request = factory.get("/?filter_active=false")
+
+        assert has_unsaved_filters(request, pref) is True
+
+
+@pytest.mark.django_db
+class TestEnrichFiltersWithDisplayValues:
+    """Test the enrich_filters_with_display_values function."""
+
+    def test_enrich_strips_range_suffix_from_model_field_keys(self, organization):
+        """Test that _range suffix is removed from model field filter keys."""
+        filters = {
+            "model_fields": {
+                "updated_at_range": {
+                    "type": "date",
+                    "start": "2024-01-01",
+                    "end": "2024-12-31",
+                },
+            },
+            "custom_attributes": {},
+        }
+
+        enriched = enrich_filters_with_display_values(filters, organization, ListViewType.PATIENT_LIST)
+
+        # The key should no longer have the _range suffix
+        assert "updated_at_range" not in enriched["model_fields"]
+        assert "updated_at" in enriched["model_fields"]
+
+        # The filter should have the operator field set to "range"
+        assert enriched["model_fields"]["updated_at"]["operator"] == "range"
+        assert enriched["model_fields"]["updated_at"]["type"] == "date"
+        assert enriched["model_fields"]["updated_at"]["start"] == "2024-01-01"
+        assert enriched["model_fields"]["updated_at"]["end"] == "2024-12-31"
+
+    def test_enrich_adds_display_values_for_enum_filters(self, organization):
+        """Test that enum filters get display values added."""
+        filters = {
+            "model_fields": {
+                "status": ["IP", "CO"],
+            },
+            "custom_attributes": {},
+        }
+
+        enriched = enrich_filters_with_display_values(filters, organization, ListViewType.ENCOUNTER_LIST)
+
+        # The filter should have display_values added
+        assert "display_values" in enriched["model_fields"]["status"]
+        assert enriched["model_fields"]["status"]["type"] == "enum"
+        assert enriched["model_fields"]["status"]["values"] == ["IP", "CO"]

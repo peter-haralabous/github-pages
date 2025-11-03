@@ -31,13 +31,17 @@ from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
+from sandwich.core.service.custom_attribute_query import apply_filters_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
 from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
+from sandwich.core.service.list_preference_service import enrich_filters_with_display_values
 from sandwich.core.service.list_preference_service import get_available_columns
 from sandwich.core.service.list_preference_service import get_list_view_preference
+from sandwich.core.service.list_preference_service import has_unsaved_filters
+from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.patient_service import assign_default_patient_permissions
 from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.permissions_service import ObjPerm
@@ -48,6 +52,7 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.forms.task import AddTaskForm
+from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
 logger = logging.getLogger(__name__)
 
@@ -288,6 +293,12 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
         ListViewType.PATIENT_LIST,
     )
 
+    redirect_response = maybe_redirect_with_saved_filters(request, preference.saved_filters)
+    if redirect_response:
+        return redirect_response
+
+    filters = parse_filters_from_query_params(request.GET)
+
     available_columns = get_available_columns(ListViewType.PATIENT_LIST, organization)
     valid_sort_fields = [col["value"] for col in available_columns]
 
@@ -338,6 +349,13 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
         content_type,
     )
 
+    patients = apply_filters_with_custom_attributes(
+        patients,
+        filters,
+        organization,
+        content_type,
+    )
+
     if sort:
         patients = apply_sort_with_custom_attributes(
             patients,
@@ -364,6 +382,8 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
         },
     )
 
+    enriched_filters = enrich_filters_with_display_values(filters, organization, ListViewType.PATIENT_LIST)
+
     context = {
         "patients": patients_page,
         "organization": organization,
@@ -374,6 +394,9 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
         "visible_columns": preference.visible_columns,
         "visible_column_meta": visible_column_meta,
         "preference": preference,
+        "active_filters": enriched_filters,
+        "available_columns": available_columns,
+        "has_unsaved_filters": has_unsaved_filters(request, preference),
     }
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/patient_list_table.html", context)

@@ -244,85 +244,133 @@ def _normalize_date(date_value: str | date | None) -> date | None:
     return date_value
 
 
-def _build_exact_date_filter(value: str | date | None, annotation_name: str) -> Q:
-    """Build exact match date filter."""
+def _build_exact_date_filter(value: str | date | None, field_name: str) -> Q:
+    """Build exact match date filter for any field (custom attribute or model field)."""
     normalized_date = _normalize_date(value)
     if normalized_date:
-        return Q(**{annotation_name: normalized_date})
+        return Q(**{field_name: normalized_date})
     return Q()
 
 
-def _build_gte_date_filter(value: str | date | None, annotation_name: str) -> Q:
-    """Build greater-than-or-equal date filter."""
+def _build_gte_date_filter(value: str | date | None, field_name: str) -> Q:
+    """Build greater-than-or-equal date filter for any field (custom attribute or model field)."""
     normalized_date = _normalize_date(value)
     if normalized_date:
-        return Q(**{f"{annotation_name}__gte": normalized_date})
+        return Q(**{f"{field_name}__gte": normalized_date})
     return Q()
 
 
-def _build_lte_date_filter(value: str | date | None, annotation_name: str) -> Q:
-    """Build less-than-or-equal date filter."""
+def _build_lte_date_filter(value: str | date | None, field_name: str) -> Q:
+    """Build less-than-or-equal date filter for any field (custom attribute or model field)."""
     normalized_date = _normalize_date(value)
     if normalized_date:
-        return Q(**{f"{annotation_name}__lte": normalized_date})
+        return Q(**{f"{field_name}__lte": normalized_date})
     return Q()
 
 
 def _build_range_date_filter(
     start: str | date | None,
     end: str | date | None,
-    annotation_name: str,
+    field_name: str,
 ) -> Q:
-    """Build date range filter with support for partial ranges."""
+    """Build date range filter with support for partial ranges for any field (custom attribute or model field)."""
     start_date = _normalize_date(start)
     end_date = _normalize_date(end)
 
     if start_date and end_date:
-        return Q(**{f"{annotation_name}__gte": start_date, f"{annotation_name}__lte": end_date})
+        return Q(**{f"{field_name}__gte": start_date, f"{field_name}__lte": end_date})
     if start_date:
-        return Q(**{f"{annotation_name}__gte": start_date})
+        return Q(**{f"{field_name}__gte": start_date})
     if end_date:
-        return Q(**{f"{annotation_name}__lte": end_date})
+        return Q(**{f"{field_name}__lte": end_date})
     return Q()
 
 
 def _build_date_filter(
-    attribute: CustomAttribute,
+    field_name: str,
     filter_config: dict[str, Any],
-    annotation_name: str,
 ) -> Q:
-    """Build Q filter for DATE attributes supporting exact, gte, lte, and range operators."""
-    operator = filter_config.get("operator", "exact")
+    """Build Q filter for DATE fields supporting exact, gte, lte, and range operators.
+
+    Works for both custom attributes and model fields.
+    """
+    operator = filter_config.get("operator", "range")
     include_null = filter_config.get("include_null", False)
 
     logger.debug(
         "Building date filter",
         extra={
-            "attribute_id": str(attribute.id),
-            "annotation_name": annotation_name,
+            "field_name": field_name,
             "operator": operator,
         },
     )
 
     if operator == "exact":
-        filter_q = _build_exact_date_filter(filter_config.get("value"), annotation_name)
+        filter_q = _build_exact_date_filter(filter_config.get("value"), field_name)
     elif operator == "gte":
-        filter_q = _build_gte_date_filter(filter_config.get("value"), annotation_name)
+        filter_q = _build_gte_date_filter(filter_config.get("value"), field_name)
     elif operator == "lte":
-        filter_q = _build_lte_date_filter(filter_config.get("value"), annotation_name)
+        filter_q = _build_lte_date_filter(filter_config.get("value"), field_name)
     elif operator == "range":
         filter_q = _build_range_date_filter(
             filter_config.get("start"),
             filter_config.get("end"),
-            annotation_name,
+            field_name,
         )
     else:
         filter_q = Q()
 
     if include_null:
-        filter_q |= Q(**{f"{annotation_name}__isnull": True})
+        filter_q |= Q(**{f"{field_name}__isnull": True})
 
     return filter_q
+
+
+def _build_enum_filter_for_field(
+    field_name: str,
+    filter_config: dict[str, Any],
+) -> Q:
+    """Build Q filter for ENUM model fields."""
+    values = filter_config.get("values", [])
+    if not values:
+        logger.debug("Empty enum filter values, returning no-op filter")
+        return Q()
+
+    include_null = filter_config.get("include_null", False)
+
+    logger.debug(
+        "Building enum filter for model field",
+        extra={
+            "field_name": field_name,
+            "values": values,
+        },
+    )
+
+    filter_q = Q(**{f"{field_name}__in": values})
+
+    if include_null:
+        filter_q |= Q(**{f"{field_name}__isnull": True})
+
+    return filter_q
+
+
+def _build_filter_for_field(field_name: str, filter_config: dict[str, Any]) -> Q:
+    """Build Q filter for a model field based on filter configuration."""
+    filter_type = filter_config.get("type")
+
+    if filter_type == "date" or "operator" in filter_config:
+        return _build_date_filter(field_name, filter_config)
+    if filter_type == "enum" or "values" in filter_config:
+        return _build_enum_filter_for_field(field_name, filter_config)
+
+    if "value" in filter_config:
+        return Q(**{field_name: filter_config["value"]})
+
+    logger.warning(
+        "Unsupported filter configuration for model field",
+        extra={"field_name": field_name, "filter_config": filter_config},
+    )
+    return Q()
 
 
 def _build_custom_attribute_filter(
@@ -330,7 +378,6 @@ def _build_custom_attribute_filter(
     filter_config: dict[str, Any],
     organization: Organization,
     content_type: ContentType,
-    queryset: QuerySet,
 ) -> Q | None:
     """Build Q filter for a custom attribute, delegating to type-specific builders."""
     try:
@@ -362,7 +409,7 @@ def _build_custom_attribute_filter(
     if attribute.data_type == CustomAttribute.DataType.ENUM:
         return _build_enum_filter(attribute, filter_config, annotation_name, content_type)
     if attribute.data_type == CustomAttribute.DataType.DATE:
-        return _build_date_filter(attribute, filter_config, annotation_name)
+        return _build_date_filter(annotation_name, filter_config)
     logger.warning(
         "Unsupported data type for custom attribute filter",
         extra={
@@ -373,7 +420,88 @@ def _build_custom_attribute_filter(
     return None
 
 
-def apply_filters_with_custom_attributes[ModelT: Model](  # noqa: C901
+def _annotate_required_attributes(
+    queryset: QuerySet,
+    custom_attr_filters: dict[str, Any],
+    organization: Organization,
+    content_type: ContentType,
+) -> QuerySet:
+    """Annotate queryset with custom attributes needed for filtering."""
+    attrs_to_annotate = []
+    for attr_id_str in custom_attr_filters:
+        attr_id = _parse_custom_attribute_id(attr_id_str)
+        if attr_id:
+            annotation_name = _get_annotation_field_name(attr_id)
+            if annotation_name not in queryset.query.annotations:
+                attrs_to_annotate.append(attr_id_str)
+
+    if attrs_to_annotate:
+        logger.debug(
+            "Annotating custom attributes for filtering",
+            extra={"num_annotations": len(attrs_to_annotate)},
+        )
+        queryset = annotate_custom_attributes(queryset, attrs_to_annotate, organization, content_type)
+
+    return queryset
+
+
+def _apply_custom_attribute_filters(
+    queryset: QuerySet,
+    custom_attr_filters: dict[str, Any],
+    organization: Organization,
+    content_type: ContentType,
+) -> QuerySet:
+    """Apply custom attribute filters to queryset."""
+    combined_q = Q()
+    for attr_id_str, filter_config in custom_attr_filters.items():
+        attr_id = _parse_custom_attribute_id(attr_id_str)
+        if not attr_id:
+            logger.warning(
+                "Invalid attribute UUID in filter",
+                extra={"attribute_id_str": attr_id_str},
+            )
+            continue
+
+        filter_q = _build_custom_attribute_filter(attr_id, filter_config, organization, content_type)
+        if filter_q:
+            combined_q &= filter_q
+
+    if combined_q:
+        queryset = queryset.filter(combined_q)
+        logger.info(
+            "Applied custom attribute filters",
+            extra={
+                "organization_id": organization.id,
+                "num_filters": len(custom_attr_filters),
+            },
+        )
+
+    return queryset
+
+
+def _apply_model_field_filters(queryset: QuerySet, model_field_filters: dict[str, Any]) -> QuerySet:
+    """Apply model field filters to the queryset"""
+    combined_q = Q()
+
+    for field, value in model_field_filters.items():
+        actual_field = field.replace("_range", "") if field.endswith("_range") else field
+
+        if isinstance(value, dict):
+            filter_q = _build_filter_for_field(actual_field, value)
+            if filter_q:
+                combined_q &= filter_q
+        elif isinstance(value, list):
+            combined_q &= Q(**{f"{actual_field}__in": value})
+        else:
+            combined_q &= Q(**{actual_field: value})
+
+    if combined_q:
+        queryset = queryset.filter(combined_q)
+
+    return queryset
+
+
+def apply_filters_with_custom_attributes[ModelT: Model](
     queryset: QuerySet[ModelT],
     filters: dict[str, Any],
     organization: Organization,
@@ -397,49 +525,11 @@ def apply_filters_with_custom_attributes[ModelT: Model](  # noqa: C901
     )
 
     if custom_attr_filters:
-        attrs_to_annotate = []
-        for attr_id_str in custom_attr_filters:
-            attr_id = _parse_custom_attribute_id(attr_id_str)
-            if attr_id:
-                annotation_name = _get_annotation_field_name(attr_id)
-                if annotation_name not in queryset.query.annotations:
-                    attrs_to_annotate.append(attr_id_str)
-        if attrs_to_annotate:
-            logger.debug(
-                "Annotating custom attributes for filtering",
-                extra={
-                    "num_annotations": len(attrs_to_annotate),
-                },
-            )
-            queryset = annotate_custom_attributes(queryset, attrs_to_annotate, organization, content_type)
-
-        combined_q = Q()
-        for attr_id_str, filter_config in custom_attr_filters.items():
-            attr_id = _parse_custom_attribute_id(attr_id_str)
-            if not attr_id:
-                logger.warning(
-                    "Invalid attribute UUID in filter",
-                    extra={"attribute_id_str": attr_id_str},
-                )
-                continue
-
-            filter_q = _build_custom_attribute_filter(attr_id, filter_config, organization, content_type, queryset)
-            if filter_q:
-                combined_q &= filter_q
-
-        if combined_q:
-            queryset = queryset.filter(combined_q)
-            logger.info(
-                "Applied custom attribute filters",
-                extra={
-                    "organization_id": organization.id,
-                    "num_filters": len(custom_attr_filters),
-                },
-            )
+        queryset = _annotate_required_attributes(queryset, custom_attr_filters, organization, content_type)
+        queryset = _apply_custom_attribute_filters(queryset, custom_attr_filters, organization, content_type)
 
     if model_field_filters:
-        model_q = Q(**model_field_filters)
-        queryset = queryset.filter(model_q)
+        queryset = _apply_model_field_filters(queryset, model_field_filters)
         logger.info(
             "Applied model field filters",
             extra={

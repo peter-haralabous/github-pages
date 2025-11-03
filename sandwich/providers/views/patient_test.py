@@ -7,12 +7,14 @@ from guardian.shortcuts import remove_perm
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
+from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.form import Form
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import TaskStatus
+from sandwich.core.service.list_preference_service import save_list_view_preference
 from sandwich.users.models import User
 
 
@@ -29,6 +31,38 @@ def test_patient_list(provider: User, organization: Organization) -> None:
     )
 
     assert res.status_code == HTTPStatus.OK
+
+
+def test_patient_list_canonicalizes_saved_filters(provider: User, organization: Organization) -> None:
+    PatientFactory.create(organization=organization, first_name="Alice")
+
+    save_list_view_preference(
+        organization=organization,
+        list_type=ListViewType.PATIENT_LIST,
+        user=provider,
+        visible_columns=["first_name"],
+        saved_filters={"model_fields": {"first_name": "Alice"}, "custom_attributes": {}},
+    )
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse(
+        "providers:patient_list",
+        kwargs={
+            "organization_id": organization.id,
+        },
+    )
+
+    response = client.get(url)
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert "filter_first_name=Alice" in response["Location"]
+
+    canonical = client.get(response["Location"])
+
+    assert canonical.status_code == HTTPStatus.OK
+    assert canonical.context is not None
+    assert canonical.context["has_unsaved_filters"] is False
 
 
 def test_patient_list_filter_allowed_patients(provider: User, organization: Organization) -> None:
@@ -439,3 +473,21 @@ def test_patient_resend_invite_deny_access(user: User, organization: Organizatio
     )
     assert len(mailoutbox) == 0
     assert res.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_patient_list_shows_filter_panel_in_custom_mode_without_filters(
+    provider: User, organization: Organization
+) -> None:
+    """Filter panel should render with 'No Filters Applied' when in custom mode.
+
+    Ensures empty state still shows panel and save option.
+    """
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:patient_list", kwargs={"organization_id": organization.id}) + "?filter_mode=custom"
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+    assert "provider/patient_list.html" in [t.name for t in response.templates]
+    content = response.content.decode()
+    assert "No Filters Applied" in content
+    assert "Save Filters" in content

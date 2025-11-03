@@ -4,11 +4,13 @@ from django.urls import reverse
 from playwright.sync_api import Page
 
 from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.organization import Organization
+from sandwich.core.service.list_preference_service import save_list_view_preference
 from sandwich.users.models import User
 
 
@@ -52,6 +54,54 @@ def test_encounter_details_returns_template(provider: User, organization: Organi
 
     assert result.status_code == 200
     assert "provider/encounter_details.html" in [template.name for template in result.templates]
+
+
+@pytest.mark.django_db
+def test_encounter_list_canonicalizes_saved_filters(provider: User, organization: Organization) -> None:
+    save_list_view_preference(
+        organization=organization,
+        list_type=ListViewType.ENCOUNTER_LIST,
+        user=provider,
+        visible_columns=["patient__first_name"],
+        saved_filters={
+            "model_fields": {"status": EncounterStatus.IN_PROGRESS.value},
+            "custom_attributes": {},
+        },
+    )
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
+    response = client.get(url)
+
+    assert response.status_code == 302
+    assert f"filter_status={EncounterStatus.IN_PROGRESS.value}" in response["Location"]
+
+    canonical = client.get(response["Location"])
+
+    assert canonical.status_code == 200
+    assert canonical.context is not None
+    assert canonical.context["has_unsaved_filters"] is False
+
+
+@pytest.mark.django_db
+def test_encounter_list_shows_filter_panel_in_custom_mode_without_filters(
+    provider: User,
+    organization: Organization,
+) -> None:
+    """Filter panel should be visible with 'No Filters Applied' when filter_mode=custom and no filters set."""
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id}) + "?filter_mode=custom"
+    response = client.get(url)
+
+    assert response.status_code == 200
+    # Ensure main template rendered
+    assert "provider/encounter_list.html" in [t.name for t in response.templates]
+    content = response.content.decode()
+    assert "No Filters Applied" in content
+    # Save Filters button should be visible in custom mode (unsaved)
+    assert "Save Filters" in content
 
 
 @pytest.mark.e2e

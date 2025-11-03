@@ -62,8 +62,14 @@ def validate_sort_field(
                 organization=organization,
                 content_type=content_type,
             ).exists()
-    except (ValueError, AttributeError):
-        pass
+    except (ValueError, AttributeError) as e:
+        logger.warning(
+            "Invalid sort field",
+            extra={
+                "sort_field": sort_field,
+                "error": str(e),
+            },
+        )
 
     return False
 

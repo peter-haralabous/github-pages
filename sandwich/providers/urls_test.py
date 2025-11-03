@@ -41,6 +41,13 @@ EXCLUDED_URL_NAMES = {
     "reset_list_preference",
     "save_organization_preference",
     "reset_organization_preference",
+    "apply_filter",
+    "remove_filter",
+    "clear_all_filters",
+    "save_current_filters",
+    # GET endpoints that require query parameters we can't easily provide
+    "get_filter_options",
+    "get_filter_options_with_id",
 }
 
 
@@ -94,8 +101,18 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
         kwargs["attribute_id"] = attribute.pk
     if ":form_id>" in url.pattern:
         kwargs["form_id"] = form.pk
-    if url.name in {"list_preference_settings", "organization_preference_settings_detail"}:
+    if url.name in {
+        "list_preference_settings",
+        "organization_preference_settings_detail",
+        "show_filter_modal",
+        "apply_filter",
+        "remove_filter",
+        "clear_all_filters",
+        "save_current_filters",
+    }:
         kwargs["list_type"] = "encounter_list"
+    if ":field_id>" in url.pattern:
+        kwargs["field_id"] = "status"
 
     response = client.get(reverse("providers:" + url.name, kwargs=kwargs))
     assert response.status_code == HTTPStatus.OK

@@ -1,5 +1,7 @@
 from datetime import date
+from datetime import datetime
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
@@ -664,3 +666,116 @@ class TestApplyFiltersWithCustomAttributes:
 
         assert len(results) == 1
         assert results[0].id == encounter.id
+
+
+@pytest.mark.django_db
+class TestModelFieldFilters:
+    def test_filter_model_field_with_date_operators(self, organization, patient):
+        content_type = ContentType.objects.get_for_model(Encounter)
+        tz = ZoneInfo("UTC")
+
+        enc1 = Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 1, 15, tzinfo=tz),
+        )
+        Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 2, 20, tzinfo=tz),
+        )
+        Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 3, 25, tzinfo=tz),
+        )
+
+        encounters = Encounter.objects.filter(organization=organization)
+
+        # Test exact operator
+        filters = {"model_fields": {"ended_at": {"type": "date", "operator": "exact", "value": date(2024, 1, 15)}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert list(filtered.values_list("id", flat=True)) == [enc1.id]
+
+        # Test gte operator
+        filters = {"model_fields": {"ended_at": {"type": "date", "operator": "gte", "value": date(2024, 2, 1)}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert len(filtered) == 2
+
+        # Test lte operator
+        filters = {"model_fields": {"ended_at": {"type": "date", "operator": "lte", "value": date(2024, 2, 28)}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert len(filtered) == 2
+
+    def test_filter_model_field_with_date_range(self, organization, patient):
+        content_type = ContentType.objects.get_for_model(Encounter)
+        tz = ZoneInfo("UTC")
+
+        enc1 = Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 1, 15, tzinfo=tz),
+        )
+        enc2 = Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 2, 20, tzinfo=tz),
+        )
+        Encounter.objects.create(
+            organization=organization,
+            patient=patient,
+            status=EncounterStatus.IN_PROGRESS,
+            ended_at=datetime(2024, 3, 25, tzinfo=tz),
+        )
+
+        encounters = Encounter.objects.filter(organization=organization)
+
+        # Test with _range suffix (from URL parsing)
+        filters = {
+            "model_fields": {"ended_at_range": {"type": "date", "start": date(2024, 1, 10), "end": date(2024, 2, 28)}}
+        }
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        results = list(filtered.values_list("id", flat=True))
+        assert set(results) == {enc1.id, enc2.id}
+
+    def test_filter_model_field_with_enum(self, organization, patient):
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
+        enc2 = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.COMPLETED)
+
+        encounters = Encounter.objects.filter(organization=organization)
+
+        # Test enum filter with values
+        filters = {
+            "model_fields": {
+                "status": {"type": "enum", "values": [EncounterStatus.IN_PROGRESS, EncounterStatus.COMPLETED]}
+            }
+        }
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert len(filtered) == 2
+
+        # Test enum filter with single value
+        filters = {"model_fields": {"status": {"type": "enum", "values": [EncounterStatus.COMPLETED]}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        results = list(filtered.values_list("id", flat=True))
+        assert results == [enc2.id]
+
+    def test_filter_model_field_list_format(self, organization, patient):
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        enc1 = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
+        Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.COMPLETED)
+
+        encounters = Encounter.objects.filter(organization=organization)
+
+        # Test simple list format (backward compatible)
+        filters = {"model_fields": {"status": [EncounterStatus.IN_PROGRESS]}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        results = list(filtered.values_list("id", flat=True))
+        assert results == [enc1.id]

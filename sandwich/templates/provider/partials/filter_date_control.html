@@ -1,0 +1,85 @@
+{% load i18n crispy_forms_tags %}
+
+{% crispy form %}
+<script>
+  (() => {
+    const operatorSelect = document.getElementById("date-operator");
+    const rangeInputs = document.getElementById("date-range-inputs");
+    const singleInput = document.getElementById("date-single-input");
+    const presetButtons = document.getElementById("date-preset-buttons");
+    const startInput = document.querySelector("input[name='start']");
+    const endInput = document.querySelector("input[name='end']");
+    const valueInput = document.querySelector("input[name='value']");
+
+    function toggleDateInputs() {
+      const isRange = operatorSelect.value === "range";
+
+      if (isRange) {
+        rangeInputs.classList.remove("hidden");
+        singleInput.classList.add("hidden");
+        presetButtons?.classList.remove("hidden");
+        startInput.setAttribute("aria-label", "Start date for range filter");
+        endInput.setAttribute("aria-label", "End date for range filter");
+      } else {
+        rangeInputs.classList.add("hidden");
+        singleInput.classList.remove("hidden");
+        presetButtons?.classList.add("hidden");
+        valueInput.setAttribute("aria-label", `Date for ${operatorSelect.selectedOptions[0].text} filter`);
+      }
+    }
+
+    function applyPreset(preset, clickEvent) {
+      const today = new Date();
+      let start, end;
+
+      switch (preset) {
+        case "7":
+          start = new Date(today);
+          start.setDate(today.getDate() - 7);
+          end = new Date(today);
+          break;
+        case "30":
+          start = new Date(today);
+          start.setDate(today.getDate() - 30);
+          end = new Date(today);
+          break;
+        case "month":
+          start = new Date(today.getFullYear(), today.getMonth(), 1);
+          end = new Date(today);
+          break;
+        case "year":
+          start = new Date(today.getFullYear(), 0, 1);
+          end = new Date(today);
+          break;
+        default:
+          return;
+      }
+
+      operatorSelect.value = "range";
+      startInput.value = start.toISOString().split("T")[0];
+      endInput.value = end.toISOString().split("T")[0];
+      toggleDateInputs();
+
+      document.querySelectorAll("[data-preset]").forEach(btn => {
+        btn.classList.remove("btn-primary");
+        btn.classList.add("btn-outline");
+      });
+
+      const targetButton = clickEvent.target.closest("[data-preset]");
+      targetButton.classList.remove("btn-outline");
+      targetButton.classList.add("btn-primary");
+    }
+
+    operatorSelect.addEventListener("change", toggleDateInputs);
+
+    document.querySelectorAll("[data-preset]").forEach((button) => {
+      button.addEventListener("click", function(event) {
+        event.preventDefault();
+        const preset = this.getAttribute("data-preset");
+        applyPreset(preset, event);
+      });
+    });
+
+    toggleDateInputs();
+  })();
+</script>

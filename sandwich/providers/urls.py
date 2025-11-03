@@ -11,6 +11,12 @@ from .views.encounter import encounter_details
 from .views.encounter import encounter_list
 from .views.home import home
 from .views.home import organization_home
+from .views.list_filters import apply_filter
+from .views.list_filters import clear_all_filters
+from .views.list_filters import get_filter_options
+from .views.list_filters import remove_filter
+from .views.list_filters import save_current_filters
+from .views.list_filters import show_filter_modal
 from .views.list_preferences import list_preference_settings
 from .views.list_preferences import organization_list_preference_settings
 from .views.list_preferences import organization_preference_settings_detail
@@ -135,5 +141,41 @@ urlpatterns = [
         "organization/<uuid:organization_id>/preferences/org/<str:list_type>/reset",
         reset_organization_preference,
         name="reset_organization_preference",
+    ),
+    # Filter management endpoints
+    path(
+        "organization/<uuid:organization_id>/lists/<str:list_type>/filters/modal",
+        show_filter_modal,
+        name="show_filter_modal",
+    ),
+    path(
+        "organization/<uuid:organization_id>/lists/<str:list_type>/filters/apply",
+        apply_filter,
+        name="apply_filter",
+    ),
+    path(
+        "organization/<uuid:organization_id>/lists/<str:list_type>/filters/remove/<str:field_id>",
+        remove_filter,
+        name="remove_filter",
+    ),
+    path(
+        "organization/<uuid:organization_id>/lists/<str:list_type>/filters/clear",
+        clear_all_filters,
+        name="clear_all_filters",
+    ),
+    path(
+        "organization/<uuid:organization_id>/lists/<str:list_type>/filters/save",
+        save_current_filters,
+        name="save_current_filters",
+    ),
+    path(
+        "organization/<uuid:organization_id>/filters/options",
+        get_filter_options,
+        name="get_filter_options",
+    ),
+    path(
+        "organization/<uuid:organization_id>/filters/<uuid:attribute_id>/options",
+        get_filter_options,
+        name="get_filter_options_with_id",
     ),
 ]

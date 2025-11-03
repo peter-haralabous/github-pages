@@ -9,8 +9,8 @@
   <form hx-get="{% url "providers:patient_list" organization_id=organization.id %}"
         hx-target="#patient_table_container"
         hx-push-url="true"
-        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter']">
-    <div class="mb-2">
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='has_active_encounter'], filtersChanged from:body">
+    <div class="mb-2 flex gap-2 flex-wrap items-center">
       <input name="search"
              type="text"
              class="input"
@@ -26,10 +26,20 @@
       </select>
       <input type="hidden" name="sort" value="{{ sort }}" />
       <button type="submit" class="btn">Search</button>
+      <button type="button"
+              class="btn"
+              hx-get="{% url 'providers:show_filter_modal' organization_id=organization.id list_type='patient_list' %}{{ querystring }}"
+              hx-target="#filter-modal-container"
+              hx-swap="innerHTML"
+              hx-push-url="false">Filter</button>
       <a href="{% url 'providers:patient_list' organization_id=organization.id %}"
          class="btn btn-secondary">Clear</a>
     </div>
   </form>
+  {% if active_filters.custom_attributes or active_filters.model_fields or request.GET.filter_mode == "custom" %}
+    {% include "provider/partials/list_filter_panel.html" %}
+  {% endif %}
   <div id="patient_table_container">{% include "provider/partials/patient_list_table.html" %}</div>
+  <div id="filter-modal-container"></div>
   <div id="preference-modal-container"></div>
 {% endblock content %}

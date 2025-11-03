@@ -1,0 +1,44 @@
+{% load i18n lucide %}
+
+<div class="badge badge-lg gap-2">
+  <span>{{ label }}:</span>
+  {% if filter_config.display_values %}
+    <span>{{ filter_config.display_values|join:", " }}</span>
+  {% elif filter_config.type == "date" %}
+    {% if filter_config.operator == "range" %}
+      <span>
+        {% if filter_config.start %}
+          {{ filter_config.start }}
+        {% else %}
+          ...
+        {% endif %}
+        to
+        {% if filter_config.end %}
+          {{ filter_config.end }}
+        {% else %}
+          ...
+        {% endif %}
+      </span>
+    {% elif filter_config.operator == "gte" %}
+      <span>≥ {{ filter_config.value }}</span>
+    {% elif filter_config.operator == "lte" %}
+      <span>≤ {{ filter_config.value }}</span>
+    {% else %}
+      <span>{{ filter_config.value }}</span>
+    {% endif %}
+  {% elif filter_config.values %}
+    <span>{{ filter_config.values|join:", " }}</span>
+  {% elif filter_config is iterable and not filter_config is stringtype and not filter_config is mapping %}
+    <span>{{ filter_config|join:", " }}</span>
+  {% else %}
+    <span>{{ filter_config }}</span>
+  {% endif %}
+  <form method="post"
+        hx-post="{% url 'providers:remove_filter' organization_id=organization.id list_type=preference.list_type field_id=field_id %}{% if query %}?{{ query }}{% endif %}"
+        class="inline">
+    {% csrf_token %}
+    <button type="submit"
+            class="btn btn-ghost btn-xs btn-circle"
+            title="{% trans 'Remove filter' %}">{% lucide "x" class="h-4 w-4" %}</button>
+  </form>
+</div>

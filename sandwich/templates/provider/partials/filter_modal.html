@@ -1,0 +1,54 @@
+{% load i18n crispy_forms_tags %}
+
+<dialog id="filter-modal" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">×</button>
+    </form>
+    <h3 class="font-bold text-lg mb-4">{% trans "Add Filter" %}</h3>
+    {% crispy form %}
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+<script>
+  (() => {
+    const modal = document.getElementById("filter-modal");
+    modal.showModal();
+
+    const resetBtn = document.getElementById('field-filter-reset');
+    const radios = document.querySelectorAll('input[name="field_id"]');
+    radios.forEach(radio => {
+      radio.setAttribute("hx-get", "{% url 'providers:get_filter_options' organization_id=organization.id %}?list_type={{ list_type }}");
+      radio.setAttribute("hx-trigger", "change");
+      radio.setAttribute("hx-target", "#filter-controls");
+      radio.setAttribute("hx-swap", "innerHTML");
+      radio.setAttribute("hx-include", "input[name='field_id']:checked");
+
+      radio.addEventListener('change', () => {
+        resetBtn.classList.remove('hidden');
+        radios.forEach(r => {
+          if (!r.checked) {
+            r.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.classList.add('hidden');
+      resetBtn.addEventListener('click', () => {
+        resetBtn.classList.add('hidden');
+        radios.forEach(r => {
+          r.checked = false;
+          r.classList.remove('hidden');
+        });
+        const filterControls = document.getElementById('filter-controls');
+        if (filterControls) {
+          filterControls.innerHTML = '';
+        }
+      });
+    }
+  })();
+</script>

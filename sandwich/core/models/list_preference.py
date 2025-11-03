@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.patient import Patient
 
 if TYPE_CHECKING:
@@ -32,11 +33,11 @@ class ListViewType(models.TextChoices):
 
     def get_content_type(self) -> ContentType | None:
         """Get the Django ContentType associated with this list view type."""
-        content_type_map = {
-            self.ENCOUNTER_LIST: ContentType.objects.get_for_model(Encounter),
-            self.PATIENT_LIST: ContentType.objects.get_for_model(Patient),
+        model_map = {
+            self.ENCOUNTER_LIST: Encounter,
+            self.PATIENT_LIST: Patient,
         }
-        return content_type_map.get(self)
+        return ContentType.objects.get_for_model(model_map[self])
 
     def get_standard_column_fields(self) -> set[str]:
         fields = {
@@ -62,23 +63,35 @@ class ListViewType(models.TextChoices):
     def get_column_definitions(self) -> list[dict[str, str]]:
         definitions = {
             self.ENCOUNTER_LIST: [
-                {"value": "patient__first_name", "label": "Patient Name"},
-                {"value": "patient__email", "label": "Email"},
-                {"value": "patient__date_of_birth", "label": "Date of Birth"},
+                {"value": "patient__first_name", "label": "Patient Name", "type": "text"},
+                {"value": "patient__email", "label": "Email", "type": "text"},
+                {"value": "patient__date_of_birth", "label": "Date of Birth", "type": "date"},
                 {"value": "active", "label": "Active/Archived"},
-                {"value": "created_at", "label": "Created"},
-                {"value": "updated_at", "label": "Last Updated"},
+                {"value": "status", "label": "Status", "type": "enum"},
+                {"value": "created_at", "label": "Created", "type": "date"},
+                {"value": "updated_at", "label": "Last Updated", "type": "date"},
             ],
             self.PATIENT_LIST: [
-                {"value": "first_name", "label": "Name"},
-                {"value": "email", "label": "Email"},
-                {"value": "date_of_birth", "label": "Date of Birth"},
-                {"value": "has_active_encounter", "label": "Active Encounter"},
-                {"value": "created_at", "label": "Created"},
-                {"value": "updated_at", "label": "Last Updated"},
+                {"value": "first_name", "label": "Name", "type": "text"},
+                {"value": "email", "label": "Email", "type": "text"},
+                {"value": "date_of_birth", "label": "Date of Birth", "type": "date"},
+                {"value": "has_active_encounter", "label": "Active Encounter", "type": "boolean"},
+                {"value": "created_at", "label": "Created", "type": "date"},
+                {"value": "updated_at", "label": "Last Updated", "type": "date"},
             ],
         }
         return definitions.get(self, [])
+
+    def get_field_type(self, field_name: str) -> str | None:
+        for field_def in self.get_column_definitions():
+            if field_def["value"] == field_name:
+                return field_def.get("type", "text")
+        return None
+
+    def get_field_choices(self, field_name: str) -> list[tuple[str, str]]:
+        if self == self.ENCOUNTER_LIST and field_name == "status":
+            return [(status.value, str(status.label)) for status in EncounterStatus]
+        return []
 
 
 class PreferenceScope(models.TextChoices):
@@ -97,32 +110,24 @@ class ListViewPreferenceQuerySet(models.QuerySet["ListViewPreference"]):
         organization: "Organization",
         list_type: "ListViewType",
     ) -> "ListViewPreference | None":
-        return (
-            self.filter(
-                user=user,
-                organization=organization,
-                list_type=list_type,
-                scope=PreferenceScope.USER,
-            )
-            .select_related("user", "organization")
-            .first()
-        )
+        return self.filter(
+            user=user,
+            organization=organization,
+            list_type=list_type,
+            scope=PreferenceScope.USER,
+        ).first()
 
     def for_organization(
         self,
         organization: "Organization",
         list_type: "ListViewType",
     ) -> "ListViewPreference | None":
-        return (
-            self.filter(
-                organization=organization,
-                list_type=list_type,
-                scope=PreferenceScope.ORGANIZATION,
-                user__isnull=True,
-            )
-            .select_related("organization")
-            .first()
-        )
+        return self.filter(
+            organization=organization,
+            list_type=list_type,
+            scope=PreferenceScope.ORGANIZATION,
+            user__isnull=True,
+        ).first()
 
 
 class ListViewPreferenceManager(models.Manager["ListViewPreference"]):
