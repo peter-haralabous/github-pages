@@ -270,10 +270,11 @@ def organization_list_preference_settings(
             "value": ListViewType.ENCOUNTER_LIST,
             "label": "Encounter List",
         },
-        {
-            "value": ListViewType.PATIENT_LIST,
-            "label": "Patient List",
-        },
+        # Patient list is not visible. It may be added in the future.
+        # {
+        #     "value": ListViewType.PATIENT_LIST,
+        #     "label": "Patient List",
+        # },
     ]
 
     context = {
