@@ -17,15 +17,13 @@ from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.list_preference_service import _get_custom_attribute_columns
 from sandwich.core.service.list_preference_service import get_available_columns
-from sandwich.core.service.list_preference_service import get_default_columns
-from sandwich.core.service.list_preference_service import get_default_sort
 from sandwich.core.service.list_preference_service import get_list_view_preference
 from sandwich.core.service.list_preference_service import parse_filters_from_request
 from sandwich.core.service.list_preference_service import reset_list_view_preference
 from sandwich.core.service.list_preference_service import save_filters_to_preference
 from sandwich.core.service.list_preference_service import save_list_view_preference
-from sandwich.core.service.list_preference_service import validate_custom_attribute_filter
-from sandwich.core.service.list_preference_service import validate_sort_field
+from sandwich.core.validators.list_preference_validators import validate_custom_attribute_filter
+from sandwich.core.validators.list_preference_validators import validate_sort_field
 
 
 @pytest.mark.django_db
@@ -154,8 +152,8 @@ class TestListPreferenceService:
         pref = get_list_view_preference(user, organization, ListViewType.ENCOUNTER_LIST)
 
         assert pref is not None
-        assert pref.visible_columns == get_default_columns(ListViewType.ENCOUNTER_LIST)
-        assert pref.default_sort == get_default_sort(ListViewType.ENCOUNTER_LIST)
+        assert pref.visible_columns == ListViewPreference.get_default_columns(ListViewType.ENCOUNTER_LIST)
+        assert pref.default_sort == ListViewPreference.get_default_sort(ListViewType.ENCOUNTER_LIST)
         assert pref.items_per_page == 25
 
     def test_get_preference_returns_user_preference_when_exists(self, user, organization):
@@ -305,22 +303,22 @@ class TestListPreferenceService:
 
     def test_get_default_columns(self):
         """get_default_columns returns correct defaults for each list type."""
-        encounter_cols = get_default_columns(ListViewType.ENCOUNTER_LIST)
+        encounter_cols = ListViewPreference.get_default_columns(ListViewType.ENCOUNTER_LIST)
         assert "patient__first_name" in encounter_cols
         assert "patient__email" in encounter_cols
         assert len(encounter_cols) > 0
 
-        patient_cols = get_default_columns(ListViewType.PATIENT_LIST)
+        patient_cols = ListViewPreference.get_default_columns(ListViewType.PATIENT_LIST)
         assert "first_name" in patient_cols
         assert "email" in patient_cols
         assert len(patient_cols) > 0
 
     def test_get_default_sort(self):
         """get_default_sort returns correct defaults for each list type."""
-        encounter_sort = get_default_sort(ListViewType.ENCOUNTER_LIST)
+        encounter_sort = ListViewPreference.get_default_sort(ListViewType.ENCOUNTER_LIST)
         assert encounter_sort == "-updated_at"
 
-        patient_sort = get_default_sort(ListViewType.PATIENT_LIST)
+        patient_sort = ListViewPreference.get_default_sort(ListViewType.PATIENT_LIST)
         assert patient_sort == "-updated_at"
 
     def test_get_available_columns(self):
@@ -349,7 +347,7 @@ class TestListPreferenceService:
         pref = get_list_view_preference(user, organization, ListViewType.ENCOUNTER_LIST)
         assert pref is not None
         # Preference falls back to defaults regardless of persistence state
-        assert pref.visible_columns == get_default_columns(ListViewType.ENCOUNTER_LIST)
+        assert pref.visible_columns == ListViewPreference.get_default_columns(ListViewType.ENCOUNTER_LIST)
 
     def test_different_orgs_have_separate_preferences(self, user):
         """User preferences are scoped per organization."""

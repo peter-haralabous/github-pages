@@ -19,16 +19,14 @@ from sandwich.core.models import ListViewType
 from sandwich.core.models import Organization
 from sandwich.core.models import PreferenceScope
 from sandwich.core.service.list_preference_service import get_available_columns
-from sandwich.core.service.list_preference_service import get_default_columns
-from sandwich.core.service.list_preference_service import get_default_sort
 from sandwich.core.service.list_preference_service import get_list_view_preference
 from sandwich.core.service.list_preference_service import reset_list_view_preference
 from sandwich.core.service.list_preference_service import save_list_view_preference
-from sandwich.core.service.list_preference_service import validate_list_type
 from sandwich.core.service.organization_service import get_provider_organizations
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.validators.list_preference_validators import validate_list_type
 
 logger = logging.getLogger(__name__)
 
@@ -322,8 +320,8 @@ def organization_preference_settings_detail(
         current_sort = org_preference.default_sort
         current_items_per_page = org_preference.items_per_page
     else:
-        visible_column_values = get_default_columns(list_type_enum)
-        current_sort = get_default_sort(list_type_enum)
+        visible_column_values = ListViewPreference.get_default_columns(list_type_enum)
+        current_sort = ListViewPreference.get_default_sort(list_type_enum)
         current_items_per_page = 25
 
     logger.debug(
