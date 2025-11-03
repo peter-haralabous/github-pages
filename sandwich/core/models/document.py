@@ -1,3 +1,4 @@
+import pghistory
 from django.db import models
 from private_storage.fields import PrivateFileField
 
@@ -13,6 +14,7 @@ class DocumentManager(models.Manager["Document"]):
         return document
 
 
+@pghistory.track()
 class Document(HealthRecord):
     """
     A document associated with a patient.
