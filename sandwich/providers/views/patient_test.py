@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from django.test import Client
 from django.urls import reverse
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import remove_perm
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
@@ -109,7 +109,7 @@ def test_patient_add_deny_access_not_provider(user: User, organization: Organiza
     assert res.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_patient_add_deny_access_missing_perms(user: User, organization: Organization) -> None:
+def test_patient_add_deny_access_missing_perms(provider: User, organization: Organization) -> None:
     data = {
         "first_name": "Jacob",
         "last_name": "Newpatient",
@@ -118,12 +118,11 @@ def test_patient_add_deny_access_missing_perms(user: User, organization: Organiz
         "phn": "9111111117",  # BC requires more specific PHN
     }
 
-    # Has `create_encounter` but not `create_patient`
-    assign_perm("create_encounter", user, organization)
-    assign_perm("view_organization", user, organization)
+    provider_group = provider.groups.first()
+    remove_perm("create_patient", provider_group, organization)
 
     client = Client()
-    client.force_login(user)
+    client.force_login(provider)
     res = client.post(
         reverse(
             "providers:patient_add",
