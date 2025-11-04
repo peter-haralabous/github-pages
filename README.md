@@ -47,6 +47,9 @@ Quick feedback loop for testing your Python code changes.
 **`make test-e2e`** - Run end-to-end tests
 Full browser testing to ensure the complete application works correctly.
 
+**`make test-frontend`** - Run frontend unit tests
+Quick feedback loop for testing your TypeScript code changes.
+
 ## Setup & Maintenance
 
 **`make init`** - Initialize project

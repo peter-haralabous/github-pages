@@ -31,7 +31,7 @@ This repository is a Django web application built with HTMX and Tailwind CSS for
 ### Essential Commands
 
 - **Start development**: `make dev` - Sets up and starts the dev server
-- **Run tests**: `make test` (all), `make test-unit`, `make test-e2e`
+- **Run tests**: `make test` (all), `make test-unit`, `make test-e2e`, `make test-frontend`
 - **Lint code**: `make lint` - Runs all pre-commit hooks
 - **Database migrations**: `make migrate`
 - **Initialize project**: `make init` - Sets up venv, installs dependencies
@@ -58,6 +58,7 @@ This repository is a Django web application built with HTMX and Tailwind CSS for
 
 4. **Testing**:
    - Unit tests: pytest with `pytest-django`
+   - Frontend Unit tests: vitest
    - E2E tests: Playwright with pytest-playwright
    - Mark E2E tests with `@pytest.mark.e2e`
    - Use `--snapshot-update` for updating snapshots
@@ -101,6 +102,7 @@ This repository is a Django web application built with HTMX and Tailwind CSS for
 2. Run `make migrate` if models changed
 3. Run `make lint` before committing
 4. Run `make test-unit` for quick feedback
+5. Run `make test-frontend` for quick feedback
 5. Run `make test-e2e` for full integration testing
 6. Check that the dev server works with `make dev`
 
