@@ -49,7 +49,7 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
 @authorize_objects(
     [
         ObjPerm(Organization, "organization_id", ["view_organization"]),
-        ObjPerm(Form, "form_id", ["view_form", "change_form"]),
+        ObjPerm(Form, "form_id", ["view_form"]),
     ]
 )
 def form_details(request: AuthenticatedHttpRequest, organization: Organization, form: Form):
