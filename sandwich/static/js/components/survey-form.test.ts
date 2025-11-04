@@ -159,4 +159,72 @@ describe('SurveyForm custom element', () => {
 
     document.body.removeChild(el);
   });
+
+  it('calls fetch with the correct data on submit', async () => {
+    const el = new SurveyForm();
+    el.setAttribute('data-submit-url', '/submit-url');
+    el.setAttribute('data-csrf-token', 'tok-123');
+    el.setAttribute('data-complete-url', '/done');
+    document.body.appendChild(el);
+
+    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal('fetch', fetchSpy);
+    await el.updateComplete;
+    const surveyModel = el.initSurvey({ title: 'Test' });
+
+    const doCompleteSpy = vi.spyOn(surveyModel, 'doComplete');
+    surveyModel.data = { q1: 'my-answer' };
+
+    // Simulate the user clicking "Submit"
+    // We manually trigger the 'onCompleting' event
+    await surveyModel.doComplete();
+
+    // Check that fetch was called with all the right information
+    expect(fetchSpy).toHaveBeenCalledWith('/submit-url', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': 'tok-123',
+      },
+      body: JSON.stringify({
+        q1: 'my-answer',
+      }),
+    });
+
+    expect(surveyModel.completedHtml).toContain('Form successfully submitted');
+  });
+
+  it('does not re-submit a form that is already completed', async () => {
+    const el = new SurveyForm();
+    el.setAttribute('data-submit-url', '/submit-url');
+    el.setAttribute('data-csrf-token', 'tok-123');
+    el.setAttribute('data-complete-url', '/done');
+    document.body.appendChild(el);
+
+    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const surveyModel = el.initSurvey({ title: 'Test' });
+    surveyModel.data = { q1: 'my-answer' };
+
+    // Simulate the first "Submit" click
+    await surveyModel.doComplete();
+
+    // Check that fetch was called the first time
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    // Check that the survey is now in a "completed" state
+    expect(surveyModel.state).toBe('completed');
+
+    // Clear the call history of our mock
+    fetchSpy.mockClear();
+
+    // Simulate the user clicking "Submit" AGAIN
+    await surveyModel.doComplete();
+
+    // Check that fetch was NOT called a second time
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
 });
