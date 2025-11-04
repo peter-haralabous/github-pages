@@ -14,6 +14,14 @@ export class SurveyForm extends LitElement {
     return this as unknown as HTMLElement;
   }
 
+  isReadOnly(): boolean {
+    const readOnly = this.getAttribute('read-only');
+    if (readOnly != null) {
+      return true;
+    }
+    return false;
+  }
+
   render(): TemplateResult {
     return html`
       <div id="${this._containerId}" data-survey-container="1"></div>
@@ -127,6 +135,7 @@ export class SurveyForm extends LitElement {
 
     // TODO(JL): create and set a Thrive specific theme
     model.applyTheme(LayeredLightPanelless);
+    model.readOnly = this.isReadOnly();
 
     const hasSubmit = !!this._submitUrl;
     if (hasSubmit) {

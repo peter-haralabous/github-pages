@@ -14,6 +14,12 @@
 {% block content %}
   <div class="container mx-auto">
     {{ form_schema | json_script:"form_schema" }}
-    <survey-form data-schema-id="form_schema" data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'patients:home' %}" />
+    <survey-form
+      data-schema-id="form_schema"
+      data-submit-url="{{ submit_url }}"
+      data-csrf-token="{{ csrf_token }}"
+      data-complete-url="{% url 'patients:home' %}"
+      {% if read_only %}readonly{% endif %}
+    />
   </div>
 {% endblock content %}
