@@ -34,7 +34,6 @@
                   data-test="list-settings-button"
                   id="list-settings-button">{% lucide "settings" class="size-3" %}</button>
         </th>
-
       </tr>
     </thead>
     <tbody>
@@ -42,9 +41,9 @@
         <tr>
           <td>
             <label for="encounter-details-modal-{{ encounter.id }}"
-                       class="link cursor-pointer">
-                  {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
-                </label>
+                   class="link cursor-pointer">
+              {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
+            </label>
           </td>
           <td>{{ encounter.patient.email|default:"—" }}</td>
           <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
@@ -58,7 +57,6 @@
           <td colspan="{{ visible_column_meta|length|add:1 }}" class="text-center">No encounters found.</td>
         </tr>
       {% endfor %}
-      
     </tbody>
   </table>
 </div>
