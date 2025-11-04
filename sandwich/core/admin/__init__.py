@@ -3,6 +3,7 @@ from django.contrib import admin
 from sandwich.core.models import Document
 from sandwich.core.models import Encounter
 from sandwich.core.models import FormioSubmission
+from sandwich.core.models import Immunization
 from sandwich.core.models import Invitation
 from sandwich.core.models import Task
 
@@ -18,5 +19,5 @@ from .predicate import PredicateAdmin as PredicateAdmin
 from .template import TemplateAdmin as TemplateAdmin
 
 admin.site.register(
-    [Document, Encounter, FormioSubmission, Invitation, Task],
+    [Document, Encounter, FormioSubmission, Immunization, Invitation, Task],
 )

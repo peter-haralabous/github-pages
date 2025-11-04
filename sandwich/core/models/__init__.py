@@ -10,6 +10,7 @@ from .fact import Fact
 from .form import Form
 from .form_submission import FormSubmission
 from .formio_submission import FormioSubmission
+from .immunization import Immunization
 from .invitation import Invitation
 from .list_preference import ListViewPreference
 from .list_preference import ListViewType
@@ -35,6 +36,7 @@ __all__ = [
     "Form",
     "FormSubmission",
     "FormioSubmission",
+    "Immunization",
     "Invitation",
     "ListViewPreference",
     "ListViewType",

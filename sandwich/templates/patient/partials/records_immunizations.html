@@ -1,0 +1,46 @@
+{% load lucide %}
+
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 mb-4">
+  <h2 class="text-lg font-semibold">Immunizations</h2>
+  <a href="{% url "patients:health_records_add" patient_id=patient.id record_type="immunization" %}"
+     class="btn btn-primary btn-sm">Add</a>
+</div>
+<div id="documents-table-container">
+  <div id="documents-table-wrapper"
+       class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+    <table id="documents-table" class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for immunization in immunizations %}
+          <tr>
+            <td>
+              <a href="{% url "patients:immunization" immunization_id=immunization.id %}"
+                 class="link">{{ immunization.name }}</a>
+            </td>
+            <td>{{ immunization.date }}</td>
+            <td>
+              <form hx-delete="{% url 'patients:immunization' immunization_id=immunization.id %}"
+                    hx-target="closest tr"
+                    hx-swap="outerHTML"
+                    class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-xs btn-error">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3" class="text-center">No immunizations found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include "partials/messages_oob.html" %}

@@ -21,70 +21,7 @@
   {% include "patient/partials/card_procedures.html" with category="Procedures" facts=facts.procedures %}
   {% include "patient/partials/card_family_history.html" with category="Family History" facts=facts.family_history %}
   {% include "patient/partials/card_documents_and_notes.html" with category="Documents and Notes" facts=facts.documents_and_notes %}
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 mb-6">
-    <div class="flex items-center gap-3">
-      <h2 id="documents" class="text-lg font-semibold">Documents</h2>
-      <span class="badge badge-info badge-outline text-xs">PDF upload will extract clinical facts automatically</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <button id="upload-btn"
-              type="button"
-              class="btn btn-primary btn-sm flex items-center gap-1">
-        {% lucide "file-up" class="size-4" %}
-        Upload
-      </button>
-      <form id="upload-form"
-            method="post"
-            action="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
-            hx-post="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
-            hx-target="#documents-table-container"
-            hx-encoding="multipart/form-data"
-            class="hidden">
-        <input type="file"
-               id="file-input"
-               name="file"
-               accept="application/pdf, text/plain" />
-        {% csrf_token %}
-      </form>
-    </div>
-  </div>
-  <div id="documents-table-container">{% include "patient/partials/documents_table.html" %}</div>
-  <script nonce="{{ request.csp_nonce }}">
-    document.getElementById('upload-btn').addEventListener('click', () => {
-      document.getElementById('file-input').click()
-    });
-    document.getElementById('file-input').addEventListener('change', () => {
-      document.getElementById('upload-form').requestSubmit();
-    });
-
-    // Visual feedback for drag events
-    const tableContainer = document.getElementById('documents-table-container');
-    tableContainer.addEventListener('dragover', e => {
-      e.preventDefault();
-      tableContainer.children[0].classList.add('border-primary', 'bg-base-300');
-    });
-    tableContainer.addEventListener('dragleave', e => {
-      e.preventDefault();
-      tableContainer.children[0].classList.remove('border-primary', 'bg-base-300');
-    });
-    tableContainer.addEventListener('drop', e => {
-      e.preventDefault();
-      tableContainer.children[0].classList.remove('border-primary', 'bg-base-300');
-      const files = e.dataTransfer.files;
-      if (!files.length) return;
-      const file = files[0];
-      if (!["application/pdf", "text/plain"].includes(file.type)) {
-        // TODO: add javascript interface for showing toast messages
-        alert("Unsupported file type. Please upload a PDF or plain text file.");
-        return;
-      }
-      const fileInput = document.getElementById('file-input');
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      fileInput.files = dataTransfer.files;
-      document.getElementById('upload-form').requestSubmit();
-    });
-  </script>
+  {% include "patient/partials/records_documents.html" %}
   {# NOTE: tasks are only relevant if this patient is linked with an organization #}
   {% if tasks %}
     <h2 id="tasks" class="my-4">Tasks</h2>

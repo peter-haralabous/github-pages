@@ -62,6 +62,7 @@ def test_all_views_permissioned() -> None:
         "patients/invite/<str:token>/accept",
         # These views are permissioned but not using the decorator
         "patients/document/<uuid:document_id>",
+        "patients/immunization/<uuid:immunization_id>",
     }
 
     # This list acts as a registery of unpermissioned views. Remove entries

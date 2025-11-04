@@ -72,5 +72,13 @@
     </script>
       {% endcomment %}
     {% endblock inline_javascript %}
+    <script nonce="{{ request.csp_nonce }}">
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        const csrfToken = '{{ csrf_token }}';
+        if (event.detail.method !== 'get' && event.detail.method !== 'head') {
+          event.detail.headers['X-CSRFToken'] = csrfToken;
+        }
+      });
+    </script>
   </body>
 </html>

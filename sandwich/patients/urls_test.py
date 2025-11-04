@@ -10,6 +10,7 @@ from sandwich.core.factories.form import FormFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Document
 from sandwich.core.models import Entity
+from sandwich.core.models import Immunization
 from sandwich.core.models.entity import EntityType
 from sandwich.core.models.predicate import PredicateName
 from sandwich.core.service.entity_service import entity_for_patient
@@ -31,6 +32,7 @@ EXCLUDED_URL_NAMES = {
     "document_upload_and_extract",  # POST
     "task",  # POST
     "patient_onboarding_add",  # redirects if there's already a patient for the user
+    "health_records_add",  # needs record type in the url; covered in `health_records_test.py`
     # Ninja api routes below
     "api-1.0.0:api-root",
     "api-1.0.0:openapi-json",
@@ -72,6 +74,13 @@ def test_patient_http_get_urls_return_status_200(db, user, url, patient) -> None
             subject=entity_for_patient(patient),
             predicate=predicate_for_predicate_name(PredicateName.HAS_SYMPTOM),
             object=Entity.objects.create(type=EntityType.OBSERVATION),
+        ).pk
+
+    if ":immunization_id>" in url.pattern:
+        kwargs["immunization_id"] = Immunization.objects.create(
+            patient=patient,
+            name="test",
+            date="2022-01-01",
         ).pk
 
     if ":task_id>" in url.pattern or "<task_id>" in url.pattern:
