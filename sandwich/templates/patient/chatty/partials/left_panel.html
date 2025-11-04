@@ -1,0 +1,58 @@
+{% extends "patient/chatty/partials/sidebar.html" %}
+
+{% load lucide %}
+
+{% block panel_id %}
+  left-panel
+{% endblock panel_id %}
+{% block collapsed_panel_id %}
+  left-panel-collapsed
+{% endblock collapsed_panel_id %}
+{% block collapse_btn_id %}
+  collapse-left-btn
+{% endblock collapse_btn_id %}
+{% block header_icon %}
+  {% lucide "heart-pulse" class="size-6" %}
+{% endblock header_icon %}
+{% block header_title %}
+  Health Records
+{% endblock header_title %}
+{% block collapse_icon %}
+  {% lucide "panel-left-close" class="size-6" %}
+{% endblock collapse_icon %}
+{% block panel_content %}
+  <div class="p-4 border-b">
+    <label class="input input-bordered flex items-center gap-2">
+      {% lucide "search" class="size-5" %}
+      <input type="text" class="grow" placeholder="Search all records..." />
+    </label>
+  </div>
+  <nav class="menu flex-1 p-4 space-y-1">
+    <p class="text-xs text-base-content/60 px-4">Navigation Stub</p>
+    <li>
+      <a>{% lucide "user" class="size-5" %} Personal Info</a>
+    </li>
+    <li>
+      <a>{% lucide "activity" class="size-5" %} Conditions</a>
+    </li>
+    <li>
+      <a>{% lucide "pill" class="size-5" %} Medications</a>
+    </li>
+  </nav>
+{% endblock panel_content %}
+{% block collapsed_panel_content %}
+  <div class="flex flex-col items-center justify-center p-4">
+    <button id="expand-left-btn" class="btn btn-square btn-ghost">{% lucide "panel-left-open" class="size-6" %}</button>
+  </div>
+  <nav class="menu flex-1 p-4 space-y-1">
+    <li>
+      <a class="tooltip tooltip-right" data-tip="Personal Info">{% lucide "user" class="size-5" %}</a>
+    </li>
+    <li>
+      <a class="tooltip tooltip-right" data-tip="Conditions">{% lucide "activity" class="size-5" %}</a>
+    </li>
+    <li>
+      <a class="tooltip tooltip-right" data-tip="Medications">{% lucide "pill" class="size-5" %}</a>
+    </li>
+  </nav>
+{% endblock collapsed_panel_content %}

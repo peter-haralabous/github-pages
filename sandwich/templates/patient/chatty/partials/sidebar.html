@@ -1,0 +1,35 @@
+{% load lucide %}
+
+<div class="flex-shrink-0">
+  {# Expanded Panel #}
+  <div id="{% block panel_id %}{% endblock panel_id %}"
+       class="flex flex-col w-72 bg-base-100 h-full rounded-xl border border-base-300">
+    <header class="navbar bg-base-100 border-b rounded-t-xl">
+      <div class="flex-none pl-2">
+        {% block header_icon %}
+        {% endblock header_icon %}
+      </div>
+      <div class="flex-1 px-2">
+        <span class="font-semibold text-lg">
+          {% block header_title %}
+          {% endblock header_title %}
+        </span>
+      </div>
+      <div class="flex-none">
+        <button id="{% block collapse_btn_id %}{% endblock collapse_btn_id %}"
+                class="btn btn-square btn-ghost">
+          {% block collapse_icon %}
+          {% endblock collapse_icon %}
+        </button>
+      </div>
+    </header>
+    {% block panel_content %}
+    {% endblock panel_content %}
+  </div>
+  {# Collapsed Panel #}
+  <div id="{% block collapsed_panel_id %}{% endblock collapsed_panel_id %}"
+       class="hidden flex-col w-16 bg-base-100 h-full border border-base-300 rounded-xl justify-between items-center">
+    {% block collapsed_panel_content %}
+    {% endblock collapsed_panel_content %}
+  </div>
+</div>

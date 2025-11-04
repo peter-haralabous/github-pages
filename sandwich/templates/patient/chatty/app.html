@@ -1,1 +1,96 @@
 {% extends "base_top_nav.html" %}
+
+{% load lucide %}
+
+{% block topnav %}
+  {% comment %} Your existing topnav include {% endcomment %}
+  {% include 'patient/chatty/partials/topnav.html' %}
+{% endblock topnav %}
+{% block content %}
+  <div class="flex flex-row h-[calc(100vh-8rem)] gap-2 p-2">
+    {% include 'patient/chatty/partials/left_panel.html' %}
+    {% comment %} Center Panel {% endcomment %}
+    <div class="flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
+      <header class="navbar bg-base-100 border-b rounded-t-xl">
+        <div class="flex-none pl-2">{% lucide "sparkles" class="size-6" %}</div>
+        <div class="flex-1 px-2">
+          <span class="font-semibold text-lg">Assistant</span>
+        </div>
+      </header>
+      <main class="flex-1 overflow-y-auto p-4">
+        <p class="text-center text-base-content/60">Main content area stub</p>
+        <div class="chat chat-start">
+          <div class="chat-bubble">Here are a few things you could do...</div>
+        </div>
+        <div class="space-y-2">
+          <div class="p-4 border rounded-lg bg-base-100 text-primary cursor-pointer">
+            Your last recorded HbA1c and Cholesterol results are from May 2023. Would you like to add any more
+            recent lab results?
+          </div>
+        </div>
+      </main>
+      <footer class="p-4 bg-base-100 border-t border-base-300 rounded-b-xl">
+        <div class="form-control">
+          <label class="input input-bordered flex items-center gap-3">
+            {% lucide "sparkles" class="size-5" %}
+            <input type="text" class="grow" placeholder="Ask a question or add notes..." />
+            {% lucide "paperclip" class="size-5" %}
+            {% lucide "share" class="size-5" %}
+            <button class="btn btn-primary btn-sm btn-circle">{% lucide "arrow-up" class="size-5" %}</button>
+          </label>
+        </div>
+      </footer>
+    </div>
+    {% include 'patient/chatty/partials/right_panel.html' %}
+  </div>
+  <script nonce="{{ request.csp_nonce }}">
+    // Wait for the document to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Get all the elements
+      const leftPanel = document.getElementById('left-panel');
+      const leftPanelCollapsed = document.getElementById('left-panel-collapsed');
+      const collapseLeftBtn = document.getElementById('collapse-left-btn');
+      const expandLeftBtn = document.getElementById('expand-left-btn');
+
+      const rightPanel = document.getElementById('right-panel');
+      const rightPanelCollapsed = document.getElementById('right-panel-collapsed');
+      const collapseRightBtn = document.getElementById('collapse-right-btn');
+      const expandRightBtn = document.getElementById('expand-right-btn');
+
+      // Left Panel Listeners
+      if (collapseLeftBtn) {
+        collapseLeftBtn.addEventListener('click', () => {
+          leftPanel.classList.add('hidden');
+          leftPanelCollapsed.classList.remove('hidden');
+          leftPanelCollapsed.classList.add('flex');
+        });
+      }
+
+      if (expandLeftBtn) {
+        expandLeftBtn.addEventListener('click', () => {
+          leftPanel.classList.remove('hidden');
+          leftPanelCollapsed.classList.add('hidden');
+          leftPanelCollapsed.classList.remove('flex');
+        });
+      }
+
+      // Right Panel Listeners
+      if (collapseRightBtn) {
+        collapseRightBtn.addEventListener('click', () => {
+          rightPanel.classList.add('hidden');
+          rightPanelCollapsed.classList.remove('hidden');
+          rightPanelCollapsed.classList.add('flex');
+        });
+      }
+
+      if (expandRightBtn) {
+        expandRightBtn.addEventListener('click', () => {
+          rightPanel.classList.remove('hidden');
+          rightPanelCollapsed.classList.add('hidden');
+          rightPanelCollapsed.classList.remove('flex');
+        });
+      }
+    });
+  </script>
+{% endblock content %}
