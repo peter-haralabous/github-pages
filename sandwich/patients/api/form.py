@@ -20,6 +20,28 @@ router = ninja.Router()
 require_login = SessionAuth()
 
 
+class FormDraftResponse(JsonResponse):
+    """
+    A custom JsonResponse for saving a form draft
+    """
+
+    @classmethod
+    def success(cls, submission: FormSubmission, **kwargs) -> "FormDraftResponse":
+        data = {"result": "success", "message": "Form draft saved and updated", "saved_at": submission.updated_at}
+        return cls(data, **kwargs)
+
+
+class FormSubmitResponse(JsonResponse):
+    """
+    A custom JsonResponse for submitting a form
+    """
+
+    @classmethod
+    def success(cls, submission: FormSubmission, **kwargs) -> "FormSubmitResponse":
+        data = {"result": "success", "message": "Form submitted successfully", "submitted_at": submission.submitted_at}
+        return cls(data, **kwargs)
+
+
 def get_form_for_task(task: Task):
     return task.form_version.schema if task.form_version else {}
 
@@ -31,7 +53,9 @@ def get_form(request: AuthenticatedHttpRequest, task_id: uuid.UUID):
 
 
 @router.post("/{task_id}/submit", auth=require_login)
-def submit_form(request: AuthenticatedHttpRequest, task_id: uuid.UUID, payload: Annotated[dict, ninja.Body(...)]):
+def submit_form(
+    request: AuthenticatedHttpRequest, task_id: uuid.UUID, payload: Annotated[dict, ninja.Body(...)]
+) -> FormSubmitResponse:
     task = cast("Task", get_authorized_object_or_404(request.user, ["view_task", "complete_task"], Task, id=task_id))
 
     submission, _ = FormSubmission.objects.get_or_create(
@@ -47,37 +71,49 @@ def submit_form(request: AuthenticatedHttpRequest, task_id: uuid.UUID, payload: 
     if submission.status == FormSubmissionStatus.COMPLETED:
         raise HttpError(400, "This form has already been submitted")
 
-    try:
-        # extract data, save submission, task gets changed to completed
-        submission.data = payload.get("data", submission.data)
-        submission.submit()
-        complete_task(task)
-        logger.debug(
-            "Form submission submitted",
-            extra={
-                "user_id": request.user.id,
-                "patient_id": task.patient,
-                "task_id": task.id,
-                "submission_status": submission.status,
-            },
-        )
-        return JsonResponse(
-            {"status": "success", "message": "Form submitted successfully", "submitted_at": submission.submitted_at}
-        )
-
-    except Exception as e:
-        logger.exception("Error submitting form: {e}")
-        raise HttpError(500, "An unexpected error occured.") from e
+    # extract data, submit submission, task gets changed to completed
+    submission.data = payload
+    submission.submit()
+    complete_task(task)
+    logger.debug(
+        "Form submission submitted",
+        extra={
+            "user_id": request.user.id,
+            "patient_id": task.patient.id,
+            "task_id": task.id,
+            "submission_status": submission.status,
+        },
+    )
+    return FormSubmitResponse.success(submission=submission)
 
 
 @router.post("/{task_id}/save_draft", auth=require_login)
-def save_draft_form(request: AuthenticatedHttpRequest, task_id: uuid.UUID, payload: Annotated[dict, ninja.Body(...)]):
+def save_draft_form(
+    request: AuthenticatedHttpRequest, task_id: uuid.UUID, payload: Annotated[dict, ninja.Body(...)]
+) -> FormDraftResponse:
     task = cast("Task", get_authorized_object_or_404(request.user, ["view_task", "complete_task"], Task, id=task_id))
-    # raise ninja.errors.HttpError(400, "Fake error for testing purposes")
 
-    # TODO: get_or_create form submission record in database
-    logger.info(
-        "Form draft saved",
-        extra={"user_id": request.user.id, "task_id": task.id, "payload": payload},
+    submission, _ = FormSubmission.objects.get_or_create(
+        task=task,
+        patient=task.patient,
+        defaults={
+            "form_version": task.form_version,
+            "status": FormSubmissionStatus.DRAFT,
+        },
     )
-    return {"status": "success", "message": "Form draft saved successfully."}
+
+    if submission.status == FormSubmissionStatus.COMPLETED:
+        raise HttpError(400, "This form has already been submitted")
+
+    submission.data = payload
+    submission.save()
+    logger.debug(
+        "Form draft saved",
+        extra={
+            "user_id": request.user.id,
+            "patient_id": task.patient.id,
+            "task_id": task.id,
+            "submission_status": submission.status,
+        },
+    )
+    return FormDraftResponse.success(submission=submission)
