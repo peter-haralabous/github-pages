@@ -153,7 +153,11 @@ describe('SurveyForm custom element internals', () => {
       'data-csrf-token': 'tok-123',
     });
 
-    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      headers: { get: (_: string) => 'application/json' },
+      json: async () => ({}),
+    });
     vi.stubGlobal('fetch', fetchSpy);
 
     await vi.waitUntil(() => survey.querySelector('[data-survey-rendered]'));
@@ -194,7 +198,11 @@ describe('SurveyForm custom element internals', () => {
       'data-csrf-token': 'tok-123',
     });
 
-    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      headers: { get: (_: string) => 'application/json' },
+      json: async () => ({}),
+    });
     vi.stubGlobal('fetch', fetchSpy);
 
     await vi.waitUntil(() => survey.querySelector('[data-survey-rendered]'));
@@ -219,20 +227,66 @@ describe('SurveyForm custom element internals', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it('does not run draft save while submit is in progress', async () => {
+    const script = loadSchemaScript({ title: 'Test' });
+    const survey = loadSurveyComponent(script.id, {
+      'data-submit-url': '/submit-url',
+      'data-save-draft-url': '/save-draft',
+      'data-csrf-token': 'tok-123',
+    });
+
+    // Create a submit promise we control so submit stays in-flight
+    let resolveSubmit: (value?: any) => void = () => undefined;
+    const submitPromise = new Promise((res) => {
+      resolveSubmit = res;
+    });
+
+    const fetchSpy = vi
+      .fn()
+      .mockReturnValueOnce(submitPromise) // first call is the stalled submit
+      .mockResolvedValue({
+        ok: true,
+        headers: { get: (_: string) => 'application/json' },
+        json: async () => ({}),
+      });
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await vi.waitUntil(() => survey.querySelector('[data-survey-rendered]'));
+    const model = (survey as any).model;
+    expect(model).not.toBeNull();
+    model.data = { q1: 'initial' };
+
+    // Start submit (will be pending)
+    model.doComplete();
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    // While submit is pending, trigger a value change which normally schedules a draft save
+    model.setValue('q1', 'changed-during-submit');
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    // Finish the submit
+    resolveSubmit({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => ({}),
+    });
+  });
+
   it('autosaves draft on value change', async () => {
     const el = new SurveyForm();
     el.setAttribute('data-save-draft-url', '/save-draft');
     el.setAttribute('data-csrf-token', 'tok-123');
     document.body.appendChild(el);
 
-    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      headers: { get: (_: string) => 'application/json' },
+      json: async () => ({}),
+    });
     vi.stubGlobal('fetch', fetchSpy);
 
     // Allow element to render
     await el.updateComplete;
-
-    // Make debounce immediate for test speed
-    (el as any)._draftSaveInterval = 0;
 
     const surveyModel = el.initSurvey({
       elements: [{ type: 'text', name: 'yourName' }],

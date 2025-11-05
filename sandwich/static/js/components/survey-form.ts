@@ -12,9 +12,6 @@ export class SurveyForm extends LitElement {
   private _csrfToken: string | null = null; // CSRF token for secure submissions
   model: Model | null = null;
 
-  private _draftSaveTimer: number | undefined;
-  private _draftSaveInterval = 2000;
-
   createRenderRoot(): HTMLElement {
     return this as unknown as HTMLElement;
   }
@@ -143,41 +140,36 @@ export class SurveyForm extends LitElement {
     this.model.applyTheme(LayeredLightPanelless);
     this.model.readOnly = this.isReadOnly();
 
+    // Track whether a submit is in progress; draft save handlers will skip when true.
+    let isCompleting = false;
     const hasSubmit = !!this._submitUrl && !this.isReadOnly();
     if (hasSubmit) {
-      let isCompleting = false;
+      this.model.completedHtml = `<div>Form successfully submitted. <a href="${this._completeUrl}">Go back</a>.</div>`;
       // Use onCompleting instead of onComplete to handle async submission
       // and control when the completed page is shown.
       this.model.onCompleting.add((sender, options) => {
         if (!this._submitUrl) return;
-        if (isCompleting) return; // Prevent re-entrance
-
+        if (isCompleting) {
+          options.allow = true;
+          return;
+        }
         options.allow = false;
-        fetch(this._submitUrl, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': this._csrfToken || '',
-          },
-          body: JSON.stringify(sender.data),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(
-                `Form submission failed with status ${response.status}`,
-              );
-            }
-            // Successfully submitted
-            sender.completedHtml = `<div>Form successfully submitted. <a href="${this._completeUrl}">Go back</a>.</div>`;
+
+        (async () => {
+          if (!this._submitUrl) return;
+          isCompleting = true; // Mark as completing to avoid re-entrance
+          try {
+            await this.fetchJson(this._submitUrl, {
+              body: JSON.stringify(sender.data),
+            });
             isCompleting = true; // Mark as completing to avoid re-entrance
             sender.doComplete();
-          })
-          .catch((error) => {
+          } catch (error) {
             isCompleting = false;
             console.error('Error submitting form:', error);
             sender.notify('Form submission failed. Please try again.', 'error');
-          });
+          }
+        })();
       });
     } else {
       this.model.showCompleteButton = false;
@@ -186,11 +178,20 @@ export class SurveyForm extends LitElement {
     const hasDraftSave = !!this._saveDraftUrl && !this.isReadOnly();
     if (hasDraftSave) {
       const saveDraftHandler = (sender: Model) => {
-        if (!this._saveDraftUrl) return;
-        this._scheduleDraftSave(sender, { ...(sender.data || {}) } as Record<
-          string,
-          unknown
-        >);
+        if (isCompleting) return;
+        (async () => {
+          if (!this._saveDraftUrl) return;
+          try {
+            await this.fetchJson(this._saveDraftUrl, {
+              body: JSON.stringify(sender.data),
+            });
+            // Successfully saved draft
+            sender.notify('Draft saved.', 'info');
+          } catch (error) {
+            console.error('Error saving draft:', error);
+            sender.notify('Unable to save draft.', 'info');
+          }
+        })();
       };
       this.model.onValueChanged.add(saveDraftHandler);
       this.model.onCurrentPageChanged.add(saveDraftHandler);
@@ -203,45 +204,36 @@ export class SurveyForm extends LitElement {
     return this.model;
   }
 
-  /**
-   * Perform the network draft save.
-   */
-  private _doDraftSave(model: Model, data: Record<string, unknown>): void {
-    if (!this._saveDraftUrl) return;
-    fetch(this._saveDraftUrl, {
+  /* Fetch JSON helper with error handling and defaults. */
+  private async fetchJson(
+    input: RequestInfo,
+    init?: RequestInit,
+  ): Promise<any> {
+    const defaults: RequestInit = {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRFToken': this._csrfToken || '',
       },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`Draft save failed with status ${response.status}`);
-        model.notify('Draft saved.', 'info');
-      })
-      .catch((error) => {
-        console.error('Error saving draft:', error);
-        model.notify('Unable to save draft.', 'warning');
-      });
-  }
+    };
 
-  /**
-   * Schedule a draft save via a tiny debounce attached to the instance.
-   */
-  private _scheduleDraftSave(
-    model: Model,
-    data: Record<string, unknown>,
-  ): void {
-    if (this._draftSaveTimer) {
-      return;
+    const initWithDefaults: RequestInit = { ...defaults, ...(init || {}) };
+
+    const res = await fetch(input, initWithDefaults);
+
+    try {
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(
+          `HTTP error ${res.status}: ${res.statusText} - ${errorText}`,
+        );
+      }
+      return res.json();
+    } catch (e) {
+      console.error('[survey-form] fetchJson error:', e);
+      throw e;
     }
-    this._draftSaveTimer = setTimeout(
-      () => this._doDraftSave(model, data),
-      this._draftSaveInterval,
-    ) as unknown as number;
   }
 
   /**
