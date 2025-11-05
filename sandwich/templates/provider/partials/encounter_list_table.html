@@ -3,7 +3,7 @@
 {% load lucide %}
 {% load list_helpers %}
 
-<div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+<div class="overflow-visible border border-base-200 bg-base-100">
   <table class="table">
     <thead>
       <tr>
@@ -42,6 +42,7 @@
           {% for col in visible_column_meta %}
             {% if col.value == "patient__first_name" %}
               <td>
+                {# checks the related input in sandwich/templates/provider/partials/encounter_details_slideout.html #}
                 <label for="encounter-details-modal-{{ encounter.id }}"
                        class="link cursor-pointer">
                   {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
@@ -75,7 +76,7 @@
   </table>
 </div>
 <!-- Pagination controls -->
-<nav aria-label="Encounter pagination" class="join mt-2">
+<nav aria-label="Encounter pagination" class="join mt-4 mb-4">
   {% if encounters.has_previous %}
     <a class="join-item btn"
        href="{% querystring page=encounters.previous_page_number %}"
