@@ -13,6 +13,7 @@ from sandwich.core.models.patient import Patient
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.email_service import send_templated_email
 from sandwich.core.service.organization_service import assign_organization_role
+from sandwich.core.util.procrastinate import define_task
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -177,7 +178,7 @@ def expire_invitations() -> int:
 
 
 @app.periodic(cron="0 * * * *")  # every hour
-@app.task(lock="expire_invitations_lock")
+@define_task(lock="expire_invitations_lock")
 def expire_invitations_job(timestamp: int) -> None:
     expire_invitations()
 
@@ -191,7 +192,7 @@ DEFAULT_ORGANIZATION_ROLE_PERMS = {
 
 def assign_default_invitation_perms(invitation: Invitation) -> None:
     """
-    Assign permissisions to an invitation.
+    Assign permissions to an invitation.
     A patient should have view and change permissions on the invitation.
 
     roles in the invited patient's org should have permissions to view and change the invitation.

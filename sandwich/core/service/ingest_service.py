@@ -3,7 +3,6 @@ from uuid import UUID
 
 from django.template import loader
 from django_eventstream import send_event
-from procrastinate.contrib.django import app
 
 from sandwich.core.models import Document
 from sandwich.core.service.ingest.extract_pdf import extract_facts_from_pdf
@@ -11,17 +10,18 @@ from sandwich.core.service.ingest.extract_records import extract_records
 from sandwich.core.service.ingest.extract_text import extract_facts_from_text
 from sandwich.core.service.llm import ModelName
 from sandwich.core.service.llm import get_llm
+from sandwich.core.util.procrastinate import define_task
 
 logger = logging.getLogger(__name__)
 
 
-@app.task
+@define_task
 def process_document_job(document_id: str):
     extract_facts_from_document_job.defer(document_id=document_id)
     extract_records_from_document_job.defer(document_id=document_id)
 
 
-@app.task
+@define_task
 def extract_facts_from_document_job(document_id: str, llm_name: str = ModelName.CLAUDE_SONNET_4_5):
     document = Document.objects.get(id=document_id)
     patient = document.patient
@@ -51,7 +51,7 @@ def extract_facts_from_document_job(document_id: str, llm_name: str = ModelName.
     )
 
 
-@app.task
+@define_task
 def extract_records_from_document_job(document_id: str):
     document = Document.objects.get(id=document_id)
     patient = document.patient
