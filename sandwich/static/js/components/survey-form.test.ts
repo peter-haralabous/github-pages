@@ -20,8 +20,8 @@ function loadSchemaScript(schema: Record<string, unknown>): HTMLScriptElement {
 function loadSurveyComponent(
   schemaId: string = 'form_schema',
   attributes?: Record<string, string>,
-): HTMLElement {
-  const formComponent = document.createElement('survey-form');
+): SurveyForm {
+  const formComponent = document.createElement('survey-form') as SurveyForm;
 
   formComponent.setAttribute('data-schema-id', schemaId);
   if (attributes) {
@@ -49,57 +49,42 @@ describe('SurveyForm custom element internals', () => {
   });
 
   it('shows friendly error when JSON invalid', async () => {
-    const el = new SurveyForm();
     // Place the script in the document and reference it by id via data-schema-id
-    const script = document.createElement('script');
-    script.type = 'application/json';
-    script.id = 'form_schema';
+    const script = loadSchemaScript({});
     script.textContent = '{invalid-json}';
     document.body.appendChild(script);
-
-    el.setAttribute('data-schema-id', 'form_schema');
-    document.body.appendChild(el);
-
-    // Manually trigger connected lifecycle in JSDOM and allow the microtask tick
-    el.connectedCallback();
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    const el = loadSurveyComponent(script.id);
 
     // Container was created and the error box shows the message
-    const container = el.querySelector('[data-survey-container]');
-    expect(container).toBeTruthy();
+    await vi.waitFor(() => el.querySelector('[data-survey-container]'));
     const errorMsg = el.querySelector('[id$="-error-message"]');
     expect(errorMsg).not.toBeNull();
     // now that we know it exists, assert its text content
-    expect((errorMsg as HTMLElement).textContent).toContain(
-      'Failed to load form',
+    await vi.waitFor(() =>
+      expect((errorMsg as HTMLElement).textContent).toContain(
+        'Failed to load form',
+      ),
     );
-
-    document.body.removeChild(el);
-    document.body.removeChild(script);
   });
 
   it('shows message when no data-schema-id script present', async () => {
-    const el = new SurveyForm();
-    // No script in the document and no data-schema-id -> should show the helper message
-    document.body.appendChild(el);
-
-    el.connectedCallback();
-    await new Promise((r) => setTimeout(r, 0));
+    // No script in the document and no data-schema-id
+    const el = loadSurveyComponent();
 
     // Container was created and the error box shows the message
-    const container = el.querySelector('[data-survey-container]');
-    expect(container).toBeTruthy();
+    await vi.waitFor(() => el.querySelector('[data-survey-container]'));
     const errorEl = el.querySelector('[id$="-error"]');
     // No script provided -> component should surface an error UI.
     expect(errorEl).not.toBeNull();
-    expect((errorEl as HTMLElement).classList.contains('hidden')).toBe(false);
+
+    await vi.waitFor(() =>
+      expect((errorEl as HTMLElement).classList.contains('hidden')).toBe(false),
+    );
     const errorMsg = el.querySelector('[id$="-error-message"]');
     expect(errorMsg).not.toBeNull();
     expect((errorMsg as HTMLElement).textContent).toContain(
       'Failed to load form',
     );
-
-    document.body.removeChild(el);
   });
 
   it('initSurvey throws when target not found', () => {
@@ -111,20 +96,10 @@ describe('SurveyForm custom element internals', () => {
   });
 
   it('throws when the internal container element is missing', async () => {
-    const el = new SurveyForm();
-    const script = document.createElement('script');
-    script.type = 'application/json';
-    script.id = 'form_schema';
-    script.textContent = JSON.stringify({ title: 'x' });
-    document.body.appendChild(script);
+    const script = loadSchemaScript({ title: 'x' });
+    const el = loadSurveyComponent(script.id);
 
-    el.setAttribute('data-schema-id', 'form_schema');
-    // attach the element so its template is stamped into the document
-    document.body.appendChild(el);
-
-    // trigger connected lifecycle and wait for the template to be stamped
-    el.connectedCallback();
-    await new Promise((r) => setTimeout(r, 0));
+    await vi.waitFor(() => el.querySelector('[data-survey-container]'));
 
     // remove the internal container to simulate a missing target element
     const container = el.querySelector(
@@ -142,120 +117,102 @@ describe('SurveyForm custom element internals', () => {
     expect((errorMsg as HTMLElement).textContent).toContain(
       'Failed to load form',
     );
-
-    document.body.removeChild(el);
-    document.body.removeChild(script);
   });
 
   it('normal flow: loads and calls render', async () => {
-    const el = new SurveyForm();
-    const script = document.createElement('script');
-    script.type = 'application/json';
-    script.id = 'form_schema';
-    script.textContent = JSON.stringify({ title: 'Test Survey' });
-    document.body.appendChild(script);
-
-    el.setAttribute('data-schema-id', 'form_schema');
-    document.body.appendChild(el);
-
     // Spy on the render method of the SurveyJS Model prototype
     const renderSpy = vi.spyOn(
       (await import('survey-core')).Model.prototype,
       'render',
     );
+    const script = loadSchemaScript({ title: 'Test Survey' });
+    const el = loadSurveyComponent(script.id);
 
-    el.connectedCallback();
-    await new Promise((r) => setTimeout(r, 0));
-
-    // No explosions here
-
-    expect(renderSpy).toHaveBeenCalled();
-
-    document.body.removeChild(el);
-    document.body.removeChild(script);
+    await vi.waitFor(() => expect(renderSpy).toHaveBeenCalled());
   });
 
   it('reads data-* attributes on connectedCallback', async () => {
-    const el = new SurveyForm();
-    el.setAttribute('data-submit-url', '/submit-url');
-    el.setAttribute('data-complete-url', '/done');
-    el.setAttribute('data-csrf-token', 'tok-123');
-    document.body.appendChild(el);
-
-    el.connectedCallback();
-    await new Promise((r) => setTimeout(r, 0));
+    const el = loadSurveyComponent(undefined, {
+      'data-submit-url': '/submit-url',
+      'data-complete-url': '/done',
+      'data-csrf-token': 'tok-123',
+    });
 
     // Private fields are accessible via casting in tests
     expect((el as any)._submitUrl).toBe('/submit-url');
     expect((el as any)._completeUrl).toBe('/done');
     expect((el as any)._csrfToken).toBe('tok-123');
-
-    document.body.removeChild(el);
   });
 
   it('calls fetch with the correct data on submit', async () => {
-    const el = new SurveyForm();
-    el.setAttribute('data-submit-url', '/submit-url');
-    el.setAttribute('data-csrf-token', 'tok-123');
-    el.setAttribute('data-complete-url', '/done');
-    document.body.appendChild(el);
+    const script = loadSchemaScript({ title: 'Test' });
+    const survey = loadSurveyComponent(script.id, {
+      'data-submit-url': '/submit-url',
+      'data-complete-url': '/done',
+      'data-csrf-token': 'tok-123',
+    });
 
     const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchSpy);
-    await el.updateComplete;
-    const surveyModel = el.initSurvey({ title: 'Test' });
 
-    const doCompleteSpy = vi.spyOn(surveyModel, 'doComplete');
-    surveyModel.data = { q1: 'my-answer' };
+    await vi.waitUntil(() => survey.querySelector('[data-survey-rendered]'));
+    expect(survey.model).not.toBeNull();
+    survey.model!.data = { q1: 'my-answer' };
+
+    vi.spyOn(survey.model!, 'doComplete');
 
     // Simulate the user clicking "Submit"
     // We manually trigger the 'onCompleting' event
-    await surveyModel.doComplete();
+    survey.model!.doComplete();
 
     // Check that fetch was called with all the right information
-    expect(fetchSpy).toHaveBeenCalledWith('/submit-url', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': 'tok-123',
-      },
-      body: JSON.stringify({
-        q1: 'my-answer',
+    await vi.waitFor(() =>
+      expect(fetchSpy).toHaveBeenCalledWith('/submit-url', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': 'tok-123',
+        },
+        body: JSON.stringify({
+          q1: 'my-answer',
+        }),
       }),
-    });
+    );
 
-    expect(surveyModel.completedHtml).toContain('Form successfully submitted');
+    expect(survey.model!.completedHtml).toContain(
+      'Form successfully submitted',
+    );
   });
 
   it('does not re-submit a form that is already completed', async () => {
-    const el = new SurveyForm();
-    el.setAttribute('data-submit-url', '/submit-url');
-    el.setAttribute('data-csrf-token', 'tok-123');
-    el.setAttribute('data-complete-url', '/done');
-    document.body.appendChild(el);
+    const script = loadSchemaScript({ title: 'Test' });
+    const survey = loadSurveyComponent(script.id, {
+      'data-submit-url': '/submit-url',
+      'data-complete-url': '/done',
+      'data-csrf-token': 'tok-123',
+    });
 
     const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchSpy);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    const surveyModel = el.initSurvey({ title: 'Test' });
-    surveyModel.data = { q1: 'my-answer' };
+    await vi.waitUntil(() => survey.querySelector('[data-survey-rendered]'));
+    expect(survey.model).not.toBeNull();
+    survey.model!.data = { q1: 'my-answer' };
 
     // Simulate the first "Submit" click
-    await surveyModel.doComplete();
+    survey.model!.doComplete();
 
     // Check that fetch was called the first time
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     // Check that the survey is now in a "completed" state
-    expect(surveyModel.state).toBe('completed');
+    await vi.waitFor(() => expect(survey.model!.state).toBe('completed'));
 
     // Clear the call history of our mock
     fetchSpy.mockClear();
 
     // Simulate the user clicking "Submit" AGAIN
-    await surveyModel.doComplete();
+    survey.model!.doComplete();
 
     // Check that fetch was NOT called a second time
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -312,7 +269,8 @@ describe('Survey form renders', () => {
   afterEach(() => {
     document.body.innerHTML = '';
   });
-  it('render', async () => {
+
+  it('renders', async () => {
     const script = loadSchemaScript({
       title: 'Test Survey',
       elements: [{ name: 'Name', type: 'text' }],

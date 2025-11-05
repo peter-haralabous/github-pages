@@ -10,6 +10,7 @@ export class SurveyForm extends LitElement {
   private _submitUrl: string | null = null; // URL to submit form data to
   private _saveDraftUrl: string | null = null; // URL to save draft data to
   private _csrfToken: string | null = null; // CSRF token for secure submissions
+  model: Model | null = null;
 
   private _draftSaveTimer: number | undefined;
   private _draftSaveInterval = 2000;
@@ -131,23 +132,23 @@ export class SurveyForm extends LitElement {
 
     // SurveyJS Model expects a loosely-typed config; cast from our safer
     // SurveyJson to `any` for the library boundary.
-    const model = new Model(json as any);
+    this.model = new Model(json as any);
 
-    model.onAfterRenderSurvey.add(() => {
+    this.model.onAfterRenderSurvey.add(() => {
       targetEl.setAttribute('data-survey-rendered', '1');
       this.setLoadingHidden();
     });
 
     // TODO(JL): create and set a Thrive specific theme
-    model.applyTheme(LayeredLightPanelless);
-    model.readOnly = this.isReadOnly();
+    this.model.applyTheme(LayeredLightPanelless);
+    this.model.readOnly = this.isReadOnly();
 
     const hasSubmit = !!this._submitUrl && !this.isReadOnly();
     if (hasSubmit) {
       let isCompleting = false;
       // Use onCompleting instead of onComplete to handle async submission
       // and control when the completed page is shown.
-      model.onCompleting.add((sender, options) => {
+      this.model.onCompleting.add((sender, options) => {
         if (!this._submitUrl) return;
         if (isCompleting) return; // Prevent re-entrance
 
@@ -179,7 +180,7 @@ export class SurveyForm extends LitElement {
           });
       });
     } else {
-      model.showCompleteButton = false;
+      this.model.showCompleteButton = false;
     }
 
     const hasDraftSave = !!this._saveDraftUrl && !this.isReadOnly();
@@ -191,15 +192,15 @@ export class SurveyForm extends LitElement {
           unknown
         >);
       };
-      model.onValueChanged.add(saveDraftHandler);
-      model.onCurrentPageChanged.add(saveDraftHandler);
-      model.onPageVisibleChanged.add(saveDraftHandler);
+      this.model.onValueChanged.add(saveDraftHandler);
+      this.model.onCurrentPageChanged.add(saveDraftHandler);
+      this.model.onPageVisibleChanged.add(saveDraftHandler);
     }
 
     // Render the survey into the target element
-    model.render(targetEl);
+    this.model.render(targetEl);
 
-    return model;
+    return this.model;
   }
 
   /**
