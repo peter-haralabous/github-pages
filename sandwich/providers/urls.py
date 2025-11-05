@@ -58,8 +58,7 @@ urlpatterns = [
     path("organization/<uuid:organization_id>/templates", templates_home, name="templates_home"),
     # name must contain 'templates' for sidenav active link highlighting to work.
     path("organization/<uuid:organization_id>/templates/forms", form_list, name="form_templates_list"),
-    # TODO: Switch over this url next.
-    path("organization/<uuid:organization_id>/form_template/<uuid:form_id>", form_details, name="form_template"),
+    path("organization/<uuid:organization_id>/templates/form/<uuid:form_id>", form_details, name="form_template"),
     path("organization/<uuid:organization_id>/templates/forms/builder", form_builder, name="form_builder"),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),
     path(
