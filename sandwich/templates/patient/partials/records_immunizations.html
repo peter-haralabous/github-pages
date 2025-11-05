@@ -24,7 +24,10 @@
                  class="link">{{ immunization.name }}</a>
             </td>
             <td>{{ immunization.date }}</td>
-            <td class="text-right">
+            <td class="flex items-center justify-end gap-2">
+              {% if immunization.unattested %}
+                <div class="tooltip" data-tip="AI extracted data">{% lucide "sparkles" class="size-4" %}</div>
+              {% endif %}
               <button type="button"
                       hx-delete="{% url 'patients:immunization' immunization_id=immunization.id %}"
                       hx-target="closest tr"

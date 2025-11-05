@@ -22,7 +22,10 @@
               <a href="{% url 'patients:practitioner' practitioner_id=practitioner.id %}"
                  class="link">{{ practitioner.name }}</a>
             </td>
-            <td class="text-right">
+            <td class="flex items-center justify-end gap-2">
+              {% if practitioner.unattested %}
+                <div class="tooltip" data-tip="AI extracted data">{% lucide "sparkles" class="size-4" %}</div>
+              {% endif %}
               <button type="button"
                       hx-delete="{% url 'patients:practitioner' practitioner_id=practitioner.id %}"
                       hx-target="closest tr"

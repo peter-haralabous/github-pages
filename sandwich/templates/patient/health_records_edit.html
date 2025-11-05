@@ -4,6 +4,11 @@
 
 {% block content %}
   <h2>Edit {{ record_type_name }}</h2>
+  {% if form.instance.unattested %}
+    <div class="alert alert-info my-2">
+      This record was extracted by an AI model and may be incomplete or inaccurate. Please review and update the information as necessary.
+    </div>
+  {% endif %}
   {% crispy form %}
   <h3 class="mt-8">History</h3>
   <table class="table">

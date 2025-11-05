@@ -46,45 +46,40 @@ def health_records(request: AuthenticatedHttpRequest, patient: Patient):
     return render(request, "patient/health_records.html", context)
 
 
-class ImmunizationForm(forms.ModelForm[Immunization]):
+class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        if self.instance and self.instance.unattested:
+            pass  # should the button text change? or add a second button for "looks good"?
+        self.helper.add_input(Submit("submit", "Submit"))
+
+    # NOTE: patient is marked as optional here to prevent mypy from complaining that the signature is incompatible
+    #       with the base class, but a database constraint will prevent the form from being submitted without a patient
+    def save(self, commit: bool = True, patient: Patient | None = None) -> M:  # noqa: FBT001,FBT002
+        instance = super().save(commit=False)
+        instance.unattested = False  # the user is either correcting or confirming an unattested record
+        if patient is not None:
+            instance.patient = patient
+        if commit:
+            instance.save()
+        return instance
+
+
+class ImmunizationForm(HealthRecordForm[Immunization]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["date"].validators.append(not_in_future)
-        self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Submit"))
 
     class Meta:
         model = Immunization
         fields = ("name", "date")
 
-    # NOTE: patient is marked as optional here to prevent mypy from complaining that the signature is incompatible
-    #       with the base class, but a database constraint will prevent the form from being submitted without a patient
-    def save(self, commit: bool = True, patient: Patient | None = None) -> Immunization:  # noqa: FBT001,FBT002
-        instance = super().save(commit=False)
-        if patient is not None:
-            instance.patient = patient
-        if commit:
-            instance.save()
-        return instance
 
-
-class PractitionerForm(forms.ModelForm[Practitioner]):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Submit"))
-
+class PractitionerForm(HealthRecordForm[Practitioner]):
     class Meta:
         model = Practitioner
         fields = ("name",)
-
-    def save(self, commit: bool = True, patient: Patient | None = None) -> Practitioner:  # noqa: FBT001,FBT002
-        instance = super().save(commit=False)
-        if patient is not None:
-            instance.patient = patient
-        if commit:
-            instance.save()
-        return instance
 
 
 def _form_class(record_type: str):
