@@ -137,5 +137,3 @@ WEBPACK_LOADER["DEFAULT"]["CACHE"] = not DEBUG
 # when running locally, put uploads under ../data/
 MEDIA_ROOT = str(APPS_DIR / "../data/media")
 PRIVATE_STORAGE_ROOT = str(APPS_DIR / "../data/private-media")
-
-FEATURE_PATIENT_CHATTY_APP = env.bool("FEATURE_PATIENT_CHATTY_APP", default=False)
