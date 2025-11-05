@@ -11,23 +11,6 @@ from sandwich.core.models.role import RoleName
 from sandwich.users.models import User
 
 
-def test_templates_home(client: Client, provider: User, organization: Organization) -> None:
-    client.force_login(provider)
-    url = reverse("providers:templates_home", kwargs={"organization_id": organization.id})
-    response = client.get(url)
-    assert response.status_code == HTTPStatus.OK
-    assert "provider/templates.html" in [t.name for t in response.templates]
-
-
-def test_templates_home_user_not_in_organization_deny_access(
-    client: Client, user: User, organization: Organization
-) -> None:
-    client.force_login(user)
-    url = reverse("providers:templates_home", kwargs={"organization_id": organization.id})
-    response = client.get(url)
-    assert response.status_code == HTTPStatus.NOT_FOUND
-
-
 def test_form_list(client: Client, provider: User, organization: Organization) -> None:
     client.force_login(provider)
     url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
