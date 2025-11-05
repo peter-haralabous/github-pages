@@ -24,7 +24,6 @@
             <th>{% sortable_column col.label col.value %}</th>
           {% endif %}
         {% endfor %}
-        <th></th>
         <th class="w-px">
           <button hx-get="{% url 'providers:list_preference_settings' organization_id=organization.id list_type='encounter_list' %}"
                   hx-target="#preference-modal-container"
@@ -34,22 +33,37 @@
                   data-test="list-settings-button"
                   id="list-settings-button">{% lucide "settings" class="size-3" %}</button>
         </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for encounter in encounters %}
         <tr>
-          <td>
-            <label for="encounter-details-modal-{{ encounter.id }}"
-                   class="link cursor-pointer">
-              {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
-            </label>
-          </td>
-          <td>{{ encounter.patient.email|default:"—" }}</td>
-          <td>{{ encounter.get_patient_status_display|default:"—" }}</td>
-          <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
-          <td>{{ encounter.created_at }}</td>
-          <td>{{ encounter.updated_at }}</td>
+          {% for col in visible_column_meta %}
+            {% if col.value == "patient__first_name" %}
+              <td>
+                <label for="encounter-details-modal-{{ encounter.id }}"
+                       class="link cursor-pointer">
+                  {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
+                </label>
+              </td>
+            {% elif col.value == "patient__email" %}
+              <td>{{ encounter.patient.email|default:"—" }}</td>
+            {% elif col.value == "patient__date_of_birth" %}
+              <td>{{ encounter.patient.date_of_birth|default:"—" }}</td>
+            {% elif col.value == "active" %}
+              <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
+            {% elif col.value == "created_at" %}
+              <td>{{ encounter.created_at }}</td>
+            {% elif col.value == "updated_at" %}
+              <td>{{ encounter.updated_at }}</td>
+            {% elif col.is_custom %}
+              {% with annotation_name=col.value|custom_attr_name %}
+                <td>{{ encounter|get_attr:annotation_name|default:"—" }}</td>
+              {% endwith %}
+            {% endif %}
+          {% endfor %}
+          <td></td>
           <td>{% include "provider/partials/encounter_action_menu.html" with encounter=encounter %}</td>
         </tr>
       {% empty %}
