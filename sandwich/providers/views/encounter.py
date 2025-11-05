@@ -57,7 +57,7 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
         # TODO-WH: Update the default encounter status below if needed once we have
         # established default statuses for/per organization. Wireframe shows Not set
         # as default, but that's not an option from our EncounterStatus model from the FHIR spec
-        encounter.status = EncounterStatus.UNKNOWN  # Default status for new encounters
+        encounter.status = EncounterStatus.IN_PROGRESS  # Default status for new encounters
         if commit:
             encounter.save()
         return encounter
