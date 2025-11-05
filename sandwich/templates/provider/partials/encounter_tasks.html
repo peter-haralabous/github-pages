@@ -1,4 +1,13 @@
-<h3>Tasks</h3>
+<div id="add-task-modal"></div>
+<div class="flex justify-between items-center mb-4">
+  <h2>Tasks</h2>
+  <button class="btn btn-primary"
+          id="assign-task-btn"
+          hx-target="#add-task-modal"
+          hx-get="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}">
+    Assign task
+  </button>
+</div>
 <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
   <table class="table">
     <thead>
@@ -40,9 +49,3 @@
     </tbody>
   </table>
 </div>
-<form action="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}"
-      class="inline"
-      method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-primary mt-3">Add Task</button>
-</form>

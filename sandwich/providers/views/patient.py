@@ -18,6 +18,7 @@ from django.http import HttpResponseNotFound
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
@@ -415,8 +416,27 @@ def patient_archive(request: AuthenticatedHttpRequest, organization: Organizatio
     return HttpResponseRedirect(reverse("providers:patient_list", kwargs={"organization_id": organization.id}))
 
 
+class AddTaskForm(forms.Form):
+    def __init__(self, *args, available_forms: list[dict[str, str]], form_action: str, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        choices = [("", "Please select a form")]
+        choices.extend([(form["id"], form["name"]) for form in available_forms])
+        self.fields["selected_form"] = forms.ChoiceField(
+            choices=choices,
+            widget=forms.Select(attrs={"class": "select select-bordered w-full"}),
+            label="Select a form",
+            required=True,
+        )
+        self.helper = FormHelper()
+        self.helper.add_input(Submit("submit", "Assign task", css_class="btn-primary"))
+
+        if form_action:
+            self.helper.form_action = form_action
+
+
 @login_required
-@require_POST
+@require_http_methods(["GET", "POST"])
 @authorize_objects(
     [
         ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter", "create_invitation"]),
@@ -424,56 +444,96 @@ def patient_archive(request: AuthenticatedHttpRequest, organization: Organizatio
     ]
 )
 def patient_add_task(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
-    logger.info(
-        "Adding task to patient",
-        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
+    form_action = reverse(
+        "providers:patient_add_task", kwargs={"organization_id": organization.id, "patient_id": patient.id}
     )
+    forms = [
+        {"id": str(form["id"]), "name": form["name"]}
+        for form in get_objects_for_user(request.user, "view_form", Form)
+        .filter(organization=organization)
+        .values("id", "name")
+    ]
 
-    current_encounter = get_current_encounter(patient)
-    if current_encounter and not request.user.has_perm("view_encounter", current_encounter):
-        return HttpResponseNotFound()
+    if request.headers.get("HX-Request") and request.method == "GET":
+        add_task_form = AddTaskForm(available_forms=forms, form_action=form_action)
+        context = {"form": add_task_form}
+        return render(request, "provider/partials/add_task_modal.html", context)
 
-    if not current_encounter:
-        current_encounter = Encounter.objects.create(
-            patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
-        )
+    if request.method == "POST":
         logger.debug(
-            "Created new encounter for task",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization.id,
-                "patient_id": patient.id,
-                "encounter_id": current_encounter.id,
-            },
+            "Form submission handling",
+            extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
         )
+        add_task_form = AddTaskForm(request.POST, available_forms=forms, form_action=form_action)
+        if add_task_form.is_valid():
+            form_id = add_task_form.cleaned_data["selected_form"]
+            form = Form.objects.get(id=form_id)
+            form_version = form.get_current_version() if form is not None else None
 
-    # TODO(JL): accept user's chosen form for the new task
-    form = Form.objects.filter(organization=organization).last()
-    form_version = form.get_current_version() if form is not None else None
+            logger.debug("form retrieved", extra={"form_version": form_version})
+            # TODO: Can we move it into authorize_objects?
+            # super awkward to be dealing with this in form handling
+            current_encounter = get_current_encounter(patient)
+            if current_encounter and not request.user.has_perm("view_encounter", current_encounter):
+                return HttpResponseNotFound()
+            logger.debug("current encounter retrieved", extra={"encounter": current_encounter})
 
-    task = Task.objects.create(
-        encounter=current_encounter,
-        patient=patient,
-        status=TaskStatus.REQUESTED,
-        form_version=form_version,
-    )
-    send_task_added_email(task)
+            if not current_encounter:
+                current_encounter = Encounter.objects.create(
+                    patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
+                )
+                logger.debug(
+                    "Created new encounter for task",
+                    extra={
+                        "user_id": request.user.id,
+                        "organization_id": organization.id,
+                        "patient_id": patient.id,
+                        "encounter_id": current_encounter.id,
+                    },
+                )
 
-    logger.info(
-        "Task added successfully",
-        extra={
-            "user_id": request.user.id,
-            "organization_id": organization.id,
-            "patient_id": patient.id,
-            "task_id": task.id,
-            "encounter_id": current_encounter.id,
-        },
-    )
+            logger.info(
+                "Adding task to patient",
+                extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
+            )
+            task = Task.objects.create(
+                encounter=current_encounter,
+                patient=patient,
+                status=TaskStatus.REQUESTED,
+                form_version=form_version,
+            )
+            send_task_added_email(task)
 
-    messages.add_message(request, messages.SUCCESS, "Task added successfully.")
-    return HttpResponseRedirect(
-        reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
-    )
+            logger.info(
+                "Task added successfully",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization.id,
+                    "patient_id": patient.id,
+                    "task_id": task.id,
+                    "encounter_id": current_encounter.id,
+                },
+            )
+
+            messages.add_message(request, messages.SUCCESS, "Task added successfully.")
+            current_url = request.headers.get("HX-Current-URL")
+            if current_url == reverse(
+                "providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id}
+            ):
+                return HttpResponseRedirect(
+                    reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
+                )
+
+            return HttpResponseRedirect(
+                reverse(
+                    "providers:encounter",
+                    kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id},
+                )
+            )
+
+    add_task_form = AddTaskForm(request.POST, available_forms=forms, form_action=form_action)
+    context = {"form": add_task_form}
+    return render(request, "provider/partials/add_task_modal.html", context)
 
 
 @login_required

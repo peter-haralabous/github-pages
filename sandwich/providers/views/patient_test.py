@@ -9,6 +9,7 @@ from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
+from sandwich.core.models.form import Form
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import TaskStatus
@@ -226,25 +227,95 @@ def test_patient_edit_deny_access(provider: User, patient: Patient, organization
     assert res.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_patient_add_task(provider: User, organization: Organization, patient: Patient) -> None:
+def test_patient_add_task_returns_form_modal(provider: User, organization: Organization, patient: Patient) -> None:
     client = Client()
     client.force_login(provider)
-    assert patient.task_set.count() == 0
+    res = client.get(
+        reverse(
+            "providers:patient_add_task",
+            kwargs={"organization_id": organization.id, "patient_id": patient.id},
+        ),
+        headers={"HX-Request": "true"},
+    )
+
+    assert res.status_code == HTTPStatus.OK
+    assert "provider/partials/add_task_modal.html" in [t.name for t in res.templates]
+
+
+def test_patient_add_task_form_submission(provider: User, organization: Organization, patient: Patient) -> None:
+    form = Form.objects.create(name="Test Form", schema={"foo": "bar"}, organization=organization)
+    client = Client()
+    client.force_login(provider)
+    form_data = {"selected_form": str(form.id)}
+
     res = client.post(
         reverse(
             "providers:patient_add_task",
             kwargs={"organization_id": organization.id, "patient_id": patient.id},
-        )
+        ),
+        data=form_data,
     )
+
+    assert res.status_code == HTTPStatus.FOUND
     assert patient.task_set.count() == 1
     task = patient.task_set.first()
     assert task is not None
-    assert task.form_version is None  # No form associated yet. Formio still hardcoded in.
+    assert task.form_version.id == form.id  # type: ignore[union-attr]
+    assert task.status == TaskStatus.REQUESTED
+
+
+def test_patient_add_task_redirects_user_to_patient_details(
+    provider: User, organization: Organization, patient: Patient, encounter: Encounter
+) -> None:
+    form = Form.objects.create(name="Test Form", schema={"foo": "bar"}, organization=organization)
+    client = Client()
+    client.force_login(provider)
+    form_data = {"selected_form": str(form.id)}
+
+    res = client.post(
+        reverse(
+            "providers:patient_add_task",
+            kwargs={"organization_id": organization.id, "patient_id": patient.id},
+        ),
+        data=form_data,
+        headers={
+            "HX-Current-URL": reverse(
+                "providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id}
+            )
+        },
+    )
 
     assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse(  # type:ignore [attr-defined]
+    assert res.url == reverse(  # type: ignore[attr-defined]
         "providers:patient",
         kwargs={"organization_id": organization.id, "patient_id": patient.id},
+    )
+
+
+def test_patient_add_task_redirects_user_to_encounter_details(
+    provider: User, organization: Organization, patient: Patient, encounter: Encounter
+) -> None:
+    form = Form.objects.create(name="Test Form", schema={"foo": "bar"}, organization=organization)
+    client = Client()
+    client.force_login(provider)
+    form_data = {"selected_form": str(form.id)}
+
+    res = client.post(
+        reverse(
+            "providers:patient_add_task",
+            kwargs={"organization_id": organization.id, "patient_id": patient.id},
+        ),
+        data=form_data,
+        headers={
+            "HX-Current-URL": reverse(
+                "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
+            )
+        },
+    )
+
+    assert res.status_code == HTTPStatus.FOUND
+    assert res.url == reverse(  # type: ignore[attr-defined]
+        "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
     )
 
 
