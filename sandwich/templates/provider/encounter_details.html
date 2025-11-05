@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+  <div id="add-task-modal"></div>
   <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
      href="{% url "providers:encounter_list" organization_id=organization.id %}">
     {% lucide "chevron-left" class="size-4" %}
@@ -19,11 +20,22 @@
           <span class="badge badge-md badge-error">Archived</span>
         {% endif %}
       </div>
-      <p class="text-sm tracking-wide">{{ patient.email|default:"—" }}</p>
+      <p class="text-sm tracking-wide flex gap-6 mt-2 items-center">
+        <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:"M d, Y" }} </span>
+        <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:"—" }}</span>
+        <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:"—" }}</span>
+      </p>
     </div>
     <div>
+      <button class="btn btn-primary"
+              hx-target="#add-task-modal"
+              hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}">
+        Send form
+      </button>
+      <a href="{% url "providers:patient" organization_id=organization.id patient_id=patient.id %}"
+         class="btn btn-outline">View patient</a>
       <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
-         class="btn btn-primary">Edit patient record</a>
+         class="btn btn-outline">Edit patient record</a>
       <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
             class="inline"
             method="post">
@@ -48,7 +60,13 @@
     </div>
     <hr />
   {% endif %}
-  {% include 'provider/partials/encounter_tasks.html' %}
+  {% include 'provider/partials/encounter_details_section.html' %}
+  <hr />
+  {% include 'provider/partials/documents_and_forms_section.html' %}
+  <hr />
+  {% include 'provider/partials/summaries_section.html' %}
+  <hr />
+  {% include 'provider/partials/activity_section.html' %}
   {% if other_encounters %}
     <hr />
     <h3>Other Encounters</h3>

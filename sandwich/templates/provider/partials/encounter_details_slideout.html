@@ -17,20 +17,32 @@
       <label for="encounter-details-modal-{{ encounter.id }}"
              class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
     </div>
-    <!-- Encounter info row -->
     <div class="flex items-center justify-between px-6 pt-4 pb-0">
-      <!--Encounter type placeholder-->
-      <h2 class="font-bold text-2xl">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</h2>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h2 class="font-bold text-2xl">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</h2>
+          {% if encounter.active %}
+            <span class="badge badge-md badge-success">Active</span>
+          {% else %}
+            <span class="badge badge-md badge-error">Archived</span>
+          {% endif %}
+        </div>
+      </div>
       <div class="flex items-center gap-2">
-        <a href="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}"
-           class="btn btn-outline btn-sm flex items-center gap-2">{% lucide "info" class="size-4" %} View full</a>
+        <a href="{% url 'providers:patient' organization_id=organization.id patient_id=encounter.patient.id %}"
+           class="btn btn-primary btn-sm">View patient details</a>
+        <form action="{% url 'providers:patient_archive' organization_id=organization.id patient_id=encounter.patient.id %}"
+              class="inline"
+              method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-error btn-sm">Archive</button>
+        </form>
         <div class="dropdown dropdown-end">
           <button tabindex="0" class="btn btn-ghost btn-sm rounded-full cursor-pointer">
             {% lucide "ellipsis-vertical" class="size-4" %}
           </button>
           <ul tabindex="0"
               class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40 mt-2">
-            <!-- Other actions to be added here -->
             <li>
               <a href="#">Other Action</a>
             </li>
@@ -38,34 +50,21 @@
         </div>
       </div>
     </div>
-    <div class="text-sm text-base-content/70 flex flex-wrap gap-6 mt-2 px-6 pb-2">
-      <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} {{ encounter.created_at }}</span>
-      <span class="flex items-center gap-1">{% lucide "calendar-check" class="size-4" %} {{ encounter.ended_at|default:"—" }}</span>
-      <span class="flex items-center gap-1">{% lucide "activity" class="size-4" %} {{ encounter.get_status_display }}</span>
+    <div class="text-sm flex flex-wrap gap-6 mt-2 px-6 pb-2">
+      <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ encounter.patient.date_of_birth|date:"M d, Y" }}</span>
+      <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ encounter.patient.phn|default:"—" }}</span>
+      <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ encounter.patient.email|default:"—" }}</span>
     </div>
-    <!-- Patient Details Card -->
-    <div class="rounded-2xl border border-base-200 bg-base-100 p-6 m-6 flex flex-col gap-4">
-      <div class="font-bold text-2xl">Encounter Details</div>
-      <div class="flex flex-col md:flex-row gap-8 justify-between">
-        <div class="flex-1">
-          <div class="flex items-center gap-2 text-base-content/70 mb-1">
-            {% lucide "calendar" class="size-5" %}<span class="font-medium">Date of Birth</span>
-          </div>
-          <div class="text-base">{{ encounter.patient.date_of_birth }}</div>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 text-base-content/70 mb-1">
-            {% lucide "info" class="size-5" %}<span class="font-medium">Email</span>
-          </div>
-          <div class="text-base">{{ encounter.patient.email|default:"—" }}</div>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 text-base-content/70 mb-1">
-            {% lucide "id-card" class="size-5" %}<span class="font-medium">PHN #</span>
-          </div>
-          <div class="text-base">{{ encounter.patient.phn|default:"—" }}</div>
-        </div>
-      </div>
+    {# Scrollable content with sections #}
+    <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-4">
+      <hr />
+      {% include 'provider/partials/encounter_details_section.html' %}
+      <hr />
+      {% include 'provider/partials/documents_and_forms_section.html' %}
+      <hr />
+      {% include 'provider/partials/summaries_section.html' %}
+      <hr />
+      {% include 'provider/partials/activity_section.html' %}
     </div>
   </div>
 </div>

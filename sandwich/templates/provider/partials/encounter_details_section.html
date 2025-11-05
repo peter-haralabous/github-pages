@@ -1,0 +1,41 @@
+<div class="flex justify-between items-center mb-4">
+  <h3 class="m-0">Encounter Details</h3>
+</div>
+<div class="rounded-box border border-base-200 bg-base-100 p-6">
+  <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+    <div>
+      <div class="text-sm text-base-content/60 mb-1">Encounter Type</div>
+      <div>{{ encounter.type|default:"—" }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-base-content/60 mb-1">Tags</div>
+      <div class="text-base-content/60">
+        <button class="btn btn-xs btn-ghost gap-1">
+          <svg width="16"
+               height="16"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div>
+      <div class="text-sm text-base-content/60 mb-1">Status</div>
+      <div>{{ encounter.active|yesno:"Active,Archived" }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-base-content/60 mb-1">Created</div>
+      <div>{{ encounter.created_at|date:"Y-m-d H:i" }}</div>
+    </div>
+    <div>
+      <div class="text-sm text-base-content/60 mb-1">Updated</div>
+      <div>{{ encounter.updated_at|date:"Y-m-d H:i" }}</div>
+    </div>
+  </div>
+</div>
