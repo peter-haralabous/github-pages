@@ -1,9 +1,9 @@
 {% load lucide %}
 
-<div class="flex-shrink-0">
+<div class="w-full lg:w-auto lg:flex-shrink-0">
   {# Expanded Panel #}
   <div id="{% block panel_id %}{% endblock panel_id %}"
-       class="flex flex-col w-72 bg-base-100 h-full rounded-xl border border-base-300">
+       class="flex flex-col w-full lg:w-72 bg-base-100 h-full rounded-xl border border-base-300">
     <header class="navbar bg-base-100 border-b rounded-t-xl">
       <div class="flex-none pl-2">
         {% block header_icon %}
@@ -15,7 +15,7 @@
           {% endblock header_title %}
         </span>
       </div>
-      <div class="flex-none">
+      <div class="flex-none hidden lg:block">
         <button id="{% block collapse_btn_id %}{% endblock collapse_btn_id %}"
                 class="btn btn-square btn-ghost">
           {% block collapse_icon %}

@@ -8,9 +8,12 @@
 {% endblock topnav %}
 {% block content %}
   <div class="flex flex-row h-[calc(100vh-8rem)] gap-2 p-2">
-    {% include 'patient/chatty/partials/left_panel.html' %}
+    <div id="mobile-records-view" class="w-full lg:w-auto lg:contents">
+      {% include 'patient/chatty/partials/left_panel.html' %}
+    </div>
     {% comment %} Center Panel {% endcomment %}
-    <div class="flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
+    <div id="mobile-chat-view"
+         class="w-full lg:w-auto lg:flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
       <header class="navbar bg-base-100 border-b rounded-t-xl">
         <div class="flex-none pl-2">{% lucide "sparkles" class="size-6" %}</div>
         <div class="flex-1 px-2">
@@ -52,8 +55,32 @@
         </div>
       </footer>
     </div>
-    {% include 'patient/chatty/partials/right_panel.html' %}
+    <div id="mobile-feed-view" class="w-full lg:w-auto lg:contents">
+      {% include 'patient/chatty/partials/right_panel.html' %}
+    </div>
   </div>
+  {% comment %} Mobile Navigation {% endcomment %}
+  <nav id="mobile-nav"
+       class="lg:hidden fixed bottom-0 left-0 right-0 bg-base-100 border-t border-base-300 flex justify-around shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <button data-view="records"
+            class="mobile-nav-item flex flex-col items-center justify-center flex-1 py-2 transition-colors text-base-content/60 hover:text-primary">
+      <div class="relative">
+        {% lucide "heart-pulse" class="size-6" %}
+        {# <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-content text-xs font-semibold"></span> #}
+      </div>
+      <span class="text-xs font-medium mt-1">Records</span>
+    </button>
+    <button data-view="chat"
+            class="mobile-nav-item flex flex-col items-center justify-center flex-1 py-2 transition-colors text-primary">
+      <div class="relative">{% lucide "sparkles" class="size-6" %}</div>
+      <span class="text-xs font-bold mt-1">Assistant</span>
+    </button>
+    <button data-view="feed"
+            class="mobile-nav-item flex flex-col items-center justify-center flex-1 py-2 transition-colors text-base-content/60 hover:text-primary">
+      <div class="relative">{% lucide "layout-grid" class="size-6" %}</div>
+      <span class="text-xs font-medium mt-1">Feed</span>
+    </button>
+  </nav>
   <script nonce="{{ request.csp_nonce }}">
     // Wait for the document to be ready
     document.addEventListener('DOMContentLoaded', () => {
@@ -111,6 +138,59 @@
           chatInput.style.height = `${chatInput.scrollHeight}px`;
         });
       }
+
+      // Mobile navigation
+      const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+      const mobileViews = {
+        records: document.getElementById('mobile-records-view'),
+        chat: document.getElementById('mobile-chat-view'),
+        feed: document.getElementById('mobile-feed-view'),
+      };
+
+      function setActiveView(viewName) {
+        // Update view visibility
+        Object.values(mobileViews).forEach(view => view.classList.add('hidden'));
+        if (mobileViews[viewName]) {
+          mobileViews[viewName].classList.remove('hidden');
+        }
+
+        // Update nav item styles
+        mobileNavItems.forEach(item => {
+          const itemView = item.dataset.view;
+          const label = item.querySelector('span');
+          if (itemView === viewName) {
+            item.classList.remove('text-base-content/60');
+            item.classList.add('text-primary');
+            label.classList.add('font-bold');
+          } else {
+            item.classList.add('text-base-content/60');
+            item.classList.remove('text-primary');
+            label.classList.remove('font-bold');
+          }
+        });
+      }
+
+      function handleResize() {
+        if (window.innerWidth < 1024) {
+          // Find the active view from the nav bar or default to 'chat'
+          const activeItem = document.querySelector('.mobile-nav-item.text-primary');
+          const activeView = activeItem ? activeItem.dataset.view : 'chat';
+          setActiveView(activeView);
+        } else {
+          // On desktop, show all views
+          Object.values(mobileViews).forEach(view => view.classList.remove('hidden'));
+        }
+      }
+
+      mobileNavItems.forEach(item => {
+        item.addEventListener('click', () => {
+          setActiveView(item.dataset.view);
+        });
+      });
+
+      // Set initial state on load and on resize
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Call on initial load
     });
   </script>
 {% endblock content %}
