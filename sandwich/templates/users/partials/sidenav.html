@@ -37,12 +37,12 @@
                    class="{% if 'custom_attribute_' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Custom Fields</a>
               </li>
               <li>
-                <a href="{% url "providers:templates_home" organization_id=organization.id %}"
-                   class="{% if 'template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Templates</a>
-              </li>
-              <li>
                 <a href="{% url 'providers:organization_list_preferences' organization_id=organization.id %}"
                    class="{% if 'organization_list_preferences' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id or 'organization_preference_settings' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">{% trans "List Preferences" %}</a>
+              </li>
+              <li>
+                <a href="{% url "providers:form_templates_list" organization_id=organization.id %}"
+                   class="{% if 'templates' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Form Templates</a>
               </li>
             </ul>
           </li>
