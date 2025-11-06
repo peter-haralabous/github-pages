@@ -1,0 +1,24 @@
+{% extends "patient/chatty/partials/left_panel.html" %}
+
+{% load lucide %}
+
+{# djlint:off #}
+{% block header_icon %}<a href="{{ left_panel_back_link }}" class="btn btn-circle btn-ghost">{% lucide "arrow-left" class="size-6" %}</a>{% endblock header_icon %}
+{% block header_title %}{{ left_panel_title }}{% endblock header_title %}
+{# djlint:on #}
+{% block panel_content %}
+  <ul class="p-2">
+    {% for item in left_panel_items %}
+      <li>
+        <a href="{{ item.link }}"
+           class="flex items-center p-3 rounded-lg hover:bg-base-300/50 gap-4">
+          {% lucide item.icon class="size-5" %}
+          <span class="flex-1">{{ item.label }}</span>
+          {% if item.count is not None %}<span class="text-secondary">{{ item.count }}</span>{% endif %}
+        </a>
+      </li>
+    {% empty %}
+      <li>Nothing here.</li>
+    {% endfor %}
+  </ul>
+{% endblock panel_content %}

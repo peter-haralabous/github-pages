@@ -20,31 +20,117 @@ from sandwich.core.models import Document
 from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
+from sandwich.core.models.document import DocumentCategory
 from sandwich.core.models.health_record import HealthRecord
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_time import not_in_future
+from sandwich.patients.views.patient import _chat_context
 from sandwich.patients.views.patient import _patient_context
 from sandwich.users.models import User
 
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class NavItem:
+    link: str
+    label: str
+    icon: str
+    count: int | None = None
+
+
 @login_required
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient"])])
-def health_records(request: AuthenticatedHttpRequest, patient: Patient):
-    documents = patient.document_set.all()
-    immunizations = patient.immunization_set.all()
-    practitioners = patient.practitioner_set.all()
+def patient_records(request: AuthenticatedHttpRequest, patient: Patient, record_type: str | None = None):
+    if record_type is None:
+        left_panel_title = "Records"
+        left_panel_back_link = reverse("patients:patient_details", kwargs={"patient_id": patient.id})
+        items = [
+            NavItem(
+                link=reverse(
+                    "patients:patient_records", kwargs={"patient_id": patient.id, "record_type": "immunization"}
+                ),
+                label="Immunizations",
+                icon="syringe",
+                count=patient.immunization_set.count(),
+            ),
+            NavItem(
+                link=reverse(
+                    "patients:patient_records", kwargs={"patient_id": patient.id, "record_type": "practitioner"}
+                ),
+                label="Practitioners",
+                icon="contact",
+                count=patient.practitioner_set.count(),
+            ),
+        ]
+    else:
+        left_panel_back_link = reverse("patients:patient_details", kwargs={"patient_id": patient.id})
+        if record_type == "immunization":
+            left_panel_title = "Immunizations"
+            items = [
+                NavItem(
+                    link=reverse("patients:immunization", kwargs={"immunization_id": i.id}),
+                    label=f"{i.name} ({i.date.strftime('%Y-%m-%d')})",
+                    icon="file",
+                )
+                for i in patient.immunization_set.all()
+            ]
+        elif record_type == "practitioner":
+            left_panel_title = "Practitioners"
+            items = [
+                NavItem(
+                    link=reverse("patients:practitioner", kwargs={"practitioner_id": p.id}),
+                    label=f"{p.name})",
+                    icon="file",
+                )
+                for p in patient.practitioner_set.all()
+            ]
+        else:
+            raise Http404(f"Unknown record type: {record_type}")
 
     context = {
-        "patient": patient,
-        "documents": documents,
-        "immunizations": immunizations,
-        "practitioners": practitioners,
-    } | _patient_context(request, patient=patient)
-    return render(request, "patient/health_records.html", context)
+        "left_panel_title": left_panel_title,
+        "left_panel_back_link": left_panel_back_link,
+        "left_panel_items": items,
+    } | _chat_context(request, patient=patient)
+    return render(request, "patient/patient_records.html", context)
+
+
+@login_required
+@authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient"])])
+def patient_repository(request: AuthenticatedHttpRequest, patient: Patient, category: str | None = None):
+    if category is None:
+        left_panel_title = "Repository"
+        left_panel_back_link = reverse("patients:patient_details", kwargs={"patient_id": patient.id})
+        # TODO: make a single query for counts by category
+        items = [
+            NavItem(
+                link=reverse("patients:patient_repository", kwargs={"patient_id": patient.id, "category": value}),
+                label=str(label),
+                icon="folder",
+                count=patient.document_set.filter(category=value).count(),
+            )
+            for (value, label) in DocumentCategory.choices
+        ]
+    else:
+        category = DocumentCategory(category)
+        left_panel_title = str(category.label)
+        left_panel_back_link = reverse("patients:patient_repository", kwargs={"patient_id": patient.id})
+        items = [
+            NavItem(
+                link=reverse("patients:document", kwargs={"document_id": d.id}), label=d.original_filename, icon="file"
+            )
+            for d in patient.document_set.filter(category=category)
+        ]
+
+    context = {
+        "left_panel_title": left_panel_title,
+        "left_panel_back_link": left_panel_back_link,
+        "left_panel_items": items,
+    } | _chat_context(request, patient=patient)
+    return render(request, "patient/patient_records.html", context)
 
 
 class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
@@ -112,7 +198,7 @@ def health_records_add(request: AuthenticatedHttpRequest, patient: Patient, reco
         form = form_class(request.POST)
         if form.is_valid():
             form.save(patient=patient)
-            return HttpResponseRedirect(reverse("patients:health_records", kwargs={"patient_id": patient.id}))
+            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
     else:
         form = form_class()
 
@@ -199,12 +285,12 @@ def _generic_edit_view(record_type: str, request: AuthenticatedHttpRequest, inst
             # FIXME: doing row-by-row deletes means removing the last row doesn't re-add the empty state
             #        consider re-rendering the entire table instead, like how document_delete does it
             return HttpResponse(status=200)
-        return HttpResponseRedirect(reverse("patients:health_records", kwargs={"patient_id": patient.id}))
+        return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
     if request.method == "POST":
         form = form_class(request.POST, instance=instance)
         if form.is_valid():
             form.save(patient=patient)
-            return HttpResponseRedirect(reverse("patients:health_records", kwargs={"patient_id": patient.id}))
+            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
     else:
         form = form_class(instance=instance)
 

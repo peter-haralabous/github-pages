@@ -18,7 +18,7 @@ from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_time import not_in_future
 from sandwich.patients.service.fact_service import categorized_facts_for_patient
-from sandwich.patients.views.chat import ChatForm
+from sandwich.patients.views.patient import _chat_context
 from sandwich.patients.views.patient import _patient_context
 
 logger = logging.getLogger(__name__)
@@ -27,21 +27,25 @@ logger = logging.getLogger(__name__)
 @login_required
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient"])])
 def patient_details(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
-    # TODO-NG: page & sort these lists
-    tasks = patient.task_set.all()
-    documents = patient.document_set.all()
-
-    context = {
-        "patient": patient,
-        "tasks": tasks,
-        "documents": documents,
-        "facts": categorized_facts_for_patient(patient),
-        "chat_form": ChatForm(user=request.user),
-    } | _patient_context(request, patient=patient)
-
-    template = "patient/patient_details.html"
     if settings.FEATURE_PATIENT_CHATTY_APP:
         template = "patient/chatty/app.html"
+        records_count = patient.immunization_set.count() + patient.practitioner_set.count()
+        repository_count = patient.document_set.count()
+        context = {
+            "records_count": records_count,
+            "repository_count": repository_count,
+        } | _chat_context(request, patient=patient)
+    else:
+        template = "patient/patient_details.html"
+        # TODO-NG: page & sort these lists
+        tasks = patient.task_set.all()
+        documents = patient.document_set.all()
+        context = {
+            "patient": patient,
+            "tasks": tasks,
+            "documents": documents,
+            "facts": categorized_facts_for_patient(patient),
+        } | _patient_context(request, patient=patient)
 
     return render(request, template, context)
 
