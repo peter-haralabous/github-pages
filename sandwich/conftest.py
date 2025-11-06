@@ -123,6 +123,9 @@ def vcr_config():
         # strip sensitive headers by default
         "filter_headers": [("Authorization", None), ("X-Amz-Security-Token", None)],
         "before_record_request": before_record_request,
+        # by default VCR doesn't consider body when matching requests
+        # when replaying LLM responses, the prompt matters _a lot_
+        "match_on": ["method", "scheme", "host", "port", "path", "query", "body"],
     }
 
 

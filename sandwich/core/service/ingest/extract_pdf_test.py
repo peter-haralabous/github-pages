@@ -8,6 +8,7 @@ from sandwich.core.service.llm import ModelName
 from sandwich.core.service.llm import get_llm
 
 
+@pytest.mark.skip("pdf -> image conversion isn't stable across platforms so our fixtures are different in CI")
 @pytest.mark.vcr
 @pytest.mark.django_db
 def test_extract_facts_from_pdf(tmp_path):
