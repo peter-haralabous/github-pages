@@ -84,10 +84,14 @@ class PractitionerForm(HealthRecordForm[Practitioner]):
 
 
 class DocumentForm(HealthRecordForm[Document]):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in ("original_filename", "content_type", "size"):
+            self.fields[field].disabled = True
+
     class Meta:
         model = Document
         fields = ("original_filename", "content_type", "size", "date", "category")
-        read_only_fields = ("original_filename", "content_type", "size")
 
 
 def _form_class(record_type: str):
