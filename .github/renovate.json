@@ -5,10 +5,17 @@
     "helpers:pinGitHubActionDigestsToSemver",
     ":dependencyDashboardApproval"
   ],
+  // Apply minimum release age to normal updates
+  "packageRules": [
+    {
+      "enabled": true,
+      "matchJsonata": ["$not($exists(isVulnerabilityAlert))"],
+      "minimumReleaseAge": "7 days"
+    }
+  ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security"]
-  },
-  "minimumReleaseAge": "7 days"
+  }
 }
