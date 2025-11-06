@@ -1,0 +1,21 @@
+{% load lucide %}
+
+{% if input.wrapper_classes %}<div class="{{ input.wrapper_classes }}">{% endif %}
+  {# This is the original content of tailwind/layout/baseinput.html #}
+  {# djlint:off #}
+  <input
+    type="{{ input.input_type }}"
+    name="{% if input.name|wordcount > 1 %}{{ input.name|slugify }}{% else %}{{ input.name }}{% endif %}"
+    value="{{ input.value }}"
+    {% if input.input_type != "hidden" %}
+      class="{{ input.field_classes }}"
+      id="{% if input.id %}{{ input.id }}{% else %}{{ input.input_type }}-id-{{ input.name|slugify }}{% endif %}"
+    {% endif %}
+    {{ input.flat_attrs|safe }}
+  />
+  {# djlint:on #}
+  {# End of original content of tailwind/layout/baseinput.html #}
+  {% if input.icon and input.icon_classes %}
+    <div class="{{ input.icon_classes }}">{% lucide input.icon %}</div>
+  {% endif %}
+  {% if input.wrapper_classes %}</div>{% endif %}

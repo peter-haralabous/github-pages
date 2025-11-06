@@ -18,6 +18,7 @@ from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_time import not_in_future
 from sandwich.patients.service.fact_service import categorized_facts_for_patient
+from sandwich.patients.views.chat import ChatForm
 from sandwich.patients.views.patient import _patient_context
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ def patient_details(request: AuthenticatedHttpRequest, patient: Patient) -> Http
         "tasks": tasks,
         "documents": documents,
         "facts": categorized_facts_for_patient(patient),
+        "chat_form": ChatForm(user=request.user),
     } | _patient_context(request, patient=patient)
 
     template = "patient/patient_details.html"

@@ -1,5 +1,6 @@
 {% extends "base_top_nav.html" %}
 
+{% load crispy_forms_tags %}
 {% load lucide %}
 
 {% block topnav %}
@@ -20,29 +21,20 @@
           <span class="font-semibold text-lg">Assistant</span>
         </div>
       </header>
-      <main class="flex-1 overflow-y-auto p-4">
-        <p class="text-center text-base-content/60">Main content area stub</p>
-        <div class="chat chat-start">
-          <div class="chat-bubble">Here are a few things you could do...</div>
-        </div>
-        <div class="space-y-2">
-          <div class="p-4 border rounded-lg bg-base-100 text-primary cursor-pointer">
-            Your last recorded HbA1c and Cholesterol results are from May 2023. Would you like to add any more
-            recent lab results?
-          </div>
-        </div>
+      <main id="chat-messages" class="flex-1 overflow-y-auto p-4">
+        <template id="user-message-template" class="hidden">
+          {% include "patient/chatty/partials/user_message.html" %}
+        </template>
+        {% with message="Here are a few things you could do..." %}
+          {% include "patient/chatty/partials/user_message.html" %}
+        {% endwith %}
+        {% with message="Your last recorded HbA1c and Cholesterol results are from May 2023. Would you like to add any more recent lab results?" %}
+          {% include "patient/chatty/partials/assistant_message.html" %}
+        {% endwith %}
       </main>
       <footer class="p-4 bg-base-100 border-t border-base-300 rounded-b-xl flex justify-center">
         <div class="w-full max-w-4xl">
-          <div class="relative">
-            <textarea id="chat-input"
-                      class="textarea textarea-bordered w-full resize-none overflow-hidden pr-14"
-                      rows="1"
-                      placeholder="Ask a question or add notes..."></textarea>
-            <button class="btn btn-primary btn-circle absolute bottom-2.5 right-2.5">
-              {% lucide "arrow-up" class="size-5" %}
-            </button>
-          </div>
+          <div class="relative">{% crispy chat_form %}</div>
           <div class="flex justify-between items-center mt-2 px-2">
             <div class="flex gap-2">
               <button class="btn btn-ghost btn-sm btn-circle">{% lucide "paperclip" class="size-5" %}</button>
@@ -91,6 +83,12 @@
       const collapseLeftBtn = document.getElementById('collapse-left-btn');
       const expandLeftBtn = document.getElementById('expand-left-btn');
 
+      const chatPanel = document.getElementById('mobile-chat-view');
+      const chatMessages = chatPanel.querySelector('#chat-messages');
+      const chatInput = chatPanel.querySelector("textarea");
+      const chatUserMessageTemplate = chatPanel.querySelector('#user-message-template');
+      const chatSubmit = chatPanel.querySelector('#button-id-submit');
+
       const rightPanel = document.getElementById('right-panel');
       const rightPanelCollapsed = document.getElementById('right-panel-collapsed');
       const collapseRightBtn = document.getElementById('collapse-right-btn');
@@ -131,7 +129,6 @@
       }
 
       // Auto-resizing textarea
-      const chatInput = document.getElementById('chat-input');
       if (chatInput) {
         chatInput.addEventListener('input', () => {
           chatInput.style.height = 'auto';
@@ -191,6 +188,34 @@
       // Set initial state on load and on resize
       window.addEventListener('resize', handleResize);
       handleResize(); // Call on initial load
+
+      // Define handlers for chat form
+      chatSubmit.addEventListener('click', () => {
+        chatMessageSend();
+      });
+
+      function chatMessageSend() {
+        const message = chatInput.value.trim();
+        if (message) {
+          addUserMessage(message);
+          chatInputReset();
+        }
+      }
+
+      function addUserMessage(text) {
+        const clone = document.importNode(chatUserMessageTemplate.content, true);
+        clone.querySelector('.user-message-content').textContent = text;
+        chatMessages.appendChild(clone);
+      }
+
+      function chatInputReset() {
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+
     });
   </script>
 {% endblock content %}
