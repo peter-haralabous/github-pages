@@ -119,10 +119,8 @@ def accept_patient_invitation(invitation: Invitation, user: User) -> None:
     patient = invitation.patient
     patient.user = user
     patient.save()
-    patient.assign_user_owner_perms(user)
 
-    if patient.organization:
-        assign_organization_role(patient.organization, RoleName.PATIENT, patient.user)
+    assign_perms_on_patient_claim(patient, user)
 
     invitation.status = InvitationStatus.ACCEPTED
     invitation.accepted_at = timezone.now()
@@ -132,6 +130,35 @@ def accept_patient_invitation(invitation: Invitation, user: User) -> None:
         "Patient invitation accepted successfully",
         extra={"invitation_id": invitation.id, "patient_id": invitation.patient.id, "user_id": user.id},
     )
+
+
+def assign_perms_on_patient_claim(patient: Patient, user: User) -> None:
+    """
+    Assigns the appropriate permissions for patients accepting an invite.
+
+    Handles:
+    - user-patient permissions
+    - assigning the org "patient" role
+    - permissions for encounters and tasks created before accepting the invite
+    """
+    # imports function-scoped to avoid circular imports
+    from sandwich.core.service.encounter_service import assign_default_encounter_perms  # noqa: PLC0415
+    from sandwich.core.service.task_service import assign_default_task_perms  # noqa: PLC0415
+
+    patient.assign_user_owner_perms(user)
+
+    if not patient.organization:
+        return
+
+    assign_organization_role(patient.organization, RoleName.PATIENT, user)
+
+    # Assign this user permissions for encounters + tasks they were assigned
+    # accepting the invite
+    patient_encounters = patient.encounter_set.filter(organization=patient.organization)
+    for encounter in patient_encounters:
+        assign_default_encounter_perms(encounter)
+        for task in encounter.task_set.all():
+            assign_default_task_perms(task)
 
 
 def expire_invitations() -> int:

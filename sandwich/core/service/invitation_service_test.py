@@ -7,13 +7,20 @@ from guardian.shortcuts import get_group_perms
 from guardian.shortcuts import get_perms
 
 from sandwich.core.factories.invitation import InvitationFactory
+from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.factories.task import TaskFactory
+from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
+from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.role import RoleName
+from sandwich.core.service.invitation_service import assign_perms_on_patient_claim
 from sandwich.core.service.invitation_service import expire_invitations
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
+from sandwich.users.models import User
 
 UUID_PATTERN = re.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[0-9a-zA-Z_-]{43}")
 
@@ -110,3 +117,24 @@ def test_assign_default_invitation_perms(patient: Patient) -> None:
         group_permissions = get_group_perms(group, created)
         assert group_permissions.filter(codename="view_invitation").exists()
         assert group_permissions.filter(codename="change_invitation").exists()
+
+
+def test_assign_perms_on_patient_claim(user: User, organization: Organization) -> None:
+    patient = PatientFactory.create(organization=organization)
+    invite_encounter = Encounter.objects.create(
+        organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS
+    )
+    invite_task = TaskFactory.create(patient=patient, encounter=invite_encounter)
+    invite_task_2 = TaskFactory.create(patient=patient, encounter=invite_encounter)
+
+    assert not user.has_perm("view_task", invite_task)
+    assert not user.has_perm("view_task", invite_task_2)
+    assert not user.has_perm("view_encounter", invite_encounter)
+
+    patient.user = user
+    patient.save()
+    assign_perms_on_patient_claim(patient, user)
+
+    assert user.has_perm("view_task", invite_task)
+    assert user.has_perm("view_task", invite_task_2)
+    assert user.has_perm("view_encounter", invite_encounter)
