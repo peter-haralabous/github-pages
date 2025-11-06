@@ -12,9 +12,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Task name</th>
-        <th>Form name</th>
-        <th>Form version</th>
+        <th>Name</th>
         <th>Started</th>
         <th>Ended</th>
         <th>Status</th>
@@ -24,9 +22,14 @@
     <tbody>
       {% for task in tasks %}
         <tr>
-          <td>{{ task.name }}</td>
-          <td>{{ task.form_version.name }}</td>
-          <td>{{ task.form_version.pgh_id }}</td>
+          <td>
+            {% if task.form_version.name %}
+              {{ task.form_version.name }}
+              <div class="badge badge-neutral badge-outline">{{ task.form_version.pgh_id }}</div>
+            {% else %}
+              {{ task }}
+            {% endif %}
+          </td>
           <td>{{ task.created_at }}</td>
           <td>{{ task.ended_at|default:"—" }}</td>
           <td>{{ task.get_status_display }}</td>
