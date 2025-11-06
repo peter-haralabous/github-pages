@@ -73,7 +73,7 @@ def submit_form(
 
     # extract data, submit submission, task gets changed to completed
     submission.data = payload
-    submission.submit()
+    submission.submit(user=request.user)
     complete_task(task)
     logger.debug(
         "Form submission submitted",
@@ -82,6 +82,7 @@ def submit_form(
             "patient_id": task.patient.id,
             "task_id": task.id,
             "submission_status": submission.status,
+            "submitted_by": submission.submitted_by_id,
         },
     )
     return FormSubmitResponse.success(submission=submission)

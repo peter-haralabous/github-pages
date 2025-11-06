@@ -4,9 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
 
 from sandwich.core.models.abstract import BaseModel
-from sandwich.core.models.form import Form
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
+from sandwich.users.models import User
 
 
 class FormSubmissionStatus(models.TextChoices):
@@ -19,9 +19,6 @@ class FormSubmission(BaseModel):
     Stores a patient's data for a specific form, linking it to an assigned task.
     """
 
-    form = models.ForeignKey(
-        Form, on_delete=models.SET_NULL, null=True, help_text="The original form this submission is for"
-    )
     task = models.OneToOneField(
         Task, on_delete=models.SET_NULL, null=True, blank=True, help_text="The specific task this submission is for"
     )
@@ -40,9 +37,13 @@ class FormSubmission(BaseModel):
     metadata = models.JSONField(default=dict)
 
     submitted_at = models.DateTimeField(null=True)
+    submitted_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, help_text="The user who filled out the submission"
+    )
 
-    def submit(self):
+    def submit(self, user):
         if self.status == FormSubmissionStatus.DRAFT:
             self.status = FormSubmissionStatus.COMPLETED
+            self.submitted_by = user
             self.submitted_at = timezone.now()
             self.save()

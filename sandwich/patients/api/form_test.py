@@ -37,6 +37,7 @@ def test_submit_form_success(user: User, encounter: Encounter, patient: Patient)
     assert submission.status == FormSubmissionStatus.COMPLETED
     assert submission.form_version == task.form_version
     assert submission.submitted_at == frozen_time
+    assert submission.submitted_by == user
 
 
 @pytest.mark.django_db
