@@ -25,6 +25,13 @@ SECRET_KEY = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#test-runner
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
+# DATABASE
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# https://docs.djangoproject.com/en/dev/topics/testing/overview/#the-test-database
+# Django handles the database settings but not the DATABASE_URL env var
+DATABASE_URL = "postgres://sandwich:sandwich@localhost:5432/test_sandwich"
+
 # PASSWORDS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
