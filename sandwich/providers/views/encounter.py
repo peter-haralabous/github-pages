@@ -46,7 +46,7 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
 
         # Set up form helper
         self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Create Encounter", css_class="btn btn-primary"))
+        self.helper.add_input(Submit("submit", "Create Encounter", css_class="btn btn-primary", autofocus=True))
 
     class Meta:
         model = Encounter
@@ -243,7 +243,7 @@ def encounter_create_select_patient(
         "patient": patient,
         "form": form,
     }
-    return render(request, "provider/partials/selected_patient_display.html", context)
+    return render(request, "provider/partials/encounter_create_modal.html", context)
 
 
 @login_required

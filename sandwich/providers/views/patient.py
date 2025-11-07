@@ -52,6 +52,7 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.forms.task import AddTaskForm
+from sandwich.providers.views.encounter import EncounterCreateForm
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
 logger = logging.getLogger(__name__)
@@ -280,6 +281,86 @@ def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -
 
     context = {"form": form, "organization": organization}
     return render(request, "provider/patient_add.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter", "create_patient"])]
+)
+def patient_add_modal(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
+    """HTMX endpoint for creating a patient during encounter creation.
+
+    GET: Returns a modal dialog with patient creation form (pre-filled with maybe_name if provided).
+    POST: Creates patient and returns the encounter_create_select_patient modal with new patient selected.
+    """
+    if request.method == "POST":
+        logger.info(
+            "Processing patient add modal form",
+            extra={"user_id": request.user.id, "organization_id": organization.id},
+        )
+        form = PatientAdd(request.POST)
+        if form.is_valid():
+            patient = form.save(organization=organization)
+            assign_default_patient_permissions(patient)
+            logger.info(
+                "Patient created from modal successfully",
+                extra={
+                    "user_id": request.user.id,
+                    "organization_id": organization.id,
+                    "patient_id": patient.id,
+                },
+            )
+            # Return the encounter creation modal with the new patient selected
+            encounter_form = EncounterCreateForm(organization, initial={"patient": patient})
+            encounter_form.helper.form_action = reverse(
+                "providers:encounter_create",
+                kwargs={"organization_id": organization.id},
+            )
+            context = {
+                "organization": organization,
+                "patient": patient,
+                "form": encounter_form,
+            }
+            return render(request, "provider/partials/encounter_create_modal.html", context)
+
+        logger.warning(
+            "Invalid patient add modal form",
+            extra={
+                "user_id": request.user.id,
+                "organization_id": organization.id,
+                "form_errors": list(form.errors.keys()),
+            },
+        )
+        # Re-render the modal with errors
+        form.helper.form_tag = False
+        context = {"form": form, "organization": organization}
+        return render(request, "provider/partials/patient_add_modal.html", context)
+
+    # GET request - show the modal with form
+    maybe_name = maybe_patient_name(request.GET.get("maybe_name", ""))
+    if maybe_name:
+        logger.debug(
+            "Pre-filling patient modal form with parsed name",
+            extra={"user_id": request.user.id, "organization_id": organization.id, "has_parsed_name": True},
+        )
+        form = PatientAdd()
+        form.fields["first_name"].initial = maybe_name[0]
+        form.fields["last_name"].initial = maybe_name[1]
+    else:
+        logger.debug(
+            "Rendering empty patient modal form",
+            extra={"user_id": request.user.id, "organization_id": organization.id},
+        )
+        form = PatientAdd()
+
+    # Add autofocus to date of birth field
+    form.fields["date_of_birth"].widget.attrs["autofocus"] = True
+
+    # Tell crispy forms not to render the form tag (we do it manually in template with HTMX attrs)
+    form.helper.form_tag = False
+
+    context = {"form": form, "organization": organization}
+    return render(request, "provider/partials/patient_add_modal.html", context)
 
 
 @login_required

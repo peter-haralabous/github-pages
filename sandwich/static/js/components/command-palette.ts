@@ -263,6 +263,9 @@ class CommandPalette extends LitElement {
               targetEl.outerHTML = html;
             }
 
+            (window as any).htmx?.process(targetEl);
+
+            // The manually swapped html cannot execute scripts, so we need to handle modals here
             const modal = targetEl.querySelector('dialog');
             if (modal && typeof modal.showModal === 'function') {
               modal.showModal();

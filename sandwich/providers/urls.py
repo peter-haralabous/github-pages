@@ -28,6 +28,7 @@ from .views.organization import organization_add
 from .views.organization import organization_delete
 from .views.organization import organization_edit
 from .views.patient import patient_add
+from .views.patient import patient_add_modal
 from .views.patient import patient_add_task
 from .views.patient import patient_archive
 from .views.patient import patient_cancel_task
@@ -105,6 +106,7 @@ urlpatterns = [
     ),
     path("organization/<uuid:organization_id>/patients", patient_list, name="patient_list"),
     path("organization/<uuid:organization_id>/patient/add", patient_add, name="patient_add"),
+    path("organization/<uuid:organization_id>/patient/add-modal", patient_add_modal, name="patient_add_modal"),
     # List preference management endpoints
     path(
         "organization/<uuid:organization_id>/preferences/<str:list_type>/settings",

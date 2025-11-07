@@ -22,7 +22,10 @@
     </li>
   {% endfor %}
   <li>
-    <a href="{% url 'providers:patient_add' organization_id=organization.id %}?maybe_name={{ query|urlencode }}&return_url={% url 'providers:encounter_list' organization_id=organization.id %}?open_encounter_modal=1">
+    <a href="#"
+       hx-get="{% url 'providers:patient_add_modal' organization_id=organization.id %}?maybe_name={{ query|urlencode }}"
+       hx-target="#modal-container"
+       hx-swap="innerHTML">
       <div>
         {% lucide "user-plus" class="result-icon-left" %}
         <div class="result-content">
