@@ -1,0 +1,3 @@
+- Name: {patient_full_name}
+- Date of Birth: {patient_date_of_birth}
+- Province: {patient_province}
