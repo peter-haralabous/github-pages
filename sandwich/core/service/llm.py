@@ -9,6 +9,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 class ModelName(StrEnum):
+    DEFAULT = "claude-sonnet-4-5"
     CLAUDE_3_SONNET = "claude-3-sonnet"
     CLAUDE_SONNET_4_5 = "claude-sonnet-4-5"
     GPT_OSS = "gpt-oss-120b"
