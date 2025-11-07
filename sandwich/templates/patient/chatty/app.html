@@ -44,12 +44,7 @@
         <template id="user-message-template" class="hidden">
           {% include "patient/chatty/partials/user_message.html" %}
         </template>
-        {% with message="Here are a few things you could do..." %}
-          {% include "patient/chatty/partials/user_message.html" %}
-        {% endwith %}
-        {% with message="Your last recorded HbA1c and Cholesterol results are from May 2023. Would you like to add any more recent lab results?" %}
-          {% include "patient/chatty/partials/assistant_message.html" %}
-        {% endwith %}
+        {% for message in chat_messages %}{{ message }}{% endfor %}
       </main>
       <footer class="p-4 bg-base-100 border-t border-base-300 rounded-b-xl flex justify-center">
         <div class="w-full max-w-4xl">
