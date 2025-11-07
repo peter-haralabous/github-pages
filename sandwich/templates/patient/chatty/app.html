@@ -8,6 +8,21 @@
   {% include 'patient/chatty/partials/topnav.html' %}
 {% endblock topnav %}
 {% block content %}
+  {# the sse-swap here is misleading -- the messages themselves have hx-swap-oob set to their actual target #}
+  <div sse-connect="{% url "core:events" %}?channel=patient/{{ patient.id }}"
+       sse-swap="ingest_progress"></div>
+  <form id="global-upload-form"
+        method="post"
+        action="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
+        hx-post="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
+        hx-encoding="multipart/form-data"
+        class="hidden">
+    <input type="file" name="file" accept="application/pdf, text/plain" />
+    {% csrf_token %}
+  </form>
+  <div id="global-upload-hover"
+       class="fixed inset-2 rounded-xl pointer-events-none z-50 border-4 border-dashed border-transparent transition-all">
+  </div>
   {# pb-16 is an approximation of #mobile-nav's height. #}
   <div class="flex flex-row flex-1 gap-2 h-full pb-16 lg:pb-0">
     {% comment %} Left Panel {% endcomment %}
@@ -219,7 +234,41 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
+      const hoverIndicator = document.getElementById('global-upload-hover');
+      const uploadForm = document.getElementById('global-upload-form');
+      const fileInput = uploadForm.querySelector('input');
 
+      // Drag and drop events for the whole window
+      window.addEventListener('dragover', e => {
+        e.preventDefault();
+        hoverIndicator.classList.add('border-primary', 'bg-base-300/50');
+        hoverIndicator.classList.remove('border-transparent');
+      });
+      window.addEventListener('dragleave', e => {
+        e.preventDefault();
+        hoverIndicator.classList.remove('border-primary', 'bg-base-300/50');
+        hoverIndicator.classList.add('border-transparent');
+      });
+      window.addEventListener('drop', e => {
+        e.preventDefault();
+        hoverIndicator.classList.remove('border-primary', 'bg-base-300/50');
+        hoverIndicator.classList.add('border-transparent');
+        const files = e.dataTransfer.files;
+        if (!files.length) return;
+        const file = files[0];
+        if (!["application/pdf", "text/plain"].includes(file.type)) {
+          alert("Unsupported file type. Please upload a PDF or plain text file.");
+          return;
+        }
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        uploadForm.requestSubmit();
+      });
+      // Manual file selection (optional: add a button if desired)
+      fileInput.addEventListener('change', () => {
+        uploadForm.requestSubmit();
+      });
     });
   </script>
 {% endblock content %}

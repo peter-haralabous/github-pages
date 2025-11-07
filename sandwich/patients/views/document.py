@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 from private_storage.views import PrivateStorageDetailView
 
+from config.settings.base import FEATURE_PATIENT_CHATTY_APP
 from sandwich.core.models.document import Document
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.document_service import assign_default_document_permissions
@@ -85,6 +86,10 @@ def document_upload_and_extract(request: AuthenticatedHttpRequest, patient: Pati
         logger.info("Invalid document upload form")
         error = ", ".join([str(e) for e in form.errors.get("file", [])])
         messages.add_message(request, messages.ERROR, f"Failed to upload document: {error}")
+
+    if FEATURE_PATIENT_CHATTY_APP:
+        return render(request, "partials/messages_oob.html")
+
     documents = patient.document_set.all()
     return render(request, "patient/partials/documents_table.html", {"documents": documents})
 
