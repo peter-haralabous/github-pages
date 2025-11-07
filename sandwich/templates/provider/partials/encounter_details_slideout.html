@@ -5,7 +5,9 @@
   <input type="checkbox"
          id="encounter-details-modal-{{ encounter.id }}"
          class="peer hidden" />
-  <div class="fixed right-0 top-0 h-full w-full max-w-2xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-[9999] transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
+  <label for="encounter-details-modal-{{ encounter.id }}"
+         class="fixed inset-0 bg-black/50 z-40 hidden peer-checked:block"></label>
+  <div class="fixed right-0 top-0 h-full w-full max-w-2xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
     <!-- Top bar: section label and close -->
     <div class="flex items-center justify-between px-6 pt-6 pb-2 border-b border-base-200">
       <div class="flex items-center gap-2 text-base-content/70">
