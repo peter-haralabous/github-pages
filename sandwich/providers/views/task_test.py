@@ -144,3 +144,22 @@ def test_complete_task_form_is_read_only(patient: Patient, provider: User, organ
 
     assert res.status_code == HTTPStatus.OK
     assert res.context["read_only"] is True
+
+
+def test_submit_and_save_draft_urls_exist(
+    provider: User,
+    organization: Organization,
+    patient: Patient,
+) -> None:
+    client = Client()
+    client.force_login(provider)
+    task = TaskFactory.create(patient=patient, encounter__organization=organization)
+
+    url = reverse(
+        "providers:task", kwargs={"organization_id": organization.id, "patient_id": patient.id, "task_id": task.id}
+    )
+
+    res = client.get(url)
+
+    assert res.context["submit_url"] is not None
+    assert res.context["save_draft_url"] is not None

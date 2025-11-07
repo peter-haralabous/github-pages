@@ -43,39 +43,16 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
             "task_id": task.id,
             "task_status": task.status.value,
             "read_only": read_only,
-            "has_submission": bool(task.formio_submission),
         },
     )
 
-    # no, I don't want to catch RelatedObjectDoesNotExist if there's no submission yet
-    if task.formio_submission:
-        form_url = request.build_absolute_uri(
-            reverse(
-                "patients:api-1.0.0:get_formio_form_submission",
-                kwargs={"name": str(task.id), "submission_id": str(task.formio_submission.id)},
-            )
-        )
-        logger.debug(
-            "Using existing form submission",
-            extra={
-                "user_id": request.user.id,
-                "patient_id": patient.id,
-                "task_id": task.id,
-                "submission_id": task.formio_submission.id,
-            },
-        )
-    else:
-        form_url = request.build_absolute_uri(
-            reverse("patients:api-1.0.0:get_formio_form", kwargs={"name": str(task.id)})
-        )
-        logger.debug(
-            "Using new form", extra={"user_id": request.user.id, "patient_id": patient.id, "task_id": task.id}
-        )
-
-    formio_user = {"_id": request.user.id}
-
     form_schema = task.form_version.schema if task.form_version else {}
-
+    submit_url = request.build_absolute_uri(
+        reverse("patients:api-1.0.0:submit_form", kwargs={"task_id": str(task.id)})
+    )
+    save_draft_url = request.build_absolute_uri(
+        reverse("patients:api-1.0.0:save_draft_form", kwargs={"task_id": str(task.id)})
+    )
     initial_data: dict[str, Any] | None = None
     form_submission = task.get_form_submission()
     if form_submission:
@@ -90,8 +67,8 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
             "task": task,
             "form_schema": form_schema,  # could be removed if we offload to api
             "initial_data": initial_data,
-            "form_url": form_url,
-            "formio_user": formio_user,
             "read_only": read_only,
+            "submit_url": submit_url,
+            "save_draft_url": save_draft_url,
         },
     )
