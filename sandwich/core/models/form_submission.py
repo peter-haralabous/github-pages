@@ -5,7 +5,6 @@ from django_enum import EnumField
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.patient import Patient
-from sandwich.core.models.task import Task
 from sandwich.users.models import User
 
 
@@ -20,14 +19,18 @@ class FormSubmission(BaseModel):
     """
 
     task = models.OneToOneField(
-        Task,
+        "Task",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="form_submission",
         help_text="The specific task this submission is for",
     )
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, help_text="The patient this form submission is for")
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.CASCADE,
+        help_text="The patient this form submission is for",
+    )
     status: models.Field[FormSubmissionStatus, FormSubmissionStatus] = EnumField(
         FormSubmissionStatus, help_text="current state of submission"
     )
@@ -43,7 +46,11 @@ class FormSubmission(BaseModel):
 
     submitted_at = models.DateTimeField(null=True)
     submitted_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True, help_text="The user who filled out the submission"
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="The user who filled out the submission",
     )
 
     def submit(self, user):

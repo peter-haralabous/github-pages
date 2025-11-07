@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -52,8 +53,14 @@ def task(request: AuthenticatedHttpRequest, patient: Patient, task: Task) -> Htt
         reverse("patients:api-1.0.0:save_draft_form", kwargs={"task_id": str(task.id)})
     )
 
+    initial_data: dict[str, Any] | None = None
+    form_submission = task.get_form_submission()
+    if form_submission:
+        initial_data = form_submission.data
+
     context = {
         "form_schema": form_schema,
+        "initial_data": initial_data,
         "submit_url": submit_url,
         "save_draft_url": save_draft_url,
         "read_only": read_only,

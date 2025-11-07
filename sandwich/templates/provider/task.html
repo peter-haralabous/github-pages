@@ -14,8 +14,9 @@
     viewing {{ task.status }} task {{ task.name }}
   </div>
   <div class="container mx-auto">
+    {% if initial_data %}{{ initial_data | json_script:"initial_data" }}{% endif %}
     {{ form_schema | json_script:"form_schema" }}
-    <survey-form data-schema-id="form_schema"
+    <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data"
     {% if read_only %}readonly{% endif %}
     />
   </div>

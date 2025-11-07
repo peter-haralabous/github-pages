@@ -5,6 +5,7 @@ from django_enum import EnumField
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.encounter import Encounter
+from sandwich.core.models.form_submission import FormSubmission
 from sandwich.core.models.formio_submission import FormioSubmission
 from sandwich.core.models.patient import Patient
 
@@ -90,6 +91,15 @@ class Task(BaseModel):
     @property
     def active(self) -> bool:
         return not terminal_task_status(self.status)
+
+    def get_form_submission(self) -> FormSubmission | None:
+        """
+        Get related form submission and handle DoesNotExist exception.
+        """
+        try:
+            return self.form_submission
+        except FormSubmission.DoesNotExist:
+            return None
 
     @property
     def formio_submission(self) -> FormioSubmission | None:

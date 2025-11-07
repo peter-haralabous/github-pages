@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -75,6 +76,11 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
 
     form_schema = task.form_version.schema if task.form_version else {}
 
+    initial_data: dict[str, Any] | None = None
+    form_submission = task.get_form_submission()
+    if form_submission:
+        initial_data = form_submission.data
+
     return render(
         request,
         "provider/task.html",
@@ -83,6 +89,7 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
             "patient": patient,
             "task": task,
             "form_schema": form_schema,  # could be removed if we offload to api
+            "initial_data": initial_data,
             "form_url": form_url,
             "formio_user": formio_user,
             "read_only": read_only,
