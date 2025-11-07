@@ -115,6 +115,25 @@ export class SurveyForm extends LitElement {
     return null;
   }
 
+  private _loadInitialData(): Record<string, any> | undefined {
+    const initialDataId = this.getAttribute('data-initial-data-id');
+    if (!initialDataId) {
+      return;
+    }
+
+    const dataScriptEl = this.ownerDocument.getElementById(initialDataId);
+    if (!dataScriptEl) {
+      return;
+    }
+
+    try {
+      return JSON.parse(dataScriptEl.textContent || '{}');
+    } catch (e) {
+      this.showError('Failed to load initial data: data invalid.');
+      return;
+    }
+  }
+
   // Initialize and render the Survey model into this component's container.
   initSurvey(json: SurveyJson): Model {
     // Resolve the target element once and fail fast if it's missing.
@@ -139,6 +158,7 @@ export class SurveyForm extends LitElement {
     // TODO(JL): create and set a Thrive specific theme
     this.model.applyTheme(LayeredLightPanelless);
     this.model.readOnly = this.isReadOnly();
+    this.model.data = this._loadInitialData();
 
     // Track whether a submit is in progress; draft save handlers will skip when true.
     let isCompleting = false;
