@@ -17,7 +17,7 @@
         hx-post="{% url 'patients:document_upload_and_extract' patient_id=patient.id %}"
         hx-encoding="multipart/form-data"
         class="hidden">
-    <input type="file" name="file" accept="application/pdf, text/plain" />
+    <input type="file" name="file" accept="application/pdf, text/plain" multiple />
     {% csrf_token %}
   </form>
   <div id="global-upload-hover"
@@ -255,13 +255,14 @@
         hoverIndicator.classList.add('border-transparent');
         const files = e.dataTransfer.files;
         if (!files.length) return;
-        const file = files[0];
-        if (!["application/pdf", "text/plain"].includes(file.type)) {
+        const validFiles = Array.from(files).filter(file => ["application/pdf", "text/plain"].includes(file.type));
+        if (validFiles.length < files.length) {
+          // TODO: add javascript interface for showing toast messages
           alert("Unsupported file type. Please upload a PDF or plain text file.");
           return;
         }
         const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
+        validFiles.forEach(file => dataTransfer.items.add(file));
         fileInput.files = dataTransfer.files;
         uploadForm.requestSubmit();
       });

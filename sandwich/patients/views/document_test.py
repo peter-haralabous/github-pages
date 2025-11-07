@@ -5,11 +5,11 @@ from django.urls import reverse
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import Document
+from sandwich.core.models import Patient
 
 
-def test_document_download(client, user):
+def test_document_download(client, user, patient: Patient):
     client.force_login(user)
-    patient = PatientFactory.create(user=user)
 
     document = Document.objects.create(patient=patient, file=SimpleUploadedFile(name="empty", content=b""))
 
@@ -18,9 +18,8 @@ def test_document_download(client, user):
     assert response.status_code == 200
 
 
-def test_document_download_as_another_user(client, user):
+def test_document_download_as_another_user(client, user, patient: Patient):
     client.force_login(user)
-    PatientFactory.create(user=user)
 
     another_patient = PatientFactory.create()
     document = Document.objects.create(patient=another_patient, file=SimpleUploadedFile(name="empty", content=b""))
@@ -30,9 +29,8 @@ def test_document_download_as_another_user(client, user):
     assert response.status_code == 404
 
 
-def test_document_upload_and_extract(client, user):
+def test_document_upload_and_extract(client, user, patient: Patient):
     client.force_login(user)
-    patient = PatientFactory.create(user=user)
 
     url = reverse("patients:document_upload_and_extract", kwargs={"patient_id": patient.pk})
     pdf_content = b"%PDF-1.4 test pdf file"
@@ -50,7 +48,20 @@ def test_document_upload_and_extract(client, user):
     assert user.has_perm("delete_document", document)
 
 
-def test_document_upload_and_extract_deny_access(client, user, patient):
+def test_document_upload_and_extract_multiple(client, user, patient: Patient):
+    client.force_login(user)
+
+    url = reverse("patients:document_upload_and_extract", kwargs={"patient_id": patient.pk})
+    pdf_content = b"%PDF-1.4 test pdf file"
+    file1 = SimpleUploadedFile("file1.pdf", pdf_content, content_type="application/pdf")
+    file2 = SimpleUploadedFile("file2.pdf", pdf_content, content_type="application/pdf")
+    response = client.post(url, {"file": [file1, file2]})
+    assert response.status_code == 200
+
+    assert Document.objects.filter(patient=patient).count() == 2
+
+
+def test_document_upload_and_extract_deny_access(client, user, patient: Patient):
     client.force_login(user)
     random_patient = PatientFactory.create()
 
@@ -64,7 +75,7 @@ def test_document_upload_and_extract_deny_access(client, user, patient):
         Document.objects.get(patient=random_patient)
 
 
-def test_document_delete(client: Client, user, patient):
+def test_document_delete(client: Client, user, patient: Patient):
     document = Document.objects.create(patient=patient, file=SimpleUploadedFile(name="empty", content=b""))
 
     client.force_login(user)
@@ -76,7 +87,7 @@ def test_document_delete(client: Client, user, patient):
         Document.objects.get(patient=patient)
 
 
-def test_document_delete_deny_access(client: Client, user, patient):
+def test_document_delete_deny_access(client: Client, user, patient: Patient):
     random_patient = PatientFactory.create()
     document = Document.objects.create(patient=random_patient, file=SimpleUploadedFile(name="empty", content=b""))
 

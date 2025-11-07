@@ -22,7 +22,8 @@
       <input type="file"
              id="file-input"
              name="file"
-             accept="application/pdf, text/plain" />
+             accept="application/pdf, text/plain"
+             multiple />
       {% csrf_token %}
     </form>
   </div>
@@ -51,15 +52,15 @@
     tableContainer.children[0].classList.remove('border-primary', 'bg-base-300');
     const files = e.dataTransfer.files;
     if (!files.length) return;
-    const file = files[0];
-    if (!["application/pdf", "text/plain"].includes(file.type)) {
+    const validFiles = Array.from(files).filter(file => ["application/pdf", "text/plain"].includes(file.type));
+    if (validFiles.length < files.length) {
       // TODO: add javascript interface for showing toast messages
       alert("Unsupported file type. Please upload a PDF or plain text file.");
       return;
     }
     const fileInput = document.getElementById('file-input');
     const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(file);
+    validFiles.forEach(file => dataTransfer.items.add(file));
     fileInput.files = dataTransfer.files;
     document.getElementById('upload-form').requestSubmit();
   });

@@ -4,6 +4,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.utils.datastructures import MultiValueDict
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 from private_storage.views import PrivateStorageDetailView
@@ -71,21 +72,22 @@ class DocumentForm(forms.ModelForm):
 @login_required
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient", "create_document"])])
 def document_upload_and_extract(request: AuthenticatedHttpRequest, patient: Patient):
-    form = DocumentForm({"patient": patient.id}, request.FILES)
-    if form.is_valid():
-        document = form.save()
-        assign_default_document_permissions(document)  # ModelForm calls Document.save(), not Document.objects.save()
-        try:
-            # enqueue background extraction task
-            process_document_job.defer(document_id=str(document.id))
-            send_ingest_progress(patient.id, text=f"Uploaded {document.original_filename}...")
-        except RuntimeError:
-            logger.warning("Failed to enqueue document analysis", exc_info=True)
-            messages.add_message(request, messages.ERROR, "Failed to enqueue document analysis")
-    else:
-        logger.info("Invalid document upload form")
-        error = ", ".join([str(e) for e in form.errors.get("file", [])])
-        messages.add_message(request, messages.ERROR, f"Failed to upload document: {error}")
+    files = request.FILES.getlist("file")
+    for file in files:
+        form = DocumentForm({"patient": patient.id}, MultiValueDict({"file": [file]}))
+        if form.is_valid():
+            document = form.save()
+            assign_default_document_permissions(document)
+            try:
+                process_document_job.defer(document_id=str(document.id))
+                send_ingest_progress(patient.id, text=f"Uploaded {document.original_filename}...")
+            except RuntimeError:
+                logger.warning("Failed to enqueue document analysis", exc_info=True)
+                messages.add_message(request, messages.ERROR, "Failed to enqueue document analysis")
+        else:
+            logger.info("Invalid document upload form")
+            error = ", ".join([str(e) for e in form.errors.get("file", [])])
+            messages.add_message(request, messages.ERROR, f"Failed to upload document: {error}")
 
     if FEATURE_PATIENT_CHATTY_APP:
         return render(request, "partials/messages_oob.html")
