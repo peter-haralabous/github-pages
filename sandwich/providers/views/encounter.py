@@ -278,11 +278,7 @@ def encounter_create(request: AuthenticatedHttpRequest, organization: Organizati
 @login_required
 @authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"])])
 def encounter_create_search(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
-    """HTMX endpoint for searching patients when creating an encounter.
-
-    This view supports both traditional search results and command palette context.
-    When context=encounter_create is passed, results include HTMX attributes to open the modal.
-    """
+    # HTMX endpoint for searching patients when creating an encounter.
     query = request.GET.get("q", "").strip()
     context_param = request.GET.get("context", "").strip()
     page_size = int(request.GET.get("limit", "10"))
