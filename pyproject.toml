@@ -221,7 +221,7 @@ dependencies = [
     "pdf2image>=1.17.0",
     "pillow==11.3.0",
     "procrastinate>=3.5.2",
-    "psycopg[binary]>=3.2.10",
+    "psycopg[binary,pool]>=3.2.10",
     "pytest-xdist[psutil]>=3.8.0",
     "python-slugify==8.0.4",
     "redis[hiredis]>=7.0.0",
