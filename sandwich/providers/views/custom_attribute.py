@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -93,7 +94,7 @@ class CustomAttributeForm(forms.ModelForm[CustomAttribute]):
         #     return self._from_instance(self.instance)
         return self.cleaned_data["input_type"]
 
-    def save(self, commit=True):
+    def save(self, commit=True):  # noqa: FBT002
         instance = super().save(commit=False)
 
         data_type, is_multi = self._from_input_type(self.cleaned_data["input_type"])
@@ -145,9 +146,6 @@ CustomAttributeEnumFormSet = forms.inlineformset_factory(
     min_num=0,  # Will validate manually based on input_type
     can_delete=True,
 )
-
-
-from django.db import transaction
 
 
 @login_required
