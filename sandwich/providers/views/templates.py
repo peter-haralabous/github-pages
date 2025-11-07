@@ -60,10 +60,9 @@ def form_details(request: AuthenticatedHttpRequest, organization: Organization, 
     )
 
 
-# TODO: Add create_form permissions check.
 @surveyjs_csp
 @login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization"])])
+@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_form"])])
 def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
     """Provider view to create a new form template manually."""
     logger.info(

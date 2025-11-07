@@ -95,6 +95,15 @@ def provider(db, organization: Organization) -> User:
 
 
 @pytest.fixture
+def owner(db, organization: Organization) -> User:
+    return UserFactory.create(
+        email="owner@organization.org",
+        consents=ConsentMiddleware.required_policies,
+        groups={role.group for role in organization.role_set.filter(name=RoleName.OWNER)},
+    )
+
+
+@pytest.fixture
 def other_organization(db) -> Organization:
     return OrganizationFactory.create(name="Other")
 
