@@ -4,10 +4,14 @@ from django.test import Client
 from django.urls import reverse
 from guardian.shortcuts import remove_perm
 
+from sandwich.core.factories.form import FormFactory
+from sandwich.core.factories.form_submission import FormSubmissionFactory
 from sandwich.core.factories.task import TaskFactory
+from sandwich.core.models.form_submission import FormSubmissionStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.role import RoleName
+from sandwich.core.models.task import TaskStatus
 from sandwich.users.models import User
 
 
@@ -86,3 +90,57 @@ def test_task_view_deny_access_no_patient_access(
     )
 
     assert res.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_form_attached_to_task(patient: Patient, provider: User, organization: Organization) -> None:
+    client = Client()
+    client.force_login(provider)
+    form = FormFactory.create(schema={"elements": [{"name": "test"}]})
+    form_version = form.get_current_version()
+    task = TaskFactory.create(patient=patient, form_version=form_version)
+    url = reverse(
+        "providers:task", kwargs={"patient_id": patient.id, "task_id": task.id, "organization_id": organization.id}
+    )
+    res = client.get(url)
+
+    assert res.status_code == HTTPStatus.OK
+    assert res.context["form_schema"] == {"elements": [{"name": "test"}]}
+
+
+def test_form_submission_attached_to_form_task(patient: Patient, provider: User, organization: Organization) -> None:
+    client = Client()
+    client.force_login(provider)
+    form = FormFactory.create()
+    form_version = form.get_current_version()
+    task = TaskFactory.create(patient=patient, form_version=form_version, status=TaskStatus.COMPLETED)
+    submission = FormSubmissionFactory.create(
+        form_version=form_version,
+        task=task,
+        patient=patient,
+        data={"test": "data"},
+        status=FormSubmissionStatus.COMPLETED,
+    )
+
+    url = reverse(
+        "providers:task", kwargs={"patient_id": patient.id, "task_id": task.id, "organization_id": organization.id}
+    )
+    res = client.get(url)
+
+    assert res.status_code == HTTPStatus.OK
+    assert "form_schema" in res.context
+    assert res.context["read_only"] is True
+    assert res.context["initial_data"] == submission.data
+
+
+def test_complete_task_form_is_read_only(patient: Patient, provider: User, organization: Organization) -> None:
+    client = Client()
+    client.force_login(provider)
+    task = TaskFactory.create(patient=patient, status=TaskStatus.COMPLETED)
+
+    url = reverse(
+        "providers:task", kwargs={"patient_id": patient.id, "task_id": task.id, "organization_id": organization.id}
+    )
+    res = client.get(url)
+
+    assert res.status_code == HTTPStatus.OK
+    assert res.context["read_only"] is True
