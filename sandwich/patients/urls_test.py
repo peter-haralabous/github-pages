@@ -30,6 +30,7 @@ def get_patient_urls() -> list[UrlRegistration]:
 EXCLUDED_URL_NAMES = {
     "home",  # Redirect
     "accept_invite",  # POST
+    "chat",  # POST
     "document_delete",  # POST
     "document_upload_and_extract",  # POST
     "task",  # POST

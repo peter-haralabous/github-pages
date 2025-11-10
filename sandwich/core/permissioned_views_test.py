@@ -54,6 +54,7 @@ def test_all_views_permissioned() -> None:
         "patients/api/docs",
         "patients/api/openapi.json",
         "patients/consent/",
+        "patients/chat/",
         "patients/patient/add",
         "patients/patient/onboarding/add",
         "patients/get_phn_validation/",
