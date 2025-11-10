@@ -56,19 +56,29 @@ def test_encounter_details_returns_template(provider: User, organization: Organi
 
 @pytest.mark.e2e
 @pytest.mark.django_db
-def test_encounter_slideout_closes_when_clicking_outside(
-    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
+def test_encounter_slideout_closes_when_clicking_outside(  # noqa: PLR0913
+    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter, auth_cookies
 ) -> None:
     """Test that clicking outside the slideout closes it."""
     url = f"{live_server.url}{reverse('providers:encounter_list', kwargs={'organization_id': organization.id})}"
     page.goto(url)
+    page.wait_for_load_state("networkidle")
 
-    page.get_by_role("row").filter(has_text=encounter.patient.last_name).click()
+    first_patient_link = page.locator('label[for^="encounter-details-modal-"]').first
+    first_patient_link.click()
 
-    slideout = page.locator(f"#encounter-details-modal-{encounter.id}")
+    for_attr = first_patient_link.get_attribute("for")
+    assert for_attr is not None, "Label should have a 'for' attribute"
+    encounter_id = for_attr.replace("encounter-details-modal-", "")
+
+    slideout = page.locator(f"#encounter-details-modal-{encounter_id}")
+    page.wait_for_timeout(300)
     assert slideout.is_checked()
 
-    # Click outside (on the backdrop)
-    page.locator(f'label[for="encounter-details-modal-{encounter.id}"]').first.click()
+    # Click outside (on the backdrop) to close
+    backdrop = page.locator(f'label[for="encounter-details-modal-{encounter_id}"]').first
+    backdrop.click(force=True)
+
+    page.wait_for_timeout(300)
 
     assert not slideout.is_checked()
