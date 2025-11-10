@@ -12,7 +12,7 @@
   <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
         hx-target="#encounter_table_container"
         hx-push-url="true"
-        hx-trigger="keyup changed delay:300ms from:input[name='search'], change from:select[name='active'], filtersChanged from:body">
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], filtersChanged from:body">
     <div class="mb-2 flex gap-2 flex-wrap items-center">
       <label class="input input-bordered flex items-center gap-2">
         {% lucide "search" class="size-4 opacity-70" %}
@@ -33,7 +33,7 @@
       <button type="submit" class="btn">Search</button>
       <button type="button"
               class="btn"
-              hx-get="{% url 'providers:show_filter_modal' organization_id=organization.id list_type='patient_list' %}{% querystring %}"
+              hx-get="{% url 'providers:show_filter_modal' organization_id=organization.id list_type='encounter_list' %}{% querystring %}"
               hx-target="#filter-modal-container"
               hx-swap="innerHTML"
               hx-push-url="false">Filter</button>

@@ -104,6 +104,60 @@ def test_encounter_list_shows_filter_panel_in_custom_mode_without_filters(
     assert "Save Filters" in content
 
 
+@pytest.mark.django_db
+def test_encounter_list_filters_by_is_active(provider: User, organization: Organization) -> None:
+    """Test filtering encounters by is_active field."""
+    patient = PatientFactory.create(organization=organization)
+
+    active = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
+    inactive = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.COMPLETED)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
+
+    # Test filter for active encounters
+    response = client.get(f"{url}?filter_is_active=True")
+    assert response.status_code == 200
+    encounters = list(response.context["encounters"])
+    assert active in encounters
+    assert inactive not in encounters
+
+    # Test filter for inactive encounters
+    response = client.get(f"{url}?filter_is_active=False")
+    assert response.status_code == 200
+    encounters = list(response.context["encounters"])
+    assert inactive in encounters
+    assert active not in encounters
+
+
+@pytest.mark.django_db
+def test_encounter_list_sorts_by_is_active(provider: User, organization: Organization) -> None:
+    """Test sorting encounters by is_active field."""
+    patient = PatientFactory.create(organization=organization)
+
+    active = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
+    inactive = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.COMPLETED)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
+
+    # Test ascending sort
+    response = client.get(f"{url}?sort=is_active")
+    assert response.status_code == 200
+    encounters = list(response.context["encounters"])
+    assert encounters[0] == inactive
+    assert encounters[1] == active
+
+    # Test descending sort
+    response = client.get(f"{url}?sort=-is_active")
+    assert response.status_code == 200
+    encounters = list(response.context["encounters"])
+    assert encounters[0] == active
+    assert encounters[1] == inactive
+
+
 @pytest.mark.e2e
 @pytest.mark.django_db
 def test_encounter_slideout_closes_when_clicking_outside(  # noqa: PLR0913

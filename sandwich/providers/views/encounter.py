@@ -7,8 +7,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
-from django.db.models import Exists
-from django.db.models import OuterRef
+from django.db.models import Case
+from django.db.models import Value
+from django.db.models import When
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
@@ -125,7 +126,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
         or preference.default_sort
     )
     page = request.GET.get("page", 1)
-    active_filter = request.GET.get("active", "").lower()
 
     logger.debug(
         "Encounter list filters applied",
@@ -135,7 +135,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
             "search_length": len(search),
             "sort": sort,
             "page": page,
-            "active_filter": active_filter,
         },
     )
 
@@ -144,14 +143,13 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
         "view_encounter",
         Encounter.objects.filter(organization=organization).select_related("patient"),
     )
-    encounters = encounters.annotate(
-        has_active_encounter=Exists(encounters.filter(patient=OuterRef("pk"), status=EncounterStatus.IN_PROGRESS))
-    )
 
-    if active_filter == "true":
-        encounters = encounters.filter(status=EncounterStatus.IN_PROGRESS)
-    elif active_filter == "false":
-        encounters = encounters.exclude(status=EncounterStatus.IN_PROGRESS)
+    encounters = encounters.annotate(
+        is_active=Case(
+            When(status=EncounterStatus.IN_PROGRESS, then=Value(value=True)),
+            default=Value(value=False),
+        )
+    )
 
     if search:
         encounters = encounters.search(search)  # type: ignore[attr-defined]
@@ -205,7 +203,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
         "search": search,
         "sort": sort,
         "page": page,
-        "active_filter": active_filter,
         "visible_columns": preference.visible_columns,
         "visible_column_meta": visible_column_meta,
         "preference": preference,

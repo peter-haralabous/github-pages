@@ -45,7 +45,7 @@ class ListViewType(models.TextChoices):
                 "patient__first_name",
                 "patient__email",
                 "patient__date_of_birth",
-                "active",
+                "is_active",
                 "created_at",
                 "updated_at",
             },
@@ -66,7 +66,7 @@ class ListViewType(models.TextChoices):
                 {"value": "patient__first_name", "label": "Patient Name", "type": "text"},
                 {"value": "patient__email", "label": "Email", "type": "text"},
                 {"value": "patient__date_of_birth", "label": "Date of Birth", "type": "date"},
-                {"value": "active", "label": "Active/Archived"},
+                {"value": "is_active", "label": "Active/Archived", "type": "boolean"},
                 {"value": "status", "label": "Status", "type": "enum"},
                 {"value": "created_at", "label": "Created", "type": "date"},
                 {"value": "updated_at", "label": "Last Updated", "type": "date"},
@@ -89,8 +89,11 @@ class ListViewType(models.TextChoices):
         return None
 
     def get_field_choices(self, field_name: str) -> list[tuple[str, str]]:
-        if self == self.ENCOUNTER_LIST and field_name == "status":
-            return [(status.value, str(status.label)) for status in EncounterStatus]
+        if self == self.ENCOUNTER_LIST:
+            if field_name == "status":
+                return [(status.value, str(status.label)) for status in EncounterStatus]
+            if field_name == "is_active":
+                return [("True", "Active"), ("False", "Archived")]
         return []
 
 

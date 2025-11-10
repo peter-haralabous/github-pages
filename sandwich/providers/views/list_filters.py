@@ -222,6 +222,14 @@ def _render_model_field_filter(
             {"field_id": field_id, "field_type": field_type, "form": EnumFilterForm(choices=choices)},
         )
 
+    if field_type == "boolean":
+        choices = list_type.get_field_choices(field_id)
+        return render(
+            request,
+            "provider/partials/filter_boolean_control.html",
+            {"field_id": field_id, "field_type": field_type, "choices": choices},
+        )
+
     return HttpResponse(render_crispy_form(TextFilterForm()))
 
 

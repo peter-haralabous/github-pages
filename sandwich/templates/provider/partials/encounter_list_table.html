@@ -16,7 +16,7 @@
             <th>{% sortable_column "Date of Birth" "patient__date_of_birth" %}</th>
           {% elif col.value == "status" %}
             <th>{% sortable_column "Status" "status" %}</th>
-          {% elif col.value == "active" %}
+          {% elif col.value == "is_active" %}
             <th>{% sortable_column "Active" "active" %}</th>
           {% elif col.value == "created_at" %}
             <th>{% sortable_column "Created" "created_at" %}</th>
@@ -55,7 +55,7 @@
               <td>{{ encounter.patient.date_of_birth|default:"—" }}</td>
             {% elif col.value == "status" %}
               <td>{{ encounter.get_status_display|default:"—" }}</td>
-            {% elif col.value == "active" %}
+            {% elif col.value == "is_active" %}
               <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
             {% elif col.value == "created_at" %}
               <td>{{ encounter.created_at }}</td>

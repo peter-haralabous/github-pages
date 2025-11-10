@@ -5,6 +5,9 @@ from zoneinfo import ZoneInfo
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Case
+from django.db.models import Value
+from django.db.models import When
 
 from sandwich.core.models import CustomAttribute
 from sandwich.core.models import CustomAttributeEnum
@@ -779,3 +782,61 @@ class TestModelFieldFilters:
         filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
         results = list(filtered.values_list("id", flat=True))
         assert results == [enc1.id]
+
+    def test_filter_boolean_field(self, organization, patient):
+        """Test filtering by boolean field."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        active = Encounter.objects.create(
+            organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS
+        )
+        inactive = Encounter.objects.create(
+            organization=organization, patient=patient, status=EncounterStatus.COMPLETED
+        )
+
+        encounters = Encounter.objects.filter(organization=organization).annotate(
+            is_active=Case(
+                When(status=EncounterStatus.IN_PROGRESS, then=Value(value=True)),
+                default=Value(value=False),
+            )
+        )
+
+        # Filter for True
+        filters = {"model_fields": {"is_active": {"type": "boolean", "value": True}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert list(filtered.values_list("id", flat=True)) == [active.id]
+
+        # Filter for False
+        filters = {"model_fields": {"is_active": {"type": "boolean", "value": False}}}
+        filtered = apply_filters_with_custom_attributes(encounters, filters, organization, content_type)
+        assert list(filtered.values_list("id", flat=True)) == [inactive.id]
+
+    def test_sort_by_boolean_field(self, organization, patient):
+        """Test sorting by boolean field."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        active = Encounter.objects.create(
+            organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS
+        )
+        inactive = Encounter.objects.create(
+            organization=organization, patient=patient, status=EncounterStatus.COMPLETED
+        )
+
+        encounters = Encounter.objects.filter(organization=organization).annotate(
+            is_active=Case(
+                When(status=EncounterStatus.IN_PROGRESS, then=Value(value=True)),
+                default=Value(value=False),
+            )
+        )
+
+        # Sort ascending (False before True)
+        sorted_encounters = apply_sort_with_custom_attributes(encounters, "is_active", organization, content_type)
+        results = list(sorted_encounters)
+        assert results[0].id == inactive.id
+        assert results[1].id == active.id
+
+        # Sort descending (True before False)
+        sorted_encounters = apply_sort_with_custom_attributes(encounters, "-is_active", organization, content_type)
+        results = list(sorted_encounters)
+        assert results[0].id == active.id
+        assert results[1].id == inactive.id
