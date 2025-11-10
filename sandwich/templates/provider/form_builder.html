@@ -26,5 +26,6 @@
     </div>
     <button id="new-form-button" class="btn btn-primary cursor-default">Create form</button>
   </div>
+  {{ form_schema | json_script:"form_schema" }}
   <div id="form-builder-container"></div>
 {% endblock content %}
