@@ -19,13 +19,7 @@
             <div>
               <div class="font-medium mb-1">{{ task.name }}</div>
               <div class="flex items-center gap-2 text-sm">
-                {% if task.get_status_display == "Completed" %}
-                  <span class="badge badge-sm badge-success">{{ task.get_status_display }}</span>
-                {% elif task.get_status_display == "In Progress" %}
-                  <span class="badge badge-sm badge-warning">{{ task.get_status_display }}</span>
-                {% else %}
-                  <span class="badge badge-sm badge-info">{{ task.get_status_display }}</span>
-                {% endif %}
+                {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
                 <span class="text-base-content/60">• Created {{ task.created_at|date:"Y-m-d" }}</span>
               </div>
             </div>

@@ -1,0 +1,26 @@
+{% load lucide %}
+
+<div class="flex justify-between items-center mb-4">
+  <h3 class="m-0">Forms</h3>
+</div>
+<div class="rounded-box border border-base-200 bg-base-100 p-6">
+  {% if tasks %}
+    <div class="space-y-4">
+      {% for task in tasks %}
+        <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
+          <div>
+            <div class="font-medium mb-1">{{ task.name }}</div>
+            <div class="flex items-center gap-2 text-sm">
+              {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
+              <span class="text-base-content/60">• Created {{ task.created_at|date:"Y-m-d" }}</span>
+            </div>
+          </div>
+          <a href="{% url 'providers:task' organization_id=organization.id patient_id=patient.id task_id=task.id %}"
+             class="btn btn-xs btn-ghost">{% lucide "chevron-right" class="size-5 text-base-content/60" %}</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-8 text-base-content/60">No forms for this patient.</div>
+  {% endif %}
+</div>

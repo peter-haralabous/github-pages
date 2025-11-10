@@ -1,0 +1,14 @@
+{% if task.status == "completed" %}
+  <span class="badge badge-{{ size|default:'sm' }} badge-success">{{ task.get_status_display }}</span>
+{% elif task.status == "in-progress" %}
+  <span class="badge badge-{{ size|default:'sm' }} badge-warning">{{ task.get_status_display }}</span>
+{% elif task.status == "failed" or task.status == "rejected" or task.status == "cancelled" %}
+  <span class="badge badge-{{ size|default:'sm' }} badge-error">{{ task.get_status_display }}</span>
+{% elif task.status == "on-hold" %}
+  <span class="badge badge-{{ size|default:'sm' }} badge-warning badge-outline">{{ task.get_status_display }}</span>
+{% elif task.status == "entered-in-error" %}
+  <span class="badge badge-{{ size|default:'sm' }} badge-ghost">{{ task.get_status_display }}</span>
+{% else %}
+  {# ready, accepted, requested, received, draft, and catch-all #}
+  <span class="badge badge-{{ size|default:'sm' }} badge-info">{{ task.get_status_display }}</span>
+{% endif %}

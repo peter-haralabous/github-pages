@@ -132,6 +132,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
     current_encounter = get_current_encounter(patient)
     tasks = current_encounter.task_set.all() if current_encounter else []
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
 
     logger.debug(
@@ -152,6 +153,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "organization": organization,
         "current_encounter": current_encounter,
         "past_encounters": past_encounters,
+        "encounters": all_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
     }
