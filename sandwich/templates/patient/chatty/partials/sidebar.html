@@ -27,7 +27,13 @@
     {% endblock panel_content %}
   </div>
   {# Collapsed Panel #}
-  <div class="hidden flex flex-col w-16 bg-base-100 h-full border border-base-300 rounded-xl justify-between items-center">
+  <div class="hidden flex flex-col bg-base-100 h-full border border-base-300 rounded-xl justify-between items-center">
+    <header class="navbar border-b justify-center">
+      <toggle-button class="btn btn-square btn-ghost">
+      {% block expand_icon %}
+      {% endblock expand_icon %}
+      </toggle-button>
+    </header>
     {% block collapsed_panel_content %}
     {% endblock collapsed_panel_content %}
   </div>

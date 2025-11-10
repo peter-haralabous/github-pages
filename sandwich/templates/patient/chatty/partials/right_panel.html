@@ -8,6 +8,7 @@
 {% block header_icon %}<div class="pl-2">{% lucide "layout-grid" class="size-6" %}</div>{% endblock header_icon %}
 {% block header_title %}Feed{% endblock header_title %}
 {% block collapse_icon %}{% lucide "panel-right-close" class="size-6" %}{% endblock collapse_icon %}
+{% block expand_icon %}{% lucide "panel-right-open" class="size-6" %}{% endblock expand_icon %}
 {# djlint:on #}
 {% block panel_content %}
   <div class="flex-1 overflow-y-auto p-4">
@@ -15,7 +16,5 @@
   </div>
 {% endblock panel_content %}
 {% block collapsed_panel_content %}
-  <div class="flex flex-col items-center justify-center p-4">
-    <toggle-button class="btn btn-square btn-ghost">{% lucide "panel-right-open" class="size-6" %}</toggle-button>
-  </div>
+  {# nothing here #}
 {% endblock collapsed_panel_content %}
