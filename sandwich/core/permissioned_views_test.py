@@ -82,6 +82,7 @@ def test_all_views_permissioned() -> None:
         "patients/api/form/<task_id>",
         "patients/api/form/<task_id>/save_draft",
         "patients/api/form/<task_id>/submit",
+        "patients/api/form/organization/<organization_id>/create",
     }
 
     urls = get_all_urls(get_resolver().url_patterns)

@@ -8,9 +8,11 @@ const ENVIRONMENT = JSON.parse(
 );
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Auto-save will generate a version of the form for every change/save made,
+  // autoSaveEnabled is intentionally not enabled by default.
   const creatorOptions = {
-    autoSaveEnabled: true,
     collapseOnDrag: true,
+    showSaveButton: true,
   };
 
   const licenseKey = getSurveyLicenseKey(ENVIRONMENT);

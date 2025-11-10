@@ -4,12 +4,16 @@ from typing import Annotated
 from typing import cast
 
 import ninja
+from django.db import IntegrityError
 from django.http import JsonResponse
+from django.urls import reverse
 from ninja.errors import HttpError
 from ninja.security import SessionAuth
 
+from sandwich.core.models.form import Form
 from sandwich.core.models.form_submission import FormSubmission
 from sandwich.core.models.form_submission import FormSubmissionStatus
+from sandwich.core.models.organization import Organization
 from sandwich.core.models.task import Task
 from sandwich.core.service.permissions_service import get_authorized_object_or_404
 from sandwich.core.service.task_service import complete_task
@@ -18,6 +22,22 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 logger = logging.getLogger(__name__)
 router = ninja.Router()
 require_login = SessionAuth()
+
+
+class FormCreateResponse(JsonResponse):
+    """
+    A custom JsonResponse for creating a new form.
+    """
+
+    @classmethod
+    def success(cls, form: Form, organization: Organization, **kwargs) -> "FormCreateResponse":
+        data = {
+            "result": "success",
+            "message": "Form created successfully",
+            "form_id": str(form.id),
+            "url": reverse("providers:form_templates_list", kwargs={"organization_id": organization.id}),
+        }
+        return cls(data, **kwargs)
 
 
 class FormDraftResponse(JsonResponse):
@@ -118,3 +138,41 @@ def save_draft_form(
         },
     )
     return FormDraftResponse.success(submission=submission)
+
+
+@router.post("/organization/{organization_id}/create", auth=require_login)
+def provider_form_create(
+    request: AuthenticatedHttpRequest, organization_id: uuid.UUID, payload: Annotated[dict, ninja.Body(...)]
+) -> FormCreateResponse:
+    logger.info(
+        "Form create api accessed",
+        extra={"user_id": request.user.id, "organization_id": organization_id, "payload": payload},
+    )
+    organization = cast(
+        "Organization", get_authorized_object_or_404(request.user, ["create_form"], Organization, id=organization_id)
+    )
+
+    # Validation: Guard against empty title in payload as Form.name is required.
+    name = payload["schema"]["title"] if "schema" in payload and "title" in payload["schema"] else None
+    if not name:
+        raise HttpError(400, "Form must include a title: 'General' section missing 'Survey title'")
+
+    try:
+        form = Form.objects.create(organization=organization, name=name, schema=payload)
+    except IntegrityError as ex:
+        logger.info(
+            "Form creation failed: Form with same name exists in organization",
+            extra={"user_id": request.user.id, "organization_id": organization_id, "form_name": name},
+        )
+        raise HttpError(400, "Form with same title already exists. Please choose a different title.") from ex
+
+    logger.info(
+        "Form created in organization",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization.id,
+            "form_id": form.id,
+            "form_name": form.name,  # should not contain PHI.
+        },
+    )
+    return FormCreateResponse.success(form=form, organization=organization)

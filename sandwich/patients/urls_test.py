@@ -48,6 +48,7 @@ EXCLUDED_URL_NAMES = {
     "api-1.0.0:submit_form",
     "api-1.0.0:update_formio_form_submission_with_id",
     "api-1.0.0:update_formio_form_submission_without_id",
+    "api-1.0.0:provider_form_create",
 }
 
 
