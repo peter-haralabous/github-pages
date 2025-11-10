@@ -209,17 +209,15 @@
       handleResize(); // Call on initial load
 
       // Define handlers for chat form
-      chatSubmit.addEventListener('click', () => {
-        chatMessageSend();
-      });
-
-      function chatMessageSend() {
+      chatSubmit.addEventListener('htmx:beforeRequest', function(event) {
         const message = chatInput.value.trim();
         if (message) {
           addUserMessage(message);
           chatInputReset();
+        } else {
+          event.preventDefault(); // Cancel the request
         }
-      }
+      });
 
       function addUserMessage(text) {
         const clone = document.importNode(chatUserMessageTemplate.content, true);

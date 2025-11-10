@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
@@ -42,6 +43,9 @@ class ChatForm(forms.Form):
         self.helper.add_input(
             RoundIconButton(
                 icon="arrow-up",
+                hx_post=reverse("patients:chat"),
+                hx_target="#chat-messages",
+                hx_swap="beforeend",
             )
         )
         self.fields["patient"].queryset = self._patient_queryset()  # type: ignore[attr-defined]
