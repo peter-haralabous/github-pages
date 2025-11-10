@@ -11,6 +11,22 @@ beforeEach(() => {
     `;
 });
 
+test('creator contains Upload File button', async () => {
+  await import('./form-builder');
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  const container = document.getElementById('form-builder-container')!;
+  await vi.waitFor(() =>
+    expect(container.childElementCount).toBeGreaterThan(0),
+  );
+
+  // Look specifically for our new button with title="Upload File"
+  await vi.waitFor(() => {
+    const btn = container.querySelector('button[title="Upload File"]');
+    expect(btn).toBeTruthy();
+  });
+});
+
 // Use the real SurveyCreator but stub slk() in survey-core to avoid license calls.
 vi.mock('survey-core', async (importOriginal) => {
   const actual = await importOriginal();

@@ -28,4 +28,13 @@
   </div>
   {{ form_schema | json_script:"form_schema" }}
   <div id="form-builder-container"></div>
+  <form id="file-upload-form"
+        class="hidden"
+        hx-post="{% url 'providers:form_file_upload' organization_id=organization.id %}"
+        hx-encoding="multipart/form-data"
+        hx-target="#form_schema"
+        hx-swap="innerHTML">
+    {% csrf_token %}
+    <input type="file" name="file" accept="application/pdf, text/csv" />
+  </form>
 {% endblock content %}
