@@ -201,7 +201,7 @@
         const message = chatInput.value.trim();
         if (message) {
           addUserMessage(message);
-          chatInputReset();
+          chatInputSet('');
         } else {
           event.preventDefault(); // Cancel the request
         }
@@ -213,11 +213,9 @@
         chatMessages.appendChild(clone);
       }
 
-      function chatInputReset() {
-        chatInput.value = '';
-        chatInput.style.height = 'auto';
-        // Scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+      function chatInputSet(value) {
+        chatInput.value = value;
+        chatInput.focus();
       }
 
       const hoverIndicator = document.getElementById('global-upload-hover');
@@ -260,6 +258,7 @@
       // Set initial state on load and on resize
       window.addEventListener('resize', handleResize);
       handleResize(); // Call on initial load
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     });
   </script>
 {% endblock content %}
