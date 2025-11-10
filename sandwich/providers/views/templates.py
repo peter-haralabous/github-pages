@@ -7,6 +7,7 @@ from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
@@ -20,6 +21,7 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 logger = logging.getLogger(__name__)
 
 
+@require_GET
 @login_required
 @authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization"])])
 def form_list(request: AuthenticatedHttpRequest, organization: Organization):
@@ -49,6 +51,7 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
     )
 
 
+@require_GET
 @login_required
 @authorize_objects(
     [
@@ -73,6 +76,7 @@ def form_details(request: AuthenticatedHttpRequest, organization: Organization, 
     )
 
 
+@require_GET
 @surveyjs_csp
 @login_required
 @authorize_objects(
