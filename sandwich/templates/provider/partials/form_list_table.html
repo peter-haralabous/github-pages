@@ -15,10 +15,13 @@
         <tr>
           <td>
             <a class="link"
-               href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
+               href="{% if form_builder_enabled %}{% url "providers:form_edit" organization_id=organization.id form_id=form.id %}{% else %}{% url "providers:form_template" organization_id=organization.id form_id=form.id %}{% endif %}">{{ form.name }}</a>
           </td>
           <td>
-            <span class="badge badge-info">{{ form.current_version }}</span>
+            <a class="link"
+               href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">
+              <span class="badge badge-info">{{ form.current_version }}</span>
+            </a>
           </td>
           <td>{{ form.created_at }}</td>
           <td>{{ form.updated_at }}</td>

@@ -40,6 +40,7 @@ from .views.search import search
 from .views.task import task
 from .views.templates import form_builder
 from .views.templates import form_details
+from .views.templates import form_edit
 from .views.templates import form_file_upload
 from .views.templates import form_list
 
@@ -66,6 +67,7 @@ urlpatterns = [
     # url must contain 'templates' for provider sidenav active link highlighting to work.
     path("organization/<uuid:organization_id>/templates/forms", form_list, name="form_templates_list"),
     path("organization/<uuid:organization_id>/templates/form/<uuid:form_id>", form_details, name="form_template"),
+    path("organization/<uuid:organization_id>/templates/form/<uuid:form_id>/edit", form_edit, name="form_edit"),
     path("organization/<uuid:organization_id>/templates/form/file_upload", form_file_upload, name="form_file_upload"),
     path("organization/<uuid:organization_id>/templates/forms/builder", form_builder, name="form_builder"),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),

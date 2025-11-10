@@ -22,11 +22,17 @@
     <div class="flex items-center">
       <a href="{% url 'providers:form_templates_list' organization_id=organization.id %}"
          class="btn btn-ghost btn-circle mr-2">{% lucide "arrow-left" class="w-5 h-5" %}</a>
-      <h1>New Form</h1>
+      <h1>
+        {% if form %}
+          {{ form.name }}
+        {% else %}
+          New Form
+        {% endif %}
+      </h1>
     </div>
     <button id="new-form-button" class="btn btn-primary cursor-default">Create form</button>
   </div>
-  {{ form_schema | json_script:"form_schema" }}
+  {{ form.schema | json_script:"form_schema" }}
   <div id="form-builder-container"></div>
   <form id="file-upload-form"
         class="hidden"

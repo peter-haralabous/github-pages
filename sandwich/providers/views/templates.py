@@ -75,6 +75,30 @@ def form_details(request: AuthenticatedHttpRequest, organization: Organization, 
 
 @surveyjs_csp
 @login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization", "create_form"]),
+        ObjPerm(Form, "form_id", ["view_form", "change_form"]),
+    ]
+)
+def form_edit(request: AuthenticatedHttpRequest, organization: Organization, form: Form):
+    """Provider view to edit an existing form template manually."""
+    if not settings.FEATURE_PROVIDER_FORM_BUILDER:
+        logger.info(
+            "Form builder feature is disabled, redirecting to form list",
+            extra={"user_id": request.user.id, "organization_id": organization.id},
+        )
+        return redirect("providers:form_templates_list", organization_id=organization.id)
+
+    logger.info(
+        "Accessing organization form edit page",
+        extra={"user_id": request.user.id, "organization_id": organization.id, "form_id": form.id},
+    )
+    return render(request, "provider/form_builder.html", {"organization": organization, "form": form})
+
+
+@surveyjs_csp
+@login_required
 @authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_form"])])
 def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
     """Provider view to create a new form template manually."""
