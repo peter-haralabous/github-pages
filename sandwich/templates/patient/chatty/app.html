@@ -147,14 +147,6 @@
         });
       }
 
-      // Auto-resizing textarea
-      if (chatInput) {
-        chatInput.addEventListener('input', () => {
-          chatInput.style.height = 'auto';
-          chatInput.style.height = `${chatInput.scrollHeight}px`;
-        });
-      }
-
       // Mobile navigation
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
       const mobileViews = {
