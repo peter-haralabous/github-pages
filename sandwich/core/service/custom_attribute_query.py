@@ -10,8 +10,10 @@ from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import QuerySet
 from django.db.models import Subquery
+from django.utils.dateparse import parse_date
 
 from sandwich.core.models import CustomAttribute
+from sandwich.core.models import CustomAttributeEnum
 from sandwich.core.models import CustomAttributeValue
 from sandwich.core.models import Organization
 
@@ -540,3 +542,69 @@ def apply_filters_with_custom_attributes[ModelT: Model](
         )
 
     return queryset
+
+
+def update_custom_attribute(
+    encounter: Model,
+    attribute: CustomAttribute,
+    new_value: str,
+) -> bool:
+    """Update a custom attribute value on the given model instance."""
+    content_type = ContentType.objects.get_for_model(encounter.__class__)
+
+    if attribute.data_type == CustomAttribute.DataType.ENUM:
+        try:
+            enum_value = CustomAttributeEnum.objects.get(id=new_value, attribute=attribute)
+        except CustomAttributeEnum.DoesNotExist:
+            logger.warning(
+                "Invalid enum value for custom attribute update",
+                extra={"attribute_id": str(attribute.id), "new_value": new_value},
+            )
+            return False
+
+        CustomAttributeValue.objects.update_or_create(
+            attribute=attribute,
+            content_type=content_type,
+            object_id=encounter.pk,
+            defaults={"value_enum": enum_value},
+        )
+        logger.info(
+            "Updated ENUM custom attribute",
+            extra={
+                "attribute_id": str(attribute.id),
+                "encounter_id": encounter.pk,
+                "enum_value_id": enum_value.id,
+            },
+        )
+        return True
+
+    if attribute.data_type == CustomAttribute.DataType.DATE:
+        date_value = parse_date(new_value)
+        if not date_value:
+            logger.warning(
+                "Invalid date value for custom attribute update",
+                extra={"attribute_id": str(attribute.id), "new_value": new_value},
+            )
+            return False
+
+        CustomAttributeValue.objects.update_or_create(
+            attribute=attribute,
+            content_type=content_type,
+            object_id=encounter.pk,
+            defaults={"value_date": date_value},
+        )
+        logger.info(
+            "Updated DATE custom attribute",
+            extra={
+                "attribute_id": str(attribute.id),
+                "encounter_id": encounter.pk,
+                "date_value": date_value.isoformat(),
+            },
+        )
+        return True
+
+    logger.warning(
+        "Unsupported data type for custom attribute update",
+        extra={"attribute_id": str(attribute.id), "data_type": attribute.data_type},
+    )
+    return False

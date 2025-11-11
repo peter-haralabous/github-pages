@@ -1,7 +1,13 @@
 from datetime import date
+from urllib.parse import urlparse
 
 import pytest
+from django.conf import settings
+from django.contrib.auth import BACKEND_SESSION_KEY
+from django.contrib.auth import HASH_SESSION_KEY
+from django.contrib.auth import SESSION_KEY
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sessions.backends.db import SessionStore
 from django.test import Client
 from django.urls import reverse
 from playwright.sync_api import Page
@@ -182,7 +188,6 @@ def test_encounter_list_shows_filter_panel_in_custom_mode_without_filters(
     response = client.get(url)
 
     assert response.status_code == 200
-    # Ensure main template rendered
     assert "provider/encounter_list.html" in [t.name for t in response.templates]
     content = response.content.decode()
     assert "No Filters Applied" in content
@@ -229,14 +234,12 @@ def test_encounter_list_sorts_by_is_active(provider: User, organization: Organiz
     client.force_login(provider)
     url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
 
-    # Test ascending sort
     response = client.get(f"{url}?sort=is_active")
     assert response.status_code == 200
     encounters = list(response.context["encounters"])
     assert encounters[0] == inactive
     assert encounters[1] == active
 
-    # Test descending sort
     response = client.get(f"{url}?sort=-is_active")
     assert response.status_code == 200
     encounters = list(response.context["encounters"])
@@ -272,3 +275,277 @@ def test_encounter_slideout_closes_when_clicking_outside(  # noqa: PLR0913
     page.wait_for_timeout(300)
 
     assert not slideout.is_checked()
+
+
+@pytest.mark.e2e
+@pytest.mark.django_db
+def test_inline_edit_status_field_updates_display(
+    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that inline editing a status field updates the display value."""
+    encounter.status = EncounterStatus.IN_PROGRESS
+    encounter.save()
+
+    # Create auth cookies for the provider (not the basic user)
+    session = SessionStore()
+    session[SESSION_KEY] = str(provider.pk)
+    session[BACKEND_SESSION_KEY] = "django.contrib.auth.backends.ModelBackend"
+    session[HASH_SESSION_KEY] = provider.get_session_auth_hash()
+    session.save()
+
+    parsed = urlparse(live_server.url)
+    domain = parsed.hostname or "localhost"
+
+    session_key = session.session_key
+    assert session_key is not None, "Session key should not be None"
+
+    page.context.add_cookies(
+        [
+            {
+                "name": settings.SESSION_COOKIE_NAME,
+                "value": session_key,
+                "domain": domain,
+                "path": "/",
+                "httpOnly": True,
+            }
+        ]
+    )
+
+    url = f"{live_server.url}{reverse('providers:encounter_list', kwargs={'organization_id': organization.id})}"
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+
+    # First, verify there's at least one encounter in the table
+    table = page.locator("table")
+    assert table.is_visible(), "Encounter table should be visible"
+
+    # Look for any status cell (may need to find it differently if column order varies)
+    # Try to find the patient name link first
+    patient_link = page.locator(f"text=/{encounter.patient.last_name}, {encounter.patient.first_name}/i").first
+    if not patient_link.is_visible():
+        msg = f"Patient {encounter.patient.first_name} {encounter.patient.last_name} not found in table"
+        raise AssertionError(msg)
+
+    row = patient_link.locator("xpath=ancestor::tr")
+
+    # Find the status cell within this row
+    status_cell = (
+        row.locator("td").filter(has_text="In Progress").or_(row.locator("td").filter(has_text="IN_PROGRESS"))
+    )
+
+    status_cell.wait_for(state="visible", timeout=5000)
+
+    status_cell.click()
+
+    # Wait for HTMX to swap the cell content with the form
+    page.wait_for_timeout(500)
+
+    # Wait for the form to appear in the row (the cell was replaced by HTMX)
+    select = row.locator("select[name='value']")
+    select.wait_for(state="visible", timeout=5000)
+
+    select.select_option(EncounterStatus.COMPLETED.value)
+
+    # Wait for HTMX to process the form submission and the display to update
+    # The select should disappear after submission
+    select.wait_for(state="hidden", timeout=3000)
+
+    # Verify the display was updated - look in the same row again
+    updated_cell = row.locator("td").filter(has_text="Completed").or_(row.locator("td").filter(has_text="COMPLETED"))
+    assert updated_cell.is_visible(), "Status cell should show 'Completed' after update"
+
+    encounter.refresh_from_db()
+    assert encounter.status == EncounterStatus.COMPLETED
+
+
+@pytest.mark.e2e
+@pytest.mark.django_db
+def test_inline_edit_can_be_cancelled_with_escape(
+    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that pressing Escape cancels inline editing without saving."""
+    encounter.status = EncounterStatus.IN_PROGRESS
+    encounter.save()
+
+    # Create auth cookies for the provider
+    session = SessionStore()
+    session[SESSION_KEY] = str(provider.pk)
+    session[BACKEND_SESSION_KEY] = "django.contrib.auth.backends.ModelBackend"
+    session[HASH_SESSION_KEY] = provider.get_session_auth_hash()
+    session.save()
+
+    parsed = urlparse(live_server.url)
+    domain = parsed.hostname or "localhost"
+
+    session_key = session.session_key
+    assert session_key is not None, "Session key should not be None"
+
+    page.context.add_cookies(
+        [
+            {
+                "name": settings.SESSION_COOKIE_NAME,
+                "value": session_key,
+                "domain": domain,
+                "path": "/",
+                "httpOnly": True,
+            }
+        ]
+    )
+
+    url = f"{live_server.url}{reverse('providers:encounter_list', kwargs={'organization_id': organization.id})}"
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+
+    table = page.locator("table")
+    assert table.is_visible(), "Encounter table should be visible"
+
+    patient_link = page.locator(f"text=/{encounter.patient.last_name}, {encounter.patient.first_name}/i").first
+    if not patient_link.is_visible():
+        msg = f"Patient {encounter.patient.first_name} {encounter.patient.last_name} not found in table"
+        raise AssertionError(msg)
+
+    row = patient_link.locator("xpath=ancestor::tr")
+
+    status_cell = (
+        row.locator("td").filter(has_text="In Progress").or_(row.locator("td").filter(has_text="IN_PROGRESS"))
+    )
+
+    status_cell.wait_for(state="visible", timeout=5000)
+
+    status_cell.click()
+
+    # Wait for HTMX to swap the cell content with the form
+    page.wait_for_timeout(500)
+
+    # Wait for the form to appear in the row (the cell was replaced by HTMX)
+    select = row.locator("select[name='value']")
+    select.wait_for(state="visible", timeout=5000)
+
+    select.press("Escape")
+
+    select.wait_for(state="hidden", timeout=3000)
+
+    # Verify the display is back to original value
+    cancelled_cell = (
+        row.locator("td").filter(has_text="In Progress").or_(row.locator("td").filter(has_text="IN_PROGRESS"))
+    )
+    assert cancelled_cell.is_visible(), "Status cell should show 'In Progress' after cancelling"
+    cancelled_text = cancelled_cell.text_content()
+    assert cancelled_text is not None
+    assert "In Progress" in cancelled_text or "IN_PROGRESS" in cancelled_text
+
+    encounter.refresh_from_db()
+    assert encounter.status == EncounterStatus.IN_PROGRESS
+
+
+@pytest.mark.e2e
+@pytest.mark.django_db
+def test_inline_edit_custom_enum_updates_display(
+    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that inline editing a custom enum attribute updates the display with the correct label."""
+    # Create a custom enum attribute
+    content_type = ContentType.objects.get_for_model(Encounter)
+    priority_attr = CustomAttribute.objects.create(
+        organization=organization,
+        name="Priority",
+        data_type=CustomAttribute.DataType.ENUM,
+        content_type=content_type,
+    )
+    low_priority = CustomAttributeEnum.objects.create(
+        attribute=priority_attr,
+        label="Low",
+        value="low",
+        color_code="00FF00",
+    )
+    high_priority = CustomAttributeEnum.objects.create(
+        attribute=priority_attr,
+        label="High",
+        value="high",
+        color_code="FF0000",
+    )
+
+    # Set initial value to Low
+    encounter.attributes.create(attribute=priority_attr, value_enum=low_priority)
+
+    # Save list preference to show the custom attribute column
+    save_list_view_preference(
+        organization=organization,
+        list_type=ListViewType.ENCOUNTER_LIST,
+        user=provider,
+        visible_columns=["patient__first_name", "patient__last_name", "status", str(priority_attr.id)],
+        saved_filters={},
+    )
+
+    # Create auth cookies for the provider
+    session = SessionStore()
+    session[SESSION_KEY] = str(provider.pk)
+    session[BACKEND_SESSION_KEY] = "django.contrib.auth.backends.ModelBackend"
+    session[HASH_SESSION_KEY] = provider.get_session_auth_hash()
+    session.save()
+
+    parsed = urlparse(live_server.url)
+    domain = parsed.hostname or "localhost"
+
+    session_key = session.session_key
+    assert session_key is not None, "Session key should not be None"
+
+    page.context.add_cookies(
+        [
+            {
+                "name": settings.SESSION_COOKIE_NAME,
+                "value": session_key,
+                "domain": domain,
+                "path": "/",
+                "httpOnly": True,
+            }
+        ]
+    )
+
+    url = f"{live_server.url}{reverse('providers:encounter_list', kwargs={'organization_id': organization.id})}"
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+
+    table = page.locator("table")
+    assert table.is_visible(), "Encounter table should be visible"
+
+    patient_link = page.locator(f"text=/{encounter.patient.last_name}, {encounter.patient.first_name}/i").first
+    if not patient_link.is_visible():
+        msg = f"Patient {encounter.patient.first_name} {encounter.patient.last_name} not found in table"
+        raise AssertionError(msg)
+
+    row = patient_link.locator("xpath=ancestor::tr")
+
+    priority_cell = row.locator("td").filter(has_text="Low").first
+
+    priority_cell.wait_for(state="visible", timeout=5000)
+    initial_text = priority_cell.text_content()
+    assert initial_text is not None
+    assert "Low" in initial_text, f"Expected 'Low' in cell but got: {initial_text}"
+
+    priority_cell.click()
+
+    # Wait for HTMX to swap the cell content with the form
+    page.wait_for_timeout(500)
+
+    # Wait for the form to appear in the row (the cell was replaced by HTMX)
+    select = row.locator("select[name='value']")
+    select.wait_for(state="visible", timeout=5000)
+
+    select.select_option(str(high_priority.id))
+
+    # Wait for HTMX to process the form submission and the display to update
+    # The select should disappear after submission
+    select.wait_for(state="hidden", timeout=3000)
+
+    # Verify the display was updated to show "High" (the label, not "high" the value)
+    updated_cell = row.locator("td").filter(has_text="High").first
+    updated_cell.wait_for(state="visible", timeout=2000)
+    updated_text = updated_cell.text_content()
+    assert updated_text is not None
+    assert "High" in updated_text, f"Expected 'High' in cell after update but got: {updated_text}"
+    assert "high" not in updated_text or "High" in updated_text, "Should show label 'High', not value 'high'"
+
+    encounter.refresh_from_db()
+    attr_value = encounter.attributes.get(attribute=priority_attr)
+    assert attr_value.value_enum == high_priority

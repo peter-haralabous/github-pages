@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load lucide %}
+
+<td id="{{ cell_id }}"
+    {% if can_edit %}class="inline-edit-cell group hover:bg-base-200 cursor-pointer transition-colors py-1" hx-get="{% url 'providers:encounter_edit_field' organization_id=organization.id encounter_id=encounter.id field_name=field_name %}" hx-target="this" hx-swap="outerHTML" title="{% trans 'Click to edit' %}" aria-label="{% trans 'Click to edit' %} {{ field_name }}"{% endif %}
+    {% if oob %}hx-swap-oob="true"{% endif %}>
+  <div class="inline-edit-display flex items-center gap-2">
+    <span class="inline-edit-value flex-1">{{ display_value }}</span>
+    {% if can_edit %}
+      <span class="inline-edit-icon opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-hidden="true">{% lucide "pencil" class="size-3.5 text-primary" %}</span>
+    {% endif %}
+  </div>
+</td>

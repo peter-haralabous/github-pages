@@ -32,6 +32,7 @@ EXCLUDED_URL_NAMES = {
     "organization",
     # POST-only endpoints (test harness only issues GET requests)
     "encounter_create",
+    "encounter_update_field",
     "form_file_upload",
     "patient_archive",
     "patient_add_task",
@@ -58,6 +59,40 @@ EXCLUDED_URL_NAMES = {
 
 def test_no_stale_exclusions():
     assert EXCLUDED_URL_NAMES.issubset({url.name for url in get_provider_urls()})
+
+
+def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dict[str, Any]:
+    """Build kwargs dict for URL reverse lookup based on URL pattern and name."""
+    kwargs: dict[str, Any] = {}
+
+    if ":encounter_id>" in url.pattern:
+        kwargs["encounter_id"] = test_objects["encounter"].pk
+    if ":organization_id>" in url.pattern:
+        kwargs["organization_id"] = test_objects["organization"].pk
+    if ":patient_id>" in url.pattern:
+        kwargs["patient_id"] = test_objects["patient"].pk
+    if ":task_id>" in url.pattern:
+        kwargs["task_id"] = test_objects["task"].pk
+    if ":attribute_id>" in url.pattern:
+        kwargs["attribute_id"] = test_objects["attribute"].pk
+    if ":form_id>" in url.pattern:
+        kwargs["form_id"] = test_objects["form"].pk
+    if url.name in {
+        "list_preference_settings",
+        "organization_preference_settings_detail",
+        "show_filter_modal",
+        "apply_filter",
+        "remove_filter",
+        "clear_all_filters",
+        "save_current_filters",
+    }:
+        kwargs["list_type"] = "encounter_list"
+    if ":field_id>" in url.pattern:
+        kwargs["field_id"] = "status"
+    if ":field_name>" in url.pattern:
+        kwargs["field_name"] = "status"
+
+    return kwargs
 
 
 @override_settings(FEATURE_PROVIDER_FORM_BUILDER=True)
@@ -92,32 +127,15 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     # Need a form for the form route
     form = Form.objects.create(organization=organization, name="Test Form", schema={"title": "Test Form"})
 
-    kwargs: dict[str, Any] = {}
-
-    if ":encounter_id>" in url.pattern:
-        kwargs["encounter_id"] = encounter.pk
-    if ":organization_id>" in url.pattern:
-        kwargs["organization_id"] = organization.pk
-    if ":patient_id>" in url.pattern:
-        kwargs["patient_id"] = patient.pk
-    if ":task_id>" in url.pattern:
-        kwargs["task_id"] = task.pk
-    if ":attribute_id>" in url.pattern:
-        kwargs["attribute_id"] = attribute.pk
-    if ":form_id>" in url.pattern:
-        kwargs["form_id"] = form.pk
-    if url.name in {
-        "list_preference_settings",
-        "organization_preference_settings_detail",
-        "show_filter_modal",
-        "apply_filter",
-        "remove_filter",
-        "clear_all_filters",
-        "save_current_filters",
-    }:
-        kwargs["list_type"] = "encounter_list"
-    if ":field_id>" in url.pattern:
-        kwargs["field_id"] = "status"
+    test_objects = {
+        "encounter": encounter,
+        "organization": organization,
+        "patient": patient,
+        "task": task,
+        "attribute": attribute,
+        "form": form,
+    }
+    kwargs = _build_url_kwargs(url, test_objects)
 
     response = client.get(reverse("providers:" + url.name, kwargs=kwargs))
     assert response.status_code == HTTPStatus.OK

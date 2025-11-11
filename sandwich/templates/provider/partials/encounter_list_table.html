@@ -54,16 +54,16 @@
             {% elif col.value == "patient__date_of_birth" %}
               <td>{{ encounter.patient.date_of_birth|default:"—" }}</td>
             {% elif col.value == "status" %}
-              <td>{{ encounter.get_status_display|default:"—" }}</td>
+              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-status" field_name="status" display_value=encounter.get_status_display|default:"—" can_edit=True encounter=encounter organization=organization %}
             {% elif col.value == "is_active" %}
-              <td>{{ encounter.active|yesno:"Active,Archived" }}</td>
+              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-is_active" field_name="is_active" display_value=encounter.is_active|yesno:"Active,Archived" can_edit=True encounter=encounter organization=organization %}
             {% elif col.value == "created_at" %}
               <td>{{ encounter.created_at }}</td>
             {% elif col.value == "updated_at" %}
               <td>{{ encounter.updated_at }}</td>
             {% elif col.is_custom %}
               {% with annotation_name=col.value|custom_attr_name %}
-                <td>{{ encounter|get_attr:annotation_name|default:"—" }}</td>
+                {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-"|add:col.value field_name=col.value display_value=encounter|get_attr:annotation_name|default:"—" can_edit=True encounter=encounter organization=organization %}
               {% endwith %}
             {% endif %}
           {% endfor %}

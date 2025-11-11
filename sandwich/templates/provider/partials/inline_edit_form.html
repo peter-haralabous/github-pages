@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load lucide %}
+{% load crispy_forms_tags %}
+
+<td id="encounter-{{ encounter.id }}-{% if field_name != 'status' and field_name != 'is_active' %}{% endif %}{{ field_name }}"
+    class="py-1">
+  <inline-edit-field field-type="{{ field_type }}">
+  <template data-display-html>
+    {% include "provider/partials/inline_edit_display.html" with cell_id=cell_id display_value=display_value can_edit=True oob=False %}
+  </template>
+  {% crispy form %}
+  {% if errors %}
+    <div class="alert alert-error alert-sm mt-1 py-1 px-2 text-xs"
+         role="alert">
+      <span>{{ errors }}</span>
+    </div>
+  {% endif %}
+  </inline-edit-field>
+</td>

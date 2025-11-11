@@ -1,5 +1,6 @@
 import '../css/project.css';
 import './components/command-palette';
+import './components/inline-edit-field';
 import './components/message-alert';
 import './components/sortable-columns';
 import './components/toggle-container';

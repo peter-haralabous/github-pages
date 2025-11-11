@@ -1,6 +1,7 @@
 import logging
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import TypedDict
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -8,16 +9,20 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Case
 from django.db.models import Value
 from django.db.models import When
 from django.http import HttpResponse
+from django.http.response import HttpResponseBadRequest
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from guardian.shortcuts import get_objects_for_user
 
+from sandwich.core.models import CustomAttribute
+from sandwich.core.models import CustomAttributeValue
 from sandwich.core.models import ListViewType
 from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.encounter import Encounter
@@ -27,6 +32,7 @@ from sandwich.core.models.patient import Patient
 from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_filters_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
+from sandwich.core.service.custom_attribute_query import update_custom_attribute
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.list_preference_service import enrich_filters_with_display_values
@@ -38,12 +44,22 @@ from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
+from sandwich.providers.forms.inline_edit import InlineEditForm
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
 if TYPE_CHECKING:
     from uuid import UUID
 
 logger = logging.getLogger(__name__)
+
+
+class FormContext(TypedDict):
+    """Type definition for inline edit form context."""
+
+    choices: list[tuple[str, str]]
+    current_value: str | None
+    field_type: str
+    field_label: str
 
 
 class EncounterCreateForm(forms.ModelForm[Encounter]):
@@ -412,3 +428,372 @@ def encounter_create_search(request: AuthenticatedHttpRequest, organization: Org
         "context": context_param,
     }
     return render(request, "provider/partials/encounter_create_search_results.html", context)
+
+
+def _status_to_is_active(status: EncounterStatus) -> str:
+    """Convert encounter status to is_active value."""
+    return "active" if status == EncounterStatus.IN_PROGRESS else "archived"
+
+
+def _is_active_to_status(is_active: str) -> EncounterStatus | None:
+    """Convert is_active value to encounter status."""
+    if is_active == "active":
+        return EncounterStatus.IN_PROGRESS
+    if is_active == "archived":
+        return EncounterStatus.COMPLETED
+    return None
+
+
+def _get_custom_attribute_value_display(
+    encounter: Encounter, attribute: CustomAttribute, content_type: ContentType
+) -> str:
+    """Get display value for a custom attribute."""
+    try:
+        attr_value = CustomAttributeValue.objects.get(
+            attribute=attribute,
+            content_type=content_type,
+            object_id=encounter.id,
+        )
+        if attribute.data_type == CustomAttribute.DataType.ENUM and attr_value.value_enum:
+            return attr_value.value_enum.label
+        if attribute.data_type == CustomAttribute.DataType.DATE and attr_value.value_date:
+            return attr_value.value_date.strftime("%Y-%m-%d")
+    except CustomAttributeValue.DoesNotExist:
+        return "—"
+    return "—"
+
+
+def _get_custom_attribute(field_name: str, organization: Organization) -> CustomAttribute | None:
+    """Get a custom attribute by ID if it exists."""
+    try:
+        return CustomAttribute.objects.get(
+            id=field_name,
+            organization=organization,
+            content_type=ContentType.objects.get_for_model(Encounter),
+        )
+    except (CustomAttribute.DoesNotExist, ValueError, ValidationError):
+        return None
+
+
+def _get_field_display_value(encounter: Encounter, field_name: str, organization: Organization) -> str:
+    """Helper to get the display value for a field.
+
+    Args:
+        encounter: The encounter instance
+        field_name: The field name (e.g., 'status', 'is_active', or custom attribute field_id)
+        organization: The organization context
+
+    Returns:
+        The formatted display value or a placeholder
+    """
+    if field_name == "status":
+        return encounter.get_status_display() or "—"
+
+    if field_name == "is_active":
+        return "Active" if _status_to_is_active(encounter.status) == "active" else "Archived"
+
+    # Custom attribute
+    attribute = _get_custom_attribute(field_name, organization)
+    if not attribute:
+        return "—"
+
+    content_type = ContentType.objects.get_for_model(Encounter)
+    return _get_custom_attribute_value_display(encounter, attribute, content_type)
+
+
+def _build_custom_attribute_form_context(encounter: Encounter, attribute: CustomAttribute) -> FormContext | None:
+    """Build form context for custom attribute editing.
+
+    Returns:
+        Context dict with choices, current_value, field_type, and field_label.
+        None if attribute data type is not supported.
+    """
+    field_label = attribute.name
+    content_type = ContentType.objects.get_for_model(Encounter)
+
+    if attribute.data_type == CustomAttribute.DataType.ENUM:
+        enum_set = getattr(attribute, "customattributeenum_set", None)
+        choices = [(str(enum.id), str(enum.label)) for enum in enum_set.all()] if enum_set else []
+        field_type = "select"
+
+        try:
+            attr_value = CustomAttributeValue.objects.get(
+                attribute=attribute,
+                content_type=content_type,
+                object_id=encounter.id,
+            )
+            value_enum_id = getattr(attr_value, "value_enum_id", None)
+            current_value = str(value_enum_id) if value_enum_id else None
+        except CustomAttributeValue.DoesNotExist:
+            current_value = None
+
+    elif attribute.data_type == CustomAttribute.DataType.DATE:
+        choices = []
+        field_type = "date"
+
+        try:
+            attr_value = CustomAttributeValue.objects.get(
+                attribute=attribute,
+                content_type=content_type,
+                object_id=encounter.id,
+            )
+            current_value = attr_value.value_date.strftime("%Y-%m-%d") if attr_value.value_date else None
+        except CustomAttributeValue.DoesNotExist:
+            current_value = None
+    else:
+        return None
+
+    return {
+        "choices": choices,
+        "current_value": current_value,
+        "field_type": field_type,
+        "field_label": field_label,
+    }
+
+
+def _build_edit_form_context(encounter: Encounter, field_name: str, organization: Organization) -> FormContext | None:
+    """Build context for the inline edit form.
+
+    Returns:
+        Context dict with choices, current_value, field_type, and field_label.
+        None if field_name is invalid.
+    """
+    choices: list[tuple[str, str]] = []
+    current_value: str | None = None
+    field_type: str
+    field_label: str
+
+    if field_name == "status":
+        choices = [(status.value, str(status.label)) for status in EncounterStatus]
+        current_value = encounter.status.value
+        field_type = "select"
+        field_label = "Status"
+
+    elif field_name == "is_active":
+        choices = [("active", "Active"), ("archived", "Archived")]
+        current_value = _status_to_is_active(encounter.status)
+        field_type = "select"
+        field_label = "Active"
+
+    else:
+        # Custom attribute
+        attribute = _get_custom_attribute(field_name, organization)
+        if not attribute:
+            return None
+
+        return _build_custom_attribute_form_context(encounter, attribute)
+
+    return {
+        "choices": choices,
+        "current_value": current_value,
+        "field_type": field_type,
+        "field_label": field_label,
+    }
+
+
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter", "change_encounter"]),
+    ]
+)
+def encounter_edit_field(
+    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter, field_name: str
+) -> HttpResponse:
+    """GET endpoint to fetch the edit form for a specific encounter field."""
+    form_context = _build_edit_form_context(encounter, field_name, organization)
+    if not form_context:
+        return HttpResponseBadRequest("Invalid field name")
+
+    form_action = reverse(
+        "providers:encounter_update_field",
+        kwargs={
+            "organization_id": organization.id,
+            "encounter_id": encounter.id,
+            "field_name": field_name,
+        },
+    )
+
+    hx_target = f"#encounter-{encounter.id}-{field_name}"
+
+    form = InlineEditForm(
+        field_type=form_context["field_type"],
+        field_name=field_name,
+        choices=form_context["choices"],
+        current_value=form_context["current_value"],
+        form_action=form_action,
+        hx_target=hx_target,
+    )
+
+    display_value = _get_field_display_value(encounter, field_name, organization)
+
+    context = {
+        "encounter": encounter,
+        "organization": organization,
+        "field_name": field_name,
+        "form": form,
+        "field_type": form_context["field_type"],
+        "display_value": display_value,
+    }
+
+    return render(request, "provider/partials/inline_edit_form.html", context)
+
+
+def _render_form_with_errors(
+    request: AuthenticatedHttpRequest,
+    encounter: Encounter,
+    organization: Organization,
+    field_name: str,
+    form: InlineEditForm,
+) -> HttpResponse:
+    """Render the inline edit form with error messages."""
+    display_value = _get_field_display_value(encounter, field_name, organization)
+    field_type = form.fields["value"].widget.__class__.__name__.lower().replace("widget", "").replace("input", "")
+    if "select" in field_type or isinstance(form.fields["value"].widget, forms.Select):
+        field_type = "select"
+    elif isinstance(form.fields["value"].widget, forms.DateInput):
+        field_type = "date"
+    else:
+        field_type = "text"
+
+    context = {
+        "encounter": encounter,
+        "organization": organization,
+        "field_name": field_name,
+        "form": form,
+        "field_type": field_type,
+        "display_value": display_value,
+        "errors": form.errors.get("value", ["Invalid value"])[0] if form.errors else None,
+    }
+    return HttpResponseBadRequest(render(request, "provider/partials/inline_edit_form.html", context).content)
+
+
+def _handle_field_update(
+    encounter: Encounter,
+    field_name: str,
+    new_value: str,
+    organization: Organization,
+    form: InlineEditForm,
+) -> bool:
+    """Update the specified field. Returns True if successful, False otherwise."""
+    if field_name in ["status", "is_active"]:
+        if not _update_model_field(encounter, field_name, new_value):
+            form.add_error("value", f"Invalid {field_name} value")
+            return False
+        return True
+
+    # Try custom attribute
+    attribute = _get_custom_attribute(field_name, organization)
+    if not attribute:
+        return False
+    if not update_custom_attribute(encounter, attribute, new_value):
+        form.add_error("value", f"Invalid {attribute.data_type} value")
+        return False
+    return True
+
+
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter", "change_encounter"]),
+    ]
+)
+def encounter_update_field(
+    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter, field_name: str
+) -> HttpResponse:
+    """POST endpoint to update a specific encounter field."""
+    if request.method != "POST":
+        return HttpResponseBadRequest("Only POST allowed")
+
+    form_context = _build_edit_form_context(encounter, field_name, organization)
+    if not form_context:
+        return HttpResponseBadRequest("Invalid field name")
+
+    form_action = reverse(
+        "providers:encounter_update_field",
+        kwargs={
+            "organization_id": organization.id,
+            "encounter_id": encounter.id,
+            "field_name": field_name,
+        },
+    )
+
+    cell_id = f"encounter-{encounter.id}-{field_name}"
+
+    form = InlineEditForm(
+        request.POST,
+        field_type=form_context["field_type"],
+        field_name=field_name,
+        choices=form_context["choices"],
+        current_value=form_context["current_value"],
+        form_action=form_action,
+        hx_target=cell_id,
+    )
+
+    if not form.is_valid():
+        return _render_form_with_errors(request, encounter, organization, field_name, form)
+
+    new_value = form.cleaned_data.get("value", "")
+    if isinstance(new_value, str):
+        new_value = new_value.strip()
+
+    if not _handle_field_update(encounter, field_name, str(new_value), organization, form):
+        return _render_form_with_errors(request, encounter, organization, field_name, form)
+
+    logger.info(
+        "Encounter field updated via inline edit",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization.id,
+            "encounter_id": encounter.id,
+            "field_name": field_name,
+            "new_value": new_value,
+        },
+    )
+
+    display_value = _get_field_display_value(encounter, field_name, organization)
+
+    context = {
+        "encounter": encounter,
+        "organization": organization,
+        "field_name": field_name,
+        "display_value": display_value,
+        "cell_id": cell_id,
+        "can_edit": True,
+        "oob": False,
+    }
+
+    logger.info(
+        "Returning inline edit display",
+        extra={
+            "cell_id": cell_id,
+            "display_value": display_value,
+            "oob": False,
+        },
+    )
+
+    return render(request, "provider/partials/inline_edit_display.html", context)
+
+
+def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -> bool:
+    """Update a model field (status or is_active). Returns True if successful."""
+    if field_name == "status":
+        try:
+            encounter.status = EncounterStatus(new_value)
+            encounter.save()
+        except ValueError:
+            return False
+        else:
+            return True
+
+    if field_name == "is_active":
+        status = _is_active_to_status(new_value)
+        if not status:
+            return False
+        encounter.status = status
+        encounter.save()
+        return True
+
+    return False
