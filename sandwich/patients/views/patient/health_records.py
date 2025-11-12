@@ -9,7 +9,6 @@ from uuid import UUID
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.http import HttpResponse
@@ -33,7 +32,6 @@ from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_time import not_in_future
 from sandwich.patients.views.patient import _chat_context
-from sandwich.patients.views.patient import _patient_context
 from sandwich.patients.views.patient.details import _chatty_patient_details_context
 from sandwich.users.models import User
 
@@ -280,18 +278,14 @@ def health_records_add(request: AuthenticatedHttpRequest, patient: Patient, reco
         "form": form,
     }
 
-    if settings.FEATURE_PATIENT_CHATTY_APP:
-        if request.headers.get("HX-Request") == "true":
-            # only render the modal; leave the rest of the page as-is
-            return render(request, "patient/partials/health_record_add_modal.html", context)
+    if request.headers.get("HX-Request") == "true":
+        # only render the modal; leave the rest of the page as-is
+        return render(request, "patient/partials/health_record_add_modal.html", context)
 
-        # NOTE: we don't know what state the page was in before the modal was opened; assume it was just the
-        #       patient details homepage
-        context |= _chatty_patient_details_context(request, patient)
-        return render(request, "patient/chatty/records_add.html", context)
-
-    context |= _patient_context(request, patient=patient)
-    return render(request, "patient/health_records_add.html", context)
+    # NOTE: we don't know what state the page was in before the modal was opened; assume it was just the
+    #       patient details homepage
+    context |= _chatty_patient_details_context(request, patient)
+    return render(request, "patient/chatty/records_add.html", context)
 
 
 @dataclass
@@ -385,18 +379,14 @@ def _generic_edit_view(record_type: str, request: AuthenticatedHttpRequest, inst
         "history": _history_events(instance, request.user),
     }
 
-    if settings.FEATURE_PATIENT_CHATTY_APP:
-        if request.headers.get("HX-Request") == "true":
-            # only render the modal; leave the rest of the page as-is
-            return render(request, "patient/partials/health_record_edit_modal.html", context)
+    if request.headers.get("HX-Request") == "true":
+        # only render the modal; leave the rest of the page as-is
+        return render(request, "patient/partials/health_record_edit_modal.html", context)
 
-        # NOTE: we don't know what state the page was in before the modal was opened; assume it was just the
-        #       patient details homepage
-        context |= _chatty_patient_details_context(request, patient)
-        return render(request, "patient/chatty/records_edit.html", context)
-
-    context |= _patient_context(request, patient=patient)
-    return render(request, "patient/health_records_edit.html", context)
+    # NOTE: we don't know what state the page was in before the modal was opened; assume it was just the
+    #       patient details homepage
+    context |= _chatty_patient_details_context(request, patient)
+    return render(request, "patient/chatty/records_edit.html", context)
 
 
 @login_required

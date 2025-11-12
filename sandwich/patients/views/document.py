@@ -1,7 +1,6 @@
 import logging
 
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -89,11 +88,7 @@ def document_upload_and_extract(request: AuthenticatedHttpRequest, patient: Pati
             error = ", ".join([str(e) for e in form.errors.get("file", [])])
             messages.add_message(request, messages.ERROR, f"Failed to upload document: {error}")
 
-    if settings.FEATURE_PATIENT_CHATTY_APP:
-        return render(request, "partials/messages_oob.html")
-
-    documents = patient.document_set.all()
-    return render(request, "patient/partials/documents_table.html", {"documents": documents})
+    return render(request, "partials/messages_oob.html")
 
 
 @require_POST

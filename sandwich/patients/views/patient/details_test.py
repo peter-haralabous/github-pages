@@ -48,33 +48,15 @@ def test_patient_details_deny_access(user: User, patient: Patient) -> None:
 def test_patient_details_kg(
     db, client: Client, user: User, patient: Patient, patient_knowledge_graph: list[Fact]
 ) -> None:
+    """Test that patient details page loads with chatty app (facts are loaded dynamically)."""
     client.force_login(user)
     url = reverse("patients:patient_details", kwargs={"patient_id": patient.pk})
     response = client.get(url)
 
-    facts = response.context["facts"]
-
-    category_length = {
-        "allergies": 1,
-        "conditions": 2,
-        "documents_and_notes": 1,
-        "family_history": 0,
-        "hospital_visits": 0,
-        "immunizations": 1,
-        "injuries": 0,
-        "lab_results": 0,
-        "medications": 1,
-        "practitioners": 0,
-        "procedures": 1,
-        "symptoms": 1,
-    }
-    all_categories = set(category_length.keys())
-    assert set(facts.keys()) == all_categories, "Fact categories do not match expected categories."
-
-    for category, length in category_length.items():
-        assert len(facts[category]) == length, (
-            f"Expected {length} facts in category '{category}', found {len(facts[category])}."
-        )
+    # Chatty app provides records_count and repository_count instead of facts
+    assert "records_count" in response.context
+    assert "repository_count" in response.context
+    assert response.status_code == 200
 
 
 def login(live_server: LiveServer, page: Page, user: User) -> Page:
