@@ -76,14 +76,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const creator = new SurveyCreator(creatorOptions);
 
   // Configure save function with creator.
-  const createFormUrl = document
+  const saveFormUrl = document
     .getElementById('form-builder-container')
-    ?.getAttribute('data-form-create-url');
+    ?.getAttribute('data-form-save-url');
   creator.saveSurveyFunc = (
     saveNo: number,
     callback: (saveNo: number, success: boolean) => void,
   ) => {
-    saveSurveyJson(createFormUrl, creator.JSON, saveNo, callback);
+    saveSurveyJson(saveFormUrl, creator.JSON, saveNo, callback);
   };
 
   (window as any).SurveyCreator = creator;

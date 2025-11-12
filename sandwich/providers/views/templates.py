@@ -123,7 +123,7 @@ def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
     return render(
         request,
         "provider/form_builder.html",
-        {"organization": organization, "form_create_url": url, "success_url": success_redirect_url},
+        {"organization": organization, "form_save_url": url, "success_url": success_redirect_url},
     )
 
 

@@ -34,7 +34,7 @@
   {{ form.schema | json_script:"form_schema" }}
   <div id="form-builder-container"
        data-csrf-token="{{ csrf_token }}"
-       data-form-create-url="{{ form_create_url }}"
+       data-form-save-url="{{ form_save_url }}"
        data-success-url="{{ success_url }}"></div>
   <form id="file-upload-form"
         class="hidden"
