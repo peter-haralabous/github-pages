@@ -1,28 +1,27 @@
 {% load lucide %}
 
 <dialog id="new-form-modal" class="modal">
-  <div class="modal-box space-y-2">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-3"
-              aria-label="Close">{% lucide "x" %}</button>
-    </form>
-    <h3>Create a New Form</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <a href="{% url "providers:form_template_builder" organization_id=organization.id %}"
-         class="card bg-base-200 hover:bg-primary/10 hover:border-primary border-2 border-dashed border-base-300 transition-all text-center p-6">
-        {% lucide "pencil" class="w-10 h-10 mx-auto text-primary" %}
-        <h3 class="font-bold text-lg mt-3">Create Manually</h3>
-        <p class="text-sm text-base-content/70 mt-1">Build your form from scratch using the form editor.</p>
-      </a>
-      {# TODO: Link to AI Form Builder #}
-      <div class="card bg-base-200 border-2 border-dashed border-base-300 text-center p-6 relative group cursor-not-allowed">
-        {% lucide "sparkles" class="w-10 h-10 mx-auto text-primary opacity-50 group-hover:opacity-30 transition-opacity" %}
-        <h3 class="font-bold text-lg mt-3 opacity-50 group-hover:opacity-30 transition-opacity">Build with AI</h3>
-        <p class="text-sm text-base-content/70 mt-1 opacity-50 group-hover:opacity-30 transition-opacity">
-          Upload an existing document and let AI create a starting point.
-        </p>
-        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800/90 rounded-box">
-          <span class="text-white font-bold text-lg">Coming Soon</span>
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3>Create a New Form</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <a href="{% url "providers:form_template_builder" organization_id=organization.id %}"
+           class="card bg-base-200 hover:bg-primary/10 hover:border-primary border-2 border-dashed border-base-300 transition-all text-center p-6">
+          {% lucide "pencil" class="w-10 h-10 mx-auto text-primary" %}
+          <h3 class="font-bold text-lg mt-3">Create Manually</h3>
+          <p class="text-sm text-base-content/70 mt-1">Build your form from scratch using the form editor.</p>
+        </a>
+        {# TODO: Link to AI Form Builder #}
+        <div class="card bg-base-200 border-2 border-dashed border-base-300 text-center p-6 relative group cursor-not-allowed">
+          {% lucide "sparkles" class="w-10 h-10 mx-auto text-primary opacity-50 group-hover:opacity-30 transition-opacity" %}
+          <h3 class="font-bold text-lg mt-3 opacity-50 group-hover:opacity-30 transition-opacity">Build with AI</h3>
+          <p class="text-sm text-base-content/70 mt-1 opacity-50 group-hover:opacity-30 transition-opacity">
+            Upload an existing document and let AI create a starting point.
+          </p>
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800/90 rounded-box">
+            <span class="text-white font-bold text-lg">Coming Soon</span>
+          </div>
         </div>
       </div>
     </div>

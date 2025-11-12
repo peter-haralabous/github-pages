@@ -7,10 +7,7 @@
         aria-labelledby="preference-modal-title"
         aria-modal="true">
   <div class="modal-box max-w-2xl">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              aria-label="Close">{% lucide "x" %}</button>
-    </form>
+    {% include "partials/modal_close_button.html" %}
     <h3 id="preference-modal-title" class="font-bold text-lg mb-2">
       {% if is_org_default %}
         {% trans "Organization Default Preferences" %}

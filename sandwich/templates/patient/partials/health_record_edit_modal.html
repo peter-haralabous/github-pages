@@ -1,5 +1,8 @@
 <dialog class="modal" id="edit-record-modal">
-  <div class="modal-box">{% include "patient/partials/health_record_edit.html" %}</div>
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    {% include "patient/partials/health_record_edit.html" %}
+  </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
   </form>

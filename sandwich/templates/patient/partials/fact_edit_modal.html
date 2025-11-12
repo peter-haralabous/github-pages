@@ -1,12 +1,12 @@
 {% load crispy_forms_tags %}
 
 <dialog id="form-modal-dialog" class="modal">
-  <div class="modal-box space-y-2">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    </form>
-    <h3>{{ fact.object }}</h3>
-    {% crispy form %}
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3>{{ fact.object }}</h3>
+      {% crispy form %}
+    </div>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>

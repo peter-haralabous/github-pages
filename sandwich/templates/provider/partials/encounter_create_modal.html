@@ -2,26 +2,25 @@
 {% load lucide %}
 
 <dialog id="encounter-create-modal" class="modal">
-  <div class="modal-box space-y-4">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              aria-label="Close">{% lucide "x" %}</button>
-    </form>
-    <h3 class="font-bold text-lg">Create Encounter</h3>
-    <div class="alert alert-info">
-      <div class="flex items-center gap-2">
-        {% lucide "user" class="size-5" %}
-        <div>
-          <h4 class="font-bold">Selected Patient</h4>
-          <h4 class="font-semibold">{{ patient.last_name }}, {{ patient.first_name }}</h4>
-          <p class="text-md">
-            DOB: {{ patient.date_of_birth|date:"M d, Y"|default:"—" }} • PHN:
-            {{ patient.phn|default:"—" }}
-          </p>
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3 class="font-bold text-lg">Create Encounter</h3>
+      <div class="alert alert-info">
+        <div class="flex items-center gap-2">
+          {% lucide "user" class="size-5" %}
+          <div>
+            <h4 class="font-bold">Selected Patient</h4>
+            <h4 class="font-semibold">{{ patient.last_name }}, {{ patient.first_name }}</h4>
+            <p class="text-md">
+              DOB: {{ patient.date_of_birth|date:"M d, Y"|default:"—" }} • PHN:
+              {{ patient.phn|default:"—" }}
+            </p>
+          </div>
         </div>
       </div>
+      <div data-encounter-form>{% crispy form %}</div>
     </div>
-    <div data-encounter-form>{% crispy form %}</div>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>

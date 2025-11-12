@@ -2,9 +2,7 @@
 
 <dialog id="filter-modal" class="modal">
   <div class="modal-box">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">×</button>
-    </form>
+    {% include "partials/modal_close_button.html" %}
     <h3 class="font-bold text-lg mb-4">{% trans "Add Filter" %}</h3>
     {% crispy form %}
   </div>
