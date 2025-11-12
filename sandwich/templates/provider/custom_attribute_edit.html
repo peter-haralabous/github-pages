@@ -10,8 +10,7 @@
     {% crispy form %}
     <div id="enum-fields-container">
       {% if show_enum_fields %}
-        {% include
-        "provider/_custom_attribute_enum_formset.html" %}
+        {% include "provider/partials/custom_attribute_enum_fields.html" %}
       {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>

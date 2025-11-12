@@ -165,7 +165,36 @@ def custom_attribute_add(request: AuthenticatedHttpRequest, organization: Organi
         input_type = form.data["input_type"]
         requires_enums = input_type in ("select", "multi_select")
 
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
+            # Validate formset only if ENUM type
+            input_type = form.cleaned_data["input_type"]
+            requires_enums = input_type in ("select", "multi_select")
+
+            if requires_enums:
+                if formset.is_valid():
+                    # Check at least one enum value
+                    valid_forms = [f for f in formset if f.cleaned_data and not f.cleaned_data.get("DELETE")]
+                    if not valid_forms:
+                        form.add_error(
+                            "input_type",
+                            "At least one option is required for Select/Multi-Select types. Please add options below.",
+                        )
+                        context = {
+                            "organization": organization,
+                            "form": form,
+                            "formset": formset,
+                            "show_enum_fields": True,
+                        }
+                        return render(request, "provider/custom_attribute_edit.html", context)
+                else:
+                    context = {
+                        "organization": organization,
+                        "form": form,
+                        "formset": formset,
+                        "show_enum_fields": True,
+                    }
+                    return render(request, "provider/custom_attribute_edit.html", context)
+
             # Save everything in transaction
             with transaction.atomic():
                 instance = form.save()
