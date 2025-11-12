@@ -32,7 +32,10 @@
     </div>
   </div>
   {{ form.schema | json_script:"form_schema" }}
-  <div id="form-builder-container"></div>
+  <div id="form-builder-container"
+       data-csrf-token="{{ csrf_token }}"
+       data-form-create-url="{{ form_create_url }}"
+       data-success-url="{{ success_url }}"></div>
   <form id="file-upload-form"
         class="hidden"
         hx-post="{% url 'providers:form_file_upload' organization_id=organization.id %}"

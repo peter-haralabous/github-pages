@@ -194,7 +194,7 @@ def test_provider_form_create(client: Client, owner: User, organization: Organiz
     assert orgs_forms.exists() is False
 
     client.force_login(owner)
-    payload = {"schema": {"title": "Intake Form"}}
+    payload = {"title": "Intake Form"}
     url = reverse("patients:api-1.0.0:provider_form_create", kwargs={"organization_id": organization.id})
     response = client.post(url, data=payload, content_type="application/json")
 
@@ -208,11 +208,7 @@ def test_provider_form_create(client: Client, owner: User, organization: Organiz
 def test_provider_form_create_validation(client: Client, owner: User, organization: Organization):
     """If the user does not provide a form title, endpoint returns 400 error."""
     client.force_login(owner)
-    payload = {
-        "schema": {
-            "width": "1000px",
-        }
-    }
+    payload = {"width": "1000px"}
     url = reverse("patients:api-1.0.0:provider_form_create", kwargs={"organization_id": organization.id})
     response = client.post(url, data=payload, content_type="application/json")
 
@@ -225,7 +221,7 @@ def test_provider_form_create_duplicate_form_name(client: Client, owner: User, o
     existing_form = FormFactory.create(organization=organization, name="Intake Form")
 
     client.force_login(owner)
-    payload = {"schema": {"title": existing_form.name}}
+    payload = {"title": existing_form.name}
     url = reverse("patients:api-1.0.0:provider_form_create", kwargs={"organization_id": organization.id})
     response = client.post(url, data=payload, content_type="application/json")
 

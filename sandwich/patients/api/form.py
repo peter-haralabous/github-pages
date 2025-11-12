@@ -6,7 +6,6 @@ from typing import cast
 import ninja
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.urls import reverse
 from ninja.errors import HttpError
 from ninja.security import SessionAuth
 
@@ -35,7 +34,6 @@ class FormCreateResponse(JsonResponse):
             "result": "success",
             "message": "Form created successfully",
             "form_id": str(form.id),
-            "url": reverse("providers:form_templates_list", kwargs={"organization_id": organization.id}),
         }
         return cls(data, **kwargs)
 
@@ -153,8 +151,12 @@ def provider_form_create(
     )
 
     # Validation: Guard against empty title in payload as Form.name is required.
-    name = payload["schema"]["title"] if "schema" in payload and "title" in payload["schema"] else None
+    name = payload.get("title", None)
     if not name:
+        logger.info(
+            "Form creation failed: form title missing in schema",
+            extra={"user_id": request.user.id, "organization_id": organization_id},
+        )
         raise HttpError(400, "Form must include a title: 'General' section missing 'Survey title'")
 
     try:

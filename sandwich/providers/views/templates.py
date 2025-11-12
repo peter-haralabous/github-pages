@@ -7,6 +7,7 @@ from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
@@ -117,7 +118,13 @@ def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
         "Accessing organization form builder page",
         extra={"user_id": request.user.id, "organization_id": organization.id},
     )
-    return render(request, "provider/form_builder.html", {"organization": organization})
+    url = reverse("patients:api-1.0.0:provider_form_create", kwargs={"organization_id": organization.id})
+    success_redirect_url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
+    return render(
+        request,
+        "provider/form_builder.html",
+        {"organization": organization, "form_create_url": url, "success_url": success_redirect_url},
+    )
 
 
 @login_required
