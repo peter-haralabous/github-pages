@@ -158,12 +158,24 @@ def patient_repository(request: AuthenticatedHttpRequest, patient: Patient, cate
 
 
 class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, show_delete: bool = False, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         if self.instance and self.instance.unattested:
             pass  # should the button text change? or add a second button for "looks good"?
         self.helper.add_input(Submit("submit", "Submit"))
+        if show_delete:
+            # NOTE-NG: hx-confirm doesn't do anything unless we attach custom hx-post behaviour to this button.
+            #          if it inherits the form's hx-post the confirmation dialog isn't shown.
+            self.helper.add_input(
+                Submit(
+                    "delete",
+                    "Delete",
+                    css_class="!btn-error",
+                    hx_delete=self.instance.get_absolute_url(),
+                    hx_confirm="Are you sure?",
+                )
+            )
 
     # NOTE: patient is marked as optional here to prevent mypy from complaining that the signature is incompatible
     #       with the base class, but a database constraint will prevent the form from being submitted without a patient
@@ -175,6 +187,12 @@ class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
         if commit:
             instance.save()
         return instance
+
+    @classmethod
+    def verbose_name(cls) -> str:
+        # https://docs.djangoproject.com/en/5.2/ref/models/options/#verbose-name
+        # encapsulated here to avoid lint exclusions everywhere it's called
+        return cls.Meta.model._meta.verbose_name  # type: ignore[attr-defined] # noqa: SLF001
 
 
 class ConditionForm(HealthRecordForm[Condition]):
@@ -210,7 +228,7 @@ class PractitionerForm(HealthRecordForm[Practitioner]):
         fields = ("name",)
 
 
-def _form_class(record_type: str):
+def _form_class(record_type: str) -> type[HealthRecordForm]:
     if record_type == "condition":
         return ConditionForm
     if record_type == "document":
@@ -222,6 +240,28 @@ def _form_class(record_type: str):
     raise Http404(f"Unknown form class: {record_type}")
 
 
+def show_updated_list_of_records(
+    request: AuthenticatedHttpRequest, patient: Patient, record_type: str, instance: HealthRecord
+) -> HttpResponse:
+    """after adding, updating, or deleting a record, show the updated list that record was a member of"""
+
+    if settings.FEATURE_PATIENT_CHATTY_APP:
+        if record_type == "document":
+            url = reverse(
+                "patients:patient_repository",
+                kwargs={"patient_id": patient.id, "category": cast("Document", instance).category},
+            )
+        else:
+            url = reverse("patients:patient_records", kwargs={"patient_id": patient.id, "record_type": record_type})
+    else:
+        url = reverse("patients:patient_details", kwargs={"patient_id": patient.id})
+
+    # htmx ignores 302 responses, so we need to redirect the browser ourselves
+    if request.headers.get("HX-Request"):
+        return HttpResponse(headers={"HX-Redirect": url})
+    return HttpResponseRedirect(url)
+
+
 @login_required
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient", "change_patient"])])
 def health_records_add(request: AuthenticatedHttpRequest, patient: Patient, record_type: str):
@@ -229,14 +269,14 @@ def health_records_add(request: AuthenticatedHttpRequest, patient: Patient, reco
     if request.method == "POST":
         form = form_class(request.POST)
         if form.is_valid():
-            form.save(patient=patient)
-            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
+            instance = form.save(patient=patient)
+            return show_updated_list_of_records(request, patient, record_type, instance)
     else:
         form = form_class()
 
     context = {
         "record_type": record_type,
-        "record_type_name": form_class.Meta.model._meta.verbose_name,  # noqa: SLF001
+        "record_type_name": form_class.verbose_name(),
         "form": form,
     }
 
@@ -329,22 +369,18 @@ def _generic_edit_view(record_type: str, request: AuthenticatedHttpRequest, inst
     form_class = _form_class(record_type)
     if request.method == "DELETE":
         instance.delete()
-        if request.headers.get("HX-Request") == "true":
-            # FIXME: doing row-by-row deletes means removing the last row doesn't re-add the empty state
-            #        consider re-rendering the entire table instead, like how document_delete does it
-            return HttpResponse(status=200)
-        return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
+        return show_updated_list_of_records(request, patient, record_type, instance)
     if request.method == "POST":
-        form = form_class(request.POST, instance=instance)
+        form = form_class(request.POST, instance=instance, show_delete=True)
         if form.is_valid():
             form.save(patient=patient)
-            return HttpResponseRedirect(reverse("patients:patient_details", kwargs={"patient_id": patient.id}))
+            return show_updated_list_of_records(request, patient, record_type, instance)
     else:
-        form = form_class(instance=instance)
+        form = form_class(instance=instance, show_delete=True)
 
     context = {
         "record_type": record_type,
-        "record_type_name": form_class.Meta.model._meta.verbose_name,  # noqa: SLF001
+        "record_type_name": form_class.verbose_name(),
         "form": form,
         "history": _history_events(instance, request.user),
     }

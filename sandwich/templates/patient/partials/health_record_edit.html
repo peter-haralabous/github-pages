@@ -7,25 +7,27 @@
   </div>
 {% endif %}
 {% crispy form %}
-<h3 class="mt-8">History</h3>
-<table class="table">
-  <tbody>
-    {% for event in history %}
-      {% if event.count %}
-        <tr>
-          <td colspan="2" class="text-center text-secondary">{{ event }}</td>
-        </tr>
-      {% else %}
-        <tr>
-          <td>
-            {{ event.get_label_display }} by {{ event.actor }}
-            {% if event.document %}
-              based on <a class="link" href="{{ event.document.get_absolute_url }}">{{ event.document }}</a>
-            {% endif %}
-          </td>
-          <td>{{ event.date }}</td>
-        </tr>
-      {% endif %}
-    {% endfor %}
-  </tbody>
-</table>
+<details class="collapse collapse-arrow mt-8">
+  <summary class="collapse-title">History</summary>
+  <table class="table collapse-content">
+    <tbody>
+      {% for event in history %}
+        {% if event.count %}
+          <tr>
+            <td colspan="2" class="text-center text-secondary">{{ event }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td>
+              {{ event.get_label_display }} by {{ event.actor }}
+              {% if event.document %}
+                based on <a class="link" href="{{ event.document.get_absolute_url }}">{{ event.document }}</a>
+              {% endif %}
+            </td>
+            <td>{{ event.date }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</details>
