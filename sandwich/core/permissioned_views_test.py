@@ -59,6 +59,9 @@ def test_all_views_permissioned() -> None:
         "patients/patient/onboarding/add",
         "patients/get_phn_validation/",
         "providers/",
+        "providers/api/",
+        "providers/api/docs",
+        "providers/api/openapi.json",
         "providers/organization/add",
         "patients/invite/<str:token>/accept",
         # These views are permissioned but not using the decorator
@@ -67,6 +70,7 @@ def test_all_views_permissioned() -> None:
         "patients/document/<uuid:document_id>/download",
         "patients/immunization/<uuid:immunization_id>",
         "patients/practitioner/<uuid:practitioner_id>",
+        "providers/api/form/organization/<organization_id>/create",
     }
 
     # This list acts as a registry of unpermissioned views. Remove entries
@@ -82,7 +86,6 @@ def test_all_views_permissioned() -> None:
         "patients/api/form/<task_id>",
         "patients/api/form/<task_id>/save_draft",
         "patients/api/form/<task_id>/submit",
-        "patients/api/form/organization/<organization_id>/create",
     }
 
     urls = get_all_urls(get_resolver().url_patterns)

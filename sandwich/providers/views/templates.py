@@ -118,7 +118,7 @@ def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
         "Accessing organization form builder page",
         extra={"user_id": request.user.id, "organization_id": organization.id},
     )
-    url = reverse("patients:api-1.0.0:provider_form_create", kwargs={"organization_id": organization.id})
+    url = reverse("providers:providers-api:create_form", kwargs={"organization_id": organization.id})
     success_redirect_url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
     return render(
         request,

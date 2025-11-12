@@ -48,6 +48,11 @@ EXCLUDED_URL_NAMES = {
     # GET endpoints that require query parameters we can't easily provide
     "get_filter_options",
     "get_filter_options_with_id",
+    # Ninja api routes below,
+    "providers-api:api-root",
+    "providers-api:openapi-json",
+    "providers-api:openapi-view",
+    "providers-api:create_form",
 }
 
 

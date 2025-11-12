@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .api import api
 from .views.custom_attribute import custom_attribute_add
 from .views.custom_attribute import custom_attribute_archive
 from .views.custom_attribute import custom_attribute_edit
@@ -48,6 +49,7 @@ from .views.templates import form_list
 app_name = "providers"
 urlpatterns = [
     path("", home, name="home"),
+    path("api/", api.urls, name="api"),
     path("organization/add", organization_add, name="organization_add"),
     path("organization/<uuid:organization_id>", organization_home, name="organization"),
     path("organization/<uuid:organization_id>/edit", organization_edit, name="organization_edit"),
