@@ -32,11 +32,8 @@
           <footer class="p-4 bg-base-100 border-t border-base-300 rounded-b-xl flex justify-center">
             <div class="w-full max-w-4xl">
               <div class="relative">{% crispy chat_form %}</div>
-              <div class="flex justify-between items-center mt-2 px-2">
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost btn-sm btn-circle">{% lucide "paperclip" class="size-5" %}</button>
-                  <button class="btn btn-ghost btn-sm btn-circle">{% lucide "share" class="size-5" %}</button>
-                </div>
+              <div class="flex justify-between items-center mt-2 gap-2">
+                <button id="chat-attach" class="btn btn-ghost btn-sm btn-circle">{% lucide "paperclip" class="size-5" %}</button>
                 <p class="text-xs text-base-content/50">
                   HealthConnect can make mistakes. Double check with a health professional you trust.
                 </p>
@@ -88,6 +85,7 @@
       const chatPanel = document.getElementById('mobile-chat-view');
       const chatMessages = chatPanel.querySelector('#chat-messages');
       const chatInput = chatPanel.querySelector("textarea");
+      const chatAttach = document.getElementById('chat-attach');
       const chatUserMessageTemplate = chatPanel.querySelector('#user-message-template');
       const chatSubmit = chatPanel.querySelector('#button-id-submit');
 
@@ -242,6 +240,7 @@
       fileInput.addEventListener('change', () => {
         uploadForm.requestSubmit();
       });
+      chatAttach.addEventListener('click', () => fileInput.click())
 
       // Set initial state on load and on resize
       window.addEventListener('resize', handleResize);
