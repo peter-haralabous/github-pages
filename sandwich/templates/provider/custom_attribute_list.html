@@ -3,9 +3,8 @@
 {% block content %}
   <div class="flex justify-between mb-2">
     <h2>Custom Fields</h2>
-    {#    this button is WIP. to be enabled in https://github.com/thrivehealth/sandwich/pull/395 #}
-    {#    <a href="{% url "providers:custom_attribute_add" organization_id=organization.id %}"#}
-    {#       class="btn btn-primary">New Field</a>#}
+    <a href="{% url "providers:custom_attribute_add" organization_id=organization.id %}"
+       class="btn btn-primary">New Field</a>
   </div>
   <div id="custom_attribute_table_container">{% include "provider/partials/custom_attribute_list_table.html" %}</div>
 {% endblock content %}
