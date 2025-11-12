@@ -1,5 +1,4 @@
 {% load lucide %}
-{% load crispy_forms_tags %}
 
 <div class="relative">
   <input type="checkbox"
@@ -7,9 +6,8 @@
          class="peer hidden" />
   <label for="encounter-details-modal-{{ encounter.id }}"
          class="fixed inset-0 bg-black/50 z-40 hidden peer-checked:block"></label>
-  <div class="fixed right-0 top-0 h-full w-full max-w-2xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
-    <!-- Top bar: section label and close -->
-    <div class="flex items-center justify-between px-6 pt-6 pb-2 border-b border-base-200">
+  <div class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
+    <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
       <div class="flex items-center gap-2 text-base-content/70">
         {% lucide "clipboard-list" class="size-5" %}
         <span class="font-medium">Encounter Details</span>
@@ -17,54 +15,14 @@
       <label for="encounter-details-modal-{{ encounter.id }}"
              class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
     </div>
-    <div class="flex items-center justify-between px-6 pt-4 pb-0">
-      <div>
-        <div class="flex items-center space-x-2">
-          <h2 class="font-bold text-2xl">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</h2>
-          {% if encounter.active %}
-            <span class="badge badge-md badge-success">Active</span>
-          {% else %}
-            <span class="badge badge-md badge-error">Archived</span>
-          {% endif %}
-        </div>
+    <div class="flex-1 overflow-y-auto px-6 py-4 text-left"
+         hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}"
+         hx-trigger="load"
+         hx-select="#content"
+         hx-swap="innerHTML">
+      <div class="flex items-center justify-center h-full">
+        <span class="loading loading-spinner loading-lg"></span>
       </div>
-      <div class="flex items-center gap-2">
-        <a href="{% url 'providers:patient' organization_id=organization.id patient_id=encounter.patient.id %}"
-           class="btn btn-primary btn-sm">View patient details</a>
-        <form action="{% url 'providers:patient_archive' organization_id=organization.id patient_id=encounter.patient.id %}"
-              class="inline"
-              method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-error btn-sm">Archive</button>
-        </form>
-        <div class="dropdown dropdown-end">
-          <button tabindex="0" class="btn btn-ghost btn-sm rounded-full cursor-pointer">
-            {% lucide "ellipsis-vertical" class="size-4" %}
-          </button>
-          <ul tabindex="0"
-              class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40 mt-2">
-            <li>
-              <a href="#">Other Action</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="text-sm flex flex-wrap gap-6 mt-2 px-6 pb-2">
-      <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ encounter.patient.date_of_birth|date:"M d, Y" }}</span>
-      <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ encounter.patient.phn|default:"—" }}</span>
-      <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ encounter.patient.email|default:"—" }}</span>
-    </div>
-    {# Scrollable content with sections #}
-    <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-4">
-      <hr />
-      {% include 'provider/partials/encounter_details_section.html' %}
-      <hr />
-      {% include 'provider/partials/documents_and_forms_section.html' %}
-      <hr />
-      {% include 'provider/partials/summaries_section.html' %}
-      <hr />
-      {% include 'provider/partials/activity_section.html' %}
     </div>
   </div>
 </div>
