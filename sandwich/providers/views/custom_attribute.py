@@ -162,34 +162,10 @@ def custom_attribute_add(request: AuthenticatedHttpRequest, organization: Organi
 
         # Create formset with POST data, but without instance yet
         formset = CustomAttributeEnumFormSet(request.POST, prefix="enums")
+        input_type = form.data["input_type"]
+        requires_enums = input_type in ("select", "multi_select")
 
-        if form.is_valid():
-            # Validate formset only if ENUM type
-            input_type = form.cleaned_data["input_type"]
-            requires_enums = input_type in ("select", "multi_select")
-
-            if requires_enums:
-                if formset.is_valid():
-                    # Check at least one enum value
-                    valid_forms = [f for f in formset if f.cleaned_data and not f.cleaned_data.get("DELETE")]
-                    if not valid_forms:
-                        messages.error(request, "At least one option is required for Select/Multi-Select types.")
-                        context = {
-                            "organization": organization,
-                            "form": form,
-                            "formset": formset,
-                            "show_enum_fields": True,
-                        }
-                        return render(request, "provider/custom_attribute_edit.html", context)
-                else:
-                    context = {
-                        "organization": organization,
-                        "form": form,
-                        "formset": formset,
-                        "show_enum_fields": True,
-                    }
-                    return render(request, "provider/custom_attribute_edit.html", context)
-
+        if form.is_valid() and formset.is_valid():
             # Save everything in transaction
             with transaction.atomic():
                 instance = form.save()
@@ -202,12 +178,20 @@ def custom_attribute_add(request: AuthenticatedHttpRequest, organization: Organi
             return HttpResponseRedirect(
                 reverse("providers:custom_attribute_list", kwargs={"organization_id": organization.id})
             )
-    else:
-        form = CustomAttributeForm(
-            content_type=ContentType.objects.get_for_model(Encounter),
-            organization=organization,
-        )
-        formset = CustomAttributeEnumFormSet(prefix="enums")
+
+        messages.error(request, "Error while creating custom attribute")
+        context = {
+            "organization": organization,
+            "form": form,
+            "formset": CustomAttributeEnumFormSet(prefix="enums"),
+            "show_enum_fields": requires_enums,
+        }
+        return render(request, "provider/custom_attribute_edit.html", context)
+    form = CustomAttributeForm(
+        content_type=ContentType.objects.get_for_model(Encounter),
+        organization=organization,
+    )
+    formset = CustomAttributeEnumFormSet(prefix="enums")
 
     context = {
         "organization": organization,
