@@ -1,14 +1,14 @@
 <div class="assistant-message ml-5">
   <div class="assistant-message-content p-4 border rounded-lg bg-base-100 text-primary cursor-pointer">
     {{ message }}
-    {% if buttons %}
-      <div class="mt-2">
-        {% for button in buttons %}
-          <button class="btn btn-sm btn-outline btn-secondary my-1 assistant-button"
-                  data-action="{{ button.action }}"
-                  data-value="{{ button.value }}">{{ button.label }}</button>
-        {% endfor %}
-      </div>
-    {% endif %}
+    {#    {% if buttons %}#}
+    {#      <div class="mt-2">#}
+    {#        {% for button in buttons %}#}
+    {#          <button class="btn btn-sm btn-outline btn-secondary my-1 assistant-button"#}
+    {#                  data-action="{{ button.action }}"#}
+    {#                  data-value="{{ button.value }}">{{ button.label }}</button>#}
+    {#        {% endfor %}#}
+    {#      </div>#}
+    {#    {% endif %}#}
   </div>
 </div>
