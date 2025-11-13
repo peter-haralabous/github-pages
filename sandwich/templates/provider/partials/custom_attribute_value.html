@@ -1,0 +1,36 @@
+{% load list_helpers %}
+
+{% comment %}
+Renders a custom attribute field with label and value.
+Expects: attr (CustomAttribute object), attribute_values (dict mapping attr.id to values)
+{% endcomment %}
+<div>
+  <div class="text-sm text-base-content/60 mb-1">{{ attr.name }}</div>
+  <div>
+    {% with value=attribute_values|get_item:attr.id %}
+      {% if attr.is_multi %}
+        {% if value %}
+          {% if attr.data_type == 'date' %}
+            {% for v in value %}
+              {{ v|date:"Y-m-d" }}
+              {% if not forloop.last %},{% endif %}
+            {% endfor %}
+          {% else %}
+            {% for v in value %}
+              {{ v }}
+              {% if not forloop.last %},{% endif %}
+            {% endfor %}
+          {% endif %}
+        {% else %}
+          —
+        {% endif %}
+      {% else %}
+        {% if attr.data_type == 'date' %}
+          {{ value|date:"Y-m-d"|default:"—" }}
+        {% else %}
+          {{ value|default:"—" }}
+        {% endif %}
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>

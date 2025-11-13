@@ -1,10 +1,15 @@
+from datetime import date
+
 import pytest
+from django.contrib.contenttypes.models import ContentType
 from django.test import Client
 from django.urls import reverse
 from playwright.sync_api import Page
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import ListViewType
+from sandwich.core.models.custom_attribute import CustomAttribute
+from sandwich.core.models.custom_attribute import CustomAttributeEnum
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.invitation import Invitation
@@ -54,6 +59,85 @@ def test_encounter_details_returns_template(provider: User, organization: Organi
 
     assert result.status_code == 200
     assert "provider/encounter_details.html" in [template.name for template in result.templates]
+
+
+@pytest.mark.django_db
+def test_encounter_details_includes_custom_attributes(
+    provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that custom attributes are included in the encounter details context."""
+
+    # Create custom attributes for encounters
+    content_type = ContentType.objects.get_for_model(Encounter)
+
+    date_attr = CustomAttribute.objects.create(
+        organization=organization,
+        content_type=content_type,
+        name="Follow-up Date",
+        data_type=CustomAttribute.DataType.DATE,
+    )
+
+    enum_attr = CustomAttribute.objects.create(
+        organization=organization,
+        content_type=content_type,
+        name="Priority",
+        data_type=CustomAttribute.DataType.ENUM,
+    )
+
+    high_priority = CustomAttributeEnum.objects.create(
+        attribute=enum_attr,
+        label="High",
+        value="high",
+    )
+
+    # Add values to the encounter
+    encounter.attributes.create(attribute=date_attr, value_date=date(2025, 12, 31))
+    encounter.attributes.create(attribute=enum_attr, value_enum=high_priority)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+    result = client.get(url)
+
+    assert result.status_code == 200
+    assert result.context is not None
+    assert "custom_attributes" in result.context
+    assert "attribute_values" in result.context
+
+    custom_attrs = list(result.context["custom_attributes"])
+    assert len(custom_attrs) == 2
+    assert any(attr.name == "Follow-up Date" for attr in custom_attrs)
+    assert any(attr.name == "Priority" for attr in custom_attrs)
+
+    attr_values = result.context["attribute_values"]
+    assert attr_values[date_attr.id] == date(2025, 12, 31)
+    assert attr_values[enum_attr.id] == "High"
+
+
+@pytest.mark.django_db
+def test_encounter_details_shows_custom_attributes_with_no_value(
+    provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that custom attributes without values show None in context."""
+
+    # Create a custom attribute but don't set a value
+    content_type = ContentType.objects.get_for_model(Encounter)
+    attr = CustomAttribute.objects.create(
+        organization=organization,
+        content_type=content_type,
+        name="Notes",
+        data_type=CustomAttribute.DataType.DATE,
+    )
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+    result = client.get(url)
+
+    assert result.status_code == 200
+    assert result.context is not None
+    attr_values = result.context["attribute_values"]
+    assert attr_values[attr.id] is None
 
 
 @pytest.mark.django_db

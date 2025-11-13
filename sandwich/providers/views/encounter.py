@@ -1,4 +1,6 @@
 import logging
+from typing import TYPE_CHECKING
+from typing import Any
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -17,6 +19,7 @@ from django.urls import reverse
 from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import ListViewType
+from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
@@ -36,6 +39,9 @@ from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
+
+if TYPE_CHECKING:
+    from uuid import UUID
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +92,37 @@ def encounter_details(
     if not request.user.has_perm("view_invitation", pending_invitation):
         pending_invitation = None
 
+    # Get custom attributes for encounters in this organization
+    content_type = ContentType.objects.get_for_model(Encounter)
+    custom_attributes = CustomAttribute.objects.filter(
+        organization=organization,
+        content_type=content_type,
+    ).order_by("name")
+
+    # Build a dict of custom attribute values for this encounter
+    attribute_values: dict[UUID, Any] = {}
+    for attr in custom_attributes:
+        values = encounter.attributes.filter(attribute=attr)
+
+        if attr.is_multi:
+            # Handle multi-valued attributes - always return a list
+            if attr.data_type == CustomAttribute.DataType.DATE:
+                attribute_values[attr.id] = [v.value_date for v in values if v.value_date]
+            elif attr.data_type == CustomAttribute.DataType.ENUM:
+                attribute_values[attr.id] = [v.value_enum.label for v in values if v.value_enum]
+            else:
+                attribute_values[attr.id] = []
+        else:
+            # Handle single-valued attributes
+            value = values.first()
+            if value:
+                if attr.data_type == CustomAttribute.DataType.DATE:
+                    attribute_values[attr.id] = value.value_date
+                elif attr.data_type == CustomAttribute.DataType.ENUM:
+                    attribute_values[attr.id] = value.value_enum.label if value.value_enum else None
+            else:
+                attribute_values[attr.id] = None
+
     context = {
         "patient": patient,
         "organization": organization,
@@ -93,6 +130,8 @@ def encounter_details(
         "other_encounters": other_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
+        "custom_attributes": custom_attributes,
+        "attribute_values": attribute_values,
     }
     return render(request, "provider/encounter_details.html", context)
 

@@ -34,3 +34,18 @@ def custom_attr_name(column_value: str) -> str:
     """
     attr_id = _parse_custom_attribute_id(column_value)
     return _get_annotation_field_name(attr_id) if attr_id else ""
+
+
+@register.filter
+def get_item(dictionary: dict, key: Any) -> Any:
+    """
+    Get an item from a dictionary by key.
+
+    Used for accessing dictionary values in templates.
+
+    Example: {{ my_dict|get_item:my_key }}
+    """
+    try:
+        return dictionary.get(key)
+    except (AttributeError, TypeError):
+        return None
