@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class EventType(StrEnum):
+    ASSISTANT_MESSAGE = "assistant_message"
+    ASSISTANT_THINKING = "assistant_thinking"
     INGEST_PROGRESS = "ingest_progress"
 
 
