@@ -178,9 +178,9 @@ dev = [
 ]
 
 [project]
-name = "sandwich"
+name = "thrive-prototypes"
 version = "0.1.0"
-description = "bread + htmx"
+description = "Thrive Health prototypes and experimental features"
 readme = "README.md"
 
 requires-python = "==3.13.*"

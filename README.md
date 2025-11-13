@@ -1,8 +1,6 @@
-# sandwich
+# thrive-prototypes
 
-bread + htmx
-
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
+Thrive Health prototypes and experimental features - a Django + HTMX application for rapid healthcare solution development.
 
 ## Quickstart
 

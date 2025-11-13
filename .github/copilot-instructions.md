@@ -1,6 +1,6 @@
-# Copilot Instructions for sandwich
+# Copilot Instructions for thrive-prototypes
 
-This repository is a Django web application built with HTMX and Tailwind CSS for creating healthcare-related forms and workflows.
+This repository is a Django web application built with HTMX and Tailwind CSS for prototyping healthcare-related forms and workflows.
 
 ## Technology Stack
 
