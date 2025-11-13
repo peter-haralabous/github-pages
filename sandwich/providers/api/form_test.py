@@ -15,7 +15,7 @@ def intake_form(organization: Organization) -> Form:
     return FormFactory.create(organization=organization, name="Intake Form")
 
 
-def test_provider_form_create(client: Client, owner: User, organization: Organization):
+def test_create_form(client: Client, owner: User, organization: Organization):
     orgs_forms = Form.objects.filter(organization=organization)
     assert orgs_forms.exists() is False
 
@@ -31,7 +31,7 @@ def test_provider_form_create(client: Client, owner: User, organization: Organiz
     assert response.json()["message"] == "Form created successfully"
 
 
-def test_provider_form_create_validation(client: Client, owner: User, organization: Organization):
+def test_create_form_validation(client: Client, owner: User, organization: Organization):
     """If the user does not provide a form title, endpoint returns 400 error."""
     client.force_login(owner)
     payload = {"width": "1000px"}
@@ -42,9 +42,7 @@ def test_provider_form_create_validation(client: Client, owner: User, organizati
     assert response.json()["detail"] == "Form must include a title: 'General' section missing 'Survey title'"
 
 
-def test_provider_form_create_duplicate_form_name(
-    client: Client, owner: User, organization: Organization, intake_form: Form
-):
+def test_create_form_duplicate_form_name(client: Client, owner: User, organization: Organization, intake_form: Form):
     """Creating a form with the same as an existing one in the organization returns 400 error."""
     client.force_login(owner)
     payload = {"title": intake_form.name}
