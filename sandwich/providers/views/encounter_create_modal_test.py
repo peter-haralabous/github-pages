@@ -32,6 +32,7 @@ def provider_page(live_server, page: Page, provider: User) -> Page:
 
 
 @pytest.mark.e2e
+@pytest.mark.django_db
 def test_encounter_create_modal_opens_with_button(live_server, provider_page: Page, organization: Organization):
     """Test that the encounter create command palette opens when 'New Encounter' button is clicked."""
     provider_page.goto(
@@ -53,6 +54,7 @@ def test_encounter_create_modal_opens_with_button(live_server, provider_page: Pa
 
 
 @pytest.mark.e2e
+@pytest.mark.django_db
 def test_encounter_create_patient_form_no_longer_redirects_to_encounter_page(
     live_server, provider_page: Page, organization: Organization
 ):
@@ -96,6 +98,7 @@ def test_encounter_create_patient_form_no_longer_redirects_to_encounter_page(
 
 
 @pytest.mark.e2e
+@pytest.mark.django_db
 def test_encounter_modal_opens_via_htmx(live_server, provider_page: Page, organization: Organization, provider: User):
     """Test that clicking a patient in the command palette results loads the encounter modal via HTMX."""
     # Create a patient and assign view permission
@@ -166,6 +169,7 @@ def test_encounter_modal_opens_via_htmx(live_server, provider_page: Page, organi
 
 
 @pytest.mark.e2e
+@pytest.mark.django_db
 def test_create_patient_from_encounter_modal(
     live_server, provider_page: Page, organization: Organization, provider: User
 ):
