@@ -1,6 +1,7 @@
 from typing import Any
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
 
 from sandwich.core.models import Organization
@@ -16,6 +17,20 @@ def test_form_create(db: Any, organization: Organization) -> None:
     with pytest.raises(IntegrityError):
         # Duplicate form name in same org raises error.
         Form.objects.create(name="Test Form", schema={"baz": "zooka"}, organization=organization)
+
+
+def test_form_create_with_file_reference(db: Any, organization: Organization) -> None:
+    test_file = SimpleUploadedFile(name="test_file", content=b"test content")
+    form = Form.objects.create(
+        name="Test Form", schema={"foo": "bar"}, organization=organization, reference_file=test_file
+    )
+    assert form.pk is not None
+    assert form.name == "Test Form"
+    assert form.schema == {"foo": "bar"}
+    assert form.organization == organization
+    assert form.reference_file.size != 0
+    assert form.reference_file.size == test_file.size
+    assert form.reference_file.name.startswith("form_reference_files/")
 
 
 def test_form_versions(db: Any, organization: Organization) -> None:

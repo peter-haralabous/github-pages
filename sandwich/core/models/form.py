@@ -1,5 +1,6 @@
 import pghistory
 from django.db import models
+from private_storage.fields import PrivateFileField
 
 from sandwich.core.mixins.versioning import VersionMixin
 from sandwich.core.models.abstract import BaseModel
@@ -25,6 +26,7 @@ class Form(VersionMixin, BaseModel):
         help_text="The surveyjs JSON schema of the form",
     )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    reference_file = PrivateFileField(upload_to="form_reference_files/", null=True, blank=True)
 
     objects = FormManager()
 
