@@ -6,10 +6,12 @@
       {% block topnav %}
         {% include 'partials/topnav.html' %}
       {% endblock topnav %}
-      <div class="p-1 lg:p-6 flex-1">
-        {% block content %}
-        {% endblock content %}
-      </div>
+      {% block main %}
+        <div class="p-1 lg:p-6 flex-1">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      {% endblock main %}
     </div>
   </div>
 {% endblock body %}

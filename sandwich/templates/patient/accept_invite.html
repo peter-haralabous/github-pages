@@ -2,8 +2,8 @@
 
 {% load crispy_forms_tags %}
 
-{% block main %}
+{% block content %}
   <p>{{ invitation.patient.organization.name }} is inviting you to join their practice.</p>
   <p>{{ invitation.patient.full_name }}</p>
   {% crispy form %}
-{% endblock main %}
+{% endblock content %}

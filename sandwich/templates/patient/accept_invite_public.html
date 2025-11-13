@@ -1,9 +1,9 @@
 {% extends "patient/base.html" %}
 
-{% block main %}
+{% block content %}
   <p>{{ invitation.patient.organization.name }} is inviting you to join their practice.</p>
   {# intentionally not exposing any patient information here; we just want to show a bit more context than landing directly on the login page #}
   <p>
     Please <a href="{% url 'account_signup' %}?next={{ request.path }}">create an account</a> or <a href="{% url 'account_login' %}?next={{ request.path }}">log in</a> to accept the invitation.
   </p>
-{% endblock main %}
+{% endblock content %}
