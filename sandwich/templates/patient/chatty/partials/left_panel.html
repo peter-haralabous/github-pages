@@ -39,6 +39,20 @@
       {% lucide "folder" class="size-5" %}
       <h3 class="font-medium">Repository</h3>
     </a>
+    <a href="{% url 'patients:patient_tasks' patient_id=patient.id %}"
+       hx-get="{% url 'patients:patient_tasks' patient_id=patient.id %}"
+       hx-target="#left-panel"
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="aspect-square p-4 rounded-3xl lg:rounded-2xl text-left relative overflow-hidden group w-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-lg bg-cyan-100 text-cyan-800">
+      {% if tasks_count %}
+        <div class="absolute top-3 right-3 h-8 px-3 rounded-full bg-black/5 group-hover:bg-black/10 flex items-center justify-center transition-colors font-semibold text-sm">
+          {{ tasks_count }}
+        </div>
+      {% endif %}
+      {% lucide "folder" class="size-5" %}
+      <h3 class="font-medium">Forms</h3>
+    </a>
   </nav>
 {% endblock panel_content %}
 {% block collapsed_panel_content %}

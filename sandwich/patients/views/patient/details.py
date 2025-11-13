@@ -25,9 +25,12 @@ logger = logging.getLogger(__name__)
 def _chatty_patient_details_context(request: AuthenticatedHttpRequest, patient: Patient):
     records_count = get_total_health_record_count(patient)
     repository_count = patient.document_set.count()
+    tasks_count = patient.task_set.count()
+
     return {
         "records_count": records_count,
         "repository_count": repository_count,
+        "tasks_count": tasks_count,
     } | _chat_context(request, patient=patient)
 
 

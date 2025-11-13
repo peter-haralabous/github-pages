@@ -20,6 +20,7 @@ from .views.patient.health_records import health_records_add
 from .views.patient.health_records import immunization_edit
 from .views.patient.health_records import patient_records
 from .views.patient.health_records import patient_repository
+from .views.patient.health_records import patient_tasks
 from .views.patient.health_records import practitioner_edit
 from .views.task import task
 
@@ -36,6 +37,7 @@ urlpatterns = [
     path("patient/<uuid:patient_id>/records/<str:record_type>", patient_records, name="patient_records"),
     path("patient/<uuid:patient_id>/repository", patient_repository, name="patient_repository"),
     path("patient/<uuid:patient_id>/repository/<str:category>", patient_repository, name="patient_repository"),
+    path("patient/<uuid:patient_id>/tasks", patient_tasks, name="patient_tasks"),
     path(
         "patient/<uuid:patient_id>/health_records/<str:record_type>/add", health_records_add, name="health_records_add"
     ),

@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
 
@@ -108,6 +109,9 @@ class Task(BaseModel):
             return self._formio_submission
         except FormioSubmission.DoesNotExist:
             return None
+
+    def get_absolute_url(self):
+        return reverse("patients:task", kwargs={"task_id": self.id, "patient_id": self.patient.id})
 
     class Meta:
         permissions = (("complete_task", "Can complete a task."),)

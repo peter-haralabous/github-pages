@@ -23,6 +23,7 @@ from sandwich.core.models import Document
 from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
+from sandwich.core.models import Task
 from sandwich.core.models.document import DocumentCategory
 from sandwich.core.models.health_record import HealthRecord
 from sandwich.core.service.health_record_service import get_document_count_by_category
@@ -142,6 +143,35 @@ def patient_repository(request: AuthenticatedHttpRequest, patient: Patient, cate
             for record in patient.document_set.filter(category=category)
         ]
 
+    context = {
+        "patient": patient,
+        "left_panel_title": left_panel_title,
+        "left_panel_back_link": left_panel_back_link,
+        "left_panel_items": items,
+    }
+    if request.headers.get("HX-Target") == "left-panel":
+        return render(request, "patient/chatty/partials/left_panel_records.html", context)
+
+    context |= _chat_context(request, patient=patient)
+    return render(request, "patient/chatty/records.html", context)
+
+
+@login_required
+@authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient"])])
+def patient_tasks(request: AuthenticatedHttpRequest, patient: Patient):
+    left_panel_title = "Forms"
+    left_panel_back_link = reverse("patients:patient_details", kwargs={"patient_id": patient.id})
+
+    def task_icon(task: Task) -> str:
+        if task.active:
+            return "clipboard"
+        return "clipboard-check"
+
+    items = [
+        NavItem(link=task.get_absolute_url(), label=task.name, icon=task_icon(task))
+        # FIXME: need to page this list
+        for task in patient.task_set.all()
+    ]
     context = {
         "patient": patient,
         "left_panel_title": left_panel_title,
