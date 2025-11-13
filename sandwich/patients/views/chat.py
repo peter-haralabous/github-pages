@@ -1,4 +1,5 @@
 import logging
+import uuid
 from typing import TYPE_CHECKING
 
 from crispy_forms.helper import FormHelper
@@ -16,6 +17,8 @@ from sandwich.core.inputs import RoundIconButton
 from sandwich.core.models import Patient
 from sandwich.core.service.agent_service.config import configure
 from sandwich.core.service.chat_service.chat import receive_chat_message
+from sandwich.core.service.chat_service.sse import send_assistant_message
+from sandwich.core.service.chat_service.sse import send_assistant_thinking
 from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.users.models import User
@@ -43,9 +46,8 @@ class ChatForm(forms.Form):
         self.helper.add_input(
             RoundIconButton(
                 icon="arrow-up",
+                hx_swap="none",
                 hx_post=reverse("patients:chat"),
-                hx_target="#chat-messages",
-                hx_swap="beforeend",
             )
         )
         self.fields["patient"].queryset = self._patient_queryset()  # type: ignore[attr-defined]
@@ -63,7 +65,9 @@ def chat(request: AuthenticatedHttpRequest) -> HttpResponse:
         patient = form.cleaned_data["patient"]
         thread = f"{user.pk}-{patient.pk}"  # Hard code for now
         message = form.cleaned_data["message"]
+
         message_id = str(uuid.uuid4())
+        send_assistant_thinking(patient, message_id)
         response: ChatResponse = receive_chat_message(
             user=user,
             patient=patient,
@@ -71,8 +75,15 @@ def chat(request: AuthenticatedHttpRequest) -> HttpResponse:
             message=message,
             message_id=message_id,
         )
-        context = {"message": markdown_to_html(response.message), "buttons": response.buttons}
-        return render(request, "patient/chatty/partials/assistant_message.html", context)
+        send_assistant_message(
+            patient,
+            message_id,
+            context={
+                "message": markdown_to_html(response.message),
+                "buttons": response.buttons,
+            },
+        )
+        return HttpResponse("OK")
     logging.error("Invalid chat form: %s", form.errors)
     context = {"message": str(form.errors) if settings.DEBUG else "An error has occurred"}
     return render(request, "patient/chatty/partials/assistant_message.html", context)

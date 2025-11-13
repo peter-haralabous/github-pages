@@ -7,9 +7,9 @@
   <div class="grid grid-rows-[auto_1fr_auto] h-screen">
     {% include 'patient/chatty/partials/topnav.html' %}
     <div class="overflow-hidden">
-      {# the sse-swap here is misleading; ingest_progress messages include a hx-swap-oob with their real target #}
+      {# The sse-swap here is misleading; messages include a hx-swap-oob with their real target #}
       <div sse-connect="{% url "core:events" %}?channel=patient/{{ patient.id }}"
-           sse-swap="ingest_progress"></div>
+           sse-swap="assistant_message,assistant_thinking,ingest_progress"></div>
       <div class="flex flex-row gap-2 p-1 lg:p-6 h-full">
         {# Left Panel #}
         {% block left_panel %}
@@ -145,55 +145,11 @@
         const message = chatInput.value.trim();
         if (message) {
           addUserMessage(message);
-          addAssistantSkeleton();
           chatInputSet('');
         } else {
           event.preventDefault(); // Cancel the request
         }
       });
-
-
-      document.body.addEventListener('htmx:load', function(event) {
-        removeAssistantSkeleton();
-        event.target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        })
-
-        // attach any event listeners for assistant buttons
-        const assistantButtons = chatMessages.querySelectorAll('.assistant-button');
-        assistantButtons.forEach(button => {
-          if (button.dataset.action === "prompt") {
-            button.addEventListener('click', () => {
-              chatInputSet(button.dataset.value);
-            });
-          }
-        });
-      });
-
-      function addAssistantSkeleton() {
-        const skeleton = document.createElement('div');
-        skeleton.classList.add('assistant-message', 'chat', 'chat-start', 'my-1', 'assistant-skeleton');
-        skeleton.innerHTML = `
-            <div class="assistant-message-content chat-bubble p-4 border rounded-lg bg-base-100 text-primary">
-              <div class="animate-pulse">
-                <div class="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
-                <div class="h-4 bg-base-300 rounded w-5/6 mb-2"></div>
-                <div class="h-4 bg-base-300 rounded w-1/2"></div>
-              </div>
-            </div>
-          `;
-        chatMessages.appendChild(skeleton);
-        // Scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      function removeAssistantSkeleton() {
-        const skeleton = chatMessages.querySelector('.assistant-skeleton');
-        if (skeleton) {
-          chatMessages.removeChild(skeleton);
-        }
-      }
 
       function addUserMessage(text) {
         const clone = document.importNode(chatUserMessageTemplate.content, true);

@@ -1,15 +1,48 @@
-<div class="assistant-message chat chat-start my-1">
-  {# assistant messages are markdown; prose applies default styling to lists & headings #}
-  <div class="assistant-message-content chat-bubble prose">
-    {{ message }}
-    {#    {% if buttons %}#}
-    {#      <div class="mt-2">#}
-    {#        {% for button in buttons %}#}
-    {#          <button class="btn btn-sm btn-outline btn-secondary my-1 assistant-button"#}
-    {#                  data-action="{{ button.action }}"#}
-    {#                  data-value="{{ button.value }}">{{ button.label }}</button>#}
-    {#        {% endfor %}#}
-    {#      </div>#}
-    {#    {% endif %}#}
+{% if oob %}
+  <div hx-swap-oob="{{ oob }}"
+       {% if message_id %}id="message-{{ message_id }}"{% endif %}>
+  {% endif %}
+  <div {% if message_id %}id="message-{{ message_id }}" data-message-id="{{ message_id }}"{% endif %}
+       class="{% block message_classes %}assistant-message chat chat-start my-1{% endblock message_classes %}">
+    {# assistant messages are markdown; prose applies default styling to lists & headings #}
+    <div class="assistant-message-content chat-bubble prose cursor-pointer bg-primary/20">
+      {% block message_content %}
+        {{ message }}
+        {#        {% if buttons %}#}
+        {#          <div class="mt-2">#}
+        {#            {% for button in buttons %}#}
+        {#              <button class="btn btn-sm btn-outline btn-secondary my-1 assistant-button"#}
+        {#                      data-action="{{ button.action }}"#}
+        {#                      data-value="{{ button.value }}">{{ button.label }}</button>#}
+        {#            {% endfor %}#}
+        {#          </div>#}
+        {#        {% endif %}#}
+      {% endblock message_content %}
+    </div>
   </div>
-</div>
+  {% if oob %}
+  </div>
+  {# djlint:off #}
+  <script>
+    {% if message_id %}
+      document.querySelector("#message-{{ message_id }}").scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+
+      {% if buttons %}
+        document.querySelector("#message-{{ message_id }}")
+            .querySelectorAll('.assistant-button')
+            .forEach(button => {
+          if (button.dataset.action === "prompt") {
+            button.addEventListener('click', () => {
+              chatInputSet(button.dataset.value);
+            });
+          }
+        });
+      {% endif %}
+
+    {% endif %}
+</script>
+  {# djlint:on #}
+{% endif %}

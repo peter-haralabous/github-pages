@@ -1,0 +1,12 @@
+{% extends "patient/chatty/partials/assistant_message.html" %}
+
+{% block message_classes %}
+  {{ block.super }} assistant-skeleton
+{% endblock message_classes %}
+{% block message_content %}
+  <div class="animate-pulse w-100">
+    <div class="h-4 bg-base-300 rounded w-3/4 mb-2"></div>
+    <div class="h-4 bg-base-300 rounded w-5/6 mb-2"></div>
+    <div class="h-4 bg-base-300 rounded w-1/2"></div>
+  </div>
+{% endblock message_content %}
