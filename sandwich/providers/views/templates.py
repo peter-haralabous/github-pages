@@ -99,7 +99,13 @@ def form_edit(request: AuthenticatedHttpRequest, organization: Organization, for
         "Accessing organization form edit page",
         extra={"user_id": request.user.id, "organization_id": organization.id, "form_id": form.id},
     )
-    return render(request, "provider/form_builder.html", {"organization": organization, "form": form})
+    url = reverse("providers:providers-api:edit_form", kwargs={"organization_id": organization.id, "form_id": form.id})
+    success_redirect_url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
+    return render(
+        request,
+        "provider/form_builder.html",
+        {"organization": organization, "form": form, "form_save_url": url, "success_url": success_redirect_url},
+    )
 
 
 @surveyjs_csp
