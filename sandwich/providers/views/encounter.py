@@ -74,6 +74,64 @@ class EncounterCreateForm(forms.ModelForm[Encounter]):
         return encounter
 
 
+def _format_attribute_value(attr: CustomAttribute, values: list) -> str | None:
+    """
+    Format custom attribute values for display.
+
+    Returns formatted string value, or None if no values exist
+    """
+    if not values:
+        return None
+
+    if attr.is_multi:
+        # Handle multi-valued attributes - return comma-separated string
+        if attr.data_type == CustomAttribute.DataType.DATE:
+            formatted = [str(v.value_date) for v in values if v.value_date]
+        elif attr.data_type == CustomAttribute.DataType.ENUM:
+            formatted = [v.value_enum.label for v in values if v.value_enum]
+        else:
+            return None
+        return ", ".join(formatted) if formatted else None
+    # Handle single-valued attributes
+    value = values[0]
+    if attr.data_type == CustomAttribute.DataType.DATE:
+        return str(value.value_date) if value.value_date else None
+    if attr.data_type == CustomAttribute.DataType.ENUM:
+        return value.value_enum.label if value.value_enum else None
+    return None
+
+
+def _format_attributes(encounter: Encounter, custom_attributes: list[CustomAttribute]) -> list[dict[str, Any]]:
+    """
+    Build a simplified representation of custom attributes with their values.
+
+    Returns list of dicts with 'name' and 'value' keys for template rendering
+    """
+    # Prefetch all attribute values for this encounter to avoid N+1 queries
+    attribute_values_qs = encounter.attributes.select_related("value_enum").all()
+
+    # Group values by attribute ID
+    values_by_attr: dict[UUID, list] = {}
+    for value in attribute_values_qs:
+        if value.attribute_id not in values_by_attr:
+            values_by_attr[value.attribute_id] = []
+        values_by_attr[value.attribute_id].append(value)
+
+    # Build formatted attribute list
+    formatted = []
+    for attr in custom_attributes:
+        values = values_by_attr.get(attr.id, [])
+        formatted_value = _format_attribute_value(attr, values)
+        formatted.append(
+            {
+                "name": attr.name,
+                "value": formatted_value,
+            }
+        )
+
+    return formatted
+
+
 @login_required
 @authorize_objects(
     [
@@ -94,34 +152,15 @@ def encounter_details(
 
     # Get custom attributes for encounters in this organization
     content_type = ContentType.objects.get_for_model(Encounter)
-    custom_attributes = CustomAttribute.objects.filter(
-        organization=organization,
-        content_type=content_type,
-    ).order_by("name")
+    custom_attributes = list(
+        CustomAttribute.objects.filter(
+            organization=organization,
+            content_type=content_type,
+        ).order_by("name")
+    )
 
-    # Build a dict of custom attribute values for this encounter
-    attribute_values: dict[UUID, Any] = {}
-    for attr in custom_attributes:
-        values = encounter.attributes.filter(attribute=attr)
-
-        if attr.is_multi:
-            # Handle multi-valued attributes - always return a list
-            if attr.data_type == CustomAttribute.DataType.DATE:
-                attribute_values[attr.id] = [v.value_date for v in values if v.value_date]
-            elif attr.data_type == CustomAttribute.DataType.ENUM:
-                attribute_values[attr.id] = [v.value_enum.label for v in values if v.value_enum]
-            else:
-                attribute_values[attr.id] = []
-        else:
-            # Handle single-valued attributes
-            value = values.first()
-            if value:
-                if attr.data_type == CustomAttribute.DataType.DATE:
-                    attribute_values[attr.id] = value.value_date
-                elif attr.data_type == CustomAttribute.DataType.ENUM:
-                    attribute_values[attr.id] = value.value_enum.label if value.value_enum else None
-            else:
-                attribute_values[attr.id] = None
+    # Format attributes with their values for display
+    formatted_attributes = _format_attributes(encounter, custom_attributes)
 
     context = {
         "patient": patient,
@@ -130,8 +169,7 @@ def encounter_details(
         "other_encounters": other_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
-        "custom_attributes": custom_attributes,
-        "attribute_values": attribute_values,
+        "formatted_attributes": formatted_attributes,
     }
     return render(request, "provider/encounter_details.html", context)
 

@@ -101,17 +101,15 @@ def test_encounter_details_includes_custom_attributes(
 
     assert result.status_code == 200
     assert result.context is not None
-    assert "custom_attributes" in result.context
-    assert "attribute_values" in result.context
+    assert "formatted_attributes" in result.context
 
-    custom_attrs = list(result.context["custom_attributes"])
-    assert len(custom_attrs) == 2
-    assert any(attr.name == "Follow-up Date" for attr in custom_attrs)
-    assert any(attr.name == "Priority" for attr in custom_attrs)
+    formatted_attrs = result.context["formatted_attributes"]
+    assert len(formatted_attrs) == 2
 
-    attr_values = result.context["attribute_values"]
-    assert attr_values[date_attr.id] == date(2025, 12, 31)
-    assert attr_values[enum_attr.id] == "High"
+    # Check that both attributes are present with correct values
+    attr_dict = {attr["name"]: attr["value"] for attr in formatted_attrs}
+    assert attr_dict["Follow-up Date"] == "2025-12-31"
+    assert attr_dict["Priority"] == "High"
 
 
 @pytest.mark.django_db
@@ -122,7 +120,7 @@ def test_encounter_details_shows_custom_attributes_with_no_value(
 
     # Create a custom attribute but don't set a value
     content_type = ContentType.objects.get_for_model(Encounter)
-    attr = CustomAttribute.objects.create(
+    CustomAttribute.objects.create(
         organization=organization,
         content_type=content_type,
         name="Notes",
@@ -136,8 +134,12 @@ def test_encounter_details_shows_custom_attributes_with_no_value(
 
     assert result.status_code == 200
     assert result.context is not None
-    attr_values = result.context["attribute_values"]
-    assert attr_values[attr.id] is None
+    formatted_attrs = result.context["formatted_attributes"]
+
+    # Find the Notes attribute
+    notes_attr = next((a for a in formatted_attrs if a["name"] == "Notes"), None)
+    assert notes_attr is not None
+    assert notes_attr["value"] is None
 
 
 @pytest.mark.django_db
