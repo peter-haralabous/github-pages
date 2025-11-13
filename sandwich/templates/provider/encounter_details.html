@@ -37,11 +37,18 @@
            class="btn btn-outline">View patient</a>
         <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
            class="btn btn-outline">Edit patient record</a>
-        <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+        <form action="{% url "providers:encounter_archive" organization_id=organization.id encounter_id=encounter.id %}"
               class="inline"
               method="post">
           {% csrf_token %}
-          <button type="submit" class="btn btn-error">Archive</button>
+          <button type="submit"
+                  class="btn {% if encounter.status == "completed" %}btn-outline{% else %}btn-error{% endif %}">
+            {% if encounter.status == "completed" %}
+              Unarchive Encounter
+            {% else %}
+              Archive Encounter
+            {% endif %}
+          </button>
         </form>
       </div>
     </div>

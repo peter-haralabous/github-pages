@@ -30,6 +30,7 @@ EXCLUDED_URL_NAMES = {
     "home",
     "organization",
     # POST-only endpoints (test harness only issues GET requests)
+    "encounter_archive",
     "encounter_create",
     "form_file_upload",
     "patient_archive",

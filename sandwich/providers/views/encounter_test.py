@@ -549,3 +549,49 @@ def test_inline_edit_custom_enum_updates_display(
     encounter.refresh_from_db()
     attr_value = encounter.attributes.get(attribute=priority_attr)
     assert attr_value.value_enum == high_priority
+
+
+@pytest.mark.django_db
+def test_encounter_archive_changes_in_progress_to_completed(
+    provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    encounter.status = EncounterStatus.IN_PROGRESS
+    encounter.save()
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse(
+        "providers:encounter_archive", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
+    )
+    result = client.post(url, follow=True)
+
+    assert result.status_code == 200
+    encounter.refresh_from_db()
+    assert encounter.status == EncounterStatus.COMPLETED
+
+    messages = list(result.context["messages"])
+    assert len(messages) == 1
+    assert "archived successfully" in str(messages[0]).lower()
+
+
+@pytest.mark.django_db
+def test_encounter_archive_changes_completed_to_in_progress(
+    provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    encounter.status = EncounterStatus.COMPLETED
+    encounter.save()
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse(
+        "providers:encounter_archive", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
+    )
+    result = client.post(url, follow=True)
+
+    assert result.status_code == 200
+    encounter.refresh_from_db()
+    assert encounter.status == EncounterStatus.IN_PROGRESS
+
+    messages = list(result.context["messages"])
+    assert len(messages) == 1
+    assert "unarchived successfully" in str(messages[0]).lower()

@@ -32,6 +32,7 @@ from sandwich.core.service.custom_attribute_query import apply_filters_with_cust
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import update_custom_attribute
 from sandwich.core.service.encounter_service import assign_default_encounter_perms
+from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.list_preference_service import enrich_filters_with_display_values
 from sandwich.core.service.list_preference_service import get_available_columns
@@ -718,3 +719,37 @@ def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -
             return True
 
     return False
+
+
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter", "change_encounter"]),
+    ]
+)
+def encounter_archive(
+    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
+) -> HttpResponse:
+    if request.method != "POST":
+        return HttpResponseRedirect(reverse("providers:encounter_list", kwargs={"organization_id": organization.id}))
+
+    if encounter.status != EncounterStatus.COMPLETED:
+        complete_encounter(encounter, request.user)
+        message = "Encounter archived successfully."
+        logger.info(
+            "Encounter archived successfully",
+            extra={"user_id": request.user.id, "organization_id": organization.id, "encounter_id": encounter.id},
+        )
+    else:
+        encounter.status = EncounterStatus.IN_PROGRESS
+        encounter.ended_at = None
+        encounter.save()
+        message = "Encounter unarchived successfully."
+        logger.info(
+            "Encounter unarchived successfully",
+            extra={"user_id": request.user.id, "organization_id": organization.id, "encounter_id": encounter.id},
+        )
+
+    messages.add_message(request, messages.SUCCESS, message)
+    return HttpResponseRedirect(reverse("providers:encounter_list", kwargs={"organization_id": organization.id}))

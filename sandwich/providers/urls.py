@@ -6,6 +6,7 @@ from .views.custom_attribute import custom_attribute_archive
 from .views.custom_attribute import custom_attribute_edit
 from .views.custom_attribute import custom_attribute_enum_fields
 from .views.custom_attribute import custom_attribute_list
+from .views.encounter import encounter_archive
 from .views.encounter import encounter_create
 from .views.encounter import encounter_create_search
 from .views.encounter import encounter_create_select_patient
@@ -98,6 +99,11 @@ urlpatterns = [
         "organization/<uuid:organization_id>/encounter/<uuid:encounter_id>/edit/<str:field_name>",
         encounter_edit_field,
         name="encounter_edit_field",
+    ),
+    path(
+        "organization/<uuid:organization_id>/encounter/<uuid:encounter_id>/archive",
+        encounter_archive,
+        name="encounter_archive",
     ),
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>", patient_details, name="patient"),
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
