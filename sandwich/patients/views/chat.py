@@ -63,11 +63,13 @@ def chat(request: AuthenticatedHttpRequest) -> HttpResponse:
         patient = form.cleaned_data["patient"]
         thread = f"{user.pk}-{patient.pk}"  # Hard code for now
         message = form.cleaned_data["message"]
+        message_id = str(uuid.uuid4())
         response: ChatResponse = receive_chat_message(
             user=user,
             patient=patient,
             config=configure(thread),
             message=message,
+            message_id=message_id,
         )
         context = {"message": markdown_to_html(response.message), "buttons": response.buttons}
         return render(request, "patient/chatty/partials/assistant_message.html", context)

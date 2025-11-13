@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
 
 def receive_chat_message(
+    message_id: str,
     message: str,
     config: "RunnableConfig",
     user: User | None = None,
@@ -33,7 +34,15 @@ def receive_chat_message(
     **params: "Unpack[AgentParameters]",
 ) -> "ChatResponse":
     state: AgentState = {
-        "messages": [HumanMessage(content=message, response_metadata={"timestamp": timezone.now().isoformat()})],
+        "messages": [
+            HumanMessage(
+                content=message,
+                response_metadata={
+                    "timestamp": timezone.now().isoformat(),
+                    "message_id": message_id,
+                },
+            ),
+        ],
     }
     with chat_agent(user, patient, **params) as agent:
         return agent.invoke(

@@ -1,4 +1,5 @@
 import itertools
+import uuid
 from collections.abc import Iterable
 
 from langchain_core.language_models import BaseChatModel
@@ -68,6 +69,7 @@ def cli_loop(model: BaseChatModel, user: User, patient: Patient) -> None:
                     continue
 
         response = receive_chat_message(
+            message_id=str(uuid.uuid4()),
             message=user_response,
             config=configure(thread_id),
             user=user,
