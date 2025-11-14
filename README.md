@@ -87,3 +87,5 @@ pytest --record-mode=all sandwich/core/services/ingest/extract_text_test.py
 - To re-record, delete the cassette files or use `--record-mode=all` again.
 
 See `extract_text_test.py` for example test cases and assertions.
+
+## End
