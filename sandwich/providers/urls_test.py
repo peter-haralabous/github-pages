@@ -4,7 +4,6 @@ from typing import Any
 import pytest
 from django.contrib.contenttypes.models import ContentType
 from django.test import Client
-from django.test.utils import override_settings
 from django.urls import reverse
 
 from sandwich.core.factories.patient import PatientFactory
@@ -94,7 +93,6 @@ def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dic
     return kwargs
 
 
-@override_settings(FEATURE_PROVIDER_FORM_BUILDER=True)
 @pytest.mark.parametrize("url", get_provider_urls(), ids=lambda url: url.name)
 def test_provider_http_get_urls_return_status_200(db, user, organization, url) -> None:
     if url.name in EXCLUDED_URL_NAMES:

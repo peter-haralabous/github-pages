@@ -463,5 +463,3 @@ EVENTSTREAM_REDIS = {
     "ssl": env.bool("REDIS_SSL", default=False),
 }
 EVENTSTREAM_CHANNELMANAGER_CLASS = "sandwich.core.eventstream.ChannelManager"
-
-FEATURE_PROVIDER_FORM_BUILDER = env.bool("FEATURE_PROVIDER_FORM_BUILDER", default=False)
