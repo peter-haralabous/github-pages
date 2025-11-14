@@ -284,9 +284,8 @@ def custom_attribute_edit(
     return render(request, "provider/custom_attribute_edit.html", context)
 
 
-@login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
-def custom_attribute_list(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
+def _get_custom_attribute_list_context(request: AuthenticatedHttpRequest, organization: Organization) -> dict:
+    """Get the context for rendering the custom attribute list."""
     page = request.GET.get("page", 1)
 
     sort = (
@@ -305,12 +304,18 @@ def custom_attribute_list(request: AuthenticatedHttpRequest, organization: Organ
 
     paginator = Paginator(attributes, 25)
 
-    context = {
+    return {
         "attributes": paginator.get_page(page),
         "organization": organization,
         "sort": sort,
         "page": page,
     }
+
+
+@login_required
+@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization", "view_organization"])])
+def custom_attribute_list(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
+    context = _get_custom_attribute_list_context(request, organization)
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/custom_attribute_list_table.html", context)
     return render(request, "provider/custom_attribute_list.html", context)
@@ -367,5 +372,13 @@ def custom_attribute_archive(
             kwargs={"organization_id": organization.id, "attribute_id": attribute.id},
         )
     )
-    context = {"form": form, "attribute": attribute, "organization": organization}
-    return render(request, "provider/partials/custom_attribute_delete_modal.html", context)
+    modal_context = {"form": form, "attribute": attribute, "organization": organization}
+
+    # If it's an HTMX request, render the modal partial
+    if request.headers.get("HX-Request"):
+        return render(request, "provider/partials/custom_attribute_delete_modal.html", modal_context)
+
+    # Otherwise (direct URL access or page refresh), render the full list page with the modal
+    context = _get_custom_attribute_list_context(request, organization)
+    context.update(modal_context)
+    return render(request, "provider/custom_attribute_archive.html", context)

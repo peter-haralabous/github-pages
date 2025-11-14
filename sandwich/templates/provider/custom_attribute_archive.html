@@ -1,0 +1,6 @@
+{% extends "provider/custom_attribute_list.html" %}
+
+{% block modal %}
+  {{ block.super }}
+  {% include "provider/partials/custom_attribute_delete_modal.html" %}
+{% endblock modal %}

@@ -25,8 +25,9 @@
             <button class="btn btn-ghost btn-sm"
                     type="button"
                     hx-get="{% url 'providers:custom_attribute_archive' organization_id=organization.id attribute_id=attribute.id %}"
-                    hx-target="body"
-                    hx-swap="beforeend"
+                    hx-target="#modal-container"
+                    hx-swap="innerHTML"
+                    hx-push-url="true"
                     aria-label="Delete {{ attribute.name }}">
               {% lucide "trash-2" class="h-4 w-4 text-red-500" %}
             </button>

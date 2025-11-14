@@ -20,6 +20,10 @@
     <button>close</button>
   </form>
 </dialog>
-<script nonce="{{ request.csp_nonce }}">
-  document.getElementById('delete-custom-attribute-{{ attribute.id }}').showModal();
+<script nonce="{{ request.csp_nonce }}" type="module">
+  const modal = document.getElementById('delete-custom-attribute-{{ attribute.id }}');
+  modal.showModal();
+  modal.addEventListener('close', () => {
+    window.history.back();
+  });
 </script>
