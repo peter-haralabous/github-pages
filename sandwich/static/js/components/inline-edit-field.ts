@@ -102,55 +102,13 @@ abstract class BaseFieldHandler<T extends HTMLElement> implements FieldHandler {
   };
 }
 
-class SelectFieldHandler extends BaseFieldHandler<HTMLSelectElement> {
-  protected getValue(): string {
-    return this.element.value;
-  }
-
-  protected setValue(value: string): void {
-    this.element.value = value;
-  }
-
-  protected setupCustomBehavior(signal: AbortSignal): void {
-    const shouldAutoOpen = this.element.dataset.autoOpen === 'true';
-
-    if (shouldAutoOpen) {
-      this.openDropdown();
-    }
-
-    this.element.addEventListener(
-      'input',
-      () => {
-        // Input event fires during interaction - mark as handled but don't submit yet
-        // Change event will submit, or blur will check the final value
-        if (this.element.value !== this.originalValue) {
-          this.onValueChange(true);
-        }
-      },
-      { signal },
-    );
-  }
-
-  private openDropdown(): void {
-    const maybePicker = (
-      this.element as HTMLSelectElement & { showPicker?: () => void }
-    ).showPicker;
-    if (typeof maybePicker === 'function') {
-      try {
-        maybePicker.call(this.element);
-      } catch {
-        // Ignore picker errors - focusing is sufficient fallback
-      }
-    }
-  }
-}
-
-class MultiSelectFieldHandler implements FieldHandler {
+class SelectFieldHandler implements FieldHandler {
   private readonly element: HTMLSelectElement;
   private readonly originalValue: string;
   private readonly onSubmit: () => void;
   private readonly onCancel: () => void;
   private readonly onValueChange: (changed: boolean) => void;
+  private readonly isMultiple: boolean;
   private choicesInstance: Choices | null = null;
 
   constructor(
@@ -160,6 +118,7 @@ class MultiSelectFieldHandler implements FieldHandler {
     onValueChange: (changed: boolean) => void,
   ) {
     this.element = element;
+    this.isMultiple = element.hasAttribute('multiple');
     this.originalValue = this.getValue();
     this.onSubmit = onSubmit;
     this.onCancel = onCancel;
@@ -167,25 +126,32 @@ class MultiSelectFieldHandler implements FieldHandler {
   }
 
   setup(signal: AbortSignal): void {
+    const searchEnabled = this.element.options.length > 10;
+
     this.choicesInstance =
       (this.element as any).choices ||
       new Choices(this.element, {
-        removeItemButton: true,
-        searchEnabled: true,
+        removeItemButton: this.isMultiple,
+        searchEnabled,
         shouldSort: false,
         itemSelectText: '',
       });
 
     // Auto-open dropdown after Choices is fully initialized
-    requestAnimationFrame(() => this?.choicesInstance?.showDropdown());
+    requestAnimationFrame(() => {
+      this.choicesInstance?.showDropdown();
+      this.choicesInstance?.containerOuter?.element?.focus?.({
+        preventScroll: true,
+      });
+    });
 
     this.element.addEventListener('change', this.handleChange, { signal });
 
-    this.choicesInstance?.input.element.addEventListener(
-      'keydown',
-      this.handleKeydown,
-      { signal },
-    );
+    // Add keydown listener to the container for consistent keyboard handling
+    if (this.choicesInstance) {
+      const container = this.choicesInstance.containerOuter.element;
+      container.addEventListener('keydown', this.handleKeydown, { signal });
+    }
 
     document.addEventListener('click', this.handleClickOutside, {
       signal,
@@ -201,22 +167,33 @@ class MultiSelectFieldHandler implements FieldHandler {
   }
 
   private getValue(): string {
-    const selected = Array.from(this.element.selectedOptions).map(
-      (option) => option.value,
-    );
-    return selected.join(',');
+    if (this.isMultiple) {
+      const selected = Array.from(this.element.selectedOptions).map(
+        (option) => option.value,
+      );
+      return selected.join(',');
+    }
+    return this.element.value;
   }
 
   private setValue(value: string): void {
-    const values = value ? value.split(',') : [];
+    if (this.isMultiple) {
+      const values = value ? value.split(',') : [];
 
-    if (this.choicesInstance) {
-      this.choicesInstance.removeActiveItems();
-      this.choicesInstance.setChoiceByValue(values);
+      if (this.choicesInstance) {
+        this.choicesInstance.removeActiveItems();
+        this.choicesInstance.setChoiceByValue(values);
+      } else {
+        Array.from(this.element.options).forEach((option) => {
+          option.selected = values.includes(option.value);
+        });
+      }
     } else {
-      Array.from(this.element.options).forEach((option) => {
-        option.selected = values.includes(option.value);
-      });
+      if (this.choicesInstance) {
+        this.choicesInstance.setChoiceByValue(value);
+      } else {
+        this.element.value = value;
+      }
     }
   }
 
@@ -224,6 +201,9 @@ class MultiSelectFieldHandler implements FieldHandler {
     const currentValue = this.getValue();
     if (currentValue !== this.originalValue) {
       this.onValueChange(true);
+      if (!this.isMultiple) {
+        this.onSubmit();
+      }
     }
   };
 
@@ -334,7 +314,7 @@ class DateFieldHandler extends BaseFieldHandler<HTMLInputElement> {
 }
 
 /**
- * Inline edit field component that handles both select and date inputs.
+ * Inline edit field component that handles select, multi-select, and date inputs.
  * Supports auto-submit on change, cancel on escape, and HTMX integration.
  */
 @customElement('inline-edit-field')
@@ -402,21 +382,11 @@ export class InlineEditField extends LitElement {
       this.changeHandled = changed;
     };
 
-    if (this.fieldType === 'select') {
+    if (this.fieldType === 'select' || this.fieldType === 'multi-select') {
       const select = this.form?.querySelector('select');
       if (select instanceof HTMLSelectElement) {
         return new SelectFieldHandler(
           select,
-          onSubmit,
-          onCancel,
-          onValueChange,
-        );
-      }
-    } else if (this.fieldType === 'multi-select') {
-      const multiSelect = this.form?.querySelector('select[multiple]');
-      if (multiSelect instanceof HTMLSelectElement) {
-        return new MultiSelectFieldHandler(
-          multiSelect,
           onSubmit,
           onCancel,
           onValueChange,

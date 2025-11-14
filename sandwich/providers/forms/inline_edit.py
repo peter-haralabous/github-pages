@@ -6,6 +6,7 @@ from crispy_forms.layout import Layout
 from django import forms
 
 from sandwich.core.widgets import MultiSelectWidget
+from sandwich.core.widgets import SelectWidget
 
 
 class InlineEditForm(forms.Form):
@@ -64,13 +65,12 @@ class InlineEditSelectForm(InlineEditForm):
         self.fields["value"] = forms.ChoiceField(
             choices=choices,
             required=False,
-            widget=forms.Select(
+            widget=SelectWidget(
+                choices=choices,
                 attrs={
-                    "class": "select select-sm select-bordered inline-edit-select w-full",
                     "autofocus": True,
-                    "data-auto-open": "true",
-                    "aria-label": field_name,
-                }
+                    "label": field_name,
+                },
             ),
         )
         if current_value:
