@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import StateSnapshot
@@ -9,7 +11,7 @@ from sandwich.core.service.agent_service.memory import load_snapshot
 
 @pytest.fixture
 def conversation_thread_id(agent: CompiledStateGraph) -> str:
-    thread_id = "test-thread"
+    thread_id = "test-" + uuid.uuid4().hex
     agent.invoke({"messages": [{"role": "user", "content": "Hello"}]}, config=configure(thread_id))
     return thread_id
 
