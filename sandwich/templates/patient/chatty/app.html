@@ -10,11 +10,17 @@
       {# the sse-swap here is misleading; ingest_progress messages include a hx-swap-oob with their real target #}
       <div sse-connect="{% url "core:events" %}?channel=patient/{{ patient.id }}"
            sse-swap="ingest_progress"></div>
-      <div class="flex flex-row gap-2 p-1 lg:p-6 h-full">
+      <div id="modal-container"></div>
+      <div class="flex flex-row gap-0 p-1 lg:p-6 h-full">
         {# Left Panel #}
         {% block left_panel %}
           {% include 'patient/chatty/partials/left_panel.html' %}
         {% endblock left_panel %}
+        {# Left Resize Handle #}
+        <div id="left-resize-handle"
+             class="hidden lg:flex items-center justify-center w-2 cursor-col-resize hover:bg-primary/20 transition-colors group">
+          <div class="h-12 w-1 bg-base-300 group-hover:bg-primary transition-colors"></div>
+        </div>
         {# Center Panel #}
         <div id="mobile-chat-view"
              class="w-full lg:w-auto lg:flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
@@ -41,6 +47,11 @@
               </div>
             </div>
           </footer>
+        </div>
+        {# Right Resize Handle #}
+        <div id="right-resize-handle"
+             class="hidden lg:flex items-center justify-center w-2 cursor-col-resize hover:bg-primary/20 transition-colors group">
+          <div class="h-12 w-1 bg-base-300 group-hover:bg-primary transition-colors"></div>
         </div>
         {# Right Panel #}
         {% include 'patient/chatty/partials/right_panel.html' %}
@@ -248,6 +259,158 @@
       window.addEventListener('resize', handleResize);
       handleResize(); // Call on initial load
       chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // ===== Panel Resizing =====
+      let isResizing = false;
+      let currentHandle = null;
+      let startX = 0;
+      let startWidth = 0;
+
+      function getExpandedPanel(panelId) {
+        const container = document.getElementById(panelId);
+        if (!container) return null;
+        return container.querySelector('.panel-expanded');
+      }
+
+      function isPanelCollapsed(panelId) {
+        const expandedPanel = getExpandedPanel(panelId);
+        return !expandedPanel || expandedPanel.classList.contains('hidden');
+      }
+
+      function updateResizeHandleVisibility() {
+        const leftResizeHandle = document.getElementById('left-resize-handle');
+        const rightResizeHandle = document.getElementById('right-resize-handle');
+
+        // Keep left resize handle as spacer if left panel is collapsed
+        if (leftResizeHandle) {
+          if (isPanelCollapsed('left-panel')) {
+            leftResizeHandle.classList.add('!pointer-events-none', 'opacity-0');
+          } else {
+            leftResizeHandle.classList.remove('!pointer-events-none', 'opacity-0');
+          }
+        }
+
+        // Keep right resize handle as spacer if right panel is collapsed
+        if (rightResizeHandle) {
+          if (isPanelCollapsed('right-panel')) {
+            rightResizeHandle.classList.add('!pointer-events-none', 'opacity-0');
+          } else {
+            rightResizeHandle.classList.remove('!pointer-events-none', 'opacity-0');
+          }
+        }
+      }
+
+      function applyPanelWidths() {
+        const leftPanelExpanded = getExpandedPanel('left-panel');
+        const rightPanelExpanded = getExpandedPanel('right-panel');
+
+        // Load saved widths from localStorage or use defaults
+        const savedLeftWidth = localStorage.getItem('leftPanelWidth') || '320px';
+        const savedRightWidth = localStorage.getItem('rightPanelWidth') || '384px';
+
+        // Only apply width if the expanded panel is visible (not collapsed)
+        if (leftPanelExpanded && !leftPanelExpanded.classList.contains('hidden')) {
+          leftPanelExpanded.style.width = savedLeftWidth;
+        }
+        if (rightPanelExpanded && !rightPanelExpanded.classList.contains('hidden')) {
+          rightPanelExpanded.style.width = savedRightWidth;
+        }
+
+        // Update resize handle visibility based on collapse state
+        updateResizeHandleVisibility();
+      }
+
+      function startResize(e, handleId) {
+        const panelId = handleId === 'left-resize-handle' ? 'left-panel' : 'right-panel';
+        const panel = getExpandedPanel(panelId);
+
+        if (!panel || panel.classList.contains('hidden')) return;
+
+        isResizing = true;
+        currentHandle = handleId;
+        startX = e.clientX;
+        startWidth = parseInt(window.getComputedStyle(panel).width);
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      }
+
+      function resize(e) {
+        if (!isResizing) return;
+
+        const panelId = currentHandle === 'left-resize-handle' ? 'left-panel' : 'right-panel';
+        const panel = getExpandedPanel(panelId);
+
+        if (!panel || panel.classList.contains('hidden')) return;
+
+        const dx = currentHandle === 'left-resize-handle' ? (e.clientX - startX) : (startX - e.clientX);
+        const newWidth = Math.max(240, Math.min(1200, startWidth + dx)); // Min 240px, Max 1200px
+
+        panel.style.width = newWidth + 'px';
+      }
+
+      function stopResize() {
+        if (!isResizing) return;
+
+        isResizing = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+
+        // Save widths to localStorage
+        const leftPanelExpanded = getExpandedPanel('left-panel');
+        const rightPanelExpanded = getExpandedPanel('right-panel');
+
+        if (leftPanelExpanded && leftPanelExpanded.style.width) {
+          localStorage.setItem('leftPanelWidth', leftPanelExpanded.style.width);
+        }
+        if (rightPanelExpanded && rightPanelExpanded.style.width) {
+          localStorage.setItem('rightPanelWidth', rightPanelExpanded.style.width);
+        }
+
+        currentHandle = null;
+      }
+
+      function setupResizeHandles() {
+        const leftResizeHandle = document.getElementById('left-resize-handle');
+        const rightResizeHandle = document.getElementById('right-resize-handle');
+
+        // Remove old listeners by cloning (this removes all event listeners)
+        if (leftResizeHandle) {
+          const newLeftHandle = leftResizeHandle.cloneNode(true);
+          leftResizeHandle.parentNode.replaceChild(newLeftHandle, leftResizeHandle);
+          newLeftHandle.addEventListener('mousedown', (e) => startResize(e, 'left-resize-handle'));
+        }
+
+        if (rightResizeHandle) {
+          const newRightHandle = rightResizeHandle.cloneNode(true);
+          rightResizeHandle.parentNode.replaceChild(newRightHandle, rightResizeHandle);
+          newRightHandle.addEventListener('mousedown', (e) => startResize(e, 'right-resize-handle'));
+        }
+      }
+
+      // Initial setup
+      applyPanelWidths();
+      setupResizeHandles();
+
+      // Global mouse move and up events
+      document.addEventListener('mousemove', resize);
+      document.addEventListener('mouseup', stopResize);
+
+      // Reapply widths after HTMX swaps
+      document.body.addEventListener('htmx:afterSwap', function(event) {
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+          applyPanelWidths();
+        }, 0);
+      });
+
+      // Update resize handle visibility when panels are toggled
+      document.body.addEventListener('toggle-children', function(event) {
+        setTimeout(() => {
+          updateResizeHandleVisibility();
+        }, 0);
+      });
+
     });
   </script>
 {% endblock body %}

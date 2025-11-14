@@ -12,6 +12,7 @@ from .views.patient.add import patient_add
 from .views.patient.add import patient_onboarding_add
 from .views.patient.details import fact_edit
 from .views.patient.details import patient_details
+from .views.patient.details import regenerate_health_summary
 from .views.patient.edit import get_phn_validation
 from .views.patient.edit import patient_edit
 from .views.patient.health_records import condition_edit
@@ -32,6 +33,7 @@ urlpatterns = [
     path("patient/onboarding/add", patient_onboarding_add, name="patient_onboarding_add"),
     path("patient/<uuid:patient_id>", patient_details, name="patient_details"),
     path("patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
+    path("patient/<uuid:patient_id>/regenerate_summary", regenerate_health_summary, name="regenerate_health_summary"),
     path("patient/<uuid:patient_id>/records", patient_records, name="patient_records"),
     path("patient/<uuid:patient_id>/records/<str:record_type>", patient_records, name="patient_records"),
     path("patient/<uuid:patient_id>/repository", patient_repository, name="patient_repository"),

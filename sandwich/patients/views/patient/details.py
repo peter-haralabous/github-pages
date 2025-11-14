@@ -5,14 +5,19 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import format_html
 
 from sandwich.core.models import Fact
+from sandwich.core.models import HealthSummary
 from sandwich.core.models import Patient
+from sandwich.core.models import SummaryType
 from sandwich.core.service.health_record_service import get_total_health_record_count
+from sandwich.core.service.health_summary_service import get_or_generate_health_summary
+from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -25,9 +30,21 @@ logger = logging.getLogger(__name__)
 def _chatty_patient_details_context(request: AuthenticatedHttpRequest, patient: Patient):
     records_count = get_total_health_record_count(patient)
     repository_count = patient.document_set.count()
+
+    # Get or generate health summary
+    try:
+        health_summary = get_or_generate_health_summary(patient, SummaryType.OVERVIEW)
+        health_summary_html = markdown_to_html(health_summary.content)
+    except Exception:
+        logger.exception("Failed to generate health summary")
+        health_summary = None
+        health_summary_html = None
+
     return {
         "records_count": records_count,
         "repository_count": repository_count,
+        "health_summary": health_summary,
+        "health_summary_html": health_summary_html,
     } | _chat_context(request, patient=patient)
 
 
@@ -41,6 +58,30 @@ def patient_details(request: AuthenticatedHttpRequest, patient: Patient) -> Http
         template = "patient/chatty/partials/left_panel.html"
 
     return render(request, template, context)
+
+
+@login_required
+@authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient"])])
+@require_POST
+def regenerate_health_summary(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
+    """Force regenerate the health summary and return the updated right panel."""
+    try:
+        # Delete existing summaries to force regeneration
+        HealthSummary.objects.filter(patient=patient, summary_type=SummaryType.OVERVIEW).delete()
+
+        # Generate fresh summary
+        health_summary = get_or_generate_health_summary(patient, SummaryType.OVERVIEW)
+        health_summary_html = markdown_to_html(health_summary.content)
+    except Exception:
+        logger.exception("Failed to regenerate health summary")
+        health_summary = None
+        health_summary_html = None
+
+    context = _chatty_patient_details_context(request, patient)
+    context["health_summary"] = health_summary
+    context["health_summary_html"] = health_summary_html
+
+    return render(request, "patient/chatty/partials/right_panel.html", context)
 
 
 class FactEditModalForm(forms.ModelForm[Fact]):
