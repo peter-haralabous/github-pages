@@ -399,7 +399,7 @@ def test_inline_edit_can_be_cancelled_with_escape(
     table = page.locator("table")
     assert table.is_visible(), "Encounter table should be visible"
 
-    patient_link = page.locator(f"text=/{encounter.patient.last_name}, {encounter.patient.first_name}/i").first
+    patient_link = table.locator(f"text=/{encounter.patient.last_name}, {encounter.patient.first_name}/i").first
     if not patient_link.is_visible():
         msg = f"Patient {encounter.patient.first_name} {encounter.patient.last_name} not found in table"
         raise AssertionError(msg)
@@ -408,7 +408,7 @@ def test_inline_edit_can_be_cancelled_with_escape(
 
     status_cell = (
         row.locator("td").filter(has_text="In Progress").or_(row.locator("td").filter(has_text="IN_PROGRESS"))
-    )
+    ).first
 
     status_cell.wait_for(state="visible", timeout=5000)
 
@@ -428,7 +428,7 @@ def test_inline_edit_can_be_cancelled_with_escape(
     # Verify the display is back to original value
     cancelled_cell = (
         row.locator("td").filter(has_text="In Progress").or_(row.locator("td").filter(has_text="IN_PROGRESS"))
-    )
+    ).first
     assert cancelled_cell.is_visible(), "Status cell should show 'In Progress' after cancelling"
     cancelled_text = cancelled_cell.text_content()
     assert cancelled_text is not None

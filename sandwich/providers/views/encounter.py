@@ -20,7 +20,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from guardian.shortcuts import get_objects_for_user
 
-from sandwich.core.models import CustomAttribute
 from sandwich.core.models import CustomAttributeValue
 from sandwich.core.models import ListViewType
 from sandwich.core.models.custom_attribute import CustomAttribute
