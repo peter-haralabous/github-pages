@@ -288,3 +288,12 @@ sandwich/static/webpack_bundles/
 webpack-stats.json
 
 tsconfig.tsbuildinfo
+
+# Lock files - should be committed, but adding here for reference
+# Uncomment if you want to ignore them (not recommended for most projects)
+# package-lock.json
+# yarn.lock
+# uv.lock
+
+# Claude Code local settings
+.claude/settings.local.json
