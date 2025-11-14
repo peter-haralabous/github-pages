@@ -21,13 +21,15 @@
           <td>{{ attribute.is_multi|yesno:"Yes,No" }}</td>
           <td>{{ attribute.created_at }}</td>
           <td>{{ attribute.updated_at }}</td>
-          <td>
+          <td class="text-right">
             <button class="btn btn-ghost btn-sm"
                     type="button"
                     hx-get="{% url 'providers:custom_attribute_archive' organization_id=organization.id attribute_id=attribute.id %}"
                     hx-target="body"
                     hx-swap="beforeend"
-                    aria-label="Delete {{ attribute.name }}">{% lucide "x" class="h-5 w-5 text-red-500" %}</button>
+                    aria-label="Delete {{ attribute.name }}">
+              {% lucide "trash-2" class="h-4 w-4 text-red-500" %}
+            </button>
           </td>
         </tr>
       {% empty %}
