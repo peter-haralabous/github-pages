@@ -2,7 +2,7 @@
 {% load lucide %}
 {% load crispy_forms_tags %}
 
-<td id="encounter-{{ encounter.id }}-{% if field_name != 'status' and field_name != 'is_active' %}{% endif %}{{ field_name }}"
+<td id="encounter-{{ encounter.id }}-{% if field_name != 'status' %}{% endif %}{{ field_name }}"
     class="py-1">
   <inline-edit-field field-type="{{ field_type }}">
   <template data-display-html>

@@ -18,8 +18,6 @@ from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
 from sandwich.providers.views.encounter import _build_edit_form_context
 from sandwich.providers.views.encounter import _get_field_display_value
-from sandwich.providers.views.encounter import _is_active_to_status
-from sandwich.providers.views.encounter import _status_to_is_active
 from sandwich.users.factories import UserFactory
 from sandwich.users.models import User
 
@@ -90,32 +88,6 @@ class TestEncounterEditField:
         assert EncounterStatus.IN_PROGRESS.value in content
         assert EncounterStatus.COMPLETED.value in content
         assert f'value="{encounter.status.value}"' in content
-        assert "selected" in content
-
-    @pytest.mark.django_db
-    def test_returns_edit_form_for_is_active_field(
-        self, provider: User, organization: Organization, encounter: Encounter
-    ) -> None:
-        """Returns correct form HTML for is_active field."""
-        client = Client()
-        client.force_login(provider)
-        url = reverse(
-            "providers:encounter_edit_field",
-            kwargs={
-                "organization_id": organization.id,
-                "encounter_id": encounter.id,
-                "field_name": "is_active",
-            },
-        )
-
-        response = client.get(url)
-
-        assert response.status_code == 200
-        content = response.content.decode()
-        assert 'name="value"' in content
-        assert "Active" in content
-        assert "Archived" in content
-        assert 'value="active"' in content
         assert "selected" in content
 
     @pytest.mark.django_db
@@ -343,36 +315,6 @@ class TestEncounterUpdateField:
         assert encounter.status != original_status
 
     @pytest.mark.django_db
-    def test_updates_is_active_field_successfully(
-        self, provider: User, organization: Organization, encounter: Encounter
-    ) -> None:
-        """Updates is_active (via status) and returns OOB swap HTML."""
-        # Start with active encounter
-        encounter.status = EncounterStatus.IN_PROGRESS
-        encounter.save()
-
-        client = Client()
-        client.force_login(provider)
-        url = reverse(
-            "providers:encounter_edit_field",
-            kwargs={
-                "organization_id": organization.id,
-                "encounter_id": encounter.id,
-                "field_name": "is_active",
-            },
-        )
-
-        response = client.post(url, {"value": "archived"})
-
-        assert response.status_code == 200
-        content = response.content.decode()
-        assert "Archived" in content
-
-        # Verify database was updated (archived = COMPLETED status)
-        encounter.refresh_from_db()
-        assert encounter.status == EncounterStatus.COMPLETED
-
-    @pytest.mark.django_db
     def test_updates_custom_enum_attribute(
         self,
         provider: User,
@@ -496,26 +438,6 @@ class TestEncounterUpdateField:
         # Verify database was not updated
         encounter.refresh_from_db()
         assert encounter.status == EncounterStatus.IN_PROGRESS
-
-    @pytest.mark.django_db
-    def test_returns_400_for_invalid_is_active_value(
-        self, provider: User, organization: Organization, encounter: Encounter
-    ) -> None:
-        """Returns 400 for invalid is_active value."""
-        client = Client()
-        client.force_login(provider)
-        url = reverse(
-            "providers:encounter_edit_field",
-            kwargs={
-                "organization_id": organization.id,
-                "encounter_id": encounter.id,
-                "field_name": "is_active",
-            },
-        )
-
-        response = client.post(url, {"value": "invalid_value"})
-
-        assert response.status_code == 400
 
     @pytest.mark.django_db
     def test_returns_400_for_invalid_date_format(
@@ -687,21 +609,6 @@ class TestInlineEditHelperFunctions:
     """Tests for helper functions used in inline editing."""
 
     @pytest.mark.django_db
-    def test_status_to_is_active_conversion(self) -> None:
-        """Test _status_to_is_active helper maps IN_PROGRESS to active."""
-        assert _status_to_is_active(EncounterStatus.IN_PROGRESS) == "active"
-        assert _status_to_is_active(EncounterStatus.COMPLETED) == "archived"
-        assert _status_to_is_active(EncounterStatus.CANCELLED) == "archived"
-        assert _status_to_is_active(EncounterStatus.ENTERED_IN_ERROR) == "archived"
-
-    @pytest.mark.django_db
-    def test_is_active_to_status_conversion(self) -> None:
-        """Test _is_active_to_status helper maps active/archived to status."""
-        assert _is_active_to_status("active") == EncounterStatus.IN_PROGRESS
-        assert _is_active_to_status("archived") == EncounterStatus.COMPLETED
-        assert _is_active_to_status("invalid") is None
-
-    @pytest.mark.django_db
     def test_get_field_display_value_for_status(self, encounter: Encounter, organization: Organization) -> None:
         """Test _get_field_display_value for status field."""
         encounter.status = EncounterStatus.IN_PROGRESS
@@ -710,23 +617,6 @@ class TestInlineEditHelperFunctions:
         display = _get_field_display_value(encounter, "status", organization)
 
         assert display == EncounterStatus.IN_PROGRESS.label
-
-    @pytest.mark.django_db
-    def test_get_field_display_value_for_is_active(self, encounter: Encounter, organization: Organization) -> None:
-        """Test _get_field_display_value for is_active field."""
-        encounter.status = EncounterStatus.IN_PROGRESS
-        encounter.save()
-
-        display = _get_field_display_value(encounter, "is_active", organization)
-
-        assert display == "Active"
-
-        encounter.status = EncounterStatus.COMPLETED
-        encounter.save()
-
-        display = _get_field_display_value(encounter, "is_active", organization)
-
-        assert display == "Archived"
 
     @pytest.mark.django_db
     def test_get_field_display_value_for_custom_enum_attribute(
@@ -784,20 +674,6 @@ class TestInlineEditHelperFunctions:
         assert isinstance(choices, list)
         assert len(choices) > 0
         assert any(choice[0] == EncounterStatus.IN_PROGRESS.value for choice in choices)
-
-    @pytest.mark.django_db
-    def test_build_edit_form_context_for_is_active(self, encounter: Encounter, organization: Organization) -> None:
-        """Test _build_edit_form_context for is_active field."""
-        encounter.status = EncounterStatus.IN_PROGRESS
-        encounter.save()
-
-        context = _build_edit_form_context(encounter, "is_active", organization)
-
-        assert context is not None
-        assert context["field_type"] == "select"
-        assert context["field_label"] == "Active"
-        assert context["current_value"] == "active"
-        assert context["choices"] == [("active", "Active"), ("archived", "Archived")]
 
     @pytest.mark.django_db
     def test_build_edit_form_context_for_custom_enum(

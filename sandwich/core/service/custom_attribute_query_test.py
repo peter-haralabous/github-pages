@@ -681,19 +681,19 @@ class TestModelFieldFilters:
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 1, 15, tzinfo=tz),
+            ended_at=datetime(2024, 1, 15, 0, 0, 0, tzinfo=tz),
         )
         Encounter.objects.create(
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 2, 20, tzinfo=tz),
+            ended_at=datetime(2024, 2, 20, 0, 0, 0, tzinfo=tz),
         )
         Encounter.objects.create(
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 3, 25, tzinfo=tz),
+            ended_at=datetime(2024, 3, 25, 0, 0, 0, tzinfo=tz),
         )
 
         encounters = Encounter.objects.filter(organization=organization)
@@ -721,19 +721,19 @@ class TestModelFieldFilters:
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 1, 15, tzinfo=tz),
+            ended_at=datetime(2024, 1, 15, 0, 0, 0, tzinfo=tz),
         )
         enc2 = Encounter.objects.create(
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 2, 20, tzinfo=tz),
+            ended_at=datetime(2024, 2, 20, 0, 0, 0, tzinfo=tz),
         )
         Encounter.objects.create(
             organization=organization,
             patient=patient,
             status=EncounterStatus.IN_PROGRESS,
-            ended_at=datetime(2024, 3, 25, tzinfo=tz),
+            ended_at=datetime(2024, 3, 25, 0, 0, 0, tzinfo=tz),
         )
 
         encounters = Encounter.objects.filter(organization=organization)

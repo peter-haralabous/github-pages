@@ -421,20 +421,6 @@ def encounter_create_search(request: AuthenticatedHttpRequest, organization: Org
     return render(request, "provider/partials/encounter_create_search_results.html", context)
 
 
-def _status_to_is_active(status: EncounterStatus) -> str:
-    """Convert encounter status to is_active value."""
-    return "active" if status == EncounterStatus.IN_PROGRESS else "archived"
-
-
-def _is_active_to_status(is_active: str) -> EncounterStatus | None:
-    """Convert is_active value to encounter status."""
-    if is_active == "active":
-        return EncounterStatus.IN_PROGRESS
-    if is_active == "archived":
-        return EncounterStatus.COMPLETED
-    return None
-
-
 def _get_custom_attribute_value_display(
     encounter: Encounter, attribute: CustomAttribute, content_type: ContentType
 ) -> str:
@@ -471,7 +457,7 @@ def _get_field_display_value(encounter: Encounter, field_name: str, organization
 
     Args:
         encounter: The encounter instance
-        field_name: The field name (e.g., 'status', 'is_active', or custom attribute field_id)
+        field_name: The field name (e.g., 'status' or custom attribute field_id)
         organization: The organization context
 
     Returns:
@@ -479,9 +465,6 @@ def _get_field_display_value(encounter: Encounter, field_name: str, organization
     """
     if field_name == "status":
         return encounter.get_status_display() or "—"
-
-    if field_name == "is_active":
-        return "Active" if _status_to_is_active(encounter.status) == "active" else "Archived"
 
     # Custom attribute
     attribute = _get_custom_attribute(field_name, organization)
@@ -559,12 +542,6 @@ def _build_edit_form_context(encounter: Encounter, field_name: str, organization
         current_value = encounter.status.value
         field_type = "select"
         field_label = "Status"
-
-    elif field_name == "is_active":
-        choices = [("active", "Active"), ("archived", "Archived")]
-        current_value = _status_to_is_active(encounter.status)
-        field_type = "select"
-        field_label = "Active"
 
     else:
         # Custom attribute
@@ -714,7 +691,7 @@ def _handle_field_update(
     form: InlineEditForm,
 ) -> bool:
     """Update the specified field. Returns True if successful, False otherwise."""
-    if field_name in ["status", "is_active"]:
+    if field_name == "status":
         if not _update_model_field(encounter, field_name, new_value):
             form.add_error("value", f"Invalid {field_name} value")
             return False
@@ -730,7 +707,7 @@ def _handle_field_update(
 
 
 def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -> bool:
-    """Update a model field (status or is_active). Returns True if successful."""
+    """Update a model field (status). Returns True if successful."""
     if field_name == "status":
         try:
             encounter.status = EncounterStatus(new_value)
@@ -739,13 +716,5 @@ def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -
             return False
         else:
             return True
-
-    if field_name == "is_active":
-        status = _is_active_to_status(new_value)
-        if not status:
-            return False
-        encounter.status = status
-        encounter.save()
-        return True
 
     return False
