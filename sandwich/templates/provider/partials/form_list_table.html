@@ -15,7 +15,7 @@
         <tr>
           <td>
             <a class="link"
-               href="{% if form_builder_enabled %}{% url "providers:form_template_edit" organization_id=organization.id form_id=form.id %}{% else %}{% url "providers:form_template" organization_id=organization.id form_id=form.id %}{% endif %}">{{ form.name }}</a>
+               href="{% url "providers:form_template_edit" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
           </td>
           <td>
             <a class="link"
