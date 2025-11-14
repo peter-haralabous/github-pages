@@ -85,6 +85,38 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         ObjPerm(Form, "form_id", ["view_form"]),
     ]
 )
+def form_template_preview(
+    request: AuthenticatedHttpRequest, organization: Organization, form: Form, form_version_id: int
+):
+    """
+    Displays a preview for a from version of a form template
+    """
+
+    logger.info(
+        "Accessing preview for specific form version",
+        extra={
+            "user_id": request.user.id,
+            "organization_id": organization.id,
+            "form_id": form.id,
+            "form_version_pgh_id": form_version_id,
+        },
+    )
+    form_version = form.get_version(form_version_id)
+    form_schema = form_version.schema if form_version.schema else {}
+
+    return render(
+        request, "provider/form_preview.html", {"organization": organization, "form": form, "form_schema": form_schema}
+    )
+
+
+@require_GET
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Form, "form_id", ["view_form"]),
+    ]
+)
 def form_details(request: AuthenticatedHttpRequest, organization: Organization, form: Form):
     """Provider view of a single form template.
 

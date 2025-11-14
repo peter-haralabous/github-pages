@@ -161,5 +161,8 @@ def test_submit_and_save_draft_urls_exist(
 
     res = client.get(url)
 
-    assert res.context["submit_url"] is not None
-    assert res.context["save_draft_url"] is not None
+    submit_form_url = reverse("patients:patients-api:submit_form", kwargs={"task_id": str(task.id)})
+    save_draft_url = reverse("patients:patients-api:save_draft_form", kwargs={"task_id": str(task.id)})
+
+    assert submit_form_url in res.context["submit_url"]
+    assert save_draft_url in res.context["save_draft_url"]

@@ -98,3 +98,60 @@ def test_form_builder(client: Client, owner: User, organization: Organization) -
     url = reverse("providers:form_template_builder", kwargs={"organization_id": organization.id})
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
+
+
+def test_form_template_preview(client: Client, provider: User, organization: Organization) -> None:
+    form = FormFactory.create(organization=organization)
+    form_version = form.get_current_version()
+    client.force_login(provider)
+    url = reverse(
+        "providers:form_template_preview",
+        kwargs={"organization_id": organization.id, "form_id": form.id, "form_version_id": form_version.pgh_id},
+    )
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+
+
+def test_form_template_preview_deny_access(client: Client, provider: User, organization: Organization) -> None:
+    form = FormFactory.create()
+    form_version = form.get_current_version()
+    client.force_login(provider)
+    url = reverse(
+        "providers:form_template_preview",
+        kwargs={"organization_id": organization.id, "form_id": form.id, "form_version_id": form_version.pgh_id},
+    )
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_form_template_preview_older_versions(client: Client, provider: User, organization: Organization) -> None:
+    client.force_login(provider)
+    original_schema = {"title": "form_version_1"}
+    form = FormFactory.create(organization=organization, schema=original_schema)
+
+    form.refresh_from_db()
+    version_1 = form.get_current_version()
+
+    assert version_1.schema == original_schema
+
+    updated_schema = {"title": "form_version_2"}
+    form.schema = updated_schema
+    form.save()
+
+    form.refresh_from_db()
+    version_2 = form.get_current_version()
+
+    assert version_2.schema == updated_schema
+    assert version_1.pgh_id != version_2.pgh_id
+
+    # Get url of older version of form
+    url = reverse(
+        "providers:form_template_preview",
+        kwargs={"organization_id": organization.id, "form_id": form.id, "form_version_id": version_1.pgh_id},
+    )
+    response = client.get(url)
+
+    assert response.status_code == HTTPStatus.OK
+
+    assert response.context["form_schema"] == original_schema
+    assert response.context["form_schema"] != updated_schema

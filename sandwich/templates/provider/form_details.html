@@ -29,8 +29,9 @@
             <td>{{ form_version.pgh_created_at }}</td>
             <td>
               {# TODO: swap to kebab menu of actions #}
-              <a class="btn btn-sm" href="#" disabled>View</a>
-              <a class="btn btn-sm" href="#" disabled>Restore</a>
+              <a class="btn btn-sm"
+                 href="{% url 'providers:form_template_preview' organization_id=organization.id form_id=form.id form_version_id=form_version.pgh_id %}">View</a>
+              <a class="btn btn-sm" href="#" {% if forloop.first %}disabled{% endif %}>Restore</a>
             </td>
           </tr>
         {% empty %}

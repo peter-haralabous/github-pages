@@ -60,7 +60,7 @@ def test_no_stale_exclusions():
     assert EXCLUDED_URL_NAMES.issubset({url.name for url in get_provider_urls()})
 
 
-def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dict[str, Any]:
+def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dict[str, Any]:  # noqa: C901
     """Build kwargs dict for URL reverse lookup based on URL pattern and name."""
     kwargs: dict[str, Any] = {}
 
@@ -76,6 +76,8 @@ def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dic
         kwargs["attribute_id"] = test_objects["attribute"].pk
     if ":form_id>" in url.pattern:
         kwargs["form_id"] = test_objects["form"].pk
+    if ":form_version_id>" in url.pattern:
+        kwargs["form_version_id"] = test_objects["form"].get_current_version().pgh_id
     if url.name in {
         "list_preference_settings",
         "organization_preference_settings_detail",

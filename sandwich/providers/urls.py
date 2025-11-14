@@ -47,6 +47,7 @@ from .views.templates import form_details
 from .views.templates import form_edit
 from .views.templates import form_file_upload
 from .views.templates import form_list
+from .views.templates import form_template_preview
 
 app_name = "providers"
 urlpatterns = [
@@ -77,6 +78,11 @@ urlpatterns = [
     # name must contain 'template' for provider sidenav active link highlighting to work.
     path("organization/<uuid:organization_id>/templates/forms", form_list, name="form_templates_list"),
     path("organization/<uuid:organization_id>/templates/form/<uuid:form_id>", form_details, name="form_template"),
+    path(
+        "organization/<uuid:organization_id>/templates/form/<uuid:form_id>/form_version/<int:form_version_id>/preview",
+        form_template_preview,
+        name="form_template_preview",
+    ),
     path(
         "organization/<uuid:organization_id>/templates/form/<uuid:form_id>/edit", form_edit, name="form_template_edit"
     ),
