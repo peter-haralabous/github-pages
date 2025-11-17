@@ -1,11 +1,8 @@
-{% if oob %}
-  <div hx-swap-oob="{{ oob }}"
-       {% if message_id %}id="message-{{ message_id }}"{% endif %}>
-  {% endif %}
-  <div {% if message_id %}id="message-{{ message_id }}" data-message-id="{{ message_id }}"{% endif %}
-       class="{% block message_classes %}assistant-message chat chat-start my-1{% endblock message_classes %}">
+{% if oob %}<div hx-swap-oob="beforeend:#chat-messages">{% endif %}
+  <div {% if message_id %}id="message-{{ message_id }}"{% endif %}
+       class="{% block message_classes %}assistant-message chat chat-start{% endblock message_classes %}">
     {# assistant messages are markdown; prose applies default styling to lists & headings #}
-    <div class="assistant-message-content chat-bubble prose cursor-pointer bg-primary/20">
+    <div class="assistant-message-content chat-bubble prose bg-primary/20">
       {% block message_content %}
         {{ message }}
         {#        {% if buttons %}#}
@@ -23,26 +20,24 @@
   {% if oob %}
   </div>
   {# djlint:off #}
-  <script>
-    {% if message_id %}
-      document.querySelector("#message-{{ message_id }}").scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      })
-
-      {% if buttons %}
-        document.querySelector("#message-{{ message_id }}")
-            .querySelectorAll('.assistant-button')
-            .forEach(button => {
-          if (button.dataset.action === "prompt") {
-            button.addEventListener('click', () => {
-              chatInputSet(button.dataset.value);
-            });
-          }
+<script>
+  {% if message_id != "assistant-thinking" %}
+  document.querySelector("#message-assistant-thinking")?.remove();
+  {% endif %}
+  document.querySelector("#message-{{ message_id }}")?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+  {% if buttons %}
+    document.querySelector("#message-{{ message_id }}")
+        ?.querySelectorAll('.assistant-button')
+        .forEach(button => {
+      if (button.dataset.action === "prompt") {
+        button.addEventListener('click', () => {
+          chatInputSet(button.dataset.value);
         });
-      {% endif %}
-
-    {% endif %}
+      }
+    });
+  {% endif %}
 </script>
-  {# djlint:on #}
 {% endif %}

@@ -17,19 +17,19 @@ def send_assistant_thinking(patient: Patient, message_id: str) -> None:
         EventType.ASSISTANT_THINKING,
         loader.render_to_string(
             "patient/chatty/partials/assistant_message_skeleton.html",
-            context={"oob": "beforeend:#chat-messages", "message_id": message_id},
+            context={"oob": True, "message_id": "assistant-thinking"},
         ),
     )
 
 
-def send_assistant_message(patient: Patient, message_id: str, context=ContextDict) -> None:
+def send_assistant_message(patient: Patient, message_id: str, context: ContextDict) -> None:
     sse_send(
         sse_patient_channel(patient),
         EventType.ASSISTANT_MESSAGE,
         loader.render_to_string(
             "patient/chatty/partials/assistant_message.html",
             context={
-                "oob": f"outerHTML:#message-{message_id}",  # Replace the thinking skeleton
+                "oob": True,
                 "message_id": message_id,
                 **context,
             },
