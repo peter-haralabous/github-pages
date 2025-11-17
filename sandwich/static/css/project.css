@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './_google-button.css';
 @import './choicesjs.css';
+@import './components/htmx-loading-bar.css';
 
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {

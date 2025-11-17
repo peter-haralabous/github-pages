@@ -1,0 +1,76 @@
+/* HTMX loading bar */
+htmx-loading-bar {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+htmx-loading-bar .loading-bar {
+  height: 0;
+  opacity: 0;
+  transition:
+    height 0.2s ease,
+    opacity 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+htmx-loading-bar .loading-bar.visible {
+  height: 4px;
+  opacity: 1;
+}
+
+htmx-loading-bar .loading-bar.error {
+  height: 6px;
+}
+
+htmx-loading-bar .progress-inner {
+  height: 100%;
+  width: 100%;
+}
+
+/* Indeterminate progress animation */
+@keyframes htmx-loading-indeterminate {
+  0% {
+    transform: translateX(-150%);
+  }
+  100% {
+    transform: translateX(150%);
+  }
+}
+
+htmx-loading-bar .progress-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  animation: htmx-loading-indeterminate 3s linear infinite;
+  opacity: 0.5;
+}
+
+htmx-loading-bar .loading-bar.normal .progress-inner {
+  background-color: var(--color-info);
+}
+
+htmx-loading-bar .loading-bar.normal .progress-inner::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-warning),
+    transparent
+  );
+}
+
+htmx-loading-bar .loading-bar.error .progress-inner {
+  background-color: var(--color-error);
+}
+
+htmx-loading-bar .loading-bar.error .progress-inner::before {
+  animation: none;
+}
