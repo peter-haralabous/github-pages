@@ -103,17 +103,20 @@
 
       // Constants
       const MOBILE_BREAKPOINT = 1024; // Tailwind's lg breakpoint
+      const VIEW_RECORDS = 'records';
+      const VIEW_CHAT = 'chat';
+      const VIEW_FEED = 'feed';
 
       // Mobile navigation
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
       // Track which panel was last active/focused
-      let lastActivePanel = 'chat'; // Default to chat view
+      let lastActivePanel = VIEW_CHAT; // Default to chat view
 
       /**
        * Determines which panel contains the given element
        * @param {Element} element - The element to check
-       * @returns {string|null} - 'records', 'chat', 'feed', or null
+       * @returns {string|null} - VIEW_RECORDS, VIEW_CHAT, VIEW_FEED, or null
        */
       function getPanelForElement(element) {
         const leftPanel = document.getElementById('left-panel');
@@ -121,11 +124,11 @@
         const rightPanel = document.getElementById('right-panel');
 
         if (leftPanel && leftPanel.contains(element)) {
-          return 'records';
+          return VIEW_RECORDS;
         } else if (chatPanel && chatPanel.contains(element)) {
-          return 'chat';
+          return VIEW_CHAT;
         } else if (rightPanel && rightPanel.contains(element)) {
-          return 'feed';
+          return VIEW_FEED;
         }
         return null;
       }
@@ -151,7 +154,7 @@
 
       /**
        * Sets the active view on mobile and updates navigation UI
-       * @param {string} viewName - One of 'records', 'chat', or 'feed'
+       * @param {string} viewName - One of VIEW_RECORDS, VIEW_CHAT, or VIEW_FEED
        */
       function setActiveView(viewName) {
         lastActivePanel = viewName;
@@ -179,11 +182,11 @@
 
           // Show only the active panel
           let activePanel = null;
-          if (viewName === 'records') {
+          if (viewName === VIEW_RECORDS) {
             activePanel = leftPanel;
-          } else if (viewName === 'chat') {
+          } else if (viewName === VIEW_CHAT) {
             activePanel = chatPanel;
-          } else if (viewName === 'feed') {
+          } else if (viewName === VIEW_FEED) {
             activePanel = rightPanel;
           }
 
@@ -215,15 +218,15 @@
       function handleResize() {
         if (window.innerWidth < MOBILE_BREAKPOINT) {
           // Mobile: detect which panel to show based on last active panel or URL
-          let viewToShow = lastActivePanel || 'chat';
+          let viewToShow = lastActivePanel || VIEW_CHAT;
 
           // Only infer from URL if we don't have a last active panel
           if (!lastActivePanel) {
             const path = window.location.pathname;
             if (path.includes('/records') || path.includes('/repository')) {
-              viewToShow = 'records';
+              viewToShow = VIEW_RECORDS;
             } else if (path.includes('/feed')) {
-              viewToShow = 'feed';
+              viewToShow = VIEW_FEED;
             }
           }
 
@@ -505,21 +508,39 @@
         }
 
         const swapTarget = event.detail.target;
+        const triggeringElement = event.detail.elt; // The element that triggered the HTMX request
 
         // Re-apply visibility in mobile mode after content swaps
         // innerHTML swaps can replace elements and remove our visibility classes
         if (window.innerWidth < MOBILE_BREAKPOINT) {
           const targetId = swapTarget.id || '';
 
-          // Determine which panel was affected by the swap
-          let swappedPanel = null;
-          if (targetId === 'left-panel' || (swapTarget.closest && swapTarget.closest('#left-panel'))) {
-            swappedPanel = 'records';
-          } else if (targetId === 'mobile-chat-view' || (swapTarget.closest && swapTarget.closest('#mobile-chat-view'))) {
-            swappedPanel = 'chat';
-          } else if (targetId === 'right-panel' || (swapTarget.closest && swapTarget.closest('#right-panel'))) {
-            swappedPanel = 'feed';
-          } else if (targetId === 'modal-container' || (swapTarget.closest && swapTarget.closest('#modal-container'))) {
+          // Determine which panel the USER IS INTERACTING WITH (not which panel received the swap)
+          // This is important for cross-panel interactions like clicking "Conditions" in Records
+          // which swaps content into Feed - we want Records to stay active, not switch to Feed
+          let activePanel = null;
+
+          // First check which panel the triggering element is in
+          if (triggeringElement) {
+            const triggeringPanel = getPanelForElement(triggeringElement);
+            if (triggeringPanel) {
+              activePanel = triggeringPanel;
+            }
+          }
+
+          // If we couldn't determine from triggering element, fall back to swap target
+          if (!activePanel) {
+            if (targetId === 'left-panel' || (swapTarget.closest && swapTarget.closest('#left-panel'))) {
+              activePanel = VIEW_RECORDS;
+            } else if (targetId === 'mobile-chat-view' || (swapTarget.closest && swapTarget.closest('#mobile-chat-view'))) {
+              activePanel = VIEW_CHAT;
+            } else if (targetId === 'right-panel' || (swapTarget.closest && swapTarget.closest('#right-panel'))) {
+              activePanel = VIEW_FEED;
+            }
+          }
+
+          // Handle modal interactions
+          if (targetId === 'modal-container' || (swapTarget.closest && swapTarget.closest('#modal-container'))) {
             // Modal opened/closed - re-apply active view to ensure correct visibility
             requestAnimationFrame(() => {
               setActiveView(lastActivePanel);
@@ -529,8 +550,8 @@
 
           // When a panel is swapped, it indicates user is actively interacting with it
           // Update lastActivePanel to reflect current panel usage
-          if (swappedPanel) {
-            lastActivePanel = swappedPanel;
+          if (activePanel) {
+            lastActivePanel = activePanel;
 
             // Use requestAnimationFrame to ensure DOM is fully rendered before applying classes
             requestAnimationFrame(() => {

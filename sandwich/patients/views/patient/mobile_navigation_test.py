@@ -570,3 +570,44 @@ def test_mobile_view_shows_active_panel_after_navigation(
     records_panel = page.locator("#left-panel")
     expect(records_panel).to_be_visible()
     expect(chat_panel).not_to_be_visible()
+
+
+@pytest.mark.e2e
+def test_mobile_view_respects_records_when_clicking_items_that_swap_feed(
+    live_server: LiveServer,
+    page: Page,
+    auth_cookies,
+    patient_with_data: Patient,
+) -> None:
+    """Test that clicking items in Records panel that trigger Feed swaps still keeps Records as active panel."""
+    url = f"{live_server.url}{reverse('patients:patient_details', kwargs={'patient_id': patient_with_data.pk})}"
+    page.goto(url)
+
+    # Start on desktop
+    page.set_viewport_size({"width": 1440, "height": 900})
+    page.wait_for_timeout(200)
+
+    # Click on Records to navigate there
+    page.get_by_text("Records", exact=True).first.click()
+    page.wait_for_timeout(300)
+
+    # Now click on a condition/practitioner item in the left panel
+    # This might trigger an HTMX request that swaps content in the right panel (Feed)
+    # But the user is still interacting with the Records panel
+    conditions_link = page.locator("#left-panel a").filter(has_text="Conditions").first
+    if conditions_link.is_visible():
+        conditions_link.click()
+        page.wait_for_timeout(300)
+
+    # Resize to mobile
+    page.set_viewport_size({"width": 375, "height": 667})
+    page.wait_for_timeout(200)
+
+    # Records should be visible because the user clicked in the Records panel
+    # even though the click might have triggered a swap in the Feed panel
+    chat_panel = page.locator("#mobile-chat-view")
+    records_panel = page.locator("#left-panel")
+    feed_panel = page.locator("#right-panel")
+    expect(records_panel).to_be_visible()
+    expect(chat_panel).not_to_be_visible()
+    expect(feed_panel).not_to_be_visible()
