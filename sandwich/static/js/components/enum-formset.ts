@@ -107,10 +107,7 @@ class EnumFormset {
   ): HTMLElement {
     const newForm = templateForm.cloneNode(true) as HTMLElement;
 
-    newForm.innerHTML = newForm.innerHTML.replace(
-      /enums-\d+-/g,
-      `enums-${formIndex}-`,
-    );
+    this.updateFormIndices(newForm, formIndex);
 
     newForm
       .querySelectorAll<HTMLInputElement>('input[type="text"]')
@@ -128,6 +125,24 @@ class EnumFormset {
     this.copyCsrfToken(templateForm, newForm);
 
     return newForm;
+  }
+
+  private updateFormIndices(form: HTMLElement, newIndex: number): void {
+    // Update all elements with name, id, or for attributes that contain form indices
+    const attributesToUpdate = ['name', 'id', 'for'] as const;
+    const selector = attributesToUpdate.map((attr) => `[${attr}]`).join(',');
+
+    form.querySelectorAll<HTMLElement>(selector).forEach((element) => {
+      attributesToUpdate.forEach((attr) => {
+        const value = element.getAttribute(attr);
+        if (value) {
+          element.setAttribute(
+            attr,
+            value.replace(/enums-\d+-/g, `enums-${newIndex}-`),
+          );
+        }
+      });
+    });
   }
 
   private copyCsrfToken(source: HTMLElement, target: HTMLElement): void {
