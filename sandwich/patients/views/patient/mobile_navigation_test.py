@@ -503,3 +503,70 @@ def test_tablet_width_proper_sizing(
         page.locator("#right-panel").is_visible(),
     ]
     assert sum(visible_panels) == 1, "Only one panel should be visible on tablet"
+
+
+@pytest.mark.e2e
+def test_mobile_view_respects_last_active_panel(
+    live_server: LiveServer,
+    page: Page,
+    auth_cookies,
+    patient_with_data: Patient,
+) -> None:
+    """Test that when resizing to mobile, the last interacted panel is shown."""
+    url = f"{live_server.url}{reverse('patients:patient_details', kwargs={'patient_id': patient_with_data.pk})}"
+    page.goto(url)
+
+    # Start on desktop
+    page.set_viewport_size({"width": 1440, "height": 900})
+    page.wait_for_timeout(200)
+
+    # Navigate into Records view (should be via HTMX)
+    page.get_by_text("Records", exact=True).first.click()
+    page.wait_for_timeout(300)
+
+    # Now click in the Chat textarea to make it the last active panel
+    chat_textarea = page.locator("#mobile-chat-view textarea").first
+    chat_textarea.click()
+    page.wait_for_timeout(100)
+
+    # Resize to mobile
+    page.set_viewport_size({"width": 375, "height": 667})
+    page.wait_for_timeout(200)
+
+    # Chat should be visible (not Records) because we clicked in Chat last
+    chat_panel = page.locator("#mobile-chat-view")
+    records_panel = page.locator("#left-panel")
+    expect(chat_panel).to_be_visible()
+    expect(records_panel).not_to_be_visible()
+
+
+@pytest.mark.e2e
+def test_mobile_view_shows_active_panel_after_navigation(
+    live_server: LiveServer,
+    page: Page,
+    auth_cookies,
+    patient_with_data: Patient,
+) -> None:
+    """Test that when navigating in a panel and resizing to mobile, that panel is shown."""
+    url = f"{live_server.url}{reverse('patients:patient_details', kwargs={'patient_id': patient_with_data.pk})}"
+    page.goto(url)
+
+    # Start on desktop
+    page.set_viewport_size({"width": 1440, "height": 900})
+    page.wait_for_timeout(200)
+
+    # Navigate into Records view via HTMX
+    page.get_by_text("Records", exact=True).first.click()
+    page.wait_for_timeout(300)
+
+    # Don't interact with any other panels - Records should be last active
+
+    # Resize to mobile
+    page.set_viewport_size({"width": 375, "height": 667})
+    page.wait_for_timeout(200)
+
+    # Records should be visible because we navigated within it
+    chat_panel = page.locator("#mobile-chat-view")
+    records_panel = page.locator("#left-panel")
+    expect(records_panel).to_be_visible()
+    expect(chat_panel).not_to_be_visible()

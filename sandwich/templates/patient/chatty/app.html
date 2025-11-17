@@ -106,30 +106,48 @@
 
       // Mobile navigation
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
-      const mobileViews = {
-        records: document.getElementById('left-panel'),
-        chat: document.getElementById('mobile-chat-view'),
-        feed: document.getElementById('right-panel'),
-      };
 
       // Track which panel was last active/focused
       let lastActivePanel = 'chat'; // Default to chat view
 
-      // Add focus tracking to all panels
-      function attachPanelListeners() {
-        Object.entries(mobileViews).forEach(([viewName, panel]) => {
-          if (panel) {
-            panel.addEventListener('click', () => {
-              lastActivePanel = viewName;
-            });
-            panel.addEventListener('focusin', () => {
-              lastActivePanel = viewName;
-            });
-          }
-        });
+      /**
+       * Determines which panel contains the given element
+       * @param {Element} element - The element to check
+       * @returns {string|null} - 'records', 'chat', 'feed', or null
+       */
+      function getPanelForElement(element) {
+        const leftPanel = document.getElementById('left-panel');
+        const chatPanel = document.getElementById('mobile-chat-view');
+        const rightPanel = document.getElementById('right-panel');
+
+        if (leftPanel && leftPanel.contains(element)) {
+          return 'records';
+        } else if (chatPanel && chatPanel.contains(element)) {
+          return 'chat';
+        } else if (rightPanel && rightPanel.contains(element)) {
+          return 'feed';
+        }
+        return null;
       }
 
-      attachPanelListeners();
+      /**
+       * Event handler for tracking panel interactions
+       * @param {Event} e - The event object
+       */
+      function handlePanelInteraction(e) {
+        const panel = getPanelForElement(e.target);
+        if (panel) {
+          lastActivePanel = panel;
+        }
+      }
+
+      // Use event delegation to track panel interactions
+      // This survives HTMX outerHTML swaps since we listen on the parent container
+      const panelsContainer = document.getElementById('panels-container');
+      if (panelsContainer) {
+        panelsContainer.addEventListener('click', handlePanelInteraction);
+        panelsContainer.addEventListener('focusin', handlePanelInteraction);
+      }
 
       /**
        * Sets the active view on mobile and updates navigation UI
@@ -196,17 +214,17 @@
        */
       function handleResize() {
         if (window.innerWidth < MOBILE_BREAKPOINT) {
-          // Mobile: detect which panel to show based on URL or last active panel
-          let viewToShow = lastActivePanel;
+          // Mobile: detect which panel to show based on last active panel or URL
+          let viewToShow = lastActivePanel || 'chat';
 
-          // When switching from desktop to mobile, infer view from current URL
-          const path = window.location.pathname;
-          if (path.includes('/records') || path.includes('/repository')) {
-            viewToShow = 'records';
-          } else if (path.includes('/feed')) {
-            viewToShow = 'feed';
-          } else {
-            viewToShow = lastActivePanel || 'chat';
+          // Only infer from URL if we don't have a last active panel
+          if (!lastActivePanel) {
+            const path = window.location.pathname;
+            if (path.includes('/records') || path.includes('/repository')) {
+              viewToShow = 'records';
+            } else if (path.includes('/feed')) {
+              viewToShow = 'feed';
+            }
           }
 
           setActiveView(viewToShow);
@@ -509,8 +527,11 @@
             return;
           }
 
-          // Re-apply if the swapped panel matches the active panel or is unknown
-          if (swappedPanel === lastActivePanel || swappedPanel === null) {
+          // When a panel is swapped, it indicates user is actively interacting with it
+          // Update lastActivePanel to reflect current panel usage
+          if (swappedPanel) {
+            lastActivePanel = swappedPanel;
+
             // Use requestAnimationFrame to ensure DOM is fully rendered before applying classes
             requestAnimationFrame(() => {
               setActiveView(lastActivePanel);
