@@ -6,7 +6,7 @@ from langgraph.types import StateSnapshot
 
 from sandwich.core.models.langgraph import Checkpoints
 from sandwich.core.service.agent_service.config import configure
-from sandwich.core.service.agent_service.memory import load_snapshot
+from sandwich.core.service.agent_service.memory import get_state
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def conversation_thread_id(agent: CompiledStateGraph) -> str:
 
 @pytest.mark.vcr
 def test_load_snapshot(conversation_thread_id: str) -> None:
-    snapshot = load_snapshot(config=configure(conversation_thread_id))
+    snapshot = get_state(config=configure(conversation_thread_id))
 
     assert isinstance(snapshot, StateSnapshot)
     assert snapshot.config["configurable"]["thread_id"] == conversation_thread_id

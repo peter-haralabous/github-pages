@@ -22,5 +22,5 @@ def _chat_context(request: AuthenticatedHttpRequest, patient: Patient) -> dict[s
     chat_thread = f"{request.user.pk}-{patient.pk}"
     return _patient_context(request, patient=patient) | {
         "chat_form": ChatForm(user=request.user, initial={"patient": patient, "thread": chat_thread}),
-        "chat_messages": load_chat_messages(configure(chat_thread)),
+        "chat_messages": load_chat_messages(configure(chat_thread), patient),
     }
