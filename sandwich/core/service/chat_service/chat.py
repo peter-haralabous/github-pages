@@ -58,6 +58,20 @@ def receive_chat_message(
         )["structured_response"]
 
 
+def _timestamp_from_message(message: HumanMessage | AIMessage) -> datetime.datetime | None:
+    if isinstance(message, HumanMessage):
+        raw_timestamp = message.response_metadata.get("timestamp")
+        if raw_timestamp:
+            if isinstance(raw_timestamp, datetime.datetime):
+                return raw_timestamp
+            return datetime.datetime.fromisoformat(raw_timestamp)
+    elif isinstance(message, AIMessage):
+        raw_timestamp = message.response_metadata.get("ResponseMetadata", {}).get("HTTPHeaders", {}).get("date")
+        if raw_timestamp:
+            return parsedate_to_datetime(raw_timestamp)
+    return None
+
+
 def initial_chat_messages(config: "RunnableConfig", patient: Patient) -> list[SafeString]:
     messages = build_assistant_messages(
         "ChatResponse",
@@ -69,7 +83,6 @@ def initial_chat_messages(config: "RunnableConfig", patient: Patient) -> list[Sa
     state = set_state(config, values={"messages": messages})
     return list(html_message_list(state.values.get("messages", [])))
 
-
 def load_chat_messages(config: "RunnableConfig", patient: Patient) -> list[SafeString]:
     state: StateSnapshot = get_state(config)
     if existing_messages := state.values.get("messages"):
@@ -79,29 +92,28 @@ def load_chat_messages(config: "RunnableConfig", patient: Patient) -> list[SafeS
 
 def html_message_list(messages: Iterable[BaseMessage]) -> Generator[SafeString, Any, None]:
     for message in messages:
+        timestamp = _timestamp_from_message(message)
         if isinstance(message, HumanMessage):
-            raw_timestamp = message.response_metadata["timestamp"]
             yield user_message(
                 message.content,  # type: ignore[arg-type]
-                datetime.datetime.fromisoformat(raw_timestamp),
+                timestamp,
             )
 
         elif isinstance(message, AIMessage):
             for tool_call in message.tool_calls:
                 if tool_call["name"] == "ChatResponse":
-                    raw_timestamp = message.response_metadata["ResponseMetadata"]["HTTPHeaders"]["date"]
                     yield assistant_message(
                         content=tool_call["args"]["message"],
                         buttons=tool_call["args"]["buttons"],
-                        timestamp=parsedate_to_datetime(raw_timestamp),
+                        timestamp=timestamp,
                     )
 
 
-def user_message(content: str, timestamp: datetime.datetime) -> SafeString:
+def user_message(content: str, timestamp: datetime.datetime | None) -> SafeString:
     context = {"message": content, "timestamp": timestamp}
     return render_to_string("patient/chatty/partials/user_message.html", context)
 
 
-def assistant_message(content: str, buttons: "list[Button]", timestamp: datetime.datetime) -> SafeString:
+def assistant_message(content: str, buttons: "list[Button]", timestamp: datetime.datetime | None) -> SafeString:
     context = {"message": markdown_to_html(content), "buttons": buttons, "timestamp": timestamp}
     return render_to_string("patient/chatty/partials/assistant_message.html", context)
