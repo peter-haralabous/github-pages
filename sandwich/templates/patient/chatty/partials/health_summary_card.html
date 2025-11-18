@@ -1,0 +1,56 @@
+{% load lucide %}
+
+{# Health Summary Card - can be swapped independently via HTMX #}
+{% if health_summary_html %}
+  <div class="card bg-base-200" id="summary-card">
+    <div class="card-body p-4">
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <div class="flex items-start gap-2">
+          {% lucide "sparkles" class="size-5 text-primary mt-0.5 flex-shrink-0" id="summary-sparkle-icon" %}
+          <h1 class="font-semibold text-sm">Health Summary</h1>
+        </div>
+        <button class="btn btn-ghost btn-xs hover:btn-primary refresh-summary-btn"
+                hx-post="{% url 'patients:regenerate_health_summary' patient_id=patient.id %}"
+                hx-target="#summary-card"
+                hx-swap="outerHTML"
+                hx-select="#summary-card"
+                hx-indicator="#summary-loading-overlay"
+                title="Regenerate summary">{% lucide "refresh-cw" class="size-3" %}</button>
+      </div>
+      <div class="prose prose-sm max-w-none" id="summary-prose">{{ health_summary_html|safe }}</div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-base-300">
+        <div class="text-xs text-base-content/50">
+          {% if health_summary_generated_at %}
+            Generated {{ health_summary_generated_at|timesince }} ago
+          {% else %}
+            Just generated
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  {# Empty state #}
+  <div class="card bg-base-200" id="summary-card">
+    <div class="card-body p-4">
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <div class="flex items-start gap-2">
+          {% lucide "sparkles" class="size-5 text-primary mt-0.5 flex-shrink-0" id="summary-sparkle-icon" %}
+          <h1 class="font-semibold text-sm">Health Summary</h1>
+        </div>
+        <button class="btn btn-ghost btn-xs hover:btn-primary refresh-summary-btn"
+                hx-post="{% url 'patients:regenerate_health_summary' patient_id=patient.id %}"
+                hx-target="#summary-card"
+                hx-swap="outerHTML"
+                hx-select="#summary-card"
+                hx-indicator="#summary-loading-overlay"
+                title="Generate summary">{% lucide "refresh-cw" class="size-3" %}</button>
+      </div>
+      <div class="flex flex-col items-center justify-center text-center p-8">
+        {% lucide "sparkles" class="size-12 text-base-content/20 mb-3" %}
+        <p class="text-base-content/60 text-sm font-medium">No health summary yet</p>
+        <p class="text-base-content/40 text-xs mt-1">Click the refresh button above to generate your health summary</p>
+      </div>
+    </div>
+  </div>
+{% endif %}

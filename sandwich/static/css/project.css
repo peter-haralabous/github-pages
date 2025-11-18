@@ -114,4 +114,17 @@
       }
     }
   }
+
+  /* Health summary loading overlay */
+  .summary-loading-overlay {
+    display: none;
+    z-index: 10;
+
+    &.htmx-request {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+  }
 }

@@ -34,7 +34,6 @@ from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.validators.date_time import not_in_future
-from sandwich.patients.views.patient import _chat_context
 from sandwich.patients.views.patient.details import _chatty_patient_details_context
 from sandwich.users.models import User
 
@@ -123,7 +122,7 @@ def patient_records(request: AuthenticatedHttpRequest, patient: Patient, record_
     if request.headers.get("HX-Target") == "left-panel":
         return render(request, "patient/chatty/partials/left_panel_records.html", context)
 
-    context |= _chat_context(request, patient=patient)
+    context |= _chatty_patient_details_context(request, patient=patient)
     return render(request, "patient/chatty/records.html", context)
 
 
@@ -163,7 +162,7 @@ def patient_repository(request: AuthenticatedHttpRequest, patient: Patient, cate
     if request.headers.get("HX-Target") == "left-panel":
         return render(request, "patient/chatty/partials/left_panel_records.html", context)
 
-    context |= _chat_context(request, patient=patient)
+    context |= _chatty_patient_details_context(request, patient=patient)
     return render(request, "patient/chatty/records.html", context)
 
 
@@ -204,7 +203,7 @@ def patient_tasks(request: AuthenticatedHttpRequest, patient: Patient):
     if request.headers.get("HX-Target") == "left-panel":
         return render(request, "patient/chatty/partials/left_panel_records.html", context)
 
-    context |= _chat_context(request, patient=patient)
+    context |= _chatty_patient_details_context(request, patient=patient)
     return render(request, "patient/chatty/records.html", context)
 
 

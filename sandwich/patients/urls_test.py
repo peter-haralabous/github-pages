@@ -35,6 +35,7 @@ EXCLUDED_URL_NAMES = {
     "task",  # POST
     "patient_onboarding_add",  # redirects if there's already a patient for the user
     "health_records_add",  # needs record type in the url; covered in `health_records_test.py`
+    "regenerate_health_summary",  # POST
     # Ninja api routes below
     "patients-api:api-root",
     "patients-api:openapi-json",

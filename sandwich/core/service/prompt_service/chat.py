@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from django.template import Context
+from django.template import Engine
 from langchain_core.prompts import ChatPromptTemplate
 
 from sandwich.core.models import Document
@@ -19,11 +21,47 @@ chat_template = ChatPromptTemplate(
 
 def patient_context(patient):
     """Hydrate the patient context template with patient data."""
-    return template_contents("patient_context.md").format(
-        patient_full_name=patient.full_name,
-        patient_date_of_birth=patient.date_of_birth,
-        patient_province=patient.province or "Unknown",
+    template = Engine().from_string(template_code=template_contents("patient_context.md"))
+    return template.render(
+        Context(
+            {
+                "patient_full_name": patient.full_name,
+                "patient_date_of_birth": patient.date_of_birth,
+                "patient_province": patient.province or "Unknown",
+                "phn": patient.phn,
+                "email": patient.email,
+            }
+        )
     )
+
+
+def patient_record_context(patient):
+    """Hydrate the patient record template with patient data."""
+
+    template = Engine().from_string(template_code=template_contents("patient_record_context.md"))
+    context = Context(
+        {
+            "immunizations": list(patient.immunization_set.all()),
+            "practitioners": list(patient.practitioner_set.all()),
+            "conditions": list(patient.condition_set.all()),
+        }
+    )
+
+    # render the template with the context
+    return template.render(context)
+
+
+def patient_summary_system(patient):
+    """Hydrate the patient summary system template with patient data."""
+
+    template = Engine().from_string(template_code=template_contents("patient_summary_system.md"))
+    context = Context(
+        {
+            "patient_context": f"{patient_context(patient)}\n\n{patient_record_context(patient)}",
+        }
+    )
+
+    return template.render(context)
 
 
 def user_context(user):
