@@ -28,7 +28,10 @@ from sandwich.core.service.chat_service.agents import chat_agent
 from sandwich.core.service.chat_service.response import ChatResponse
 from sandwich.core.service.chat_service.sse import send_assistant_message
 from sandwich.core.service.chat_service.sse import send_assistant_thinking
+from sandwich.core.service.ingest.extract_records import RecordsResponse
 from sandwich.core.service.markdown_service import markdown_to_html
+from sandwich.core.service.prompt_service.chat import document_upload_template
+from sandwich.core.service.prompt_service.chat import file_upload_context
 from sandwich.core.service.prompt_service.template import template_contents
 from sandwich.users.models import User
 
@@ -172,6 +175,16 @@ class IncomingChatEvent(ChatEvent, abc.ABC):
     @abc.abstractmethod
     def build_state(self) -> "StateLike":
         """Build the agent state for this event."""
+
+
+class FileUploadEvent(IncomingChatEvent):
+    type: ChatEventType = ChatEventType.FILE_UPLOADED
+    document_id: str
+    document_filename: str
+    records: RecordsResponse
+
+    def build_state(self) -> "StateLike":
+        return document_upload_template.invoke(file_upload_context(self))
 
 
 class UserMessageEvent(IncomingChatEvent):
