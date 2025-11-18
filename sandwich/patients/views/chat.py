@@ -1,6 +1,4 @@
 import logging
-import uuid
-from typing import TYPE_CHECKING
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML
@@ -14,17 +12,12 @@ from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import Patient
-from sandwich.core.service.agent_service.config import configure
-from sandwich.core.service.chat_service.chat import receive_chat_message
-from sandwich.core.service.chat_service.sse import send_assistant_message
-from sandwich.core.service.chat_service.sse import send_assistant_thinking
+from sandwich.core.service.chat_service.chat import ChatContext
+from sandwich.core.service.chat_service.chat import UserMessageEvent
+from sandwich.core.service.chat_service.chat import receive_chat_event
 from sandwich.core.service.chat_service.sse import send_user_message
-from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.users.models import User
-
-if TYPE_CHECKING:
-    from sandwich.core.service.chat_service.response import ChatResponse
 
 
 class ChatForm(forms.Form):
@@ -67,36 +60,15 @@ class ChatForm(forms.Form):
 def chat(request: AuthenticatedHttpRequest) -> HttpResponse:
     form = ChatForm(request.POST, user=request.user)
     if form.is_valid():
-        user = request.user
         patient = form.cleaned_data["patient"]
-        thread = f"{user.pk}-{patient.pk}"  # Hard code for now
-        message = form.cleaned_data["message"]
+        event = UserMessageEvent(context=ChatContext(patient_id=str(patient.id)), content=form.cleaned_data["message"])
 
-        # 1. update chat history to include the user's message
-        send_user_message(patient, message)
-
-        # 2. show the thinking indicator
-        message_id = str(uuid.uuid4())
-        send_assistant_thinking(patient, message_id)
+        # Update chat history to include the user's message
+        send_user_message(event)
 
         # TODO: move this into an async job
-        response: ChatResponse = receive_chat_message(
-            user=user,
-            patient=patient,
-            config=configure(thread),
-            message=message,
-            message_id=message_id,
-        )
+        receive_chat_event(event)
 
-        # 3. replace the thinking indicator with the assistant's response
-        send_assistant_message(
-            patient,
-            message_id,
-            context={
-                "message": markdown_to_html(response.message),
-                "buttons": response.buttons,
-            },
-        )
         return HttpResponse()
     logging.error("Invalid chat form: %s", form.errors)
 

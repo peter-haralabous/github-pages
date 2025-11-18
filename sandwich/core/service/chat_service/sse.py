@@ -1,30 +1,35 @@
 import logging
+from typing import TYPE_CHECKING
 
 from django.template import loader
 
-from sandwich.core.models import Patient
+from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.service.sse_service import EventType
 from sandwich.core.service.sse_service import sse_patient_channel
 from sandwich.core.service.sse_service import sse_send
-from sandwich.core.service.template_service import ContextDict
+
+if TYPE_CHECKING:
+    from sandwich.core.service.chat_service.chat import AssistantMessageEvent
+    from sandwich.core.service.chat_service.chat import ChatEvent
+    from sandwich.core.service.chat_service.chat import UserMessageEvent
 
 logger = logging.getLogger(__name__)
 
 
-def send_user_message(patient, message: str) -> None:
+def send_user_message(event: "UserMessageEvent") -> None:
     sse_send(
-        sse_patient_channel(patient),
+        sse_patient_channel(event.context.patient),
         EventType.USER_MESSAGE,
         loader.render_to_string(
             "patient/chatty/partials/user_message.html",
-            context={"oob": True, "message": message},
+            context={"oob": True, "message": event.content},
         ),
     )
 
 
-def send_assistant_thinking(patient: Patient, message_id: str) -> None:
+def send_assistant_thinking(event: "ChatEvent") -> None:
     sse_send(
-        sse_patient_channel(patient),
+        sse_patient_channel(event.context.patient),
         EventType.ASSISTANT_THINKING,
         loader.render_to_string(
             "patient/chatty/partials/assistant_message_skeleton.html",
@@ -33,16 +38,17 @@ def send_assistant_thinking(patient: Patient, message_id: str) -> None:
     )
 
 
-def send_assistant_message(patient: Patient, message_id: str, context: ContextDict) -> None:
+def send_assistant_message(event: "AssistantMessageEvent") -> None:
     sse_send(
-        sse_patient_channel(patient),
+        sse_patient_channel(event.context.patient),
         EventType.ASSISTANT_MESSAGE,
         loader.render_to_string(
             "patient/chatty/partials/assistant_message.html",
             context={
+                "message": markdown_to_html(event.response.message),
+                "buttons": event.response.buttons,
                 "oob": True,
-                "message_id": message_id,
-                **context,
+                "message_id": event.id,
             },
         ),
     )
