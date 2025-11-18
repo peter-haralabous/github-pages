@@ -426,7 +426,7 @@ class TestEncounterUpdateField:
 
         assert response.status_code == 200
         content = response.content.decode()
-        assert "2024-12-25" in content
+        assert "25 Dec 2024" in content
 
         # Verify database was updated
         attr_value = CustomAttributeValue.objects.get(
@@ -662,7 +662,7 @@ class TestInlineEditHelperFunctions:
 
         display = _get_field_display_value(encounter, str(date_attribute.id), organization)
 
-        assert display == "2024-12-25"
+        assert display == "25 Dec 2024"
 
     @pytest.mark.django_db
     def test_get_field_display_value_returns_placeholder_for_missing_custom_attribute(

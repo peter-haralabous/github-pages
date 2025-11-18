@@ -41,6 +41,7 @@ from sandwich.core.service.list_preference_service import has_unsaved_filters
 from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
+from sandwich.core.types import DATE_DISPLAY_FORMAT
 from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
@@ -95,7 +96,7 @@ def _format_attribute_value(attr: CustomAttribute, values: list) -> str | None:
     if attr.is_multi:
         # Handle multi-valued attributes - return comma-separated string
         if attr.data_type == CustomAttribute.DataType.DATE:
-            formatted = [str(v.value_date) for v in values if v.value_date]
+            formatted = [v.value_date.strftime(DATE_DISPLAY_FORMAT) for v in values if v.value_date]
         elif attr.data_type == CustomAttribute.DataType.ENUM:
             # Sort by enum ID to ensure consistent ordering
             sorted_values = sorted(values, key=lambda v: v.value_enum.id if v.value_enum else 0)
@@ -106,7 +107,7 @@ def _format_attribute_value(attr: CustomAttribute, values: list) -> str | None:
     # Handle single-valued attributes
     value = values[0]
     if attr.data_type == CustomAttribute.DataType.DATE:
-        return str(value.value_date) if value.value_date else None
+        return value.value_date.strftime(DATE_DISPLAY_FORMAT) if value.value_date else None
     if attr.data_type == CustomAttribute.DataType.ENUM:
         return value.value_enum.label if value.value_enum else None
     return None
@@ -449,7 +450,7 @@ def _get_custom_attribute_value_display(
         if attribute.data_type == CustomAttribute.DataType.ENUM and attr_value.value_enum:
             return attr_value.value_enum.label
         if attribute.data_type == CustomAttribute.DataType.DATE and attr_value.value_date:
-            return attr_value.value_date.strftime("%Y-%m-%d")
+            return attr_value.value_date.strftime(DATE_DISPLAY_FORMAT)
     except CustomAttributeValue.DoesNotExist:
         return EMPTY_VALUE_DISPLAY
     return EMPTY_VALUE_DISPLAY

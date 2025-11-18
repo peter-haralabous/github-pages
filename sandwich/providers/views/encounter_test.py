@@ -114,7 +114,7 @@ def test_encounter_details_includes_custom_attributes(
 
     # Check that both attributes are present with correct values
     attr_dict = {attr["name"]: attr["value"] for attr in formatted_attrs}
-    assert attr_dict["Follow-up Date"] == "2025-12-31"
+    assert attr_dict["Follow-up Date"] == "31 Dec 2025"
     assert attr_dict["Priority"] == "High"
 
 
