@@ -16,7 +16,7 @@
              class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
     </div>
     <div class="flex-1 overflow-y-auto px-6 py-4 text-left"
-         hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}"
+         hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?slideout=1"
          hx-trigger="load"
          hx-select="#content"
          hx-swap="innerHTML">

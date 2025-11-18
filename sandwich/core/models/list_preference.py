@@ -66,7 +66,7 @@ class ListViewType(models.TextChoices):
                 {"value": "patient__first_name", "label": "Patient Name", "type": "text"},
                 {"value": "patient__email", "label": "Email", "type": "text"},
                 {"value": "patient__date_of_birth", "label": "Date of Birth", "type": "date"},
-                {"value": "is_active", "label": "Active/Archived", "type": "boolean"},
+                {"value": "is_active", "label": "Active", "type": "boolean"},
                 {"value": "status", "label": "Status", "type": "enum"},
                 {"value": "created_at", "label": "Created", "type": "date"},
                 {"value": "updated_at", "label": "Last Updated", "type": "date"},
@@ -298,7 +298,7 @@ class ListViewPreference(BaseModel):
             scope=PreferenceScope.ORGANIZATION,
             visible_columns=cls.get_default_columns(list_type),
             default_sort=cls.get_default_sort(list_type),
-            saved_filters={},
+            saved_filters=cls.get_default_filters(list_type),
             items_per_page=DEFAULT_ITEMS_PER_PAGE,
         )
 
@@ -316,6 +316,16 @@ class ListViewPreference(BaseModel):
             ListViewType.PATIENT_LIST: DEFAULT_SORT,
         }
         return defaults.get(list_type, DEFAULT_SORT)
+
+    @staticmethod
+    def get_default_filters(list_type: "ListViewType") -> dict[str, Any]:
+        """Get default filters for a list type."""
+        defaults: dict[ListViewType, dict[str, Any]] = {
+            ListViewType.ENCOUNTER_LIST: {
+                "model_fields": {"is_active": "True"},
+            },
+        }
+        return defaults.get(list_type, {})
 
     def fill_defaults(self) -> None:
         list_type = ListViewType(self.list_type)

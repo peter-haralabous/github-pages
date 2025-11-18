@@ -1,0 +1,64 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"document": {"name": "form
+        reference file", "format": "csv", "source": {"bytes": "CiAgICB0aXRsZSxTaW1wbGUgRm9ybQogICAgcTEsIEZpcnN0IG5hbWUsIHRleHRmaWVsZAogICAg"}}},
+        {"text": "\n    You are a helpful assistant that converts CSV documents into
+        JSON form\n    schemas compatible with SurveyJS.\n\n    Attached is a CSV text
+        document that describes a medical assessment form.\n    Preserving it''s questions
+        and wording, convert the document into a\n    SurveyJS form.\n\n    \n    "}]}],
+        "system": [], "inferenceConfig": {}, "toolConfig": {"tools": [{"toolSpec": {"name":
+        "SurveySchema", "description": "When using structured output, this model allows
+        the LLM to decide whether\na multipage or single page assessment is best.",
+        "inputSchema": {"json": {"properties": {"title": {"description": "The form name",
+        "type": "string"}, "pages": {"anyOf": [{"items": {"additionalProperties": true,
+        "type": "object"}, "type": "array"}, {"type": "null"}], "description": "List
+        of elements separated into their respective pages. Used at top level for mult-page
+        forms."}, "elements": {"anyOf": [{"items": {"additionalProperties": true, "type":
+        "object"}, "type": "array"}, {"type": "null"}], "description": "List of form
+        elements. Used at top level for single page forms."}}, "required": ["title",
+        "pages", "elements"], "type": "object"}}}}], "toolChoice": {"tool": {"name":
+        "SurveySchema"}}}}'
+      headers:
+        Content-Length:
+          - '1420'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjcgbWQvcHlpbXBsI0NQeXRob24gbS9ELFos
+            YiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMThUMDMwNjQ3Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            YjM0ZTExZmUtOTZhMC00MTdiLWFjMmEtOGFjOThkYTEyZmFh
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":2691},"output":{"message":{"content":[{"toolUse":{"input":{"title":"Simple
+          Form","pages":null,"elements":[{"type":"text","name":"q1","title":"First name"}]},"name":"SurveySchema","toolUseId":"tooluse_npRQxHPHRfyLED01hmHjug","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":947,"outputTokens":89,"serverToolUsage":{},"totalTokens":1036}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '510'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 18 Nov 2025 03:06:50 GMT
+        x-amzn-RequestId:
+          - f77494a6-4094-4b00-8984-117cdfb4a614
+      status:
+        code: 200
+        message: OK
+version: 1

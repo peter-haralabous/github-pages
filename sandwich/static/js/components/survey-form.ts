@@ -1,6 +1,6 @@
 import { LitElement, html, type TemplateResult } from 'lit';
 import { Model } from 'survey-core';
-import { LayeredLightPanelless } from 'survey-core/themes';
+import CustomSandwichTheme from './survey-form-theme';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
@@ -155,8 +155,7 @@ export class SurveyForm extends LitElement {
       this.setLoadingHidden();
     });
 
-    // TODO(JL): create and set a Thrive specific theme
-    this.model.applyTheme(LayeredLightPanelless);
+    this.model.applyTheme(CustomSandwichTheme);
     this.model.readOnly = this.isReadOnly();
     this.model.data = this._loadInitialData();
 

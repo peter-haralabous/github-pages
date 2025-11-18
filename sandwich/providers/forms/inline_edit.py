@@ -69,6 +69,7 @@ class InlineEditSelectForm(InlineEditForm):
                 choices=choices,
                 attrs={
                     "autofocus": True,
+                    "allow_clear": True,
                     "label": field_name,
                 },
             ),

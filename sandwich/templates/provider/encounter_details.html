@@ -23,34 +23,11 @@
         </div>
         <p class="text-sm tracking-wide flex gap-6 mt-2 items-center">
           <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:"M d, Y" }} </span>
-          <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:"—" }}</span>
-          <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:"—" }}</span>
+          <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
+          <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}</span>
         </p>
       </div>
-      <div>
-        <button class="btn btn-primary"
-                hx-target="#add-task-modal"
-                hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}">
-          Send form
-        </button>
-        <a href="{% url "providers:patient" organization_id=organization.id patient_id=patient.id %}"
-           class="btn btn-outline">View patient</a>
-        <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
-           class="btn btn-outline">Edit patient record</a>
-        <form action="{% url "providers:encounter_archive" organization_id=organization.id encounter_id=encounter.id %}"
-              class="inline"
-              method="post">
-          {% csrf_token %}
-          <button type="submit"
-                  class="btn {% if encounter.status == "completed" %}btn-outline{% else %}btn-error{% endif %}">
-            {% if encounter.status == "completed" %}
-              Unarchive Encounter
-            {% else %}
-              Archive Encounter
-            {% endif %}
-          </button>
-        </form>
-      </div>
+      <div>{% include 'provider/partials/encounter_details_action_menu.html' %}</div>
     </div>
     <hr />
     {% if pending_invitation %}
@@ -92,7 +69,7 @@
             {% for encounter in other_encounters %}
               <tr>
                 <td>{{ encounter.created_at }}</td>
-                <td>{{ encounter.ended_at|default:"—" }}</td>
+                <td>{{ encounter.ended_at|default:EMPTY_VALUE_DISPLAY }}</td>
                 <td>{{ encounter.get_status_display }}</td>
                 <td>
                   <a class="btn btn-sm"

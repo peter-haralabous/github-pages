@@ -28,6 +28,9 @@ from .practitioner import Practitioner
 from .predicate import Predicate
 from .provenance import Provenance
 from .role import Role
+from .summary import Summary
+from .summary import SummaryStatus
+from .summary_template import SummaryTemplate
 from .task import Task
 from .template import Template
 
@@ -62,6 +65,9 @@ __all__ = [
     "Role",
     "Store",
     "StoreMigrations",
+    "Summary",
+    "SummaryStatus",
+    "SummaryTemplate",
     "Task",
     "Template",
 ]

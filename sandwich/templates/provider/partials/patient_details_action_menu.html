@@ -1,0 +1,54 @@
+{% load lucide %}
+
+{# Desktop view: show all buttons inline #}
+<div class="hidden lg:flex gap-2 flex-wrap">
+  <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
+     class="btn btn-primary">Edit Patient Record</a>
+  <form action="{% url "providers:encounter_create" organization_id=organization.id %}"
+        class="inline"
+        method="post">
+    {% csrf_token %}
+    <input type="hidden" name="patient" value="{{ patient.id }}" />
+    <button type="submit" class="btn btn-secondary">Start a New Encounter</button>
+  </form>
+  <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+        class="inline"
+        method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-error">Archive</button>
+  </form>
+</div>
+{# Mobile view: kebab menu dropdown #}
+<div class="lg:hidden dropdown dropdown-end">
+  <button tabindex="0"
+          class="btn btn-ghost btn-sm rounded-full cursor-pointer"
+          aria-label="Patient actions menu">{% lucide "ellipsis-vertical" class="size-6" %}</button>
+  <ul tabindex="0"
+      class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+    <li>
+      <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
+         class="flex items-center gap-2">{% lucide "square-pen" class="size-4" %} Edit Patient Record</a>
+    </li>
+    <li>
+      <form action="{% url "providers:encounter_create" organization_id=organization.id %}"
+            method="post">
+        {% csrf_token %}
+        <input type="hidden" name="patient" value="{{ patient.id }}" />
+        <button type="submit"
+                class="w-full text-left flex items-center gap-2 cursor-pointer">
+          {% lucide "circle-plus" class="size-4" %} Start a New Encounter
+        </button>
+      </form>
+    </li>
+    <li>
+      <form action="{% url "providers:patient_archive" organization_id=organization.id patient_id=patient.id %}"
+            method="post">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full text-left text-error flex items-center gap-2 cursor-pointer">
+          {% lucide "archive" class="size-4" %} Archive
+        </button>
+      </form>
+    </li>
+  </ul>
+</div>

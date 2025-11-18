@@ -45,9 +45,9 @@
                    href="{% url "providers:patient" patient_id=patient.id organization_id=organization.id %}">{{ patient.full_name }}</a>
               </td>
             {% elif col.value == "email" %}
-              <td>{{ patient.email|default:"—" }}</td>
+              <td>{{ patient.email|default:EMPTY_VALUE_DISPLAY }}</td>
             {% elif col.value == "date_of_birth" %}
-              <td>{{ patient.date_of_birth|default:"—" }}</td>
+              <td>{{ patient.date_of_birth|default:EMPTY_VALUE_DISPLAY }}</td>
             {% elif col.value == "has_active_encounter" %}
               <td>{{ patient.has_active_encounter|yesno:"Active,Archived" }}</td>
             {% elif col.value == "created_at" %}
@@ -56,7 +56,7 @@
               <td>{{ patient.updated_at }}</td>
             {% elif col.is_custom %}
               {% with annotation_name=col.value|custom_attr_name %}
-                <td>{{ patient|get_attr:annotation_name|default:"—" }}</td>
+                <td>{{ patient|get_attr:annotation_name|default:EMPTY_VALUE_DISPLAY }}</td>
               {% endwith %}
             {% endif %}
           {% endfor %}

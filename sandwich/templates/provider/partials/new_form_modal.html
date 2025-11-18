@@ -12,7 +12,7 @@
           <h3 class="font-bold text-lg mt-3">Create Manually</h3>
           <p class="text-sm text-base-content/70 mt-1">Build your form from scratch using the form editor.</p>
         </a>
-        <!-- TODO(MM): Remove condition upon feature flag removal -->
+        {# TODO(MM): Remove condition upon feature flag removal #}
         {% if ai_form_generation_enabled %}
           <a class="card bg-base-200 hover:bg-primary/10 hover:border-primary border-2 border-dashed border-base-300 transition-all text-center p-6 cursor-pointer"
              hx-get="{% url "providers:form_file_upload" organization_id=organization.id %}"

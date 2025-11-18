@@ -6,7 +6,7 @@ from django import forms
 class SelectWidget(forms.Select):
     """Widget that renders a native select element with Choices.js enhancement."""
 
-    template_name = "widgets/select.html"
+    template_name = "templates/tailwind/layout/select.html"
 
     def __init__(self, choices: Any = None, attrs: dict[str, Any] | None = None) -> None:
         if attrs is None:

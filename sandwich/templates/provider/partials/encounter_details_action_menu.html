@@ -1,0 +1,35 @@
+{% load lucide %}
+
+{% if request.GET.slideout %}
+  {# Inside slideout: Always show mobile layout due to width constraints #}
+  <div class="dropdown dropdown-end">{% include 'provider/partials/encounter_details_action_menu_dropdown.html' %}</div>
+{% else %}
+  {# Full page view: responsive breakpoints #}
+  {# Desktop view: show all buttons inline #}
+  <div class="hidden lg:flex gap-2 flex-wrap">
+    <a href="{% url "providers:patient" organization_id=organization.id patient_id=patient.id %}"
+       class="btn btn-primary">View Patient</a>
+    <button class="btn btn-secondary"
+            hx-target="#add-task-modal"
+            hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}">
+      Send Form
+    </button>
+    <form action="{% url "providers:encounter_archive" organization_id=organization.id encounter_id=encounter.id %}"
+          class="inline"
+          method="post">
+      {% csrf_token %}
+      <button type="submit"
+              class="btn {% if encounter.status == "completed" %}btn-outline{% else %}btn-error{% endif %}">
+        {% if encounter.status == "completed" %}
+          Unarchive Encounter
+        {% else %}
+          Archive Encounter
+        {% endif %}
+      </button>
+    </form>
+  </div>
+  {# Mobile view: kebab menu dropdown #}
+  <div class="lg:hidden dropdown dropdown-end">
+    {% include 'provider/partials/encounter_details_action_menu_dropdown.html' %}
+  </div>
+{% endif %}

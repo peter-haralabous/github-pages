@@ -608,6 +608,21 @@ def _update_single_enum_attribute(
         )
         return False
 
+    if not new_value or new_value.strip() == "":
+        CustomAttributeValue.objects.filter(
+            attribute=attribute,
+            content_type=content_type,
+            object_id=encounter.pk,
+        ).delete()
+        logger.info(
+            "Cleared ENUM custom attribute",
+            extra={
+                "attribute_id": str(attribute.id),
+                "encounter_id": encounter.pk,
+            },
+        )
+        return True
+
     try:
         enum_value = CustomAttributeEnum.objects.get(id=new_value, attribute=attribute)
     except CustomAttributeEnum.DoesNotExist:
@@ -647,6 +662,21 @@ def _update_date_attribute(
             extra={"attribute_id": str(attribute.id), "new_values": new_value},
         )
         return False
+
+    if not new_value or new_value == "":
+        CustomAttributeValue.objects.filter(
+            attribute=attribute,
+            content_type=content_type,
+            object_id=encounter.pk,
+        ).delete()
+        logger.info(
+            "Cleared DATE custom attribute",
+            extra={
+                "attribute_id": str(attribute.id),
+                "encounter_id": encounter.pk,
+            },
+        )
+        return True
 
     date_value = parse_date(new_value)
     if not date_value:

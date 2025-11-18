@@ -137,5 +137,5 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     }
     kwargs = _build_url_kwargs(url, test_objects)
 
-    response = client.get(reverse("providers:" + url.name, kwargs=kwargs))
+    response = client.get(reverse("providers:" + url.name, kwargs=kwargs), follow=True)
     assert response.status_code == HTTPStatus.OK

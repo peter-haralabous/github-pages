@@ -11,6 +11,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.test import Client
 from django.urls import reverse
 from playwright.sync_api import Page
+from playwright.sync_api import expect
 
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.models import ListViewType
@@ -114,7 +115,7 @@ def test_encounter_details_includes_custom_attributes(
 
     # Check that both attributes are present with correct values
     attr_dict = {attr["name"]: attr["value"] for attr in formatted_attrs}
-    assert attr_dict["Follow-up Date"] == "2025-12-31"
+    assert attr_dict["Follow-up Date"] == "31 Dec 2025"
     assert attr_dict["Priority"] == "High"
 
 
@@ -196,6 +197,26 @@ def test_encounter_list_shows_filter_panel_in_custom_mode_without_filters(
 
 
 @pytest.mark.django_db
+def test_encounter_list_default_excludes_archived_encounters(provider: User, organization: Organization) -> None:
+    """Test that archived encounters are excluded by default on first load."""
+    patient = PatientFactory.create(organization=organization)
+
+    active = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
+    archived = Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.COMPLETED)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
+
+    # First load without any query parameters should exclude archived encounters
+    response = client.get(url, follow=True)
+    assert response.status_code == 200
+    encounters = list(response.context["encounters"])
+    assert active in encounters
+    assert archived not in encounters
+
+
+@pytest.mark.django_db
 def test_encounter_list_filters_by_is_active(provider: User, organization: Organization) -> None:
     """Test filtering encounters by is_active field."""
     patient = PatientFactory.create(organization=organization)
@@ -234,15 +255,18 @@ def test_encounter_list_sorts_by_is_active(provider: User, organization: Organiz
     client.force_login(provider)
     url = reverse("providers:encounter_list", kwargs={"organization_id": organization.id})
 
-    response = client.get(f"{url}?sort=is_active")
+    # Use filter_mode=custom to bypass default filter and see all encounters
+    response = client.get(f"{url}?sort=is_active&filter_mode=custom", follow=True)
     assert response.status_code == 200
     encounters = list(response.context["encounters"])
+    # Ascending sort: inactive (False) comes before active (True)
     assert encounters[0] == inactive
     assert encounters[1] == active
 
-    response = client.get(f"{url}?sort=-is_active")
+    response = client.get(f"{url}?sort=-is_active&filter_mode=custom", follow=True)
     assert response.status_code == 200
     encounters = list(response.context["encounters"])
+    # Descending sort: active (True) comes before inactive (False)
     assert encounters[0] == active
     assert encounters[1] == inactive
 
@@ -611,3 +635,42 @@ def test_encounter_archive_changes_completed_to_in_progress(
     messages = list(result.context["messages"])
     assert len(messages) == 1
     assert "unarchived successfully" in str(messages[0]).lower()
+
+
+@pytest.mark.e2e
+@pytest.mark.django_db
+def test_kebab_menu_visible_in_table(
+    live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
+) -> None:
+    """Test that kebab menu dropdowns are visible and not clipped."""
+    session = SessionStore()
+    session[SESSION_KEY] = str(provider.pk)
+    session[BACKEND_SESSION_KEY] = "django.contrib.auth.backends.ModelBackend"
+    session[HASH_SESSION_KEY] = provider.get_session_auth_hash()
+    session.save()
+
+    session_key = session.session_key
+    assert session_key is not None, "Session key should not be None"
+
+    page.context.add_cookies(
+        [
+            {
+                "name": settings.SESSION_COOKIE_NAME,
+                "value": session_key,
+                "domain": urlparse(live_server.url).hostname or "localhost",
+                "path": "/",
+                "httpOnly": True,
+            }
+        ]
+    )
+
+    page.goto(f"{live_server.url}{reverse('providers:encounter_list', kwargs={'organization_id': organization.id})}")
+    page.wait_for_load_state("networkidle")
+
+    page.locator('button[aria-label="Encounter actions menu"]').first.click()
+
+    dropdown = page.locator("table .dropdown-content.menu").first
+    patient_details = dropdown.locator("text=Patient Details")
+    encounter_details = dropdown.locator("text=Encounter Details")
+    expect(patient_details).to_be_visible()
+    expect(encounter_details).to_be_visible()

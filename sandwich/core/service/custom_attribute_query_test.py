@@ -19,6 +19,7 @@ from sandwich.core.service.custom_attribute_query import _parse_custom_attribute
 from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_filters_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
+from sandwich.core.service.custom_attribute_query import update_custom_attribute
 
 
 @pytest.mark.django_db
@@ -840,3 +841,106 @@ class TestModelFieldFilters:
         results = list(sorted_encounters)
         assert results[0].id == active.id
         assert results[1].id == inactive.id
+
+
+@pytest.mark.django_db
+class TestUpdateCustomAttribute:
+    def test_update_single_enum_attribute_with_value(self, organization, encounter):
+        """Test updating a single enum attribute with a valid value."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        priority_attr = CustomAttribute.objects.create(
+            organization=organization,
+            content_type=content_type,
+            name="Priority",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+        high = CustomAttributeEnum.objects.create(attribute=priority_attr, label="High", value="high")
+
+        result = update_custom_attribute(encounter, priority_attr, str(high.id))
+
+        assert result is True
+        value = CustomAttributeValue.objects.get(
+            attribute=priority_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+        )
+        assert value.value_enum == high
+
+    def test_update_single_enum_attribute_with_empty_string(self, organization, encounter):
+        """Test clearing a single enum attribute with an empty string."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        priority_attr = CustomAttribute.objects.create(
+            organization=organization,
+            content_type=content_type,
+            name="Priority",
+            data_type=CustomAttribute.DataType.ENUM,
+        )
+        high = CustomAttributeEnum.objects.create(attribute=priority_attr, label="High", value="high")
+
+        CustomAttributeValue.objects.create(
+            attribute=priority_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+            value_enum=high,
+        )
+
+        result = update_custom_attribute(encounter, priority_attr, "")
+
+        assert result is True
+        assert not CustomAttributeValue.objects.filter(
+            attribute=priority_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+        ).exists()
+
+    def test_update_date_attribute_with_value(self, organization, encounter):
+        """Test updating a date attribute with a valid value."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        followup_attr = CustomAttribute.objects.create(
+            organization=organization,
+            content_type=content_type,
+            name="Follow-up Date",
+            data_type=CustomAttribute.DataType.DATE,
+        )
+
+        result = update_custom_attribute(encounter, followup_attr, "2024-12-31")
+
+        assert result is True
+        value = CustomAttributeValue.objects.get(
+            attribute=followup_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+        )
+        assert value.value_date == date(2024, 12, 31)
+
+    def test_update_date_attribute_with_empty_string(self, organization, encounter):
+        """Test clearing a date attribute with an empty string."""
+        content_type = ContentType.objects.get_for_model(Encounter)
+
+        followup_attr = CustomAttribute.objects.create(
+            organization=organization,
+            content_type=content_type,
+            name="Follow-up Date",
+            data_type=CustomAttribute.DataType.DATE,
+        )
+
+        # First set a value
+        CustomAttributeValue.objects.create(
+            attribute=followup_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+            value_date=date(2024, 12, 31),
+        )
+
+        # Now clear it with empty string
+        result = update_custom_attribute(encounter, followup_attr, "")
+
+        assert result is True
+        assert not CustomAttributeValue.objects.filter(
+            attribute=followup_attr,
+            content_type=content_type,
+            object_id=encounter.id,
+        ).exists()

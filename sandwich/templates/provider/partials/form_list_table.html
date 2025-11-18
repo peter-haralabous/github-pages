@@ -13,16 +13,24 @@
     <tbody>
       {% for form in forms %}
         <tr>
-          <td>
-            <a class="link"
-               href="{% url "providers:form_template_edit" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
-          </td>
-          <td>
-            <a class="link"
-               href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">
-              <span class="badge badge-info">{{ form.current_version }}</span>
-            </a>
-          </td>
+          {# TODO(MM): improve this UI #}
+          {% if form.is_generating %}
+            <td class="text-gray-400">{{ form.name }}</td>
+            <td class="text-gray-400">
+              <i>Generating...</i>
+            </td>
+          {% else %}
+            <td>
+              <a class="link"
+                 href="{% url "providers:form_template_edit" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
+            </td>
+            <td>
+              <a class="link"
+                 href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">
+                <span class="badge badge-info">{{ form.current_version }}</span>
+              </a>
+            </td>
+          {% endif %}
           <td>{{ form.created_at }}</td>
           <td>{{ form.updated_at }}</td>
         </tr>

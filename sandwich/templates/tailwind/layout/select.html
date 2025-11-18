@@ -4,10 +4,13 @@
 
 <select class="{% if field.field.widget.attrs.class %}{{ field.field.widget.attrs.class }}{% elif classes %}{{ classes }}{% else %}select select-bordered w-full{% endif %} {% if field.errors %}input-error{% endif %}"
         name="{{ field.html_name }}"
-        {% for name, value in field.field.widget.attrs.items %}{% if name != 'class' %}{{ name }}{% if value != True %}="{{ value }}"{% endif %}
+        {% for name, value in field.field.widget.attrs.items %}{% if name not in "class,allow_clear,clear_label" %}{{ name }}{% if value != True %}="{{ value }}"{% endif %}
         {% endif %}
         {% endfor %}
         id="{{ field.auto_id }}">
+  {% if field.field.widget.attrs.allow_clear %}
+    <option value="">{{ field.field.widget.attrs.clear_label|default:"None" }}</option>
+  {% endif %}
   {% for group, options, index in field|optgroups %}
     {% if group %}<optgroup label="{{ group }}">{% endif %}
       {% for option in options %}

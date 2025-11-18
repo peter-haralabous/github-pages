@@ -40,3 +40,7 @@ class Form(VersionMixin, BaseModel):
 
     def current_version(self) -> int:
         return self.get_total_versions()
+
+    @property
+    def is_generating(self) -> bool:
+        return not self.schema and self.reference_file

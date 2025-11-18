@@ -22,7 +22,7 @@
                class="link">{{ document.original_filename }}</a>
           </td>
           <td>{{ document.get_category_display }}</td>
-          <td>{{ document.date|default:"—" }}</td>
+          <td>{{ document.date|default:EMPTY_VALUE_DISPLAY }}</td>
           <td>{{ document.content_type }}</td>
           <td>
             {% if document.size %}{{ document.size|filesizeformat }}{% endif %}

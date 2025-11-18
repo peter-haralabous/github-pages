@@ -7,6 +7,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.paginator import Paginator
 from django.core.validators import FileExtensionValidator
 from django.http import HttpResponse
@@ -19,6 +20,7 @@ from guardian.shortcuts import get_objects_for_user
 from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models import Form
 from sandwich.core.models import Organization
+from sandwich.core.service.form_generation.generate_form import generate_form_schema_from_reference_file
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -31,7 +33,7 @@ class UploadReferenceForm(forms.Form):
         required=True,
         label="Upload File",
         help_text="Upload a file to generate a form schema.",
-        widget=forms.FileInput(attrs={"accept": "application/pdf, text/csv"}),
+        widget=forms.FileInput(attrs={"accept": "application/pdf, text/csv", "class": "file-input"}),
         validators=[FileExtensionValidator(allowed_extensions=["pdf", "csv"])],
     )
     description = forms.CharField(
@@ -189,17 +191,17 @@ def form_file_upload(request: AuthenticatedHttpRequest, organization: Organizati
 
         if upload_reference_form.is_valid():
             messages.add_message(request, messages.SUCCESS, "Form upload successful, processing document.")
-            reference_file = upload_reference_form.cleaned_data["file"]
+            reference_file = upload_reference_form.cleaned_data.get("file")
+            assert isinstance(reference_file, InMemoryUploadedFile)
+            assert reference_file.name, "Uploaded file has no name"
 
             form_title = reference_file.name.split(".")[0]
-            # TODO(MM): Process form with AI
-            # Stubbed sample form
-            Form.objects.create(
-                name=form_title,
-                schema={"title": form_title},
+            form = Form.objects.create(
+                name=form_title,  # placeholder title
                 organization=organization,
                 reference_file=reference_file,
             )
+            generate_form_schema_from_reference_file.defer(form_id=str(form.id))
 
             res = HttpResponse(status=HTTPStatus.OK)
             res["HX-Redirect"] = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})

@@ -3,6 +3,7 @@ from django.http import HttpRequest
 
 from sandwich.core.models import Organization
 from sandwich.core.service.organization_service import get_provider_organizations
+from sandwich.core.types import EMPTY_VALUE_DISPLAY
 
 
 def settings_context(request: HttpRequest):
@@ -10,6 +11,7 @@ def settings_context(request: HttpRequest):
     return {
         "environment": getattr(settings, "ENVIRONMENT", None),
         "app_version": getattr(settings, "APP_VERSION", None),
+        "EMPTY_VALUE_DISPLAY": EMPTY_VALUE_DISPLAY,
     }
 
 

@@ -14,7 +14,7 @@
            data-tip="{{ fact.start_datetime|timesince }} ago">{% lucide "timer" size=15 class="inline mb-1" %}</div>
       {{ fact.start_datetime|date }}
     {% else %}
-      —
+      {{ EMPTY_VALUE_DISPLAY }}
     {% endif %}
   </td>
   <td class="w-48 text-base-content/30"
@@ -24,7 +24,7 @@
            data-tip="{{ fact.end_datetime|timesince }} ago">{% lucide "timer" size=15 class="inline mb-1" %}</div>
       {{ fact.end_datetime|date }}
     {% else %}
-      —
+      {{ EMPTY_VALUE_DISPLAY }}
     {% endif %}
   </td>
   <td>

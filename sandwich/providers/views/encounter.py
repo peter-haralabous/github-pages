@@ -41,6 +41,8 @@ from sandwich.core.service.list_preference_service import has_unsaved_filters
 from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
+from sandwich.core.types import DATE_DISPLAY_FORMAT
+from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.providers.forms.inline_edit import FormContext
@@ -94,16 +96,18 @@ def _format_attribute_value(attr: CustomAttribute, values: list) -> str | None:
     if attr.is_multi:
         # Handle multi-valued attributes - return comma-separated string
         if attr.data_type == CustomAttribute.DataType.DATE:
-            formatted = [str(v.value_date) for v in values if v.value_date]
+            formatted = [v.value_date.strftime(DATE_DISPLAY_FORMAT) for v in values if v.value_date]
         elif attr.data_type == CustomAttribute.DataType.ENUM:
-            formatted = [v.value_enum.label for v in values if v.value_enum]
+            # Sort by enum ID to ensure consistent ordering
+            sorted_values = sorted(values, key=lambda v: v.value_enum.id if v.value_enum else 0)
+            formatted = [v.value_enum.label for v in sorted_values if v.value_enum]
         else:
             return None
         return ", ".join(formatted) if formatted else None
     # Handle single-valued attributes
     value = values[0]
     if attr.data_type == CustomAttribute.DataType.DATE:
-        return str(value.value_date) if value.value_date else None
+        return value.value_date.strftime(DATE_DISPLAY_FORMAT) if value.value_date else None
     if attr.data_type == CustomAttribute.DataType.ENUM:
         return value.value_enum.label if value.value_enum else None
     return None
@@ -433,9 +437,9 @@ def _get_custom_attribute_value_display(
             object_id=encounter.id,
         )
         if attr_values.exists():
-            labels = [av.value_enum.label for av in attr_values if av.value_enum]
-            return ", ".join(labels) if labels else "—"
-        return "—"
+            labels = sorted([av.value_enum.label for av in attr_values if av.value_enum])
+            return ", ".join(labels) if labels else EMPTY_VALUE_DISPLAY
+        return EMPTY_VALUE_DISPLAY
 
     try:
         attr_value = CustomAttributeValue.objects.get(
@@ -446,10 +450,10 @@ def _get_custom_attribute_value_display(
         if attribute.data_type == CustomAttribute.DataType.ENUM and attr_value.value_enum:
             return attr_value.value_enum.label
         if attribute.data_type == CustomAttribute.DataType.DATE and attr_value.value_date:
-            return attr_value.value_date.strftime("%Y-%m-%d")
+            return attr_value.value_date.strftime(DATE_DISPLAY_FORMAT)
     except CustomAttributeValue.DoesNotExist:
-        return "—"
-    return "—"
+        return EMPTY_VALUE_DISPLAY
+    return EMPTY_VALUE_DISPLAY
 
 
 def _get_custom_attribute(field_name: str, organization: Organization) -> CustomAttribute | None:
@@ -476,12 +480,12 @@ def _get_field_display_value(encounter: Encounter, field_name: str, organization
         The formatted display value or a placeholder
     """
     if field_name == "status":
-        return encounter.get_status_display() or "—"
+        return encounter.get_status_display() or EMPTY_VALUE_DISPLAY
 
     # Custom attribute
     attribute = _get_custom_attribute(field_name, organization)
     if not attribute:
-        return "—"
+        return EMPTY_VALUE_DISPLAY
 
     content_type = ContentType.objects.get_for_model(Encounter)
     return _get_custom_attribute_value_display(encounter, attribute, content_type)

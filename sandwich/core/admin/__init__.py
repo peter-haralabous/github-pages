@@ -18,6 +18,8 @@ from .list_preference import ListViewPreferenceAdmin as ListViewPreferenceAdmin
 from .organization import OrganizationAdmin as OrganizationAdmin
 from .patient import PatientAdmin as PatientAdmin
 from .predicate import PredicateAdmin as PredicateAdmin
+from .summary import SummaryAdmin as SummaryAdmin
+from .summary_template import SummaryTemplateAdmin as SummaryTemplateAdmin
 from .template import TemplateAdmin as TemplateAdmin
 
 admin.site.register(
