@@ -50,11 +50,11 @@
                 </label>
               </td>
             {% elif col.value == "patient__email" %}
-              <td>{{ encounter.patient.email|default:"—" }}</td>
+              <td>{{ encounter.patient.email|default:EMPTY_VALUE_DISPLAY }}</td>
             {% elif col.value == "patient__date_of_birth" %}
-              <td>{{ encounter.patient.date_of_birth|default:"—" }}</td>
+              <td>{{ encounter.patient.date_of_birth|default:EMPTY_VALUE_DISPLAY }}</td>
             {% elif col.value == "status" %}
-              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-status" field_name="status" display_value=encounter.get_status_display|default:"—" can_edit=True encounter=encounter organization=organization %}
+              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-status" field_name="status" display_value=encounter.get_status_display|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
             {% elif col.value == "is_active" %}
               <td>{{ encounter.is_active|yesno:"Active,Archived" }}</td>
             {% elif col.value == "created_at" %}
@@ -63,7 +63,7 @@
               <td>{{ encounter.updated_at }}</td>
             {% elif col.is_custom %}
               {% with annotation_name=col.value|custom_attr_name %}
-                {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-"|add:col.value field_name=col.value display_value=encounter|get_attr:annotation_name|default:"—" can_edit=True encounter=encounter organization=organization %}
+                {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-"|add:col.value field_name=col.value display_value=encounter|get_attr:annotation_name|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
               {% endwith %}
             {% endif %}
           {% endfor %}

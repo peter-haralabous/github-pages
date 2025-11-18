@@ -41,6 +41,7 @@ from sandwich.core.service.list_preference_service import has_unsaved_filters
 from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
+from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.providers.forms.inline_edit import FormContext
@@ -436,8 +437,8 @@ def _get_custom_attribute_value_display(
         )
         if attr_values.exists():
             labels = sorted([av.value_enum.label for av in attr_values if av.value_enum])
-            return ", ".join(labels) if labels else "—"
-        return "—"
+            return ", ".join(labels) if labels else EMPTY_VALUE_DISPLAY
+        return EMPTY_VALUE_DISPLAY
 
     try:
         attr_value = CustomAttributeValue.objects.get(
@@ -450,8 +451,8 @@ def _get_custom_attribute_value_display(
         if attribute.data_type == CustomAttribute.DataType.DATE and attr_value.value_date:
             return attr_value.value_date.strftime("%Y-%m-%d")
     except CustomAttributeValue.DoesNotExist:
-        return "—"
-    return "—"
+        return EMPTY_VALUE_DISPLAY
+    return EMPTY_VALUE_DISPLAY
 
 
 def _get_custom_attribute(field_name: str, organization: Organization) -> CustomAttribute | None:
@@ -478,12 +479,12 @@ def _get_field_display_value(encounter: Encounter, field_name: str, organization
         The formatted display value or a placeholder
     """
     if field_name == "status":
-        return encounter.get_status_display() or "—"
+        return encounter.get_status_display() or EMPTY_VALUE_DISPLAY
 
     # Custom attribute
     attribute = _get_custom_attribute(field_name, organization)
     if not attribute:
-        return "—"
+        return EMPTY_VALUE_DISPLAY
 
     content_type = ContentType.objects.get_for_model(Encounter)
     return _get_custom_attribute_value_display(encounter, attribute, content_type)

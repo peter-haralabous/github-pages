@@ -9,8 +9,8 @@
       <h1>{{ patient.last_name }}, {{ patient.first_name }}</h1>
       <p class="text-sm tracking-wide flex gap-6 mt-2 items-center">
         <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:"M d, Y" }} </span>
-        <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:"—" }}</span>
-        <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:"—" }}</span>
+        <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
+        <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}</span>
       </p>
     </div>
     <div>
@@ -61,7 +61,7 @@
           {% for encounter in encounters %}
             <tr>
               <td>{{ encounter.created_at }}</td>
-              <td>{{ encounter.ended_at|default:"—" }}</td>
+              <td>{{ encounter.ended_at|default:EMPTY_VALUE_DISPLAY }}</td>
               {# TODO: Add encounter status badge partial with color-coded pills for visual distinction (e.g., badge-success for active, badge-neutral for archived) #}
               <td>{{ encounter.get_status_display }}</td>
               <td>

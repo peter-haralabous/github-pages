@@ -1,5 +1,7 @@
 from typing import Annotated
 
+EMPTY_VALUE_DISPLAY = "—"
+
 type HtmlStr = Annotated[str, "HTML formatted string"]
 type RePattern = Annotated[str, "A non-compiled regex pattern"]
 type UrlNamespace = Annotated[str, "A namespace for urls"]
