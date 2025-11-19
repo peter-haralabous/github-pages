@@ -14,6 +14,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_http_methods
+from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.forms import DeleteConfirmationForm
 from sandwich.core.models import Form
@@ -41,7 +42,7 @@ class SummaryTemplateFilterForm(forms.Form):
 
 
 class SummaryTemplateForm(forms.ModelForm[SummaryTemplate]):
-    def __init__(self, organization: Organization, *args, **kwargs) -> None:
+    def __init__(self, *args, organization: Organization, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.organization = organization
 
@@ -110,7 +111,17 @@ class SummaryTemplateForm(forms.ModelForm[SummaryTemplate]):
 
 def _get_summary_template_list_context(request: AuthenticatedHttpRequest, organization: Organization) -> dict:
     """Get the context for rendering the summary template list."""
-    templates = SummaryTemplate.objects.filter(organization=organization).select_related("form")
+
+    # Permission note: select_related loads forms without explicit permission checks.
+    # This is acceptable because both SummaryTemplate and Form use org-level permissions,
+    # so users with view_summarytemplate permission will have view_form permission for
+    # the same organization. If granular form permissions are added in the future,
+    # this will need to be revisited.
+    templates = get_objects_for_user(
+        request.user,
+        ["view_summarytemplate"],
+        SummaryTemplate.objects.filter(organization=organization).select_related("form"),
+    )
 
     filter_form = SummaryTemplateFilterForm(request.GET)
     if filter_form.is_valid():
@@ -155,7 +166,7 @@ def summary_template_list(request: AuthenticatedHttpRequest, organization: Organ
 
 @require_http_methods(["GET", "POST"])
 @login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization"])])
+@authorize_objects([ObjPerm(Organization, "organization_id", ["create_summarytemplate"])])
 def summary_template_add(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
     """Provider view to add a new summary template."""
     logger.info(
@@ -168,7 +179,7 @@ def summary_template_add(request: AuthenticatedHttpRequest, organization: Organi
             "Processing summary template add form",
             extra={"user_id": request.user.id, "organization_id": organization.id},
         )
-        form = SummaryTemplateForm(organization, request.POST)
+        form = SummaryTemplateForm(request.POST, organization=organization)
         if form.is_valid():
             template = form.save()
             logger.info(
@@ -196,7 +207,7 @@ def summary_template_add(request: AuthenticatedHttpRequest, organization: Organi
             "Rendering summary template add form",
             extra={"user_id": request.user.id, "organization_id": organization.id},
         )
-        form = SummaryTemplateForm(organization)
+        form = SummaryTemplateForm(organization=organization)
 
     return render(
         request,
@@ -210,27 +221,17 @@ def summary_template_add(request: AuthenticatedHttpRequest, organization: Organi
 
 @require_http_methods(["GET", "POST"])
 @login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["change_organization"])])
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(SummaryTemplate, "template_id", ["view_summarytemplate", "change_summarytemplate"]),
+    ]
+)
 def summary_template_edit(
-    request: AuthenticatedHttpRequest, organization: Organization, template_id: str
+    request: AuthenticatedHttpRequest, organization: Organization, summarytemplate: SummaryTemplate
 ) -> HttpResponse:
     """Provider view to edit an existing summary template."""
-    try:
-        template = SummaryTemplate.objects.get(id=template_id, organization=organization)
-    except SummaryTemplate.DoesNotExist:
-        logger.warning(
-            "Summary template not found or does not belong to organization",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization.id,
-                "template_id": template_id,
-            },
-        )
-        messages.add_message(request, messages.ERROR, "Template not found or you don't have permission to access it.")
-        return HttpResponseRedirect(
-            reverse("providers:summary_template_list", kwargs={"organization_id": organization.id})
-        )
-
+    template = summarytemplate
     logger.info(
         "Accessing summary template edit page",
         extra={"user_id": request.user.id, "organization_id": organization.id, "template_id": template.id},
@@ -241,7 +242,7 @@ def summary_template_edit(
             "Processing summary template edit form",
             extra={"user_id": request.user.id, "organization_id": organization.id, "template_id": template.id},
         )
-        form = SummaryTemplateForm(organization, request.POST, instance=template)
+        form = SummaryTemplateForm(request.POST, instance=template, organization=organization)
         if form.is_valid():
             template = form.save()
             logger.info(
@@ -270,7 +271,7 @@ def summary_template_edit(
             "Rendering summary template edit form",
             extra={"user_id": request.user.id, "organization_id": organization.id, "template_id": template.id},
         )
-        form = SummaryTemplateForm(organization, instance=template)
+        form = SummaryTemplateForm(instance=template, organization=organization)
 
     return render(
         request,
@@ -285,33 +286,28 @@ def summary_template_edit(
 
 @require_http_methods(["GET", "POST"])
 @login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["delete_organization"])])
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(SummaryTemplate, "template_id", ["view_summarytemplate", "delete_summarytemplate"]),
+    ]
+)
 def summary_template_delete(
-    request: AuthenticatedHttpRequest, organization: Organization, template_id: str
+    request: AuthenticatedHttpRequest, organization: Organization, summarytemplate: SummaryTemplate
 ) -> HttpResponse:
     """Delete a summary template."""
-    try:
-        template = SummaryTemplate.objects.get(id=template_id, organization=organization)
-    except SummaryTemplate.DoesNotExist:
-        logger.warning(
-            "Summary template not found or does not belong to organization",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization.id,
-                "template_id": template_id,
-            },
-        )
-        messages.add_message(request, messages.ERROR, "Template not found or you don't have permission to access it.")
-        return HttpResponseRedirect(
-            reverse("providers:summary_template_list", kwargs={"organization_id": organization.id})
-        )
+    template = summarytemplate
+    form_action = reverse(
+        "providers:summary_template_delete",
+        kwargs={"organization_id": organization.id, "template_id": template.id},
+    )
 
     if request.method == "POST":
         logger.info(
             "Processing summary template deletion",
             extra={"user_id": request.user.id, "organization_id": organization.id, "template_id": template.id},
         )
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(request.POST, form_action=form_action)
         if form.is_valid():
             template_name = template.name
             logger.info(
@@ -324,32 +320,15 @@ def summary_template_delete(
                 reverse("providers:summary_template_list", kwargs={"organization_id": organization.id})
             )
 
-        # Form is invalid - show error message and re-render the modal
+        # Form is invalid - fall through to render with validation errors
         logger.warning(
             "Invalid summary template delete confirmation",
-            extra={"user_id": request.user.id, "template_id": template_id},
+            extra={"user_id": request.user.id, "template_id": template.id},
         )
-        messages.error(request, "Invalid confirmation. Please type 'DELETE' to confirm.")
+    else:
+        # GET request - create a new form
+        form = DeleteConfirmationForm(form_action=form_action)
 
-        form_action = reverse(
-            "providers:summary_template_delete",
-            kwargs={"organization_id": organization.id, "template_id": template.id},
-        )
-        form = DeleteConfirmationForm(request.POST, form_action=form_action)
-        modal_context = {"form": form, "template": template, "organization": organization}
-
-        # Get the list context and merge with modal context
-        context = _get_summary_template_list_context(request, organization)
-        context.update(modal_context)
-        return render(request, "provider/summary_template_delete.html", context)
-
-    # GET request - render the modal
-    form = DeleteConfirmationForm(
-        form_action=reverse(
-            "providers:summary_template_delete",
-            kwargs={"organization_id": organization.id, "template_id": template.id},
-        )
-    )
     modal_context = {"form": form, "template": template, "organization": organization}
 
     # If it's an HTMX request, render just the modal partial

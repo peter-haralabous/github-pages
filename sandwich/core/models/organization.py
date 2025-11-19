@@ -98,4 +98,5 @@ class Organization(BaseModel):  # type: ignore[django-manager-missing] # see doc
             ("create_invitation", "Can create a invitation on behalf of this organization."),
             ("create_form", "Can create a new form in this organization."),
             ("create_summarytemplate", "Can create summary templates in this organization."),
+            ("delete_summarytemplate", "Can delete summary templates in this organization."),
         )

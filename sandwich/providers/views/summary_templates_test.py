@@ -105,7 +105,7 @@ def test_summary_template_list_search(client: Client, provider: User, organizati
 
 
 def test_summary_template_add_get(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("change_organization", provider, organization)
+    assign_perm("create_summarytemplate", provider, organization)
     client.force_login(provider)
     url = reverse("providers:summary_template_add", kwargs={"organization_id": organization.id})
     response = client.get(url)
@@ -114,7 +114,7 @@ def test_summary_template_add_get(client: Client, provider: User, organization: 
 
 
 def test_summary_template_add_post(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("change_organization", provider, organization)
+    assign_perm("create_summarytemplate", provider, organization)
     form = FormFactory.create(organization=organization)
     client.force_login(provider)
     url = reverse("providers:summary_template_add", kwargs={"organization_id": organization.id})
@@ -139,7 +139,7 @@ def test_summary_template_add_post(client: Client, provider: User, organization:
 
 
 def test_summary_template_edit_get(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("change_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
     form = FormFactory.create(organization=organization)
     template = SummaryTemplate.objects.create(
         organization=organization,
@@ -148,6 +148,8 @@ def test_summary_template_edit_get(client: Client, provider: User, organization:
         text="Test content",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("change_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -159,7 +161,7 @@ def test_summary_template_edit_get(client: Client, provider: User, organization:
 
 
 def test_summary_template_edit_post(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("change_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
     form = FormFactory.create(organization=organization)
     template = SummaryTemplate.objects.create(
         organization=organization,
@@ -168,6 +170,8 @@ def test_summary_template_edit_post(client: Client, provider: User, organization
         text="Original content",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("change_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -194,7 +198,7 @@ def test_summary_template_edit_post(client: Client, provider: User, organization
 
 
 def test_summary_template_delete(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("delete_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
     form = FormFactory.create(organization=organization)
     template = SummaryTemplate.objects.create(
         organization=organization,
@@ -203,6 +207,8 @@ def test_summary_template_delete(client: Client, provider: User, organization: O
         text="Content",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("delete_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -222,7 +228,7 @@ def test_summary_template_delete(client: Client, provider: User, organization: O
 def test_summary_template_delete_wrong_confirmation(
     client: Client, provider: User, organization: Organization
 ) -> None:
-    assign_perm("delete_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
     form = FormFactory.create(organization=organization)
     template = SummaryTemplate.objects.create(
         organization=organization,
@@ -231,6 +237,8 @@ def test_summary_template_delete_wrong_confirmation(
         text="Content",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("delete_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -240,12 +248,12 @@ def test_summary_template_delete_wrong_confirmation(
     response = client.post(url, {"confirmation": "delete"})  # lowercase, should fail
 
     assert response.status_code == HTTPStatus.OK
-    assert b"Invalid confirmation" in response.content
+    assert b"Must type &#x27;DELETE&#x27; to confirm." in response.content
     assert SummaryTemplate.objects.filter(id=template.id).exists()
 
 
 def test_summary_template_delete_modal(client: Client, provider: User, organization: Organization) -> None:
-    assign_perm("delete_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
     form = FormFactory.create(organization=organization)
     template = SummaryTemplate.objects.create(
         organization=organization,
@@ -254,6 +262,8 @@ def test_summary_template_delete_modal(client: Client, provider: User, organizat
         text="Content",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("delete_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -277,7 +287,9 @@ def test_summary_template_delete_modal_has_unique_id(
         form=form,
     )
 
-    assign_perm("delete_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("delete_summarytemplate", provider, template)
 
     client.force_login(provider)
     url = reverse(
@@ -346,8 +358,7 @@ def test_summary_template_delete_modal_opens_and_works(
     live_server, provider_page: Page, organization: Organization, provider: User
 ):
     """Test that the delete modal opens correctly and can delete a template."""
-    assign_perm("change_organization", provider, organization)
-    assign_perm("delete_organization", provider, organization)
+    assign_perm("view_organization", provider, organization)
 
     form = FormFactory.create(organization=organization, name="Test Form")
     template = SummaryTemplate.objects.create(
@@ -357,6 +368,9 @@ def test_summary_template_delete_modal_opens_and_works(
         text="Test content {% ai %}",
         form=form,
     )
+    assign_perm("view_summarytemplate", provider, template)
+    assign_perm("change_summarytemplate", provider, template)
+    assign_perm("delete_summarytemplate", provider, template)
 
     edit_url = reverse(
         "providers:summary_template_edit",

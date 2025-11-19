@@ -32,6 +32,8 @@ DEFAULT_ORGANIZATION_ROLES: dict[str, list[str]] = {
         "create_patient",
         "create_invitation",
         "create_form",
+        "create_summarytemplate",
+        "delete_summarytemplate",
     ],
     RoleName.ADMIN: [
         "view_organization",
@@ -40,6 +42,8 @@ DEFAULT_ORGANIZATION_ROLES: dict[str, list[str]] = {
         "create_patient",
         "create_invitation",
         "create_form",
+        "create_summarytemplate",
+        "delete_summarytemplate",
     ],
     RoleName.STAFF: [
         "view_organization",

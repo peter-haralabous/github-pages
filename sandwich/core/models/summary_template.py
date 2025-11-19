@@ -2,6 +2,14 @@ from django.db import models
 
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.organization import Organization
+from sandwich.core.service.summary_template_service import assign_default_summarytemplate_permissions
+
+
+class SummaryTemplateManager(models.Manager["SummaryTemplate"]):
+    def create(self, **kwargs) -> "SummaryTemplate":
+        summary_template = super().create(**kwargs)
+        assign_default_summarytemplate_permissions(summary_template)
+        return summary_template
 
 
 class SummaryTemplate(BaseModel):
@@ -20,6 +28,8 @@ class SummaryTemplate(BaseModel):
         on_delete=models.CASCADE,
         help_text="Form that this template is associated with",
     )
+
+    objects = SummaryTemplateManager()
 
     class Meta:
         ordering = ["name"]
