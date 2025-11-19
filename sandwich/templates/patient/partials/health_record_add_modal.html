@@ -11,6 +11,6 @@
   const modal = document.getElementById('add-record-modal');
   modal.showModal();
   modal.addEventListener('close', () => {
-    window.history.back();
-  })
+    modal.remove();
+  });
 </script>

@@ -323,6 +323,12 @@ def health_records_add(request: AuthenticatedHttpRequest, patient: Patient, reco
     else:
         form = form_class()
 
+    form.helper.form_action = reverse(
+        "patients:health_records_add", kwargs={"patient_id": patient.id, "record_type": record_type}
+    )
+    form.helper.attrs["hx-post"] = form.helper.form_action
+    form.helper.attrs["hx-target"] = "closest dialog"
+    form.helper.attrs["hx-swap"] = "outerHTML"
     context = {
         "record_type": record_type,
         "record_type_name": form_class.verbose_name(),
@@ -423,6 +429,10 @@ def _generic_edit_view(record_type: HealthRecordType, request: AuthenticatedHttp
     else:
         form = form_class(instance=instance, show_delete=True)
 
+    form.helper.form_action = instance.get_absolute_url()
+    form.helper.attrs["hx-post"] = form.helper.form_action
+    form.helper.attrs["hx-target"] = "closest dialog"
+    form.helper.attrs["hx-swap"] = "outerHTML"
     context = {
         "record_type": record_type,
         "record_type_name": form_class.verbose_name(),

@@ -15,7 +15,7 @@
         {% else %}
           <a href="{{ item.link }}"
              {% if item.target == "left_panel" %}hx-get="{{ item.link }}" hx-target="#left-panel" hx-swap="outerHTML" hx-push-url="true" {% endif %}
-             {% if item.target == "modal" %}hx-get="{{ item.link }}" hx-target="body" hx-swap="beforeend" hx-push-url="true" {% endif %}
+             {% if item.target == "modal" %}hx-get="{{ item.link }}" hx-target="body" hx-swap="beforeend"{% endif %}
              class="flex items-center p-3 rounded-lg hover:bg-base-300/50 gap-4">
             {% if item.icon %}
               {% lucide item.icon class="size-5" %}
