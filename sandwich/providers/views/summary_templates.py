@@ -26,12 +26,26 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 logger = logging.getLogger(__name__)
 
 
+class SummaryTemplateFilterForm(forms.Form):
+    SORT_CHOICES = [
+        ("-created_at", "Newest first"),
+        ("created_at", "Oldest first"),
+        ("name", "Name (A-Z)"),
+        ("-name", "Name (Z-A)"),
+        ("-updated_at", "Recently updated"),
+        ("updated_at", "Least recently updated"),
+    ]
+
+    search = forms.CharField(required=False, max_length=200)
+    sort = forms.ChoiceField(choices=SORT_CHOICES, required=False, initial="-created_at")
+
+
 class SummaryTemplateForm(forms.ModelForm[SummaryTemplate]):
     def __init__(self, organization: Organization, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.organization = organization
 
-        self.fields["form"].queryset = Form.objects.filter(organization=organization).order_by("name")  # type: ignore[attr-defined]
+        self.fields["form"].queryset = organization.form_set.order_by("name")  # type: ignore[attr-defined]
 
         self.helper = FormHelper()
         self.helper.form_tag = False
@@ -98,11 +112,17 @@ def _get_summary_template_list_context(request: AuthenticatedHttpRequest, organi
     """Get the context for rendering the summary template list."""
     templates = SummaryTemplate.objects.filter(organization=organization).select_related("form")
 
-    search_query = request.GET.get("search", "").strip()
+    filter_form = SummaryTemplateFilterForm(request.GET)
+    if filter_form.is_valid():
+        search_query = filter_form.cleaned_data.get("search", "").strip()
+        sort = filter_form.cleaned_data.get("sort") or "-created_at"
+    else:
+        search_query = ""
+        sort = "-created_at"
+
     if search_query:
         templates = templates.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
 
-    sort = request.GET.get("sort", "-created_at")
     templates = templates.order_by(sort)
 
     page = request.GET.get("page", 1)
@@ -114,6 +134,7 @@ def _get_summary_template_list_context(request: AuthenticatedHttpRequest, organi
         "templates": templates_page,
         "search": search_query,
         "sort": sort,
+        "filter_form": filter_form,
     }
 
 
