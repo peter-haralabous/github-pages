@@ -12,11 +12,6 @@ from sandwich.core.models.encounter import EncounterStatus
 
 
 @pytest.fixture
-def encounter(patient, organization):
-    return Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.UNKNOWN)
-
-
-@pytest.fixture
 def date_attribute(organization):
     return CustomAttribute.objects.create(
         organization=organization,

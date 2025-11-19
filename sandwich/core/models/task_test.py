@@ -3,12 +3,12 @@ from unittest.mock import patch
 import pytest
 from django.db import models
 
-from sandwich.core.conftest import TaskStatus
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.form import Form
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
+from sandwich.core.models.task import TaskStatus
 
 
 def test_task_deletion_does_not_affect_form_version(db, encounter: Encounter) -> None:
