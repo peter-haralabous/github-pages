@@ -267,6 +267,7 @@ class ImmunizationForm(HealthRecordForm[Immunization]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["date"].validators.append(not_in_future)
+        self.fields["date"].widget = forms.DateInput(attrs={"type": "date"})
 
     class Meta:
         model = Immunization
