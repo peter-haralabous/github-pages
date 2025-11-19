@@ -27,8 +27,8 @@
             <a class="link"
                href="{% url "providers:form_template" organization_id=organization.id form_id=template.form.id %}">{{ template.form.name }}</a>
           </td>
-          <td>{{ template.created_at|date:"Y-m-d" }}</td>
-          <td>{{ template.updated_at|date:"Y-m-d" }}</td>
+          <td>{{ template.created_at|date:DJANGO_DATE_FORMAT }}</td>
+          <td>{{ template.updated_at|date:DJANGO_DATE_FORMAT }}</td>
           <td class="text-right">
             <button class="btn btn-ghost btn-sm"
                     type="button"
