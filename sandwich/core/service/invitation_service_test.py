@@ -51,13 +51,13 @@ def test_mask_uuids():
 
 
 @pytest.mark.django_db
-def test_resend_patient_invitation_email(template_fixture: None, patient: Patient, mailoutbox, snapshot):
+def test_resend_patient_invitation_email(template_fixture: None, patient: Patient, mailoutbox, snapshot_html):
     resend_patient_invitation_email(patient)
     assert len(mailoutbox) == 1
     assert mailoutbox[0].to == [patient.email]
 
     # if the template changes, the snapshot will need to be updated
-    assert mask_uuids(mailoutbox[0].body) == snapshot
+    assert mask_uuids(mailoutbox[0].body) == snapshot_html
 
 
 @pytest.mark.django_db
