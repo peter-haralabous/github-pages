@@ -1,9 +1,8 @@
-<div id="add-task-modal"></div>
 <div class="flex justify-between items-center mb-4">
   <h2>Tasks</h2>
   <button class="btn btn-primary"
-          id="assign-task-btn"
-          hx-target="#add-task-modal"
+          hx-target="body"
+          hx-swap="beforeend"
           hx-get="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}">
     Assign task
   </button>

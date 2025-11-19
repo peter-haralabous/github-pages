@@ -10,7 +10,8 @@
     <a href="{% url "providers:patient" organization_id=organization.id patient_id=patient.id %}"
        class="btn btn-primary">View Patient</a>
     <button class="btn btn-secondary"
-            hx-target="#add-task-modal"
+            hx-target="body"
+            hx-swap="beforeend"
             hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}">
       Send Form
     </button>

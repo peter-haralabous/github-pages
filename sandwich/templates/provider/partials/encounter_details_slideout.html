@@ -1,28 +1,59 @@
 {% load lucide %}
 
-<div class="relative">
-  <input type="checkbox"
-         id="encounter-details-modal-{{ encounter.id }}"
-         class="peer hidden" />
-  <label for="encounter-details-modal-{{ encounter.id }}"
-         class="fixed inset-0 bg-black/50 z-40 hidden peer-checked:block"></label>
-  <div class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
-    <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
-      <div class="flex items-center gap-2 text-base-content/70">
-        {% lucide "clipboard-list" class="size-5" %}
-        <span class="font-medium">Encounter Details</span>
-      </div>
-      <label for="encounter-details-modal-{{ encounter.id }}"
-             class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
+<div id="encounter-details-backdrop-{{ encounter.id }}"
+     class="fixed inset-0 bg-black/50 z-40 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+<div id="encounter-details-modal-{{ encounter.id }}"
+     class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full">
+  <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
+    <div class="flex items-center gap-2 text-base-content/70">
+      {% lucide "clipboard-list" class="size-5" %}
+      <span class="font-medium">Encounter Details</span>
     </div>
-    <div class="flex-1 overflow-y-auto px-6 py-4 text-left"
-         hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?slideout=1"
-         hx-trigger="load"
-         hx-select="#content"
-         hx-swap="innerHTML">
-      <div class="flex items-center justify-center h-full">
-        <span class="loading loading-spinner loading-lg"></span>
-      </div>
-    </div>
+    <label for="encounter-details-modal-{{ encounter.id }}"
+           class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
+  </div>
+  <div class="flex-1 overflow-y-auto px-6 py-4 text-left">
+    {% include "provider/partials/encounter_details_content.html" %}
   </div>
 </div>
+<script nonce="{{ request.csp_nonce }}" type="module">
+  // TODO: switch this to a <dialog> element so that we can use native modal behavior
+  function openEncounterDetailsSlideout(encounterId) {
+    const slideout = document.getElementById(`encounter-details-modal-${encounterId}`);
+    const backdrop = document.getElementById(`encounter-details-backdrop-${encounterId}`);
+    if (slideout) {
+      slideout.classList.remove('translate-x-full');
+    }
+    if (backdrop) {
+      backdrop.classList.remove('opacity-0', 'pointer-events-none');
+      backdrop.classList.add('opacity-100', 'pointer-events-auto');
+    }
+  }
+
+  function closeEncounterDetailsSlideout(encounterId) {
+    const slideout = document.getElementById(`encounter-details-modal-${encounterId}`);
+    const backdrop = document.getElementById(`encounter-details-backdrop-${encounterId}`);
+    if (slideout) {
+      slideout.classList.add('translate-x-full');
+    }
+    if (backdrop) {
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    }
+  }
+
+  document.querySelectorAll(`[for="encounter-details-modal-{{ encounter.id }}"]`).forEach(button => {
+    button.addEventListener('click', () => {
+      closeEncounterDetailsSlideout("{{ encounter.id }}");
+    });
+  });
+
+  const backdrop = document.getElementById(`encounter-details-backdrop-{{ encounter.id }}`);
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      closeEncounterDetailsSlideout("{{ encounter.id }}");
+    });
+  }
+
+  openEncounterDetailsSlideout("{{ encounter.id }}");
+</script>

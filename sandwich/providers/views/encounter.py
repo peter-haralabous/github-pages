@@ -183,6 +183,8 @@ def encounter_details(
         "pending_invitation": pending_invitation,
         "formatted_attributes": formatted_attributes,
     }
+    if request.GET.get("slideout"):
+        return render(request, "provider/partials/encounter_details_slideout.html", context)
     return render(request, "provider/encounter_details.html", context)
 
 

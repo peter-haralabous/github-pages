@@ -43,11 +43,11 @@
           {% for col in visible_column_meta %}
             {% if col.value == "patient__first_name" %}
               <td>
-                {# checks the related input in sandwich/templates/provider/partials/encounter_details_slideout.html #}
-                <label for="encounter-details-modal-{{ encounter.id }}"
-                       class="link cursor-pointer">
-                  {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
-                </label>
+                <a href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}"
+                   hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?slideout=1"
+                   hx-target="body"
+                   hx-swap="beforeend"
+                   class="link">{{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}</a>
               </td>
             {% elif col.value == "patient__email" %}
               <td>{{ encounter.patient.email|default:EMPTY_VALUE_DISPLAY }}</td>

@@ -281,24 +281,43 @@ def test_encounter_slideout_closes_when_clicking_outside(  # noqa: PLR0913
     page.goto(url)
     page.wait_for_load_state("networkidle")
 
-    first_patient_link = page.locator('label[for^="encounter-details-modal-"]').first
-    first_patient_link.click()
+    patient_anchor = page.locator(
+        f"a.link:has-text('{encounter.patient.last_name}, {encounter.patient.first_name}')"
+    ).first
+    patient_anchor.wait_for(state="visible", timeout=5000)
+    patient_anchor.click()
 
-    for_attr = first_patient_link.get_attribute("for")
-    assert for_attr is not None, "Label should have a 'for' attribute"
-    encounter_id = for_attr.replace("encounter-details-modal-", "")
+    slideout = page.locator("[id^='encounter-details-modal-']").first
+    slideout.wait_for(state="attached", timeout=5000)
+    backdrop = page.locator("[id^='encounter-details-backdrop-']").first
+    backdrop.wait_for(state="attached", timeout=5000)
 
-    slideout = page.locator(f"#encounter-details-modal-{encounter_id}")
-    page.wait_for_timeout(300)
-    assert slideout.is_checked()
+    modal_id = slideout.get_attribute("id")
+    assert modal_id is not None, "Modal id missing"
+    assert modal_id.startswith("encounter-details-modal-"), f"Unexpected modal id: {modal_id}"
+    encounter_id = modal_id.replace("encounter-details-modal-", "")
 
-    # Click outside (on the backdrop) to close
-    backdrop = page.locator(f'label[for="encounter-details-modal-{encounter_id}"]').first
-    backdrop.click(force=True)
+    page.wait_for_timeout(500)
 
-    page.wait_for_timeout(300)
+    assert backdrop.evaluate("el => el.classList.contains('opacity-100')"), "Backdrop should be visible"
+    assert backdrop.evaluate("el => el.classList.contains('pointer-events-auto')"), "Backdrop should be clickable"
+    assert not slideout.evaluate("el => el.classList.contains('translate-x-full')"), "Slideout should be visible"
 
-    assert not slideout.is_checked()
+    backdrop.click(position={"x": 10, "y": 10})
+
+    page.wait_for_function(
+        f"document.querySelector('#encounter-details-backdrop-{encounter_id}').classList.contains('opacity-0')"
+    )
+    page.wait_for_function(
+        f"document.querySelector('#encounter-details-backdrop-{encounter_id}').classList.contains('pointer-events-none')"
+    )
+    page.wait_for_function(
+        f"document.querySelector('#encounter-details-modal-{encounter_id}').classList.contains('translate-x-full')"
+    )
+
+    assert backdrop.evaluate("el => el.classList.contains('opacity-0')"), "Backdrop should be hidden"
+    assert backdrop.evaluate("el => el.classList.contains('pointer-events-none')"), "Backdrop should not be clickable"
+    assert slideout.evaluate("el => el.classList.contains('translate-x-full')"), "Slideout should be hidden"
 
 
 @pytest.mark.e2e
