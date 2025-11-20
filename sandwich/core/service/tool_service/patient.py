@@ -1,5 +1,4 @@
 from typing import Any
-from typing import Literal
 
 from django.core.serializers.python import Serializer as PythonSerializer
 from django.utils.text import slugify
@@ -12,6 +11,7 @@ from sandwich.core.models import Fact
 from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
+from sandwich.core.models.health_record import HealthRecordType
 from sandwich.users.models import User
 
 
@@ -54,31 +54,22 @@ def build_patient_record_tool(user: User, patient: Patient) -> BaseTool:
 
     serializer = PythonSerializer()
 
+    type_queryset_map = {
+        HealthRecordType.CONDITION: Condition.objects.filter(patient=patient),
+        HealthRecordType.IMMUNIZATION: Immunization.objects.filter(patient=patient),
+        HealthRecordType.PRACTITIONER: Practitioner.objects.filter(patient=patient),
+    }
+
     @tool(
         f"{_patient_fn_slug(patient)}_medical_record",
         description=f"Access medical records for {patient.full_name}",
     )
-    def medical_record(types: list[Literal["conditions", "immunizations", "practitioners"]]) -> list[dict[str, Any]]:
+    def medical_record(types: list[HealthRecordType]) -> list[dict[str, Any]]:
         records = []
 
-        if "conditions" in types:
-            records.extend(
-                serializer.serialize(
-                    queryset=Condition.objects.filter(patient=patient),
-                )
-            )
-        if "immunizations" in types:
-            records.extend(
-                serializer.serialize(
-                    queryset=Immunization.objects.filter(patient=patient),
-                )
-            )
-        if "practitioners" in types:
-            records.extend(
-                serializer.serialize(
-                    queryset=Practitioner.objects.filter(patient=patient),
-                )
-            )
+        for health_record_type, queryset in type_queryset_map.items():
+            if health_record_type in types:
+                records.extend(serializer.serialize(queryset=queryset))
         return records
 
     return medical_record
