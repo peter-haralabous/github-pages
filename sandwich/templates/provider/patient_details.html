@@ -52,8 +52,13 @@
           <tr>
             <td>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
             <td>{{ encounter.ended_at|date:DJANGO_DATE_TIME_FORMAT|default:EMPTY_VALUE_DISPLAY }}</td>
-            {# TODO: Add encounter status badge partial with color-coded pills for visual distinction (e.g., badge-success for active, badge-neutral for archived) #}
-            <td>{{ encounter.get_status_display }}</td>
+            <td>
+              {% if encounter.active %}
+                <span class="badge badge-md badge-success">Active</span>
+              {% else %}
+                <span class="badge badge-md badge-error">Archived</span>
+              {% endif %}
+            </td>
             <td class="text-right">
               <a class="btn btn-sm"
                  href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">Details</a>
