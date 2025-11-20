@@ -13,7 +13,7 @@
         <h1>{{ patient.last_name }}, {{ patient.first_name }}</h1>
       </div>
       <p class="text-sm tracking-wide flex gap-6 mt-2 items-center">
-        <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:"M d, Y" }} </span>
+        <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }} </span>
         <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
         <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}</span>
       </p>
