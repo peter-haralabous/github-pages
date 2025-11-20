@@ -1,6 +1,7 @@
 import pytest
 from django.core.files.base import ContentFile
 
+from sandwich.core.factories.encounter import EncounterFactory
 from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
@@ -9,7 +10,6 @@ from sandwich.core.models import Encounter
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient
 from sandwich.core.models import Task
-from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.models.task import TaskStatus
 from sandwich.users.factories import UserFactory
@@ -67,9 +67,7 @@ def other_document(other_patient: Patient, other_encounter: Encounter) -> Docume
 
 @pytest.fixture
 def other_encounter(other_patient, other_organization):
-    return Encounter.objects.create(
-        patient=other_patient, organization=other_organization, status=EncounterStatus.IN_PROGRESS
-    )
+    return EncounterFactory.create(patient=other_patient, organization=other_organization)
 
 
 @pytest.fixture
