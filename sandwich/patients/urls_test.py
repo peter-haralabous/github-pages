@@ -52,7 +52,8 @@ EXCLUDED_URL_NAMES = {
 
 
 def test_no_stale_exclusions():
-    assert EXCLUDED_URL_NAMES.issubset({url.name for url in get_patient_urls()})
+    unknown = EXCLUDED_URL_NAMES - {url.name for url in get_patient_urls()}
+    assert unknown == set()
 
 
 @pytest.mark.parametrize("url", get_patient_urls(), ids=lambda url: url.name)

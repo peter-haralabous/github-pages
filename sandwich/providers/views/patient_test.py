@@ -9,7 +9,6 @@ from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import ListViewType
 from sandwich.core.models.encounter import Encounter
-from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.form import Form
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
@@ -112,10 +111,8 @@ def test_patient_add(provider: User, organization: Organization) -> None:
     assert res.status_code == HTTPStatus.FOUND
     created_patient = Patient.objects.get(last_name="Newpatient")
     assert created_patient
-    assert res.url == reverse(  # type: ignore[attr-defined]
-        "providers:patient",
-        kwargs={"patient_id": created_patient.id, "organization_id": organization.id},
-    )
+    created_encounter = Encounter.objects.get(patient=created_patient)
+    assert res.url == created_encounter.get_absolute_url()  # type:ignore[attr-defined]
     assert provider.has_perm("view_patient", created_patient)
     assert provider.has_perm("create_task", created_patient)
 
@@ -402,38 +399,6 @@ def test_patient_cancel_task_deny_access(user: User, patient, organization) -> N
                 "patient_id": patient.id,
                 "task_id": task.id,
             },
-        )
-    )
-
-    assert res.status_code == HTTPStatus.NOT_FOUND
-
-
-def test_patient_archive(provider: User, organization: Organization, patient: Patient) -> None:
-    client = Client()
-    client.force_login(provider)
-    Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
-
-    res = client.post(
-        reverse(
-            "providers:patient_archive",
-            kwargs={"organization_id": organization.id, "patient_id": patient.id},
-        )
-    )
-
-    assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse("providers:patient_list", kwargs={"organization_id": organization.id})  # type:ignore [attr-defined]
-
-
-def test_patient_archive_deny_access(user: User, organization: Organization, patient: Patient) -> None:
-    client = Client()
-    # This user doesn't have change_encounter perms, only view
-    client.force_login(user)
-    Encounter.objects.create(organization=organization, patient=patient, status=EncounterStatus.IN_PROGRESS)
-
-    res = client.post(
-        reverse(
-            "providers:patient_archive",
-            kwargs={"organization_id": organization.id, "patient_id": patient.id},
         )
     )
 

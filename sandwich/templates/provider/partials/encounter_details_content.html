@@ -45,7 +45,9 @@
   {% include 'provider/partials/activity_section.html' %}
   {% if other_encounters %}
     <hr />
-    <h3>Other Encounters</h3>
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="m-0">Other Encounters</h3>
+    </div>
     <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
       <table class="table">
         <thead>
@@ -56,20 +58,25 @@
           </tr>
         </thead>
         <tbody>
-          {# TODO: link to details about past encounters #}
           {% for encounter in other_encounters %}
             <tr>
               <td>{{ encounter.created_at }}</td>
               <td>{{ encounter.ended_at|default:EMPTY_VALUE_DISPLAY }}</td>
-              <td>{{ encounter.get_status_display }}</td>
               <td>
+                {% if encounter.active %}
+                  <span class="badge badge-md badge-success">Active</span>
+                {% else %}
+                  <span class="badge badge-md badge-error">Archived</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
                 <a class="btn btn-sm"
                    href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">Details</a>
               </td>
             </tr>
           {% empty %}
             <tr>
-              <td colspan="3" class="text-center">No past encounters.</td>
+              <td colspan="4" class="text-center">No past encounters.</td>
             </tr>
           {% endfor %}
         </tbody>

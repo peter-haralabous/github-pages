@@ -4,9 +4,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from uuid import UUID
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -20,6 +17,7 @@ from django.http.response import HttpResponseBadRequest
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import CustomAttributeValue
@@ -33,7 +31,6 @@ from sandwich.core.service.custom_attribute_query import annotate_custom_attribu
 from sandwich.core.service.custom_attribute_query import apply_filters_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import update_custom_attribute
-from sandwich.core.service.encounter_service import assign_default_encounter_perms
 from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.list_preference_service import enrich_filters_with_display_values
@@ -56,34 +53,6 @@ if TYPE_CHECKING:
     from uuid import UUID
 
 logger = logging.getLogger(__name__)
-
-
-class EncounterCreateForm(forms.ModelForm[Encounter]):
-    def __init__(self, organization: Organization, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.organization = organization
-
-        # Set up form helper
-        self.helper = FormHelper()
-        self.helper.add_input(Submit("submit", "Create Encounter", css_class="btn btn-primary", autofocus=True))
-
-    class Meta:
-        model = Encounter
-        fields = ("patient",)
-        widgets = {
-            "patient": forms.HiddenInput(),
-        }
-
-    def save(self, commit: bool = True) -> Encounter:  # noqa: FBT001, FBT002
-        encounter = super().save(commit=False)
-        encounter.organization = self.organization
-        # TODO-WH: Update the default encounter status below if needed once we have
-        # established default statuses for/per organization. Wireframe shows Not set
-        # as default, but that's not an option from our EncounterStatus model from the FHIR spec
-        encounter.status = EncounterStatus.IN_PROGRESS  # Default status for new encounters
-        if commit:
-            encounter.save()
-        return encounter
 
 
 @login_required
@@ -279,83 +248,6 @@ def encounter_list(request: AuthenticatedHttpRequest, organization: Organization
     if request.headers.get("HX-Request"):
         return render(request, "provider/partials/encounter_list_table.html", context)
     return render(request, "provider/encounter_list.html", context)
-
-
-@login_required
-@authorize_objects(
-    [
-        ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"]),
-        ObjPerm(Patient, "patient_id", ["view_patient"]),
-    ]
-)
-def encounter_create_select_patient(
-    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
-) -> HttpResponse:
-    """HTMX endpoint for selecting a patient during encounter creation.
-
-    Returns a modal dialog with patient information and encounter creation form.
-    """
-    form = EncounterCreateForm(organization, initial={"patient": patient})
-    # Set the form action to the encounter_create URL
-    form.helper.form_action = reverse(
-        "providers:encounter_create",
-        kwargs={"organization_id": organization.id},
-    )
-    context = {
-        "organization": organization,
-        "patient": patient,
-        "form": form,
-    }
-    return render(request, "provider/partials/encounter_create_modal.html", context)
-
-
-@login_required
-@authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"])])
-def encounter_create(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
-    """Handle POST requests for creating a new encounter from the modal form."""
-    if request.method != "POST":
-        # This view only handles POST requests now. Redirect to encounter list.
-        return HttpResponseRedirect(reverse("providers:encounter_list", kwargs={"organization_id": organization.id}))
-
-    form = EncounterCreateForm(organization, request.POST)
-    if form.is_valid():
-        encounter = form.save()
-        # Assign default permissions to the new encounter
-        # form.save() does not call the create method of the
-        # underlying model so we need to explictly call
-        # assign_default_encounter_perms
-        assign_default_encounter_perms(encounter)
-        logger.info(
-            "Encounter created successfully",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization.id,
-                "patient_id": encounter.patient.id,
-                "encounter_id": encounter.id,
-            },
-        )
-        messages.add_message(request, messages.SUCCESS, "Encounter created successfully.")
-        return HttpResponseRedirect(
-            reverse(
-                "providers:encounter",
-                kwargs={
-                    "encounter_id": encounter.id,
-                    "organization_id": organization.id,
-                },
-            )
-        )
-    logger.warning(
-        "Invalid encounter creation form",
-        extra={
-            "user_id": request.user.id,
-            "organization_id": organization.id,
-            "form_errors": list(form.errors.keys()),
-        },
-    )
-    # If form is invalid, redirect back to encounter list
-    # (In practice, this shouldn't happen as the form is pre-validated in the modal)
-    messages.add_message(request, messages.ERROR, "Failed to create encounter. Please try again.")
-    return HttpResponseRedirect(reverse("providers:encounter_list", kwargs={"organization_id": organization.id}))
 
 
 # NOTE-WH: The following patient search is only searching for patients within
@@ -736,6 +628,7 @@ def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -
 
 
 @login_required
+@require_POST
 @authorize_objects(
     [
         ObjPerm(Organization, "organization_id", ["view_organization"]),
@@ -745,10 +638,7 @@ def _update_model_field(encounter: Encounter, field_name: str, new_value: str) -
 def encounter_archive(
     request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
 ) -> HttpResponse:
-    if request.method != "POST":
-        return HttpResponseRedirect(reverse("providers:encounter_list", kwargs={"organization_id": organization.id}))
-
-    if encounter.status != EncounterStatus.COMPLETED:
+    if encounter.active:
         complete_encounter(encounter, request.user)
         message = "Encounter archived successfully."
         logger.info(

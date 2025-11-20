@@ -19,13 +19,28 @@
           </div>
         </div>
       </div>
-      <div data-encounter-form>{% crispy form %}</div>
+      <form action="{% url "providers:patient_add_encounter" organization_id=organization.id patient_id=patient.id %}"
+            method="post">
+        {% csrf_token %}
+        {% if current_encounter %}
+          <a href="{{ current_encounter.get_absolute_url }}"
+             class="btn btn-primary"
+             autofocus>View Current Encounter</a>
+          <button type="submit" class="btn">Create New Encounter</button>
+        {% else %}
+          <button type="submit" class="btn btn-primary" autofocus>Create New Encounter</button>
+        {% endif %}
+      </form>
     </div>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
   </form>
 </dialog>
-<script nonce="{{ request.csp_nonce }}">
-  document.getElementById("encounter-create-modal").showModal();
+<script nonce="{{ request.csp_nonce }}" type="module">
+  const modal = document.getElementById("encounter-create-modal");
+  modal.showModal();
+  modal.addEventListener("close", () => {
+    modal.remove()
+  });
 </script>

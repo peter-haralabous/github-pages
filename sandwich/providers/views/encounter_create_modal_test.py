@@ -1,8 +1,4 @@
-from datetime import date
-from http import HTTPStatus
-
 import pytest
-from django.test import Client
 from django.urls import reverse
 from guardian.shortcuts import assign_perm
 from playwright.sync_api import Page
@@ -51,50 +47,6 @@ def test_encounter_create_modal_opens_with_button(live_server, provider_page: Pa
 
     # Verify command palette is open
     assert is_open
-
-
-@pytest.mark.e2e
-@pytest.mark.django_db
-def test_encounter_create_patient_form_no_longer_redirects_to_encounter_page(
-    live_server, provider_page: Page, organization: Organization
-):
-    """Test that creating a patient no longer redirects to the encounter create page.
-
-    With the new POC approach, patients are created normally and encounters
-    can be created via the command palette afterward.
-    """
-    # Navigate to patient add page without return_url
-    provider_page.goto(
-        f"{live_server.url}{reverse('providers:patient_add', kwargs={'organization_id': organization.id})}"
-    )
-    provider_page.wait_for_load_state("networkidle")
-
-    # Fill out patient form
-    first_name_input = provider_page.locator("#id_first_name")
-    first_name_input.fill("Test")
-
-    last_name_input = provider_page.locator("#id_last_name")
-    last_name_input.fill("Patient")
-
-    dob_input = provider_page.locator("#id_date_of_birth")
-    dob_input.fill("1990-01-01")
-
-    email_input = provider_page.locator("#id_email")
-    email_input.fill("test.patient@example.com")
-
-    # Count patients before
-    patients_before = Patient.objects.filter(organization=organization).count()
-
-    # Submit the form
-    submit_button = provider_page.get_by_role("button", name="Submit")
-    submit_button.click()
-
-    # Should redirect to patient details page, not encounter create
-    provider_page.wait_for_url(lambda url: "/patient/" in url and "/encounter" not in url, timeout=5000)
-
-    # Verify patient was created
-    patients_after = Patient.objects.filter(organization=organization).count()
-    assert patients_after == patients_before + 1
 
 
 @pytest.mark.e2e
@@ -248,14 +200,11 @@ def test_create_patient_from_encounter_modal(
     # Submit the form
     provider_page.locator("#patient-add-modal input[type='submit']").click()
 
-    # Wait for encounter create modal to appear with the new patient
-    provider_page.wait_for_selector("#encounter-create-modal", state="visible", timeout=5000)
+    provider_page.wait_for_load_state("networkidle")
 
-    # Verify encounter modal shows the newly created patient
-    encounter_modal = provider_page.locator("#encounter-create-modal")
-    modal_text = encounter_modal.inner_text()
-    assert "Jane" in modal_text
-    assert "NewPatient" in modal_text
+    # Verify we're now looking at the created patient
+    heading = provider_page.locator("#content h1")
+    assert "NewPatient, Jane" in heading.inner_text()
 
     # Verify patient was created in database
     patients_after = Patient.objects.filter(organization=organization).count()
@@ -265,123 +214,3 @@ def test_create_patient_from_encounter_modal(
     new_patient = Patient.objects.get(first_name="Jane", last_name="NewPatient")
     assert new_patient.organization == organization
     assert provider.has_perm("view_patient", new_patient)
-
-
-# Unit tests for patient_add_modal view (encounter creation flow)
-
-
-def test_patient_add_modal_get(provider: User, organization: Organization) -> None:
-    """Test GET request to patient_add_modal returns modal with form."""
-    client = Client()
-    client.force_login(provider)
-    res = client.get(
-        reverse(
-            "providers:patient_add_modal",
-            kwargs={"organization_id": organization.id},
-        )
-    )
-
-    assert res.status_code == HTTPStatus.OK
-    assert b"Create Patient" in res.content
-    assert b"patient-add-modal" in res.content
-
-
-def test_patient_add_modal_get_with_maybe_name(provider: User, organization: Organization) -> None:
-    """Test GET request with maybe_name parameter pre-fills form fields."""
-    client = Client()
-    client.force_login(provider)
-    res = client.get(
-        reverse(
-            "providers:patient_add_modal",
-            kwargs={"organization_id": organization.id},
-        )
-        + "?maybe_name=John+Doe"
-    )
-
-    assert res.status_code == HTTPStatus.OK
-    assert b"John" in res.content
-    assert b"Doe" in res.content
-
-
-def test_patient_add_modal_post_success(provider: User, organization: Organization) -> None:
-    """Test POST request to patient_add_modal creates patient and returns encounter modal."""
-    data = {
-        "first_name": "Jane",
-        "last_name": "Modal",
-        "date_of_birth": date(1990, 5, 15),
-        "province": "BC",
-        "phn": "9222222228",
-    }
-
-    client = Client()
-    client.force_login(provider)
-    res = client.post(
-        reverse(
-            "providers:patient_add_modal",
-            kwargs={"organization_id": organization.id},
-        ),
-        data=data,
-    )
-
-    assert res.status_code == HTTPStatus.OK
-    # Should return encounter modal with selected patient
-    assert b"encounter-create-modal" in res.content
-    assert b"Jane" in res.content
-    assert b"Modal" in res.content
-
-    # Verify patient was created
-    created_patient = Patient.objects.get(last_name="Modal")
-    assert created_patient.first_name == "Jane"
-    assert created_patient.organization == organization
-    assert provider.has_perm("view_patient", created_patient)
-    assert provider.has_perm("create_task", created_patient)
-
-
-def test_patient_add_modal_post_invalid_data(provider: User, organization: Organization) -> None:
-    """Test POST request with invalid data re-renders modal with errors."""
-    data = {
-        "first_name": "Jane",
-        "last_name": "Modal",
-        # Missing required date_of_birth
-        "province": "BC",
-    }
-
-    client = Client()
-    client.force_login(provider)
-    res = client.post(
-        reverse(
-            "providers:patient_add_modal",
-            kwargs={"organization_id": organization.id},
-        ),
-        data=data,
-    )
-
-    assert res.status_code == HTTPStatus.OK
-    # Should re-render the patient add modal with errors
-    assert b"patient-add-modal" in res.content
-    # Should not create patient
-    assert not Patient.objects.filter(last_name="Modal").exists()
-
-
-def test_patient_add_modal_deny_access_not_provider(user: User, organization: Organization) -> None:
-    """Test non-provider cannot access patient_add_modal."""
-    data = {
-        "first_name": "Jane",
-        "last_name": "Modal",
-        "date_of_birth": date(1990, 5, 15),
-        "province": "BC",
-        "phn": "9222222228",
-    }
-
-    client = Client()
-    client.force_login(user)
-    res = client.post(
-        reverse(
-            "providers:patient_add_modal",
-            kwargs={"organization_id": organization.id},
-        ),
-        data=data,
-    )
-
-    assert res.status_code == HTTPStatus.NOT_FOUND
-    assert not Patient.objects.filter(last_name="Modal").exists()

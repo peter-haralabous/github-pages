@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.search import SearchRank
 from django.db import models
 from django.db.models import F
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_enum import EnumField
 
@@ -111,3 +112,8 @@ class Encounter(BaseModel):
     @property
     def active(self) -> bool:
         return not terminal_encounter_status(self.status)
+
+    def get_absolute_url(self) -> str:
+        return reverse(
+            "providers:encounter", kwargs={"organization_id": self.organization.id, "encounter_id": self.id}
+        )

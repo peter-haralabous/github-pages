@@ -6,19 +6,17 @@
     {% include "partials/modal_close_button.html" %}
     <div class="space-y-2">
       <h3 class="font-bold text-lg">Create Patient</h3>
-      <form method="post"
-            hx-post="{% url 'providers:patient_add_modal' organization_id=organization.id %}"
-            hx-target="#modal-container"
-            hx-swap="innerHTML">
-        {% csrf_token %}
-        {% crispy form %}
-      </form>
+      {% crispy form %}
     </div>
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
   </form>
 </dialog>
-<script>
-  document.getElementById("patient-add-modal").showModal();
+<script nonce="{{ request.csp_nonce }}" type="module">
+  const modal = document.getElementById("patient-add-modal");
+  modal.showModal();
+  modal.addEventListener("close", () => {
+    modal.remove();
+  });
 </script>

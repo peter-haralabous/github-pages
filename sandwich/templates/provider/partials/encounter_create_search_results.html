@@ -5,7 +5,7 @@
   {% for patient in patients %}
     <li>
       <a href="#"
-         hx-get="{% url 'providers:encounter_create_select_patient' organization_id=organization.id patient_id=patient.id %}"
+         hx-get="{% url 'providers:patient_add_encounter' organization_id=organization.id patient_id=patient.id %}"
          hx-target="#modal-container"
          hx-swap="innerHTML">
         <div>
@@ -23,7 +23,7 @@
   {% endfor %}
   <li>
     <a href="#"
-       hx-get="{% url 'providers:patient_add_modal' organization_id=organization.id %}?maybe_name={{ query|urlencode }}"
+       hx-get="{% url 'providers:patient_add' organization_id=organization.id %}?maybe_name={{ query|urlencode }}"
        hx-target="#modal-container"
        hx-swap="innerHTML">
       <div>

@@ -37,6 +37,13 @@
   <hr />
   <div class="flex justify-between items-center mb-4">
     <h3 class="m-0">Encounters</h3>
+    <form action="{% url "providers:patient_add_encounter" organization_id=organization.id patient_id=patient.id %}"
+          class="inline"
+          method="post">
+      {% csrf_token %}
+      <button type="submit"
+              class="btn {% if current_encounter %}{% else %}btn-primary{% endif %}">Start a New Encounter</button>
+    </form>
   </div>
   <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
     <table class="table">
@@ -72,8 +79,4 @@
       </tbody>
     </table>
   </div>
-  {% if current_encounter %}
-    <hr />
-    {% include 'provider/partials/forms_section.html' %}
-  {% endif %}
 {% endblock content %}

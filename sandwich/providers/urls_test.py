@@ -32,9 +32,7 @@ EXCLUDED_URL_NAMES = {
     "organization",
     # POST-only endpoints (test harness only issues GET requests)
     "encounter_archive",
-    "encounter_create",
     "form_file_upload",
-    "patient_archive",
     "patient_add_task",
     "patient_resend_invite",
     "patient_cancel_task",
@@ -58,7 +56,8 @@ EXCLUDED_URL_NAMES = {
 
 
 def test_no_stale_exclusions():
-    assert EXCLUDED_URL_NAMES.issubset({url.name for url in get_provider_urls()})
+    unknown = EXCLUDED_URL_NAMES - {url.name for url in get_provider_urls()}
+    assert unknown == set()
 
 
 def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dict[str, Any]:  # noqa: C901

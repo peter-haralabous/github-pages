@@ -7,9 +7,7 @@ from .views.custom_attribute import custom_attribute_edit
 from .views.custom_attribute import custom_attribute_enum_fields
 from .views.custom_attribute import custom_attribute_list
 from .views.encounter import encounter_archive
-from .views.encounter import encounter_create
 from .views.encounter import encounter_create_search
-from .views.encounter import encounter_create_select_patient
 from .views.encounter import encounter_details
 from .views.encounter import encounter_edit_field
 from .views.encounter import encounter_list
@@ -32,9 +30,8 @@ from .views.organization import organization_add
 from .views.organization import organization_delete
 from .views.organization import organization_edit
 from .views.patient import patient_add
-from .views.patient import patient_add_modal
+from .views.patient import patient_add_encounter
 from .views.patient import patient_add_task
-from .views.patient import patient_archive
 from .views.patient import patient_cancel_task
 from .views.patient import patient_details
 from .views.patient import patient_edit
@@ -119,12 +116,6 @@ urlpatterns = [
         encounter_create_search,
         name="encounter_create_search",
     ),
-    path(
-        "organization/<uuid:organization_id>/encounter/create/select-patient/<uuid:patient_id>",
-        encounter_create_select_patient,
-        name="encounter_create_select_patient",
-    ),
-    path("organization/<uuid:organization_id>/encounter/create", encounter_create, name="encounter_create"),
     path("organization/<uuid:organization_id>/encounter/<uuid:encounter_id>", encounter_details, name="encounter"),
     path(
         "organization/<uuid:organization_id>/encounter/<uuid:encounter_id>/edit/<str:field_name>",
@@ -139,9 +130,9 @@ urlpatterns = [
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>", patient_details, name="patient"),
     path("organization/<uuid:organization_id>/patient/<uuid:patient_id>/edit", patient_edit, name="patient_edit"),
     path(
-        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/archive",
-        patient_archive,
-        name="patient_archive",
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/add_encounter",
+        patient_add_encounter,
+        name="patient_add_encounter",
     ),
     path(
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/add_task",
@@ -161,7 +152,6 @@ urlpatterns = [
     ),
     path("organization/<uuid:organization_id>/patients", patient_list, name="patient_list"),
     path("organization/<uuid:organization_id>/patient/add", patient_add, name="patient_add"),
-    path("organization/<uuid:organization_id>/patient/add-modal", patient_add_modal, name="patient_add_modal"),
     # List preference management endpoints
     path(
         "organization/<uuid:organization_id>/preferences/<str:list_type>/settings",

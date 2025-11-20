@@ -33,7 +33,6 @@ from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.custom_attribute_query import annotate_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_filters_with_custom_attributes
 from sandwich.core.service.custom_attribute_query import apply_sort_with_custom_attributes
-from sandwich.core.service.encounter_service import complete_encounter
 from sandwich.core.service.encounter_service import get_current_encounter
 from sandwich.core.service.invitation_service import get_unaccepted_invitation
 from sandwich.core.service.invitation_service import resend_patient_invitation_email
@@ -52,7 +51,6 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.forms.task import AddTaskForm
-from sandwich.providers.views.encounter import EncounterCreateForm
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
 logger = logging.getLogger(__name__)
@@ -130,9 +128,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
     )
 
     current_encounter = get_current_encounter(patient)
-    tasks = current_encounter.task_set.all() if current_encounter else []
-    past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
-    all_encounters = patient.encounter_set.all().order_by("-created_at")
+    encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
 
     logger.debug(
@@ -142,8 +138,6 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
             "organization_id": organization.id,
             "patient_id": patient.id,
             "has_current_encounter": bool(current_encounter),
-            "task_count": len(list(tasks)),
-            "past_encounter_count": past_encounters.count(),
             "has_pending_invitation": bool(pending_invitation),
         },
     )
@@ -152,9 +146,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "patient": patient,
         "organization": organization,
         "current_encounter": current_encounter,
-        "past_encounters": past_encounters,
-        "encounters": all_encounters,
-        "tasks": tasks,
+        "encounters": encounters,
         "pending_invitation": pending_invitation,
     }
     return render(request, "provider/patient_details.html", context)
@@ -253,9 +245,7 @@ def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -
                 },
             )
             messages.add_message(request, messages.SUCCESS, "Patient added successfully.")
-            return HttpResponseRedirect(
-                reverse("providers:patient", kwargs={"patient_id": patient.id, "organization_id": organization.id})
-            )
+            return HttpResponseRedirect(encounter.get_absolute_url())
         logger.warning(
             "Invalid provider patient add form",
             extra={
@@ -281,88 +271,11 @@ def patient_add(request: AuthenticatedHttpRequest, organization: Organization) -
             )
             form = PatientAdd()
 
+    form.helper.form_action = reverse("providers:patient_add", kwargs={"organization_id": organization.id})
     context = {"form": form, "organization": organization}
-    return render(request, "provider/patient_add.html", context)
-
-
-@login_required
-@authorize_objects(
-    [ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter", "create_patient"])]
-)
-def patient_add_modal(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
-    """HTMX endpoint for creating a patient during encounter creation.
-
-    GET: Returns a modal dialog with patient creation form (pre-filled with maybe_name if provided).
-    POST: Creates patient and returns the encounter_create_select_patient modal with new patient selected.
-    """
-    if request.method == "POST":
-        logger.info(
-            "Processing patient add modal form",
-            extra={"user_id": request.user.id, "organization_id": organization.id},
-        )
-        form = PatientAdd(request.POST)
-        if form.is_valid():
-            patient = form.save(organization=organization)
-            assign_default_patient_permissions(patient)
-            logger.info(
-                "Patient created from modal successfully",
-                extra={
-                    "user_id": request.user.id,
-                    "organization_id": organization.id,
-                    "patient_id": patient.id,
-                },
-            )
-            # Return the encounter creation modal with the new patient selected
-            encounter_form = EncounterCreateForm(organization, initial={"patient": patient})
-            encounter_form.helper.form_action = reverse(
-                "providers:encounter_create",
-                kwargs={"organization_id": organization.id},
-            )
-            context = {
-                "organization": organization,
-                "patient": patient,
-                "form": encounter_form,
-            }
-            return render(request, "provider/partials/encounter_create_modal.html", context)
-
-        logger.warning(
-            "Invalid patient add modal form",
-            extra={
-                "user_id": request.user.id,
-                "organization_id": organization.id,
-                "form_errors": list(form.errors.keys()),
-            },
-        )
-        # Re-render the modal with errors
-        form.helper.form_tag = False
-        context = {"form": form, "organization": organization}
+    if request.headers.get("HX-Request"):
         return render(request, "provider/partials/patient_add_modal.html", context)
-
-    # GET request - show the modal with form
-    maybe_name = maybe_patient_name(request.GET.get("maybe_name", ""))
-    if maybe_name:
-        logger.debug(
-            "Pre-filling patient modal form with parsed name",
-            extra={"user_id": request.user.id, "organization_id": organization.id, "has_parsed_name": True},
-        )
-        form = PatientAdd()
-        form.fields["first_name"].initial = maybe_name[0]
-        form.fields["last_name"].initial = maybe_name[1]
-    else:
-        logger.debug(
-            "Rendering empty patient modal form",
-            extra={"user_id": request.user.id, "organization_id": organization.id},
-        )
-        form = PatientAdd()
-
-    # Add autofocus to date of birth field
-    form.fields["date_of_birth"].widget.attrs["autofocus"] = True
-
-    # Tell crispy forms not to render the form tag (we do it manually in template with HTMX attrs)
-    form.helper.form_tag = False
-
-    context = {"form": form, "organization": organization}
-    return render(request, "provider/partials/patient_add_modal.html", context)
+    return render(request, "provider/patient_add.html", context)
 
 
 @login_required
@@ -487,40 +400,28 @@ def patient_list(request: AuthenticatedHttpRequest, organization: Organization) 
 
 
 @login_required
-@require_POST
 @authorize_objects(
     [
-        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Organization, "organization_id", ["view_organization", "create_encounter"]),
         ObjPerm(Patient, "patient_id", ["view_patient"]),
     ]
 )
-def patient_archive(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
-    logger.info(
-        "Archiving patient",
-        extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
-    )
+def patient_add_encounter(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    if request.method == "POST":
+        encounter = Encounter.objects.create(
+            patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS
+        )
+        return HttpResponseRedirect(encounter.get_absolute_url())
 
     current_encounter = get_current_encounter(patient)
-    if not current_encounter or not request.user.has_perm("change_encounter", current_encounter):
-        return HttpResponseNotFound()
-
-    # in the future we might want to capture _why_ the patient was archived
-    # i.e. should status be COMPLETED / CANCELLED / ...
-    assert current_encounter is not None, "No current encounter found for patient"
-    complete_encounter(current_encounter, request.user)
-
-    logger.info(
-        "Patient archived successfully",
-        extra={
-            "user_id": request.user.id,
-            "organization_id": organization.id,
-            "patient_id": patient.id,
-            "encounter_id": current_encounter.id,
-        },
-    )
-
-    messages.add_message(request, messages.SUCCESS, "Patient archived successfully.")
-    return HttpResponseRedirect(reverse("providers:patient_list", kwargs={"organization_id": organization.id}))
+    context = {
+        "organization": organization,
+        "patient": patient,
+        "current_encounter": current_encounter,
+    }
+    return render(request, "provider/partials/encounter_create_modal.html", context)
 
 
 @login_required
