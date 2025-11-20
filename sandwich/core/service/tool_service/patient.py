@@ -7,6 +7,7 @@ from langchain_core.tools import BaseTool
 from langchain_core.tools import tool
 
 from sandwich.core.models import Condition
+from sandwich.core.models import Document
 from sandwich.core.models import Fact
 from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
@@ -56,6 +57,7 @@ def build_patient_record_tool(user: User, patient: Patient) -> BaseTool:
 
     type_queryset_map = {
         HealthRecordType.CONDITION: Condition.objects.filter(patient=patient),
+        HealthRecordType.DOCUMENT: Document.objects.filter(patient=patient),
         HealthRecordType.IMMUNIZATION: Immunization.objects.filter(patient=patient),
         HealthRecordType.PRACTITIONER: Practitioner.objects.filter(patient=patient),
     }

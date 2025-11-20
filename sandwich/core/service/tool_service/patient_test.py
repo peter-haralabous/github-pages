@@ -2,6 +2,7 @@ import pytest
 from langchain_core.tools import StructuredTool
 
 from sandwich.core.models import Condition
+from sandwich.core.models import Document
 from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
@@ -23,6 +24,20 @@ def test_patient_record_tool_condition(
     object_ = (condition._meta.label_lower, str(condition.pk))  # noqa: SLF001
     other_object = (other_condition._meta.label_lower, str(other_condition.pk))  # noqa: SLF001
     results = patient_record_query_tool.func(types=[HealthRecordType.CONDITION])  # type: ignore[misc]
+
+    objects = {(r["model"], r["pk"]) for r in results}
+    assert object_ in objects
+    assert other_object not in objects
+
+
+def test_patient_record_tool_document(
+    patient_record_query_tool: StructuredTool,
+    document: Document,
+    other_document: Document,
+):
+    object_ = (document._meta.label_lower, str(document.pk))  # noqa: SLF001
+    other_object = (other_document._meta.label_lower, str(other_document.pk))  # noqa: SLF001
+    results = patient_record_query_tool.func(types=[HealthRecordType.DOCUMENT])  # type: ignore[misc]
 
     objects = {(r["model"], r["pk"]) for r in results}
     assert object_ in objects
