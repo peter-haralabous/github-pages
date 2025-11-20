@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from http import HTTPStatus
 
 from crispy_forms.helper import FormHelper
@@ -169,12 +170,11 @@ def form_builder(request: AuthenticatedHttpRequest, organization: Organization):
         "Accessing organization form builder page",
         extra={"user_id": request.user.id, "organization_id": organization.id},
     )
-    url = reverse("providers:providers-api:save_form", kwargs={"organization_id": organization.id})
-    success_redirect_url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
-    return render(
-        request,
-        "provider/form_builder.html",
-        {"organization": organization, "form_save_url": url, "success_url": success_redirect_url},
+
+    form = Form.objects.create(organization=organization, name=f"unnamed form created on {date.today().isoformat()}")  # noqa: DTZ011
+
+    return redirect(
+        reverse("providers:form_template_edit", kwargs={"organization_id": organization.id, "form_id": form.id})
     )
 
 

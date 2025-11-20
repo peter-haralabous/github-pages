@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from django.test import Client
 from django.urls import reverse
 from guardian.shortcuts import remove_perm
@@ -93,11 +94,18 @@ def test_form_builder_deny_staff_access(client: Client, provider: User, organiza
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
+@pytest.mark.django_db
 def test_form_builder(client: Client, owner: User, organization: Organization) -> None:
     client.force_login(owner)
     url = reverse("providers:form_template_builder", kwargs={"organization_id": organization.id})
     response = client.get(url)
-    assert response.status_code == HTTPStatus.OK
+    created_form = organization.form_set.order_by("-created_at").first()
+    assert created_form is not None
+    assert response.status_code == HTTPStatus.FOUND
+    expected_url = reverse(
+        "providers:form_template_edit", kwargs={"organization_id": organization.id, "form_id": created_form.id}
+    )
+    assert response.url == expected_url  # type: ignore[attr-defined]
 
 
 def test_form_template_preview(client: Client, provider: User, organization: Organization) -> None:
