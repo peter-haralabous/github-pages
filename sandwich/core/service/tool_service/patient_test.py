@@ -7,13 +7,13 @@ from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
 from sandwich.core.models.health_record import HealthRecordType
-from sandwich.core.service.tool_service.patient import build_patient_record_tool
+from sandwich.core.service.tool_service.patient import build_read_patient_record_tool
 from sandwich.users.models import User
 
 
 @pytest.fixture
 def patient_record_query_tool(user: User, patient: Patient):
-    return build_patient_record_tool(user, patient)
+    return build_read_patient_record_tool(user, patient)
 
 
 def test_patient_record_tool_condition(

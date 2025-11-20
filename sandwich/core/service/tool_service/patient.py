@@ -50,7 +50,7 @@ def build_patient_graph_tool(user: User, patient: Patient) -> BaseTool:
     return medical_facts
 
 
-def build_patient_record_tool(user: User, patient: Patient) -> BaseTool:
+def build_read_patient_record_tool(user: User, patient: Patient) -> BaseTool:
     """Build a tool that can present the patient's medical record visible to the user."""
 
     serializer = PythonSerializer()
@@ -63,8 +63,8 @@ def build_patient_record_tool(user: User, patient: Patient) -> BaseTool:
     }
 
     @tool(
-        f"{_patient_fn_slug(patient)}_medical_record",
-        description=f"Access medical records for {patient.full_name}",
+        f"read_{_patient_fn_slug(patient)}_medical_record",
+        description=f"Retrieve medical records for {patient.full_name}",
     )
     def medical_record(types: list[HealthRecordType]) -> list[dict[str, Any]]:
         records = []
