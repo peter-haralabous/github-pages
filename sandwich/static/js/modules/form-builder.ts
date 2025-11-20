@@ -2,6 +2,7 @@ import { SurveyCreator } from 'survey-creator-js';
 import { getSurveyLicenseKey } from '../lib/survey-license-keys';
 import { slk } from 'survey-core';
 import * as SurveyCore from 'survey-core';
+import CustomSandwichTheme from '../lib/survey-form-theme';
 
 const ENVIRONMENT = JSON.parse(
   document.getElementById('environment')?.textContent || '',
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (licenseKey) slk(licenseKey);
 
   const creator = new SurveyCreator(creatorOptions);
+  creator.theme = CustomSandwichTheme;
 
   // Configure save function with creator.
   const formId =

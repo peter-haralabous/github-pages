@@ -1,6 +1,6 @@
 import { LitElement, html, type TemplateResult } from 'lit';
 import { Model } from 'survey-core';
-import CustomSandwichTheme from './survey-form-theme';
+import CustomSandwichTheme from '../lib/survey-form-theme';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
