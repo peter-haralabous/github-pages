@@ -15,6 +15,8 @@ from langgraph.store.base import BaseStore
 
 from sandwich.core.service.agent_service.memory import checkpointer_context
 from sandwich.core.service.agent_service.memory import store_context
+from sandwich.core.service.agent_service.middleware import close_db_connections
+from sandwich.core.service.agent_service.middleware import exception_handling
 from sandwich.core.service.llm import ModelName
 from sandwich.core.service.llm import get_llm
 from sandwich.core.service.prompt_service.template import template_contents
@@ -67,4 +69,5 @@ def thrive_agent(
             response_format=response_format,
             checkpointer=checkpointer,
             store=store,
+            middleware=[close_db_connections, exception_handling],
         )
