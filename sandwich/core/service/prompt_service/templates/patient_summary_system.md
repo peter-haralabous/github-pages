@@ -54,9 +54,6 @@ TEMPLATE TO FOLLOW:
 [If more than 10 providers, show the 10 most relevant and note "and X more"]
 [If no providers: Omit this section]
 
-[Include when the summary was generated, this date is correct.]
-Prepared on: {% now "Y-m-d" %}
-
 </template>
 
 PATIENT DATA:

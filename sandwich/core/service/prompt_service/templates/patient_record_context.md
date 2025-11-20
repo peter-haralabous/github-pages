@@ -7,7 +7,7 @@ No immunizations found
 
 ## Practitioners
 {% for practitioner in practitioners %}
-[Dr. {{ practitioner.name }}]({{ practitioner.get_absolute_url }})
+[{{ practitioner.name }}]({{ practitioner.get_absolute_url }})
 {% empty %}
 No practitioners found
 {% endfor %}

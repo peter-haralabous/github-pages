@@ -1,11 +1,14 @@
 """Health Summary Service - Generate AI summaries of patient health records."""
 
 import logging
+import uuid
 
 from langchain.agents.structured_output import ToolStrategy
+from langgraph.checkpoint.memory import InMemorySaver
 from pydantic import BaseModel
 
 from sandwich.core.models import Patient
+from sandwich.core.service.agent_service.agent import AgentParameters
 from sandwich.core.service.agent_service.agent import thrive_agent
 from sandwich.core.service.prompt_service.chat import patient_summary_system
 
@@ -19,14 +22,14 @@ class OutputSchema(BaseModel):
 
 def generate_health_summary(patient: Patient) -> str:
     prompt = patient_summary_system(patient)
+    params = AgentParameters()
+    params["checkpointer"] = InMemorySaver()
     with thrive_agent(
-        "patient_summary_agent",
-        system_prompt=prompt,
-        response_format=ToolStrategy(OutputSchema),
+        "patient_summary_agent", system_prompt=prompt, response_format=ToolStrategy(OutputSchema), **params
     ) as agent:
         response = agent.invoke(
             {"messages": [{"role": "user", "content": "Create a summary"}]},
-            config={"configurable": {"thread_id": f"summary-{patient.id}"}},
+            config={"configurable": {"thread_id": f"summary-{uuid.uuid4()}"}},
         )["structured_response"]
 
         return response.content

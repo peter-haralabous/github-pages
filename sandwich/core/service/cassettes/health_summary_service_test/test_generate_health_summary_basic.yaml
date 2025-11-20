@@ -1,0 +1,424 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Create a summary"}]},
+        {"role": "assistant", "content": [{"toolUse": {"toolUseId": "tooluse_9mOFjH8uQDSNmtM31MMPCA",
+        "input": {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date
+        of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}]}, {"role": "user", "content":
+        [{"toolResult": {"content": [{"text": "Returning structured response: content=''#
+        PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:**
+        Unknown\\n\\n---\\n\\n*No active medical conditions, symptoms, medications,
+        allergies, lab results, vital signs, procedures, vaccinations, family history,
+        or care team members are currently on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}],
+        "toolUseId": "tooluse_9mOFjH8uQDSNmtM31MMPCA", "status": "success"}}, {"text":
+        "Create a summary"}]}, {"role": "assistant", "content": [{"toolUse": {"toolUseId":
+        "tooluse_LXWmE5uZT6OpGUUD6ISuvQ", "input": {"content": "# PATIENT INFORMATION\n\n**Name:**
+        John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\n\n---\n\nPrepared on: 2025-11-20\n"}, "name": "OutputSchema"}}]},
+        {"role": "user", "content": [{"toolResult": {"content": [{"text": "Returning
+        structured response: content=''# PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date
+        of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\\n\\n---\\n\\nPrepared
+        on: 2025-11-20\\n''"}], "toolUseId": "tooluse_LXWmE5uZT6OpGUUD6ISuvQ", "status":
+        "success"}}, {"text": "Create a summary"}]}, {"role": "assistant", "content":
+        [{"toolUse": {"toolUseId": "tooluse_InO-EloYSjeyIxPic0mIPQ", "input": {"content":
+        "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+        Unknown\n\n---\n\n*No active medical conditions, symptoms, medications, allergies,
+        lab results, vital signs, procedures, vaccinations, family history, or care
+        team members are currently on file.*\n\n---\n\nPrepared on: 2025-11-20\n"},
+        "name": "OutputSchema"}}]}, {"role": "user", "content": [{"toolResult": {"content":
+        [{"text": "Returning structured response: content=''# PATIENT INFORMATION\\n\\n**Name:**
+        John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}], "toolUseId": "tooluse_InO-EloYSjeyIxPic0mIPQ",
+        "status": "success"}}, {"text": "Create a summary"}]}, {"role": "assistant",
+        "content": [{"toolUse": {"toolUseId": "tooluse_V0fhUYs1Sq-IldM_SVfglg", "input":
+        {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:**
+        1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical conditions,
+        symptoms, medications, allergies, lab results, vital signs, procedures, vaccinations,
+        family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}]}, {"role": "user", "content":
+        [{"toolResult": {"content": [{"text": "Returning structured response: content=''#
+        PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:**
+        Unknown\\n\\n---\\n\\n*No active medical conditions, symptoms, medications,
+        allergies, lab results, vital signs, procedures, vaccinations, family history,
+        or care team members are currently on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}],
+        "toolUseId": "tooluse_V0fhUYs1Sq-IldM_SVfglg", "status": "success"}}, {"text":
+        "Create a summary"}]}, {"role": "assistant", "content": [{"toolUse": {"toolUseId":
+        "tooluse_QgSH4Pt2SgCYSAQQ1o0s2Q", "input": {"content": "# PATIENT INFORMATION\n\n**Name:**
+        John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\n\n---\n\nPrepared on: 2025-11-20\n"}, "name": "OutputSchema"}}]},
+        {"role": "user", "content": [{"toolResult": {"content": [{"text": "Returning
+        structured response: content=''# PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date
+        of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\\n\\n---\\n\\nPrepared
+        on: 2025-11-20\\n''"}], "toolUseId": "tooluse_QgSH4Pt2SgCYSAQQ1o0s2Q", "status":
+        "success"}}, {"text": "Create a summary"}]}, {"role": "assistant", "content":
+        [{"toolUse": {"toolUseId": "tooluse_m90HBP-0S9CId1qEgb7ixw", "input": {"content":
+        "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+        Unknown\n\n---\n\n*No active medical conditions, symptoms, medications, allergies,
+        lab results, vital signs, procedures, vaccinations, family history, or care
+        team members are currently on file.*\n\n---\n\nPrepared on: 2025-11-20\n"},
+        "name": "OutputSchema"}}]}, {"role": "user", "content": [{"toolResult": {"content":
+        [{"text": "Returning structured response: content=''# PATIENT INFORMATION\\n\\n**Name:**
+        John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}], "toolUseId": "tooluse_m90HBP-0S9CId1qEgb7ixw",
+        "status": "success"}}, {"text": "Create a summary\nCreate a summary\nCreate
+        a summary\nCreate a summary"}]}, {"role": "assistant", "content": [{"toolUse":
+        {"toolUseId": "tooluse_CQSs6LE0QAqVMzMSwmc5vA", "input": {"content": "# PATIENT
+        INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+        Unknown\n\n---\n\n*No active medical conditions, symptoms, medications, allergies,
+        lab results, vital signs, procedures, vaccinations, family history, or care
+        team members are currently on file.*\n\n---\n\nPrepared on: 2025-11-20\n"},
+        "name": "OutputSchema"}}, {"toolUse": {"toolUseId": "tooluse_cesbWx97TiiGE8lHC0IlzQ",
+        "input": {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date
+        of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}, {"toolUse": {"toolUseId": "tooluse_5nrmqR4NSMmhPJA6o4uKrg",
+        "input": {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date
+        of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}, {"toolUse": {"toolUseId": "tooluse_NRR7j2HTS96kJLYILr-kKw",
+        "input": {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date
+        of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}]}, {"role": "user", "content":
+        [{"toolResult": {"content": [{"text": "Error: Model incorrectly returned multiple
+        structured responses (OutputSchema, OutputSchema, OutputSchema, OutputSchema)
+        when only one is expected.\n Please fix your mistakes."}], "toolUseId": "tooluse_CQSs6LE0QAqVMzMSwmc5vA",
+        "status": "success"}}, {"toolResult": {"content": [{"text": "Error: Model incorrectly
+        returned multiple structured responses (OutputSchema, OutputSchema, OutputSchema,
+        OutputSchema) when only one is expected.\n Please fix your mistakes."}], "toolUseId":
+        "tooluse_cesbWx97TiiGE8lHC0IlzQ", "status": "success"}}, {"toolResult": {"content":
+        [{"text": "Error: Model incorrectly returned multiple structured responses (OutputSchema,
+        OutputSchema, OutputSchema, OutputSchema) when only one is expected.\n Please
+        fix your mistakes."}], "toolUseId": "tooluse_5nrmqR4NSMmhPJA6o4uKrg", "status":
+        "success"}}, {"toolResult": {"content": [{"text": "Error: Model incorrectly
+        returned multiple structured responses (OutputSchema, OutputSchema, OutputSchema,
+        OutputSchema) when only one is expected.\n Please fix your mistakes."}], "toolUseId":
+        "tooluse_NRR7j2HTS96kJLYILr-kKw", "status": "success"}}, {"text": "Create a
+        summary\nCreate a summary"}]}, {"role": "assistant", "content": [{"toolUse":
+        {"toolUseId": "tooluse_ePEV_0JlRKaIZgPIWnT-JQ", "input": {"content": "# PATIENT
+        INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+        Unknown\n\n---\n\n*No active medical conditions, symptoms, medications, allergies,
+        lab results, vital signs, procedures, vaccinations, family history, or care
+        team members are currently on file.*\n\n---\n\nPrepared on: 2025-11-20\n"},
+        "name": "OutputSchema"}}]}, {"role": "user", "content": [{"toolResult": {"content":
+        [{"text": "Returning structured response: content=''# PATIENT INFORMATION\\n\\n**Name:**
+        John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}], "toolUseId": "tooluse_ePEV_0JlRKaIZgPIWnT-JQ",
+        "status": "success"}}, {"text": "Create a summary"}]}, {"role": "assistant",
+        "content": [{"toolUse": {"toolUseId": "tooluse_GZ4RupKDThmqpTtI4pkDYw", "input":
+        {"content": "# PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:**
+        1990-01-01  \n**Province:** Unknown\n\n---\n\n*No active medical conditions,
+        symptoms, medications, allergies, lab results, vital signs, procedures, vaccinations,
+        family history, or care team members are currently on file.*\n\n---\n\nPrepared
+        on: 2025-11-20\n"}, "name": "OutputSchema"}}]}, {"role": "user", "content":
+        [{"toolResult": {"content": [{"text": "Returning structured response: content=''#
+        PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date of Birth:** 1990-01-01  \\n**Province:**
+        Unknown\\n\\n---\\n\\n*No active medical conditions, symptoms, medications,
+        allergies, lab results, vital signs, procedures, vaccinations, family history,
+        or care team members are currently on file.*\\n\\n---\\n\\nPrepared on: 2025-11-20\\n''"}],
+        "toolUseId": "tooluse_GZ4RupKDThmqpTtI4pkDYw", "status": "success"}}, {"text":
+        "Create a summary"}]}, {"role": "assistant", "content": [{"toolUse": {"toolUseId":
+        "tooluse_edS70m85QcyxipuTJhlgYA", "input": {"content": "# PATIENT INFORMATION\n\n**Name:**
+        John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:** Unknown\n\n---\n\n*No
+        active medical conditions, symptoms, medications, allergies, lab results, vital
+        signs, procedures, vaccinations, family history, or care team members are currently
+        on file.*\n\n---\n\nPrepared on: 2025-11-20\n"}, "name": "OutputSchema"}}]},
+        {"role": "user", "content": [{"toolResult": {"content": [{"text": "Returning
+        structured response: content=''# PATIENT INFORMATION\\n\\n**Name:** John Doe  \\n**Date
+        of Birth:** 1990-01-01  \\n**Province:** Unknown\\n\\n---\\n\\n*No active medical
+        conditions, symptoms, medications, allergies, lab results, vital signs, procedures,
+        vaccinations, family history, or care team members are currently on file.*\\n\\n---\\n\\nPrepared
+        on: 2025-11-20\\n''"}], "toolUseId": "tooluse_edS70m85QcyxipuTJhlgYA", "status":
+        "success"}}, {"text": "Create a summary\nCreate a summary"}]}], "system": [{"text":
+        "You are creating a clean, patient-friendly health summary.\nUse markdown formatting
+        for structure.\n\nTEMPLATE TO FOLLOW:\n\n<template>\n\n[Include PATIENT INFORMATION
+        section - use the exact data provided below]\n\n### Active Conditions\n[List
+        conditions with onset dates and status - use bullet points]\n[If no conditions:
+        Omit this section]\n\n### Symptoms\n[List current/recent symptoms with severity
+        and dates - use bullet points]\n[If no symptoms: Omit this section]\n\n### Medications\n[Organize
+        by category if recognizable (e.g., Antibiotics, Pain Relief, Hormonal, Respiratory)]\n[Use
+        bullet points within each category]\n[If medication details are missing, just
+        list the name]\n[If more than 15 medications, show the most relevant 15 and
+        note \"and X more\"]\n[If no medications: Omit this section]\n\n### Allergies
+        & Intolerances\n[List known allergies with reactions and severity - use bullet
+        points]\n[If no allergies: Omit this section]\n\n### Lab Results\n[Group by
+        category if recognizable (e.g., Blood Work, Metabolic Panel)]\n[Include values,
+        reference ranges, and dates - use bullet points]\n[If more than 20 results,
+        show the most recent/relevant and note \"and X more\"]\n[If no lab results:
+        Omit this section]\n\n### Vital Signs\n[List recent vital signs with values
+        and dates - use bullet points]\n[If no vital signs: Omit this section]\n\n###
+        Procedures\n[List procedures with dates and locations - use bullet points]\n[If
+        no procedures: Omit this section]\n\n### Vaccinations\n[List recent vaccinations
+        with dates - use bullet points]\n[If no immunizations: Omit this section]\n\n###
+        Family History\n[List conditions with relationships and age of onset - use bullet
+        points]\n[If no family history: Omit this section]\n\n### Care Team\n[Format
+        provider names with appropriate titles (e.g., \"Dr.\" for physicians)]\n[Use
+        bullet points]\n[If more than 10 providers, show the 10 most relevant and note
+        \"and X more\"]\n[If no providers: Omit this section]\n\n[Include when the summary
+        was generated, this date is correct.]\nPrepared on: 2025-11-20\n\n</template>\n\nPATIENT
+        DATA:\n\n<patient-context>\n\n\n- Name: John Doe\n\n\n- Date of Birth: 1990-01-01\n\n\n\n-
+        Province: Unknown\n\n\n\n\n## Immunizations\n\nNo immunizations found\n\n\n##
+        Practitioners\n\nNo practitioners found\n\n\n## Conditions\n\nNo conditions
+        found\n\n\n\n</patient-context>\n\n\nINSTRUCTIONS:\n1. Start directly with the
+        PATIENT INFORMATION section (no title needed)\n2. Use exactly the patient data
+        provided - don''t modify, rephrase, or reformat names, dates, or other details\n3.
+        CRITICAL: Preserve ALL markdown links exactly as provided in the source data\n   -
+        do not remove or modify any links in square brackets [text](url)\n4. If you
+        see duplicate items with the same or very similar names, list each item only
+        once\n5. For MEDICATIONS: Organize by category (Antibiotics, Pain Relief, etc.)
+        to make scannable\n6. For LAB RESULTS: Group by category when possible for better
+        organization\n7. Use sentence casing\n8. Keep bullet points concise and scannable\n9.
+        Format dates as YYYY-MM-DD consistently\n10. Omit any sections where no data
+        exists\n11. Use ### for all section headers (H3 level)\n12. Keep the tone professional
+        but approachable - this is for the patient to read\n13. Do NOT add a notes section
+        or metadata about data collection\n"}], "inferenceConfig": {}, "toolConfig":
+        {"tools": [{"toolSpec": {"name": "OutputSchema", "description": "OutputSchema",
+        "inputSchema": {"json": {"properties": {"content": {"type": "string"}}, "required":
+        ["content"], "type": "object"}}}}], "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '16034'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjEgbWQvcHlpbXBsI0NQeXRob24gbS9aLEQs
+            YiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjBUMTg1MzMwWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            ZTExYWFhNzItYzMyYS00ZTlmLTgxMGItNzY2NjFiYzcxNzcz
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":2938},"output":{"message":{"content":[{"toolUse":{"input":{"content":"#
+          PATIENT INFORMATION\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+          Unknown\n\n---\n\n*No active medical conditions, symptoms, medications, allergies,
+          lab results, vital signs, procedures, vaccinations, family history, or care
+          team members are currently on file.*\n\n---\n\nPrepared on: 2025-11-20\n"},"name":"OutputSchema","toolUseId":"tooluse_M-xtTJ3KQc2qgplDa0TGiA","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":4703,"outputTokens":122,"serverToolUsage":{},"totalTokens":4825}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '753'
+        Content-Type:
+          - application/json
+        Date:
+          - Thu, 20 Nov 2025 18:53:33 GMT
+        x-amzn-RequestId:
+          - d18928d2-21cd-45a1-b853-a553773ffc8a
+      status:
+        code: 200
+        message: OK
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Create a summary"}]}],
+        "system": [{"text": "You are creating a clean, patient-friendly health summary.\nUse
+        markdown formatting for structure.\n\nTEMPLATE TO FOLLOW:\n\n<template>\n\n[Include
+        PATIENT INFORMATION section - use the exact data provided below]\n\n### Active
+        Conditions\n[List conditions with onset dates and status - use bullet points]\n[If
+        no conditions: Omit this section]\n\n### Symptoms\n[List current/recent symptoms
+        with severity and dates - use bullet points]\n[If no symptoms: Omit this section]\n\n###
+        Medications\n[Organize by category if recognizable (e.g., Antibiotics, Pain
+        Relief, Hormonal, Respiratory)]\n[Use bullet points within each category]\n[If
+        medication details are missing, just list the name]\n[If more than 15 medications,
+        show the most relevant 15 and note \"and X more\"]\n[If no medications: Omit
+        this section]\n\n### Allergies & Intolerances\n[List known allergies with reactions
+        and severity - use bullet points]\n[If no allergies: Omit this section]\n\n###
+        Lab Results\n[Group by category if recognizable (e.g., Blood Work, Metabolic
+        Panel)]\n[Include values, reference ranges, and dates - use bullet points]\n[If
+        more than 20 results, show the most recent/relevant and note \"and X more\"]\n[If
+        no lab results: Omit this section]\n\n### Vital Signs\n[List recent vital signs
+        with values and dates - use bullet points]\n[If no vital signs: Omit this section]\n\n###
+        Procedures\n[List procedures with dates and locations - use bullet points]\n[If
+        no procedures: Omit this section]\n\n### Vaccinations\n[List recent vaccinations
+        with dates - use bullet points]\n[If no immunizations: Omit this section]\n\n###
+        Family History\n[List conditions with relationships and age of onset - use bullet
+        points]\n[If no family history: Omit this section]\n\n### Care Team\n[Format
+        provider names with appropriate titles (e.g., \"Dr.\" for physicians)]\n[Use
+        bullet points]\n[If more than 10 providers, show the 10 most relevant and note
+        \"and X more\"]\n[If no providers: Omit this section]\n\n[Include when the summary
+        was generated, this date is correct.]\nPrepared on: 2025-11-20\n\n</template>\n\nPATIENT
+        DATA:\n\n<patient-context>\n\n\n- Name: John Doe\n\n\n- Date of Birth: 1990-01-01\n\n\n\n-
+        Province: Unknown\n\n\n\n\n## Immunizations\n\nNo immunizations found\n\n\n##
+        Practitioners\n\nNo practitioners found\n\n\n## Conditions\n\nNo conditions
+        found\n\n\n\n</patient-context>\n\n\nINSTRUCTIONS:\n1. Start directly with the
+        PATIENT INFORMATION section (no title needed)\n2. Use exactly the patient data
+        provided - don''t modify, rephrase, or reformat names, dates, or other details\n3.
+        CRITICAL: Preserve ALL markdown links exactly as provided in the source data\n   -
+        do not remove or modify any links in square brackets [text](url)\n4. If you
+        see duplicate items with the same or very similar names, list each item only
+        once\n5. For MEDICATIONS: Organize by category (Antibiotics, Pain Relief, etc.)
+        to make scannable\n6. For LAB RESULTS: Group by category when possible for better
+        organization\n7. Use sentence casing\n8. Keep bullet points concise and scannable\n9.
+        Format dates as YYYY-MM-DD consistently\n10. Omit any sections where no data
+        exists\n11. Use ### for all section headers (H3 level)\n12. Keep the tone professional
+        but approachable - this is for the patient to read\n13. Do NOT add a notes section
+        or metadata about data collection\n"}], "inferenceConfig": {}, "toolConfig":
+        {"tools": [{"toolSpec": {"name": "OutputSchema", "description": "OutputSchema",
+        "inputSchema": {"json": {"properties": {"content": {"type": "string"}}, "required":
+        ["content"], "type": "object"}}}}], "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '3713'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjEgbWQvcHlpbXBsI0NQeXRob24gbS9ELGIs
+            WiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjBUMTkwMjA2Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            NTAyNGU5ZmQtYWY0YS00ZGZkLThiNWYtZGFhNGIwZTEwNGEw
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":2740},"output":{"message":{"content":[{"toolUse":{"input":{"content":"#
+          Patient Information\n\n**Name:** John Doe  \n**Date of Birth:** 1990-01-01  \n**Province:**
+          Unknown\n\n---\n\n*Prepared on: 2025-11-20*"},"name":"OutputSchema","toolUseId":"tooluse_VigFcJbkTQighQy2UYg0-w","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1489,"outputTokens":82,"serverToolUsage":{},"totalTokens":1571}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '564'
+        Content-Type:
+          - application/json
+        Date:
+          - Thu, 20 Nov 2025 19:02:09 GMT
+        x-amzn-RequestId:
+          - aa8475c8-842e-4204-9f04-80150d8693bd
+      status:
+        code: 200
+        message: OK
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Create a summary"}]}],
+        "system": [{"text": "You are creating a clean, patient-friendly health summary.\nUse
+        markdown formatting for structure.\n\nTEMPLATE TO FOLLOW:\n\n<template>\n\n[Include
+        PATIENT INFORMATION section - use the exact data provided below]\n\n### Active
+        Conditions\n[List conditions with onset dates and status - use bullet points]\n[If
+        no conditions: Omit this section]\n\n### Symptoms\n[List current/recent symptoms
+        with severity and dates - use bullet points]\n[If no symptoms: Omit this section]\n\n###
+        Medications\n[Organize by category if recognizable (e.g., Antibiotics, Pain
+        Relief, Hormonal, Respiratory)]\n[Use bullet points within each category]\n[If
+        medication details are missing, just list the name]\n[If more than 15 medications,
+        show the most relevant 15 and note \"and X more\"]\n[If no medications: Omit
+        this section]\n\n### Allergies & Intolerances\n[List known allergies with reactions
+        and severity - use bullet points]\n[If no allergies: Omit this section]\n\n###
+        Lab Results\n[Group by category if recognizable (e.g., Blood Work, Metabolic
+        Panel)]\n[Include values, reference ranges, and dates - use bullet points]\n[If
+        more than 20 results, show the most recent/relevant and note \"and X more\"]\n[If
+        no lab results: Omit this section]\n\n### Vital Signs\n[List recent vital signs
+        with values and dates - use bullet points]\n[If no vital signs: Omit this section]\n\n###
+        Procedures\n[List procedures with dates and locations - use bullet points]\n[If
+        no procedures: Omit this section]\n\n### Vaccinations\n[List recent vaccinations
+        with dates - use bullet points]\n[If no immunizations: Omit this section]\n\n###
+        Family History\n[List conditions with relationships and age of onset - use bullet
+        points]\n[If no family history: Omit this section]\n\n### Care Team\n[Format
+        provider names with appropriate titles (e.g., \"Dr.\" for physicians)]\n[Use
+        bullet points]\n[If more than 10 providers, show the 10 most relevant and note
+        \"and X more\"]\n[If no providers: Omit this section]\n\n</template>\n\nPATIENT
+        DATA:\n\n<patient-context>\n\n\n- Name: John Doe\n\n\n- Date of Birth: 1990-01-01\n\n\n\n-
+        Province: Unknown\n\n\n\n\n## Immunizations\n\nNo immunizations found\n\n\n##
+        Practitioners\n\nNo practitioners found\n\n\n## Conditions\n\nNo conditions
+        found\n\n\n\n</patient-context>\n\n\nINSTRUCTIONS:\n1. Start directly with the
+        PATIENT INFORMATION section (no title needed)\n2. Use exactly the patient data
+        provided - don''t modify, rephrase, or reformat names, dates, or other details\n3.
+        CRITICAL: Preserve ALL markdown links exactly as provided in the source data\n   -
+        do not remove or modify any links in square brackets [text](url)\n4. If you
+        see duplicate items with the same or very similar names, list each item only
+        once\n5. For MEDICATIONS: Organize by category (Antibiotics, Pain Relief, etc.)
+        to make scannable\n6. For LAB RESULTS: Group by category when possible for better
+        organization\n7. Use sentence casing\n8. Keep bullet points concise and scannable\n9.
+        Format dates as YYYY-MM-DD consistently\n10. Omit any sections where no data
+        exists\n11. Use ### for all section headers (H3 level)\n12. Keep the tone professional
+        but approachable - this is for the patient to read\n13. Do NOT add a notes section
+        or metadata about data collection\n"}], "inferenceConfig": {}, "toolConfig":
+        {"tools": [{"toolSpec": {"name": "OutputSchema", "description": "OutputSchema",
+        "inputSchema": {"json": {"properties": {"content": {"type": "string"}}, "required":
+        ["content"], "type": "object"}}}}], "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '3621'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjEgbWQvcHlpbXBsI0NQeXRob24gbS9aLGIs
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjBUMjIwMDEzWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            YTcyODM3MzAtNjhmNS00YjVlLWFkYWEtMTY2MTMxYjAxMTQ1
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":2454},"output":{"message":{"content":[{"toolUse":{"input":{"content":"##
+          Patient Information\n\n- **Name:** John Doe\n- **Date of Birth:** 1990-01-01\n-
+          **Province:** Unknown"},"name":"OutputSchema","toolUseId":"tooluse_jk45QjkgTZaNdr_KdShEdw","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1463,"outputTokens":67,"serverToolUsage":{},"totalTokens":1530}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '531'
+        Content-Type:
+          - application/json
+        Date:
+          - Thu, 20 Nov 2025 22:00:15 GMT
+        x-amzn-RequestId:
+          - 4d63518c-ff28-49cc-acab-09b178ffa9fe
+      status:
+        code: 200
+        message: OK
+version: 1
