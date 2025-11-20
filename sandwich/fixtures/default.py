@@ -1,10 +1,12 @@
 import pytest
 from django.core.files.base import ContentFile
 
+from sandwich.core.factories.condition import ConditionFactory
 from sandwich.core.factories.encounter import EncounterFactory
 from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
+from sandwich.core.models import Condition
 from sandwich.core.models import Document
 from sandwich.core.models import Encounter
 from sandwich.core.models import Organization
@@ -54,6 +56,11 @@ def owner(db, organization: Organization) -> User:
         consents=ConsentMiddleware.required_policies,
         groups={role.group for role in organization.role_set.filter(name=RoleName.OWNER)},
     )
+
+
+@pytest.fixture
+def condition(patient: Patient, encounter: Encounter) -> Condition:
+    return ConditionFactory.create(patient=patient, encounter=encounter)
 
 
 @pytest.fixture

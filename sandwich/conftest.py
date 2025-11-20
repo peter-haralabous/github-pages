@@ -2,6 +2,7 @@ import os
 from collections.abc import Iterable
 from urllib.parse import urlparse
 
+import factory
 import pytest
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
@@ -12,7 +13,9 @@ from django.core.management import call_command
 from syrupy.extensions.single_file import SingleFileSnapshotExtension
 from syrupy.extensions.single_file import WriteMode
 
+from sandwich.core.factories.providers.condition import ConditionProvider
 from sandwich.core.util.testing import UserRequestFactory
+from sandwich.fixtures.default import condition
 from sandwich.fixtures.default import document
 from sandwich.fixtures.default import encounter
 from sandwich.fixtures.default import organization
@@ -23,6 +26,7 @@ from sandwich.fixtures.default import task
 from sandwich.fixtures.default import user
 from sandwich.fixtures.knowledge_graph import patient_entity
 from sandwich.fixtures.knowledge_graph import patient_knowledge_graph
+from sandwich.fixtures.other import other_condition
 from sandwich.fixtures.other import other_document
 from sandwich.fixtures.other import other_encounter
 from sandwich.fixtures.other import other_organization
@@ -39,10 +43,12 @@ from sandwich.users.models import User
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 __all__ = [
+    "condition",
     "conditional_webpack",
     "document",
     "encounter",
     "organization",
+    "other_condition",
     "other_document",
     "other_encounter",
     "other_organization",
@@ -60,6 +66,12 @@ __all__ = [
     "task",
     "user",
 ]
+
+
+# Install custom providers
+# https://faker.readthedocs.io/en/master/#how-to-create-a-provider
+# https://factoryboy.readthedocs.io/en/stable/reference.html#faker
+factory.Faker.add_provider(ConditionProvider)
 
 
 @pytest.fixture(autouse=True)
