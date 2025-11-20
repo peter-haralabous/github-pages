@@ -1,3 +1,7 @@
 #form-builder-container {
   flex-grow: 1;
+  border-top: 2px solid rgba(0, 0, 0, 0);
+  --sjs-primary-background-500: #0e44ad; /* side bar icon colours, tab colours, text colours */
+  --sjs-special-background: #f5f7fa; /* Background of main work area */
+  --sjs-secondary-background-500: #7c95b4; /* outline colour for question cards, icon colour for icons inside the question cards */
 }

@@ -23,7 +23,7 @@
   {% render_bundle 'creator' 'css' %}
 {% endblock extra_head %}
 {% block content %}
-  <div class="flex items-center justify-between pt-2 pl-2 bg-white">
+  <div class="flex items-center justify-between py-2 pl-2 bg-white">
     <a href="{% url 'providers:form_templates_list' organization_id=organization.id %}"
        class="btn btn-ghost mr-2">{% lucide "arrow-left" class="w-5 h-5" %}
       <h3>Back to form templates</h3>
