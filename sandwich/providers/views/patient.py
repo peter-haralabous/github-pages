@@ -46,6 +46,7 @@ from sandwich.core.service.patient_service import maybe_patient_name
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.service.task_service import cancel_task
+from sandwich.core.service.task_service import ordered_tasks_for_encounter
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
 from sandwich.core.util.http import validate_sort
@@ -128,6 +129,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
     )
 
     current_encounter = get_current_encounter(patient)
+    tasks = ordered_tasks_for_encounter(current_encounter) if current_encounter else []
+    past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
     encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
 
@@ -146,6 +149,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "patient": patient,
         "organization": organization,
         "current_encounter": current_encounter,
+        "tasks": tasks,
+        "past_encounters": past_encounters,
         "encounters": encounters,
         "pending_invitation": pending_invitation,
     }

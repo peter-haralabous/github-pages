@@ -1,12 +1,19 @@
 import logging
 
 from django.conf import settings
+from django.db.models import Case
+from django.db.models import IntegerField
+from django.db.models import Value
+from django.db.models import When
 from django.urls import reverse
 from django.utils import timezone
 from guardian.shortcuts import assign_perm
 
 from sandwich.core.models.email import EmailType
+from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.role import RoleName
+from sandwich.core.models.task import ACTIVE_TASK_STATUSES
+from sandwich.core.models.task import TERMINAL_TASK_STATUSES
 from sandwich.core.models.task import Task
 from sandwich.core.models.task import TaskStatus
 from sandwich.core.service.email_service import send_templated_email
@@ -138,3 +145,17 @@ def assign_default_task_perms(task: Task) -> None:
                 "task_id": task.id,
             },
         )
+
+
+def ordered_tasks_for_encounter(encounter: Encounter) -> list[Task]:
+    """
+    Return tasks for an encounter ordered by status and updated_at.
+    """
+    rank = Case(
+        When(status__in=[s.value for s in ACTIVE_TASK_STATUSES], then=Value(0)),
+        When(status__in=[s.value for s in TERMINAL_TASK_STATUSES], then=Value(1)),
+        default=Value(2),
+        output_field=IntegerField(),
+    )
+    qs = encounter.task_set.annotate(_rank=rank).order_by("_rank", "-updated_at", "-created_at")
+    return list(qs)

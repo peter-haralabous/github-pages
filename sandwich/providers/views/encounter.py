@@ -40,6 +40,7 @@ from sandwich.core.service.list_preference_service import has_unsaved_filters
 from sandwich.core.service.list_preference_service import parse_filters_from_query_params
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
+from sandwich.core.service.task_service import ordered_tasks_for_encounter
 from sandwich.core.types import DATE_DISPLAY_FORMAT
 from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -66,7 +67,7 @@ def encounter_details(
     request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
 ) -> HttpResponse:
     patient = encounter.patient
-    tasks = encounter.task_set.all()
+    tasks = ordered_tasks_for_encounter(encounter)
     other_encounters = patient.encounter_set.exclude(id=encounter.id)
     pending_invitation = get_unaccepted_invitation(patient)
 
