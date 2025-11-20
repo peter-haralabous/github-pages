@@ -7,8 +7,6 @@
     <h2>Patient Encounters</h2>
     <div class="pb-2">
       <button id="new-encounter-btn" class="btn btn-primary">New Encounter</button>
-      <a href="{% url "providers:custom_attribute_list" organization_id=organization.id %}"
-         class="btn btn-secondary">Add or edit fields</a>
     </div>
   </div>
   <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
