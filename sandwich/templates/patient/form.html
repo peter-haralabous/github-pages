@@ -1,4 +1,4 @@
-{% extends "patient/base.html" %}
+{% extends "base.html" %}
 
 {% load render_bundle from webpack_loader %}
 {% load lucide %}
@@ -8,32 +8,38 @@
   {% render_bundle 'survey' 'css' %}
   {% render_bundle 'survey' 'js' %}
 {% endblock extra_head %}
-{% block main_padding %}
-  {# Override default padding to allow full-width form #}
-  p-0
-{% endblock main_padding %}
-{% block content %}
-  <div class="container mx-auto py-5 space-y-5">
-    {% if task.status == "completed" %}
-      <div role="alert" class="alert alert-warning print:hidden">
-        <span>You're currently viewing a completed form.</span>
+{% block body %}
+  <div class="grid grid-rows-[auto_1fr_auto] h-screen">
+    {% include 'patient/partials/topnav_with_logo.html' %}
+    <div class="overflow-hidden">
+      <div class="flex flex-row gap-2 p-1 lg:p-6 h-full">
+        <div id="mobile-form-view"
+             class="w-full lg:w-auto lg:flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
+          <main id="form-view" class="flex-1 overflow-y-auto h-full p-4">
+            {% if task.status == "completed" %}
+              <div role="alert" class="alert alert-warning print:hidden">
+                <span>You're currently viewing a completed form.</span>
+              </div>
+              <button class="btn btn-primary float-right print:hidden" id="print-btn">
+                {% lucide "printer" class="size-4" %}
+                Print
+              </button>
+              <!-- This page is not loaded by htmx, thus we need to include the nonce -->
+              <script nonce="{{ request.csp_nonce }}">
+                const el = document.getElementById("print-btn")
+                el.addEventListener('click', () => {
+                  window.print()
+                });
+              </script>
+            {% endif %}
+            {% if initial_data %}{{ initial_data | json_script:"initial_data" }}{% endif %}
+            {{ form_schema | json_script:"form_schema" }}
+            <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data" data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'patients:patient_details' patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}"
+            {% if read_only %}readonly{% endif %}
+            />
+          </main>
+        </div>
       </div>
-      <button class="btn btn-primary float-right print:hidden" id="print-btn">
-        {% lucide "printer" class="size-4" %}
-        Print
-      </button>
-      <!-- This page is not loaded by htmx, thus we need to include the nonce -->
-      <script nonce="{{ request.csp_nonce }}">
-        const el = document.getElementById("print-btn")
-        el.addEventListener('click', () => {
-          window.print()
-        });
-      </script>
-    {% endif %}
-    {% if initial_data %}{{ initial_data | json_script:"initial_data" }}{% endif %}
-    {{ form_schema | json_script:"form_schema" }}
-    <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data" data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'patients:patient_details' patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}"
-    {% if read_only %}readonly{% endif %}
-    />
+    </div>
   </div>
-{% endblock content %}
+{% endblock body %}
