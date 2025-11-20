@@ -1,5 +1,20 @@
+{% load lucide %}
+
 {% for result in results %}
   <li>
-    <a href="{{ result.url }}">{{ result.name }}</a>
+    <a href="{{ result.url }}">
+      <div>
+        {% lucide result.icon class="result-icon-left" %}
+        <div class="result-content">
+          <div class="result-title">{{ result.title }}</div>
+          {% if result.patient %}
+            <div class="result-subtitle">
+              DOB: {{ result.patient.date_of_birth|date:DJANGO_DATE_FORMAT|default:EMPTY_VALUE_DISPLAY }} • PHN: {{ result.patient.phn|default:EMPTY_VALUE_DISPLAY }}
+            </div>
+          {% endif %}
+        </div>
+        {% lucide "chevron-right" class="result-icon" %}
+      </div>
+    </a>
   </li>
 {% endfor %}

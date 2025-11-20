@@ -9,7 +9,6 @@ from django.urls import reverse
 from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models.patient import Patient
 from sandwich.core.models.task import Task
-from sandwich.core.models.task import terminal_task_status
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -33,7 +32,7 @@ def task(request: AuthenticatedHttpRequest, patient: Patient, task: Task) -> Htt
 
     # NOTE-NG: we're using the task ID here as the form name
     # patients don't have permission to load arbitrary forms
-    read_only = terminal_task_status(task.status)
+    read_only = not task.active
     logger.debug(
         "Task form configuration",
         extra={

@@ -33,14 +33,14 @@ class EncounterStatus(models.TextChoices):
     UNKNOWN = "unknown", _("Unknown")
 
 
-def terminal_encounter_status(status: EncounterStatus) -> bool:
-    return status in [
-        EncounterStatus.CANCELLED,
-        EncounterStatus.COMPLETED,
-        EncounterStatus.DISCHARGED,
-        EncounterStatus.DISCONTINUED,
-        EncounterStatus.ENTERED_IN_ERROR,
-    ]
+TERMINAL_ENCOUNTER_STATUSES = [
+    EncounterStatus.CANCELLED,
+    EncounterStatus.COMPLETED,
+    EncounterStatus.DISCHARGED,
+    EncounterStatus.DISCONTINUED,
+    EncounterStatus.ENTERED_IN_ERROR,
+]
+ACTIVE_ENCOUNTER_STATUSES = [s for s in EncounterStatus if s not in TERMINAL_ENCOUNTER_STATUSES]
 
 
 class EncounterQuerySet(models.QuerySet):
@@ -111,7 +111,7 @@ class Encounter(BaseModel):
 
     @property
     def active(self) -> bool:
-        return not terminal_encounter_status(self.status)
+        return self.status in ACTIVE_ENCOUNTER_STATUSES
 
     def get_absolute_url(self) -> str:
         return reverse(

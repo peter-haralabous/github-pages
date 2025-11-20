@@ -2,9 +2,12 @@ import logging
 from dataclasses import dataclass
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse
 
+from sandwich.core.models.encounter import ACTIVE_ENCOUNTER_STATUSES
+from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.organization import Organization
 from sandwich.core.models.patient import Patient
 from sandwich.core.service.patient_service import maybe_patient_name
@@ -17,8 +20,68 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Result:
-    name: str
+    icon: str
+    title: str
     url: str
+    patient: Patient | None = None
+    encounter: Encounter | None = None
+
+
+def _patient_search_results(organization: Organization, query: str) -> list[Result]:
+    logger.debug(
+        "Searching for patients",
+        extra={"organization_id": organization.id, "query_length": len(query)},
+    )
+
+    # TODO: sort these sensibly
+    #       ✅ encounters come first (my organization has already interacted with this patient)
+    #       ✅ active encounters come before inactive ones
+    results: list[Result] = []
+    if query:
+        encounters = (
+            Encounter.objects.filter(organization=organization)
+            .search(query)  # type: ignore[attr-defined]
+            .annotate(is_active=Q(status__in=ACTIVE_ENCOUNTER_STATUSES))
+            .order_by("-is_active")
+        )[:20]
+        patients = (
+            Patient.objects.filter(organization=organization)
+            .search(query)  # type: ignore[attr-defined]
+            .exclude(id__in=[e.patient.id for e in encounters])
+        )[:20]
+
+        logger.debug(
+            "Patient search completed",
+            extra={
+                "organization_id": organization.id,
+                "patient_count": len(patients),
+                "encounter_count": len(encounters),
+            },
+        )
+
+        results.extend(
+            Result(
+                icon="clipboard-list" if e.active else "archive",
+                title=f"{e.patient.full_name}",
+                url=reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": e.id}),
+                patient=e.patient,
+                encounter=e,
+            )
+            for e in encounters
+        )
+
+        results.extend(
+            Result(
+                icon="user-search",
+                title=f"{p.full_name}",
+                url=reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": p.id}),
+                patient=p,
+            )
+            for p in patients
+        )
+
+    logger.info("Search completed", extra={"organization_id": organization.id, "total_results": len(results)})
+    return results
 
 
 @login_required
@@ -28,51 +91,28 @@ def search(request: AuthenticatedHttpRequest, organization: Organization):
 
     q = request.GET.get("q", "").strip()
 
-    logger.debug(
-        "Search query received",
-        extra={"organization_id": organization.id, "query_length": len(q), "has_query": bool(q)},
-    )
-
-    # TODO: sort these sensibly
-    results: list[Result] = []
-
-    if q:
-        patients = Patient.objects.filter(organization=organization).search(q)[:20]  # type: ignore[attr-defined]
-
-        logger.debug(
-            "Patient search completed", extra={"organization_id": organization.id, "results_count": len(patients)}
-        )
-
-        results.extend(
-            Result(
-                name=f"{p.full_name}",
-                url=reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": p.id}),
-            )
-            for p in patients
-        )
+    results = _patient_search_results(organization, q)
 
     # TODO: extend this to handle email addresses, etc.
+    # do actions always come after patients, or can I search for "Add Patient"?
     if maybe_name := maybe_patient_name(q):
         results.append(
             Result(
-                name=f'Create patient "{" ".join(maybe_name).strip()}"',
-                # TODO-NG: pass maybe_name through to patient_add
+                icon="user-plus",
+                title=f'Create patient "{" ".join(maybe_name).strip()}"',
                 url=reverse(
                     "providers:patient_add", kwargs={"organization_id": organization.id}, query={"maybe_name": q}
                 ),
             )
         )
-        logger.debug("Added create patient option with parsed name", extra={"organization_id": organization.id})
     else:
         results.append(
             Result(
-                name="Create a new patient",
+                icon="user-plus",
+                title="Create a new patient",
                 url=reverse("providers:patient_add", kwargs={"organization_id": organization.id}),
             )
         )
-        logger.debug("Added generic create patient option", extra={"organization_id": organization.id})
-
-    logger.info("Search completed", extra={"organization_id": organization.id, "total_results": len(results)})
 
     context = {"results": results}
     return render(request, "provider/partials/search_results.html", context)

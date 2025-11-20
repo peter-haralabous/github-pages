@@ -36,10 +36,6 @@ TERMINAL_TASK_STATUSES = [TaskStatus.CANCELLED, TaskStatus.COMPLETED, TaskStatus
 ACTIVE_TASK_STATUSES = [s for s in TaskStatus if s not in TERMINAL_TASK_STATUSES]
 
 
-def terminal_task_status(status: TaskStatus) -> bool:
-    return status in TERMINAL_TASK_STATUSES
-
-
 class TaskManager(models.Manager["Task"]):
     def create(self, **kwargs) -> "Task":
         from sandwich.core.service.task_service import assign_default_task_perms  # noqa: PLC0415
@@ -95,7 +91,7 @@ class Task(BaseModel):
 
     @property
     def active(self) -> bool:
-        return not terminal_task_status(self.status)
+        return self.status in ACTIVE_TASK_STATUSES
 
     def get_form_submission(self) -> FormSubmission | None:
         """
