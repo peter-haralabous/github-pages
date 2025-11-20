@@ -30,10 +30,13 @@ def process_document_job(document_id: str, document_context: ProcessDocumentCont
 
 @define_task
 def extract_facts_from_document_job(document_id: str, llm_name: str = ModelName.CLAUDE_SONNET_4_5):
+    """Extract facts from a document using the specified LLM.
+
+    The user doesn't need to know about the KG/facts; no need to send_ingest_progress here.
+    """
     document = Document.objects.get(id=document_id)
     patient = document.patient
     llm_client = get_llm(ModelName(llm_name))
-    send_ingest_progress(patient, text=f"Processing {document.original_filename}...")
 
     try:
         with document.file.open("rb") as f:
@@ -43,17 +46,14 @@ def extract_facts_from_document_job(document_id: str, llm_name: str = ModelName.
         return
 
     if document.content_type == "application/pdf":
-        triples = extract_facts_from_pdf(content, llm_client, patient=patient, document=document)
+        extract_facts_from_pdf(content, llm_client, patient=patient, document=document)
     elif document.content_type == "text/plain":
-        triples = extract_facts_from_text(content, llm_client, patient=patient, document=document)
+        extract_facts_from_text(content, llm_client, patient=patient, document=document)
     else:
         logger.warning(
             "Unsupported document content type",
             extra={"document_id": str(document_id), "content_type": document.content_type},
         )
-        triples = []
-
-    send_ingest_progress(patient, text=f"Extracted {len(triples)} facts from {document.original_filename}", done=True)
 
 
 @define_task
