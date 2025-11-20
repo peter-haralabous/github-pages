@@ -68,6 +68,7 @@ def encounter_details(
 ) -> HttpResponse:
     patient = encounter.patient
     tasks = ordered_tasks_for_encounter(encounter)
+    documents = encounter.document_set.all()
     other_encounters = patient.encounter_set.exclude(id=encounter.id)
     pending_invitation = get_unaccepted_invitation(patient)
 
@@ -123,6 +124,7 @@ def encounter_details(
         "encounter": encounter,
         "other_encounters": other_encounters,
         "tasks": tasks,
+        "documents": documents,
         "pending_invitation": pending_invitation,
         "enriched_attributes": enriched_attributes,
     }

@@ -286,3 +286,7 @@ sandwich/static/webpack_bundles/
 webpack-stats.json
 
 tsconfig.tsbuildinfo
+
+# Local Claude settings
+.claude/settings.local.json
+.clauderc

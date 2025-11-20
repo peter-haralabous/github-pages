@@ -1,23 +1,11 @@
 {% load lucide %}
 
-<div class="flex justify-between items-center mb-4">
-  <h3 class="m-0">Summaries</h3>
-</div>
-<div class="rounded-box border border-base-200 bg-base-100 p-6">
-  {# TODO: Replace with actual summaries data when available #}
-  {% if encounter.summaries.exists %}
-    <div class="space-y-3">
-      {% for summary in encounter.summaries %}
-        <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
-          <div>
-            <div class="font-medium">{{ summary.title|default:"Summary" }}</div>
-            <div class="text-sm text-base-content/60">Generated {{ summary.created_at|date:DJANGO_DATE_FORMAT }}</div>
-          </div>
-          <div>{% lucide "chevron-right" class="size-5 text-base-content/60" %}</div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
+<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4">
+  <div class="flex justify-between items-center">
+    <h3 class="m-0">Summaries</h3>
+  </div>
+  <div>
+    {# TODO: Replace with actual summaries data when available #}
     <div class="text-center py-8 text-base-content/60">No summaries for this encounter.</div>
-  {% endif %}
+  </div>
 </div>

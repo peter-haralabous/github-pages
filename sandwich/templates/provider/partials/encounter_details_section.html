@@ -1,32 +1,36 @@
-<div class="flex items-center gap-2 mb-4">
-  <h3 class="m-0">Encounter Details</h3>
-  {% if encounter.active %}
-    <span class="badge badge-md badge-success">Active</span>
-  {% else %}
-    <span class="badge badge-md badge-error">Archived</span>
-  {% endif %}
-</div>
-<div class="rounded-box border border-base-200 bg-base-100">
-  <table class="table">
-    <colgroup>
-      <col class="w-auto" />
-      <col class="w-2/3" />
-    </colgroup>
-    <tbody>
-      <tr>
-        <th class="text-sm text-base-content/60">Created</th>
-        <td>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
-      </tr>
-      <tr>
-        <th class="text-sm text-base-content/60">Updated</th>
-        <td>{{ encounter.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
-      </tr>
-      {% for attr in enriched_attributes %}
-        <tr>
-          <th class="text-sm text-base-content/60">{{ attr.name }}</th>
-          {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-details-"|add:encounter.id|stringformat:"s"|add:"-"|add:attr.id field_name=attr.id display_value=attr.value|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4">
+  <div class="flex justify-between items-center">
+    <h3 class="m-0">Encounter Details</h3>
+    {% if encounter.active %}
+      <span class="badge badge-md badge-success">Active</span>
+    {% else %}
+      <span class="badge badge-md badge-error">Archived</span>
+    {% endif %}
+  </div>
+  <div>
+    <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+      <table class="table">
+        <colgroup>
+          <col class="w-auto" />
+          <col class="w-2/3" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th class="text-sm text-base-content/60">Created</th>
+            <td>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          </tr>
+          <tr>
+            <th class="text-sm text-base-content/60">Updated</th>
+            <td>{{ encounter.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          </tr>
+          {% for attr in enriched_attributes %}
+            <tr>
+              <th class="text-sm text-base-content/60">{{ attr.name }}</th>
+              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-details-"|add:encounter.id|stringformat:"s"|add:"-"|add:attr.id field_name=attr.id display_value=attr.value|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
