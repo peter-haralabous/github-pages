@@ -8,13 +8,8 @@
   <ul tabindex="0"
       class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
     <li>
-      <a href="{% url 'providers:patient' organization_id=organization.id patient_id=encounter.patient.id %}">
-        {% lucide "user" class="size-4" %} Patient Details
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}">
-        {% lucide "file-text" class="size-4" %} Encounter Details
+      <a href="{% url 'providers:patient' organization_id=organization.id patient_id=encounter.patient.id %}?encounter_id={{ encounter.id }}">
+        {% lucide "user" class="size-4" %} View Patient
       </a>
     </li>
   </ul>

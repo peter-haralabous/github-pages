@@ -38,8 +38,15 @@ from .views.patient import patient_archive
 from .views.patient import patient_cancel_task
 from .views.patient import patient_details
 from .views.patient import patient_edit
+from .views.patient import patient_encounter_content
+from .views.patient import patient_encounters_list_content
 from .views.patient import patient_list
+from .views.patient import patient_nav_encounters
+from .views.patient import patient_nav_overview
+from .views.patient import patient_overview
 from .views.patient import patient_resend_invite
+from .views.patient import patient_sidebar_encounters
+from .views.patient import patient_sidebar_main
 from .views.search import search
 from .views.task import task
 from .views.templates import form_builder
@@ -117,6 +124,42 @@ urlpatterns = [
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/archive",
         patient_archive,
         name="patient_archive",
+    ),
+    # Patient details HTMX endpoints
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/overview",
+        patient_overview,
+        name="patient_overview",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/sidebar/main",
+        patient_sidebar_main,
+        name="patient_sidebar_main",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/sidebar/encounters",
+        patient_sidebar_encounters,
+        name="patient_sidebar_encounters",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/nav/overview",
+        patient_nav_overview,
+        name="patient_nav_overview",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/nav/encounters",
+        patient_nav_encounters,
+        name="patient_nav_encounters",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/encounters/list",
+        patient_encounters_list_content,
+        name="patient_encounters_list_content",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/encounter/<uuid:encounter_id>/content",
+        patient_encounter_content,
+        name="patient_encounter_content",
     ),
     path(
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/add_task",

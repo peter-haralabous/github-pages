@@ -1,5 +1,6 @@
 import logging
 from datetime import date
+from uuid import UUID
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div
@@ -24,6 +25,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import Form
 from sandwich.core.models import ListViewType
+from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
@@ -53,6 +55,7 @@ from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.forms.task import AddTaskForm
 from sandwich.providers.views.encounter import EncounterCreateForm
+from sandwich.providers.views.encounter import _format_attributes
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
 logger = logging.getLogger(__name__)
@@ -129,7 +132,17 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         extra={"user_id": request.user.id, "organization_id": organization.id, "patient_id": patient.id},
     )
 
-    current_encounter = get_current_encounter(patient)
+    # Check if a specific encounter should be displayed (from slideout "View Patient")
+    encounter_id = request.GET.get("encounter_id")
+    current_encounter: Encounter | None
+    if encounter_id:
+        try:
+            current_encounter = patient.encounter_set.get(id=UUID(encounter_id))
+        except (ValueError, Encounter.DoesNotExist):
+            current_encounter = get_current_encounter(patient)
+    else:
+        current_encounter = get_current_encounter(patient)
+
     tasks = current_encounter.task_set.all() if current_encounter else []
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
     all_encounters = patient.encounter_set.all().order_by("-created_at")
@@ -148,6 +161,10 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         },
     )
 
+    # Check if this is a search result (no from_encounter in query params)
+    # If from encounter list, show current encounter; if from search, show overview
+    from_encounter_list = request.GET.get("from_encounter_list") == "true"
+
     context = {
         "patient": patient,
         "organization": organization,
@@ -156,8 +173,9 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "encounters": all_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
+        "show_current_encounter": (from_encounter_list or encounter_id) and current_encounter,
     }
-    return render(request, "provider/patient_details.html", context)
+    return render(request, "provider/patient_details_new.html", context)
 
 
 @login_required
@@ -604,19 +622,13 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization: Organizati
             )
 
             messages.add_message(request, messages.SUCCESS, "Task added successfully.")
-            current_url = request.headers.get("HX-Current-URL")
-            if current_url == reverse(
-                "providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id}
-            ):
-                return HttpResponseRedirect(
-                    reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
-                )
-
+            # Always redirect to patient details page with encounter displayed
             return HttpResponseRedirect(
                 reverse(
-                    "providers:encounter",
-                    kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id},
+                    "providers:patient",
+                    kwargs={"organization_id": organization.id, "patient_id": patient.id},
                 )
+                + f"?encounter_id={current_encounter.id}"
             )
 
     add_task_form = AddTaskForm(request.POST, available_forms=forms, form_action=form_action)
@@ -694,4 +706,185 @@ def patient_resend_invite(
     messages.add_message(request, messages.SUCCESS, "Invitation resent successfully.")
     return HttpResponseRedirect(
         reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_overview(request: AuthenticatedHttpRequest, organization: Organization, patient: Patient) -> HttpResponse:
+    """HTMX endpoint to load the patient overview content (content only)."""
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
+    pending_invitation = get_unaccepted_invitation(patient)
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "encounters": all_encounters,
+        "pending_invitation": pending_invitation,
+    }
+    return render(request, "provider/partials/patient_overview.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_nav_overview(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to navigate to overview - returns sidebar + content."""
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
+    pending_invitation = get_unaccepted_invitation(patient)
+
+    # Return both sidebar and content using hx-swap-oob
+    sidebar_html = render(
+        request,
+        "provider/partials/patient_sidebar_nav.html",
+        {"patient": patient, "organization": organization, "viewing_overview": True},
+    ).content.decode()
+
+    content_html = render(
+        request,
+        "provider/partials/patient_overview.html",
+        {
+            "patient": patient,
+            "organization": organization,
+            "encounters": all_encounters,
+            "pending_invitation": pending_invitation,
+        },
+    ).content.decode()
+
+    # Use OOB swap to update both targets - preserve the wrapper classes
+    return HttpResponse(
+        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
+        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_sidebar_main(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load the main sidebar navigation."""
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "viewing_overview": True,
+    }
+    return render(request, "provider/partials/patient_sidebar_nav.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_sidebar_encounters(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load the encounters sidebar."""
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "encounters": all_encounters,
+        "selected_encounter_id": None,
+    }
+    return render(request, "provider/partials/patient_sidebar_encounters.html", context)
+
+
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Patient, "patient_id", ["view_patient"]),
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter"]),
+    ]
+)
+def patient_encounter_content(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient, encounter: Encounter
+) -> HttpResponse:
+    """HTMX endpoint to load encounter details in the main content area."""
+    tasks = encounter.task_set.all()
+    from_list = request.GET.get("from_list") == "true"
+    in_slideout = request.GET.get("slideout") == "true"
+
+    # Get custom attributes for encounters in this organization
+    content_type = ContentType.objects.get_for_model(Encounter)
+    custom_attributes = list(
+        CustomAttribute.objects.filter(
+            organization=organization,
+            content_type=content_type,
+        ).order_by("name")
+    )
+
+    # Format attributes with their values for display
+    formatted_attributes = _format_attributes(encounter, custom_attributes)
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "encounter": encounter,
+        "tasks": tasks,
+        "formatted_attributes": formatted_attributes,
+        "from_list": from_list,
+        "in_slideout": in_slideout,
+    }
+    return render(request, "provider/partials/patient_encounter_content.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_nav_encounters(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to navigate to encounters - returns sidebar + content."""
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
+
+    # Return both sidebar and content using hx-swap-oob
+    sidebar_html = render(
+        request,
+        "provider/partials/patient_sidebar_encounters.html",
+        {
+            "patient": patient,
+            "organization": organization,
+            "encounters": all_encounters,
+            "selected_encounter_id": None,
+        },
+    ).content.decode()
+
+    content_html = render(
+        request,
+        "provider/partials/patient_encounters_list_content.html",
+        {"patient": patient, "organization": organization, "encounters": all_encounters},
+    ).content.decode()
+
+    # Use OOB swap to update both targets - preserve the wrapper classes
+    return HttpResponse(
+        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
+        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_encounters_list_content(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load encounters list in content area only (from 'View all' in overview)."""
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
+
+    return render(
+        request,
+        "provider/partials/patient_encounters_list_content.html",
+        {"patient": patient, "organization": organization, "encounters": all_encounters},
     )

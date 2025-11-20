@@ -358,14 +358,16 @@ def encounter_create(request: AuthenticatedHttpRequest, organization: Organizati
             },
         )
         messages.add_message(request, messages.SUCCESS, "Encounter created successfully.")
+        # Redirect to patient details page with the new encounter displayed
         return HttpResponseRedirect(
             reverse(
-                "providers:encounter",
+                "providers:patient",
                 kwargs={
-                    "encounter_id": encounter.id,
+                    "patient_id": encounter.patient.id,
                     "organization_id": organization.id,
                 },
             )
+            + f"?encounter_id={encounter.id}"
         )
     logger.warning(
         "Invalid encounter creation form",

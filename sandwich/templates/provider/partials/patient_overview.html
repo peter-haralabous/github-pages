@@ -1,0 +1,91 @@
+{% load lucide %}
+
+<div class="space-y-6">
+  {# Pending Invitation Section #}
+  {% if pending_invitation %}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <h3 class="font-semibold text-blue-900 mb-2">Pending Invitation</h3>
+      <p class="text-sm text-blue-800 mb-3">
+        <strong>Status:</strong> {{ pending_invitation.get_status_display }}, last sent at {{ pending_invitation.last_invited_at|date:DJANGO_DATE_TIME_FORMAT }}
+      </p>
+      <form action="{% url "providers:patient_resend_invite" organization_id=organization.id patient_id=patient.id %}"
+            class="inline"
+            method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-outline-primary">Resend Invitation</button>
+      </form>
+    </div>
+  {% endif %}
+  {# Recent Encounters Section #}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+      <h3 class="text-lg font-semibold">Recent Encounters</h3>
+      <button hx-get="{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}"
+              hx-target="#patient-content"
+              hx-swap="innerHTML"
+              hx-push-url="false"
+              class="text-sm text-primary hover:text-primary/80 font-medium">View all</button>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      {% for encounter in encounters|slice:":3" %}
+        <li class="p-4 hover:bg-gray-50 cursor-pointer"
+            hx-get="{% url 'providers:patient_encounter_content' organization_id=organization.id patient_id=patient.id encounter_id=encounter.id %}"
+            hx-target="#patient-content"
+            hx-swap="innerHTML"
+            hx-push-url="false">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+              <p class="text-sm text-gray-600">
+                Status: {{ encounter.get_status_display }}
+                {% if encounter.ended_at %}• Ended: {{ encounter.ended_at|date:DJANGO_DATE_FORMAT }}{% endif %}
+              </p>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-gray-400" %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="p-4 text-center text-gray-500">No encounters yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {# Quick Links - Forms #}
+  <div class="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <div class="bg-blue-100 text-blue-700 p-3 rounded-lg">{% lucide "file-text" class="size-6" %}</div>
+        <div>
+          <h3 class="text-lg font-semibold">Forms</h3>
+          <p class="text-sm text-gray-600">View and manage patient forms</p>
+        </div>
+      </div>
+      {% lucide "chevron-right" class="size-5 text-gray-400" %}
+    </div>
+  </div>
+  {# Quick Links - Summaries #}
+  <div class="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <div class="bg-purple-100 text-purple-700 p-3 rounded-lg">{% lucide "file-check" class="size-6" %}</div>
+        <div>
+          <h3 class="text-lg font-semibold">Summaries</h3>
+          <p class="text-sm text-gray-600">Review visit summaries</p>
+        </div>
+      </div>
+      {% lucide "chevron-right" class="size-5 text-gray-400" %}
+    </div>
+  </div>
+  {# Quick Links - Documents #}
+  <div class="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <div class="bg-green-100 text-green-700 p-3 rounded-lg">{% lucide "folder-open" class="size-6" %}</div>
+        <div>
+          <h3 class="text-lg font-semibold">Documents</h3>
+          <p class="text-sm text-gray-600">Access patient documents</p>
+        </div>
+      </div>
+      {% lucide "chevron-right" class="size-5 text-gray-400" %}
+    </div>
+  </div>
+</div>

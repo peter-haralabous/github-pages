@@ -1,0 +1,122 @@
+{% load lucide %}
+
+{% if not in_slideout %}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    {# Header #}
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          {# Back button - goes to list if from_list, otherwise to overview #}
+          <button hx-get="{% if from_list %}{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}{% else %}{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}{% endif %}"
+                  hx-target="#patient-content"
+                  hx-swap="innerHTML"
+                  hx-push-url="false"
+                  class="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100">
+            {% lucide "arrow-left" class="size-5 text-gray-600" %}
+          </button>
+          <h2 class="text-xl font-bold text-gray-900">Encounter - {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
+          {% if encounter.active %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ encounter.get_status_display }}</span>
+          {% else %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ encounter.get_status_display }}</span>
+          {% endif %}
+        </div>
+        <div class="flex items-center gap-2">
+          {# Encounter-level action menu #}
+          {% include 'provider/partials/encounter_content_actions.html' with in_slideout=False %}
+        </div>
+      </div>
+    </div>
+    {# Content area with nested cards #}
+    <div class="p-6 space-y-6">
+    {% else %}
+      {# Slideout version - no outer card wrapper #}
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <h2 class="text-xl font-bold text-gray-900">Encounter - {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
+          {% if encounter.active %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ encounter.get_status_display }}</span>
+          {% else %}
+            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ encounter.get_status_display }}</span>
+          {% endif %}
+        </div>
+        <div class="flex items-center gap-2">
+          {# Encounter-level action menu #}
+          {% include 'provider/partials/encounter_content_actions.html' with in_slideout=True %}
+        </div>
+      </div>
+      {# Content area with cards #}
+      <div class="space-y-6">
+      {% endif %}
+      {# Encounter Details Section #}
+      <section>
+        <div class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Encounter Details</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+              <div>
+                <div class="text-sm text-gray-600 mb-1">Created</div>
+                <div class="font-medium">{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</div>
+              </div>
+              <div>
+                <div class="text-sm text-gray-600 mb-1">Updated</div>
+                <div class="font-medium">{{ encounter.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</div>
+              </div>
+              {% for attr in formatted_attributes %}
+                <div>
+                  <div class="text-sm text-gray-600 mb-1">{{ attr.name }}</div>
+                  <div class="font-medium">{{ attr.value|default:EMPTY_VALUE_DISPLAY }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+      {# Documents & Forms Combined Section #}
+      <section>
+        <div class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Documents & Forms</h3>
+          </div>
+          <div class="p-6">
+            {% if tasks %}
+              <div class="space-y-3">
+                {% for task in tasks %}
+                  <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=task.id %}"
+                     class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                    <div class="flex items-center gap-3">
+                      <div class="bg-blue-100 text-blue-700 p-2 rounded">{% lucide "file-text" class="size-5" %}</div>
+                      <div>
+                        <div class="font-medium mb-1">{{ task.name }}</div>
+                        <div class="flex items-center gap-2 text-sm">
+                          {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
+                          <span class="text-gray-600">• Created {{ task.created_at|date:DJANGO_DATE_FORMAT }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {% lucide "chevron-right" class="size-5 text-gray-400" %}
+                  </a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-8 text-gray-500">No documents or forms for this encounter.</div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+      {# Activity Section #}
+      <section>
+        <div class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Activity</h3>
+          </div>
+          <div class="p-6">
+            {# TODO: Replace with actual activity data when available #}
+            <div class="text-center py-8 text-gray-500">No activity for this encounter.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+    {% if not in_slideout %}</div>{% endif %}

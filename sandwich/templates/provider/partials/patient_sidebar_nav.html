@@ -1,0 +1,46 @@
+{% load lucide %}
+
+<div class="bg-white border border-gray-200 rounded-lg p-4">
+  <nav>
+    <ul class="flex flex-col gap-1">
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="closest div"
+                hx-select="#patient-sidebar, #patient-content"
+                hx-swap="multi:#patient-sidebar,#patient-content"
+                hx-push-url="false">
+          <span class="text-base font-medium">Overview</span>
+        </button>
+      </li>
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
+          <span class="text-base font-medium">Encounters</span>
+          {% lucide "chevron-right" class="size-5" %}
+        </button>
+      </li>
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+          <span class="text-base font-medium">Forms</span>
+          {% lucide "chevron-right" class="size-5" %}
+        </button>
+      </li>
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+          <span class="text-base font-medium">Summaries</span>
+          {% lucide "chevron-right" class="size-5" %}
+        </button>
+      </li>
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+          <span class="text-base font-medium">Documents</span>
+          {% lucide "chevron-right" class="size-5" %}
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

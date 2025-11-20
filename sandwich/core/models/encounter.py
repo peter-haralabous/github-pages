@@ -25,7 +25,7 @@ class EncounterStatus(models.TextChoices):
     IN_PROGRESS = "in-progress", _("In Progress")
     ON_HOLD = "on-hold", _("On Hold")
     DISCHARGED = "discharged", _("Discharged")
-    COMPLETED = "completed", _("Completed")
+    COMPLETED = "completed", _("Archived")  # UI displays "Archived" to match the Archive action
     CANCELLED = "cancelled", _("Cancelled")
     DISCONTINUED = "discontinued", _("Discontinued")
     ENTERED_IN_ERROR = "entered-in-error", _("Entered in Error")
