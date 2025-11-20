@@ -1876,21 +1876,6 @@
   },
   {
     "model": "core.entity",
-    "pk": "a55bea94-4f54-4811-bcac-dfe9e9c6f160",
-    "fields": {
-      "created_at": "2025-10-21T13:35:10.973Z",
-      "updated_at": "2025-10-21T13:35:10.973Z",
-      "type": "Immunization",
-      "metadata": {
-        "code": "99",
-        "system": "http://hl7.org/fhir/sid/cvx",
-        "name": "RESERVED - do not use",
-        "_predicates": ["RECEIVED_IMMUNIZATION"]
-      }
-    }
-  },
-  {
-    "model": "core.entity",
     "pk": "3079c558-2de9-4828-8549-a35469df76d1",
     "fields": {
       "created_at": "2025-10-21T13:35:10.973Z",

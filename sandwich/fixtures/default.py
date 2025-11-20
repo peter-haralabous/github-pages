@@ -3,12 +3,14 @@ from django.core.files.base import ContentFile
 
 from sandwich.core.factories.condition import ConditionFactory
 from sandwich.core.factories.encounter import EncounterFactory
+from sandwich.core.factories.immunization import ImmunizationFactory
 from sandwich.core.factories.organization import OrganizationFactory
 from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.middleware import ConsentMiddleware
 from sandwich.core.models import Condition
 from sandwich.core.models import Document
 from sandwich.core.models import Encounter
+from sandwich.core.models import Immunization
 from sandwich.core.models import Organization
 from sandwich.core.models import Patient
 from sandwich.core.models import Task
@@ -75,6 +77,11 @@ def document(patient: Patient, encounter: Encounter) -> Document:
 @pytest.fixture
 def encounter(patient, organization):
     return EncounterFactory.create(patient=patient, organization=organization)
+
+
+@pytest.fixture
+def immunization(patient: Patient, encounter: Encounter) -> Immunization:
+    return ImmunizationFactory.create(patient=patient, encounter=encounter)
 
 
 @pytest.fixture

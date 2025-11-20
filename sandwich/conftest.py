@@ -14,10 +14,12 @@ from syrupy.extensions.single_file import SingleFileSnapshotExtension
 from syrupy.extensions.single_file import WriteMode
 
 from sandwich.core.factories.providers.condition import ConditionProvider
+from sandwich.core.factories.providers.immunization import ImmunizationProvider
 from sandwich.core.util.testing import UserRequestFactory
 from sandwich.fixtures.default import condition
 from sandwich.fixtures.default import document
 from sandwich.fixtures.default import encounter
+from sandwich.fixtures.default import immunization
 from sandwich.fixtures.default import organization
 from sandwich.fixtures.default import owner
 from sandwich.fixtures.default import patient
@@ -29,6 +31,7 @@ from sandwich.fixtures.knowledge_graph import patient_knowledge_graph
 from sandwich.fixtures.other import other_condition
 from sandwich.fixtures.other import other_document
 from sandwich.fixtures.other import other_encounter
+from sandwich.fixtures.other import other_immunization
 from sandwich.fixtures.other import other_organization
 from sandwich.fixtures.other import other_owner
 from sandwich.fixtures.other import other_patient
@@ -47,11 +50,12 @@ __all__ = [
     "conditional_webpack",
     "document",
     "encounter",
+    "immunization",
     "organization",
     "other_condition",
     "other_document",
     "other_encounter",
-    "other_organization",
+    "other_immunization",
     "other_organization",
     "other_owner",
     "other_patient",
@@ -72,6 +76,7 @@ __all__ = [
 # https://faker.readthedocs.io/en/master/#how-to-create-a-provider
 # https://factoryboy.readthedocs.io/en/stable/reference.html#faker
 factory.Faker.add_provider(ConditionProvider)
+factory.Faker.add_provider(ImmunizationProvider)
 
 
 @pytest.fixture(autouse=True)
