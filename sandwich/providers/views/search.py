@@ -2,7 +2,9 @@ import logging
 from dataclasses import dataclass
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import OuterRef
 from django.db.models import Q
+from django.db.models import Subquery
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -38,12 +40,20 @@ def _patient_search_results(organization: Organization, query: str) -> list[Resu
     #       ✅ active encounters come before inactive ones
     results: list[Result] = []
     if query:
-        encounters = (
+        encounter_query = (
             Encounter.objects.filter(organization=organization)
             .search(query)  # type: ignore[attr-defined]
             .annotate(is_active=Q(status__in=ACTIVE_ENCOUNTER_STATUSES))
             .order_by("-is_active")
-        )[:20]
+        )
+        # get only the top encounter per patient
+        # if there's an active and an archived encounter for the same patient, we should only show the active one
+        # if there are only archived encounters, then the expected flow is for the user to create a new one
+        # so it doesn't matter too much which one we show here
+        # TODO: if there's more than one active, show both?
+        encounter_ids = encounter_query.filter(patient_id=OuterRef("patient_id")).values("id")[:1]
+        encounters = (Encounter.objects.filter(id__in=Subquery(encounter_ids)).select_related("patient"))[:20]
+
         patients = (
             Patient.objects.filter(organization=organization)
             .search(query)  # type: ignore[attr-defined]

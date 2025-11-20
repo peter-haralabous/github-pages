@@ -54,17 +54,15 @@ def test_patient_search_results(organization: Organization) -> None:
 
     assert len(_patient_search_results(organization, "John")) == 1
     assert len(_patient_search_results(organization, "Jane")) == 1
-    assert len(_patient_search_results(organization, "Kevin")) == 2
+    assert len(_patient_search_results(organization, "Kevin")) == 1
 
     results = _patient_search_results(organization, "Smith")
-    assert len(results) == 3
+    assert len(results) == 2
     # order matters: active encounter first, then completed encounter, then no encounters
     assert results[0].title == "Kevin Smith"
     assert results[0].encounter.active is True  # type: ignore[union-attr]
-    assert results[1].title == "Kevin Smith"
-    assert results[1].encounter.active is False  # type: ignore[union-attr]
-    assert results[2].title == "Jane Smith"
-    assert results[2].encounter is None
+    assert results[1].title == "Jane Smith"
+    assert results[1].encounter is None
 
 
 def test_search(client: Client, organization: Organization, provider: User) -> None:
