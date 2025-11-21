@@ -125,18 +125,145 @@
     <aside class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto"
            id="patient-sidebar">
       {% if show_current_encounter %}
-        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=False %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=False selected_encounter_id=selected_encounter_id %}
       {% else %}
-        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=True %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=True selected_encounter_id=None %}
       {% endif %}
     </aside>
-    {# Main Content Area #}
-    <main class="flex-1 min-w-0" id="patient-content">
-      {% if show_current_encounter %}
-        {% include 'provider/partials/patient_encounter_content.html' with encounter=current_encounter %}
-      {% else %}
-        {% include 'provider/partials/patient_overview.html' %}
-      {% endif %}
+    {# Main Content Area - Workspace with tab support (single tab for now) #}
+    <main class="flex-1 min-w-0" id="patient-workspace">
+      {# Tab bar - hidden for now, will be shown when multi-tab is enabled #}
+      <div id="workspace-tabs" class="hidden">{# Future: tab buttons will be rendered here #}</div>
+      {# Tab content panels - currently showing single active item #}
+      <div id="workspace-panels">
+        <div id="patient-content"
+             class="workspace-panel"
+             data-panel-type="{% if show_current_encounter %}encounter{% else %}overview{% endif %}"
+             data-panel-id="{% if show_current_encounter %}{{ current_encounter.id }}{% else %}overview{% endif %}">
+          {% if show_current_encounter %}
+            {% include 'provider/partials/patient_encounter_content.html' with encounter=current_encounter %}
+          {% else %}
+            {% include 'provider/partials/patient_overview.html' %}
+          {% endif %}
+        </div>
+      </div>
     </main>
   </div>
+  {# Script to maintain sidebar active states and workspace state #}
+  <script nonce="{{ request.csp_nonce }}">
+    (function() {
+      // ===========================================
+      // Workspace Manager - Scaffolding for future tab support
+      // ===========================================
+      // Currently supports single-panel mode, but structured to support:
+      // - Multiple open panels (tabs)
+      // - Panel type tracking (encounter, form, summary, document)
+      // - Active panel switching
+      // - Panel state persistence
+      //
+      // Data model for future:
+      // workspace.panels = [
+      //   { id: 'overview', type: 'overview', label: 'Overview', active: true },
+      //   { id: 'enc-123', type: 'encounter', label: '2025-11-21', active: false },
+      //   { id: 'form-456', type: 'form', label: 'Intake Form', active: false },
+      // ]
+
+      const workspace = {
+        // Current active panel info (read from DOM)
+        getActivePanel: function() {
+          const panel = document.querySelector('#patient-content');
+          if (!panel) return null;
+          return {
+            type: panel.dataset.panelType || 'overview',
+            id: panel.dataset.panelId || 'overview'
+          };
+        },
+
+        // Update panel metadata after content swap
+        updatePanelMetadata: function(type, id) {
+          const panel = document.querySelector('#patient-content');
+          if (panel) {
+            panel.dataset.panelType = type;
+            panel.dataset.panelId = id;
+          }
+        }
+      };
+
+      // Expose workspace for debugging/future use
+      window.patientWorkspace = workspace;
+
+      // ===========================================
+      // Sidebar State Management
+      // ===========================================
+      function updateSidebarStates() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const encounterId = urlParams.get('encounter_id');
+
+        // Update workspace panel metadata based on URL
+        if (encounterId) {
+          workspace.updatePanelMetadata('encounter', encounterId);
+        } else {
+          workspace.updatePanelMetadata('overview', 'overview');
+        }
+
+        // Handle Overview button state (only when main nav is visible)
+        const overviewBtn = document.querySelector('[hx-get*="patient_nav_overview"]');
+        if (overviewBtn) {
+          if (!encounterId) {
+            // Overview is active
+            overviewBtn.classList.add('bg-blue-100', 'text-gray-900', 'font-semibold');
+            overviewBtn.classList.remove('hover:bg-gray-100', 'text-gray-700');
+            const span = overviewBtn.querySelector('span');
+            if (span) span.classList.remove('font-medium');
+          } else {
+            // Overview is not active
+            overviewBtn.classList.remove('bg-blue-100', 'text-gray-900', 'font-semibold');
+            overviewBtn.classList.add('hover:bg-gray-100', 'text-gray-700');
+            const span = overviewBtn.querySelector('span');
+            if (span) span.classList.add('font-medium');
+          }
+        }
+
+        // Handle encounter highlighting in accordion
+        if (encounterId) {
+          const encounterItems = document.querySelectorAll('#patient-sidebar li[hx-get*="patient_encounter_content"]');
+
+          encounterItems.forEach(function(item) {
+            const hxGet = item.getAttribute('hx-get');
+            const itemEncounterId = hxGet ? hxGet.match(/encounter_id=([^&?]+)/)?.[1] : null;
+            const textEl = item.querySelector('p');
+
+            if (itemEncounterId === encounterId) {
+              // This is the active encounter
+              item.classList.remove('hover:bg-gray-100');
+              item.classList.add('bg-blue-100');
+              if (textEl) {
+                textEl.classList.remove('text-gray-700');
+                textEl.classList.add('font-semibold', 'text-gray-900');
+              }
+            } else {
+              // Not active
+              item.classList.remove('bg-blue-100');
+              item.classList.add('hover:bg-gray-100');
+              if (textEl) {
+                textEl.classList.remove('font-semibold', 'text-gray-900');
+                textEl.classList.add('text-gray-700');
+              }
+            }
+          });
+        }
+      }
+
+      // Update on page load
+      updateSidebarStates();
+
+      // Update after HTMX navigation
+      document.body.addEventListener('htmx:afterSwap', function() {
+        setTimeout(updateSidebarStates, 10);
+      });
+
+      // Update on browser back/forward
+      window.addEventListener('popstate', updateSidebarStates);
+    })();
+  </script>
 {% endblock content %}

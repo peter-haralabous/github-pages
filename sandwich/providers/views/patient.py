@@ -174,6 +174,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "tasks": tasks,
         "pending_invitation": pending_invitation,
         "show_current_encounter": (from_encounter_list or encounter_id) and current_encounter,
+        "selected_encounter_id": str(current_encounter.id) if current_encounter else None,
     }
     return render(request, "provider/patient_details_new.html", context)
 
@@ -742,7 +743,7 @@ def patient_nav_overview(
     sidebar_html = render(
         request,
         "provider/partials/patient_sidebar_nav.html",
-        {"patient": patient, "organization": organization, "viewing_overview": True},
+        {"patient": patient, "organization": organization, "viewing_overview": True, "selected_encounter_id": None},
     ).content.decode()
 
     content_html = render(
@@ -777,6 +778,7 @@ def patient_sidebar_main(
         "patient": patient,
         "organization": organization,
         "viewing_overview": True,
+        "selected_encounter_id": None,
     }
     return render(request, "provider/partials/patient_sidebar_nav.html", context)
 
@@ -854,11 +856,18 @@ def patient_encounter_content(
     # Format attributes with their values for display
     formatted_attributes = _format_attributes(encounter, custom_attributes)
 
-    # Return sidebar with viewing_overview=False
+    # When viewing an encounter, always show the encounters accordion
+    # This keeps the active encounter visible and provides better context
+    all_encounters = patient.encounter_set.all().order_by("-created_at")
     sidebar_html = render(
         request,
-        "provider/partials/patient_sidebar_nav.html",
-        {"patient": patient, "organization": organization, "viewing_overview": False},
+        "provider/partials/patient_sidebar_encounters.html",
+        {
+            "patient": patient,
+            "organization": organization,
+            "encounters": all_encounters,
+            "selected_encounter_id": str(encounter.id),
+        },
     ).content.decode()
 
     content_context = {
@@ -875,13 +884,12 @@ def patient_encounter_content(
     ).content.decode()
 
     # Use OOB swap to update both sidebar and content
-    combined_html = (
+    sidebar_wrapper = (
         f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start '
         f'md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
-        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
     )
-
-    return HttpResponse(combined_html)
+    content_wrapper = f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    return HttpResponse(sidebar_wrapper + content_wrapper)
 
 
 @login_required

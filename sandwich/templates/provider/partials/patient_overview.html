@@ -23,15 +23,14 @@
       <button hx-get="{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}"
               hx-target="#patient-content"
               hx-swap="innerHTML"
-              hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
+              hx-push-url="false"
               class="text-sm text-primary hover:text-primary/80 font-medium">View all</button>
     </div>
     <ul class="divide-y divide-gray-200">
       {% for encounter in encounters|slice:":3" %}
         <li class="p-4 hover:bg-gray-50 cursor-pointer"
             hx-get="{% url 'providers:patient_encounter_content' organization_id=organization.id patient_id=patient.id encounter_id=encounter.id %}"
-            hx-target="#patient-content"
-            hx-swap="innerHTML"
+            hx-swap="none"
             hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}?encounter_id={{ encounter.id }}">
           <div class="flex justify-between items-center">
             <div class="flex-1">
