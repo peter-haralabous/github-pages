@@ -1,5 +1,6 @@
 import '../css/project.css';
 import 'choices.js/public/assets/styles/choices.css';
+import './components/chat-form';
 import './components/command-palette';
 import './components/enum-formset';
 import './components/htmx-loading-bar';
