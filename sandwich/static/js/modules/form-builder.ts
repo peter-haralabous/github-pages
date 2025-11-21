@@ -134,46 +134,4 @@ document.addEventListener('DOMContentLoaded', () => {
       subtree: true,
     });
   }
-
-  // Create an action that opens a file picker and hooks into the above handler
-  const fileToSurveyAction = new SurveyCore.Action({
-    id: 'file-to-survey',
-    title: 'Upload File',
-    iconName: 'icon-folder-24x24',
-    visible: new SurveyCore.ComputedUpdater(
-      () => creator.activeTab === 'designer',
-    ),
-    action: () => openUploadChooser(),
-  });
-
-  // Helper to open the hidden form's file chooser and submit on change.
-  function openUploadChooser() {
-    const form = document.getElementById(
-      'file-upload-form',
-    ) as HTMLFormElement | null;
-    if (!form) {
-      creator.notify('File upload form not found on the page.', 'error');
-      return;
-    }
-
-    const fileInput = form.querySelector(
-      'input[type=file]',
-    ) as HTMLInputElement | null;
-    if (!fileInput) {
-      creator.notify('File upload input not found on the page.', 'error');
-      return;
-    }
-
-    fileInput.addEventListener('change', () => form.requestSubmit());
-
-    fileInput.click();
-  }
-
-  // Add the action to the creator toolbars if available
-  if (creator.toolbar && Array.isArray(creator.toolbar.actions)) {
-    creator.toolbar.actions.push(fileToSurveyAction);
-  }
-  if (creator.footerToolbar && Array.isArray(creator.footerToolbar.actions)) {
-    creator.footerToolbar.actions.push(fileToSurveyAction);
-  }
 });
