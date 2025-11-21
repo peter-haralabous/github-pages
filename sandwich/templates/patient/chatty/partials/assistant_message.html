@@ -1,6 +1,11 @@
+{% load lucide %}
+
 {% if oob %}<div hx-swap-oob="beforeend:#chat-messages">{% endif %}
   <div {% if message_id %}id="message-{{ message_id }}"{% endif %}
        class="{% block message_classes %}assistant-message chat chat-start{% endblock message_classes %}">
+    <div class="chat-image avatar">
+      <div class="w-10 rounded-full bg-primary/20 flex items-center justify-center">{% lucide "bot" %}</div>
+    </div>
     {# assistant messages are markdown; prose applies default styling to lists & headings #}
     <div class="assistant-message-content chat-bubble prose bg-primary/20">
       {% block message_content %}
@@ -15,6 +20,9 @@
         {#          </div>#}
         {#        {% endif %}#}
       {% endblock message_content %}
+    </div>
+    <div class="chat-footer">
+      {% if timestamp %}<time class="text-xs opacity-50 py-1">{{ timestamp }}</time>{% endif %}
     </div>
   </div>
   {% if oob %}

@@ -87,21 +87,22 @@ def initial_chat_messages(config: "RunnableConfig", patient: Patient) -> list[Sa
         },
     )
     state = set_state(config, values={"messages": messages})
-    return list(html_message_list(state.values.get("messages", [])))
+    return list(html_message_list(state.values.get("messages", []), patient=patient))
 
 
 def load_chat_messages(config: "RunnableConfig", patient: Patient) -> list[SafeString]:
     state: StateSnapshot = get_state(config)
     if existing_messages := state.values.get("messages"):
-        return list(html_message_list(existing_messages))
+        return list(html_message_list(existing_messages, patient=patient))
     return initial_chat_messages(config, patient=patient)
 
 
-def html_message_list(messages: Iterable[BaseMessage]) -> Generator[SafeString, Any, None]:
+def html_message_list(messages: Iterable[BaseMessage], patient: Patient) -> Generator[SafeString, Any, None]:
     for message in messages:
         timestamp = _timestamp_from_message(message)
         if isinstance(message, HumanMessage):
             yield user_message(
+                patient,
                 message.content,  # type: ignore[arg-type]
                 timestamp,
             )
@@ -116,8 +117,8 @@ def html_message_list(messages: Iterable[BaseMessage]) -> Generator[SafeString, 
                     )
 
 
-def user_message(content: str, timestamp: datetime.datetime | None) -> SafeString:
-    context = {"message": content, "timestamp": timestamp}
+def user_message(patient: Patient, content: str, timestamp: datetime.datetime | None) -> SafeString:
+    context = {"patient": patient, "message": content, "timestamp": timestamp}
     return render_to_string("patient/chatty/partials/user_message.html", context)
 
 
