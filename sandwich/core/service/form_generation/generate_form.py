@@ -80,8 +80,7 @@ def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text
         match doc_type:
             case DocType.PDF:
                 pdf_pages = _split_pdf_into_pages(doc_bytes)
-                for i in range(len(pdf_pages)):
-                    page = pdf_pages[i]
+                for i, page in enumerate(pdf_pages):
                     logger.info(
                         "Form generator processing PDF page.",
                         extra={"page_number": i + 1, "file_name": form.reference_file.name},

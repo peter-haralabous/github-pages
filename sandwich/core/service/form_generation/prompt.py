@@ -18,7 +18,7 @@ def form_from_pdf(description: str | None = None) -> str:
     do your best to determine reasonable page splits.
 
     If the current page has content that has spilled over from the previous
-    page, use the append_elements_to_existing_page tool.
+    page, use the `append_elements_to_existing_page` tool.
 
     Preserving it's questions and wording, convert it to a SurveyJS form.
 
