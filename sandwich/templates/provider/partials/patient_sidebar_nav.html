@@ -24,19 +24,31 @@
         </button>
       </li>
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
           <span class="text-base font-medium">Forms</span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
           <span class="text-base font-medium">Summaries</span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
           <span class="text-base font-medium">Documents</span>
           {% lucide "chevron-right" class="size-5" %}
         </button>

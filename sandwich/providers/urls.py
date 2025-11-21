@@ -37,16 +37,22 @@ from .views.patient import patient_add_task
 from .views.patient import patient_archive
 from .views.patient import patient_cancel_task
 from .views.patient import patient_details
+from .views.patient import patient_documents_list_content
 from .views.patient import patient_edit
 from .views.patient import patient_encounter_content
 from .views.patient import patient_encounters_list_content
+from .views.patient import patient_forms_list_content
 from .views.patient import patient_list
 from .views.patient import patient_nav_encounters
 from .views.patient import patient_nav_overview
 from .views.patient import patient_overview
 from .views.patient import patient_resend_invite
+from .views.patient import patient_sidebar_documents
 from .views.patient import patient_sidebar_encounters
+from .views.patient import patient_sidebar_forms
 from .views.patient import patient_sidebar_main
+from .views.patient import patient_sidebar_summaries
+from .views.patient import patient_summaries_list_content
 from .views.search import search
 from .views.task import task
 from .views.templates import form_builder
@@ -142,6 +148,21 @@ urlpatterns = [
         name="patient_sidebar_encounters",
     ),
     path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/sidebar/forms",
+        patient_sidebar_forms,
+        name="patient_sidebar_forms",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/sidebar/summaries",
+        patient_sidebar_summaries,
+        name="patient_sidebar_summaries",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/sidebar/documents",
+        patient_sidebar_documents,
+        name="patient_sidebar_documents",
+    ),
+    path(
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/nav/overview",
         patient_nav_overview,
         name="patient_nav_overview",
@@ -155,6 +176,21 @@ urlpatterns = [
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/encounters/list",
         patient_encounters_list_content,
         name="patient_encounters_list_content",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/forms/list",
+        patient_forms_list_content,
+        name="patient_forms_list_content",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/summaries/list",
+        patient_summaries_list_content,
+        name="patient_summaries_list_content",
+    ),
+    path(
+        "organization/<uuid:organization_id>/patient/<uuid:patient_id>/documents/list",
+        patient_documents_list_content,
+        name="patient_documents_list_content",
     ),
     path(
         "organization/<uuid:organization_id>/patient/<uuid:patient_id>/encounter/<uuid:encounter_id>/content",

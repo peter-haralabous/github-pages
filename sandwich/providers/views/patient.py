@@ -147,6 +147,10 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
     past_encounters = patient.encounter_set.exclude(status=EncounterStatus.IN_PROGRESS)
     all_encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
+    forms = Task.objects.filter(patient=patient).order_by("-created_at")
+    documents = patient.document_set.all().order_by("-created_at")
+    # Placeholder - summaries don't exist as a model yet
+    summaries: list = []
 
     logger.debug(
         "Patient details loaded",
@@ -173,6 +177,9 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "encounters": all_encounters,
         "tasks": tasks,
         "pending_invitation": pending_invitation,
+        "forms": forms,
+        "summaries": summaries,
+        "documents": documents,
         "show_current_encounter": (from_encounter_list or encounter_id) and current_encounter,
         "selected_encounter_id": str(current_encounter.id) if current_encounter else None,
     }
@@ -718,12 +725,19 @@ def patient_overview(request: AuthenticatedHttpRequest, organization: Organizati
     """HTMX endpoint to load the patient overview content (content only)."""
     all_encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
+    forms = Task.objects.filter(patient=patient).order_by("-created_at")
+    documents = patient.document_set.all().order_by("-created_at")
+    # Placeholder - summaries don't exist as a model yet
+    summaries: list = []
 
     context = {
         "patient": patient,
         "organization": organization,
         "encounters": all_encounters,
         "pending_invitation": pending_invitation,
+        "forms": forms,
+        "summaries": summaries,
+        "documents": documents,
     }
     return render(request, "provider/partials/patient_overview.html", context)
 
@@ -738,6 +752,10 @@ def patient_nav_overview(
     """HTMX endpoint to navigate to overview - returns sidebar + content."""
     all_encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
+    forms = Task.objects.filter(patient=patient).order_by("-created_at")
+    documents = patient.document_set.all().order_by("-created_at")
+    # Placeholder - summaries don't exist as a model yet
+    summaries: list = []
 
     # Return both sidebar and content using hx-swap-oob
     sidebar_html = render(
@@ -754,6 +772,9 @@ def patient_nav_overview(
             "organization": organization,
             "encounters": all_encounters,
             "pending_invitation": pending_invitation,
+            "forms": forms,
+            "summaries": summaries,
+            "documents": documents,
         },
     ).content.decode()
 
@@ -943,4 +964,114 @@ def patient_encounters_list_content(
         request,
         "provider/partials/patient_encounters_list_content.html",
         {"patient": patient, "organization": organization, "encounters": all_encounters},
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_sidebar_forms(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load the forms sidebar."""
+    forms = Task.objects.filter(patient=patient).order_by("-created_at")
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "forms": forms,
+        "selected_form_id": None,
+    }
+    return render(request, "provider/partials/patient_sidebar_forms.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_sidebar_summaries(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load the summaries sidebar."""
+    # Placeholder - summaries don't exist as a model yet
+    summaries: list = []
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "summaries": summaries,
+        "selected_summary_id": None,
+    }
+    return render(request, "provider/partials/patient_sidebar_summaries.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_sidebar_documents(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load the documents sidebar."""
+    documents = patient.document_set.all().order_by("-created_at")
+
+    context = {
+        "patient": patient,
+        "organization": organization,
+        "documents": documents,
+        "selected_document_id": None,
+    }
+    return render(request, "provider/partials/patient_sidebar_documents.html", context)
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_forms_list_content(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load forms list in content area only (from 'View all' in overview)."""
+    forms = Task.objects.filter(patient=patient).order_by("-created_at")
+
+    return render(
+        request,
+        "provider/partials/patient_forms_list_content.html",
+        {"patient": patient, "organization": organization, "forms": forms},
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_summaries_list_content(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load summaries list in content area only (from 'View all' in overview)."""
+    # Placeholder - summaries don't exist as a model yet
+    summaries: list = []
+
+    return render(
+        request,
+        "provider/partials/patient_summaries_list_content.html",
+        {"patient": patient, "organization": organization, "summaries": summaries},
+    )
+
+
+@login_required
+@authorize_objects(
+    [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
+)
+def patient_documents_list_content(
+    request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
+) -> HttpResponse:
+    """HTMX endpoint to load documents list in content area only (from 'View all' in overview)."""
+    documents = patient.document_set.all().order_by("-created_at")
+
+    return render(
+        request,
+        "provider/partials/patient_documents_list_content.html",
+        {"patient": patient, "organization": organization, "documents": documents},
     )
