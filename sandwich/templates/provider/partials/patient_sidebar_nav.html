@@ -4,13 +4,13 @@
   <nav>
     <ul class="flex flex-col gap-1">
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="w-full flex items-center justify-between p-3 rounded-lg {% if viewing_overview %}bg-blue-100 text-gray-900 font-semibold{% else %}hover:bg-gray-100 text-gray-700{% endif %}"
                 hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="closest div"
                 hx-select="#patient-sidebar, #patient-content"
                 hx-swap="multi:#patient-sidebar,#patient-content"
-                hx-push-url="false">
-          <span class="text-base font-medium">Overview</span>
+                hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">
+          <span class="text-base {% if viewing_overview %}{% else %}font-medium{% endif %}">Overview</span>
         </button>
       </li>
       <li>

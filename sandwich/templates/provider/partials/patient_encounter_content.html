@@ -7,10 +7,11 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           {# Back button - goes to list if from_list, otherwise to overview #}
-          <button hx-get="{% if from_list %}{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}{% else %}{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}{% endif %}"
-                  hx-target="#patient-content"
+          <button hx-get="{% if from_list %}{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}{% else %}{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}{% endif %}"
+                  hx-target="{% if from_list %}#patient-content{% else %}closest div{% endif %}"
                   hx-swap="innerHTML"
-                  hx-push-url="false"
+                  {% if not from_list %}hx-select="#patient-sidebar, #patient-content" hx-swap="multi:#patient-sidebar,#patient-content"{% endif %}
+                  hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
                   class="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100">
             {% lucide "arrow-left" class="size-5 text-gray-600" %}
           </button>
@@ -119,4 +120,7 @@
         </div>
       </section>
     </div>
-    {% if not in_slideout %}</div>{% endif %}
+    {% if not in_slideout %}
+    </div>
+  </div>
+{% endif %}

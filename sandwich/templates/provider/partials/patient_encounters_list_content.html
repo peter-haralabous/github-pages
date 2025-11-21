@@ -5,10 +5,11 @@
   <div class="p-4 border-b border-gray-200">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <button hx-get="{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}"
-                hx-target="#patient-content"
-                hx-swap="innerHTML"
-                hx-push-url="false"
+        <button hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="closest div"
+                hx-select="#patient-sidebar, #patient-content"
+                hx-swap="multi:#patient-sidebar,#patient-content"
+                hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
                 class="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100">
           {% lucide "arrow-left" class="size-5 text-gray-600" %}
         </button>
@@ -27,7 +28,7 @@
           hx-get="{% url 'providers:patient_encounter_content' organization_id=organization.id patient_id=patient.id encounter_id=encounter.id %}?from_list=true"
           hx-target="#patient-content"
           hx-swap="innerHTML"
-          hx-push-url="false">
+          hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}?encounter_id={{ encounter.id }}">
         <div class="flex justify-between items-center">
           <div class="flex-1">
             <p class="font-semibold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>

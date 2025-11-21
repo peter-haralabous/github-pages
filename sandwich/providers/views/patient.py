@@ -757,10 +757,12 @@ def patient_nav_overview(
     ).content.decode()
 
     # Use OOB swap to update both targets - preserve the wrapper classes
-    return HttpResponse(
-        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
-        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    sidebar_wrapper = (
+        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start '
+        f'md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
     )
+    content_wrapper = f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    return HttpResponse(sidebar_wrapper + content_wrapper)
 
 
 @login_required
@@ -814,6 +816,32 @@ def patient_encounter_content(
     from_list = request.GET.get("from_list") == "true"
     in_slideout = request.GET.get("slideout") == "true"
 
+    # If in slideout mode, just return the encounter content
+    if in_slideout:
+        # Get custom attributes for encounters in this organization
+        content_type = ContentType.objects.get_for_model(Encounter)
+        custom_attributes = list(
+            CustomAttribute.objects.filter(
+                organization=organization,
+                content_type=content_type,
+            ).order_by("name")
+        )
+
+        # Format attributes with their values for display
+        formatted_attributes = _format_attributes(encounter, custom_attributes)
+
+        context = {
+            "patient": patient,
+            "organization": organization,
+            "encounter": encounter,
+            "tasks": tasks,
+            "formatted_attributes": formatted_attributes,
+            "from_list": from_list,
+            "in_slideout": in_slideout,
+        }
+        return render(request, "provider/partials/patient_encounter_content.html", context)
+
+    # For inline view, also update sidebar to show viewing_overview=False
     # Get custom attributes for encounters in this organization
     content_type = ContentType.objects.get_for_model(Encounter)
     custom_attributes = list(
@@ -826,7 +854,14 @@ def patient_encounter_content(
     # Format attributes with their values for display
     formatted_attributes = _format_attributes(encounter, custom_attributes)
 
-    context = {
+    # Return sidebar with viewing_overview=False
+    sidebar_html = render(
+        request,
+        "provider/partials/patient_sidebar_nav.html",
+        {"patient": patient, "organization": organization, "viewing_overview": False},
+    ).content.decode()
+
+    content_context = {
         "patient": patient,
         "organization": organization,
         "encounter": encounter,
@@ -835,7 +870,18 @@ def patient_encounter_content(
         "from_list": from_list,
         "in_slideout": in_slideout,
     }
-    return render(request, "provider/partials/patient_encounter_content.html", context)
+    content_html = render(
+        request, "provider/partials/patient_encounter_content.html", content_context
+    ).content.decode()
+
+    # Use OOB swap to update both sidebar and content
+    combined_html = (
+        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start '
+        f'md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
+        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    )
+
+    return HttpResponse(combined_html)
 
 
 @login_required
@@ -867,10 +913,12 @@ def patient_nav_encounters(
     ).content.decode()
 
     # Use OOB swap to update both targets - preserve the wrapper classes
-    return HttpResponse(
-        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
-        f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    sidebar_wrapper = (
+        f'<aside id="patient-sidebar" class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start '
+        f'md:max-h-[calc(100vh-8rem)] md:overflow-y-auto" hx-swap-oob="true">{sidebar_html}</aside>'
     )
+    content_wrapper = f'<main id="patient-content" class="flex-1 min-w-0" hx-swap-oob="true">{content_html}</main>'
+    return HttpResponse(sidebar_wrapper + content_wrapper)
 
 
 @login_required
