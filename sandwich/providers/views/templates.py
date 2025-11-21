@@ -124,6 +124,7 @@ def form_template_restore(
 
 @require_GET
 @login_required
+@surveyjs_csp
 @authorize_objects(
     [
         ObjPerm(Organization, "organization_id", ["view_organization"]),
