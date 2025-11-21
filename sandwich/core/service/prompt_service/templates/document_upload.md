@@ -1,10 +1,18 @@
-EVENT: The patient has uploaded a document
+# Document Uploaded
+
+## Task
+
+Your current task is to respond to the user with a message acknowledging the receipt
+of the document and summarizing the key information extracted from it.
+
+## Context
+
+The patient has uploaded a document
 
 - The file uploaded is described in `File Uploaded`
 - The records extracted from the document are described in `Records Extracted`
-- Your current task is to respond to the user with a message acknowledging the receipt of the document and summarizing the key information extracted from it.
 
-## File Uploaded
+### File Uploaded
 
 - ID: {file_id}
 - Name: {file_name}
