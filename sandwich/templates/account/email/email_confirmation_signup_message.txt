@@ -1,18 +1,12 @@
-{% extends "email/base" %}
+{% extends "account/email/base_message.txt" %}
 {% load account %}
+{% load i18n %}
 
-{% block text %}
-You're receiving this email because user {{ user }} has given your email address to register an account on <a href="{{ current_site.domain }}">{{ current_site.name }}</a>
+{% block content %}{% autoescape off %}{% user_display user as user_display %}{% blocktranslate with site_name=current_site.name site_domain=current_site.domain %}You're receiving this email because user {{ user_display }} has given your email address to register an account on {{ site_domain }}.{% endblocktranslate %}
 
-Please click on the link below to confirm your email address and complete the registration of your account
+{% if code %}{% blocktranslate %}Your email verification code is listed below. Please enter it in your open browser window.{% endblocktranslate %}
 
-Alternatively, visit:
-
-{{ activate_url }}
+{{ code }}{% else %}{% blocktranslate %}To confirm this is correct, go to {{ activate_url }}{% endblocktranslate %}{% endif %}
 
 If you did not make this request, you can ignore this email.
-
-{% endblock text %}
-
-{% block cta_link %}{{ activate_url }}{% endblock cta_link %}
-{% block cta_text %}Confirm{% endblock cta_text %}
+{% endautoescape %}{% endblock content %}

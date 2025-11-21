@@ -1,7 +1,2 @@
-{% extends "email/base" %}
-
-{% block text %}
-{% block content %}
-{% endblock content %}
-{% endblock text %}
-{% block cta %}{% endblock cta %}
+{% load i18n %}{% autoescape off %}{% block content %}{% endblock content %}
+{% endautoescape %}

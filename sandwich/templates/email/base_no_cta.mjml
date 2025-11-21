@@ -1,0 +1,40 @@
+<mjml>
+    <mj-head>
+        <mj-title>{{ subject }}</mj-title>
+        <mj-attributes>
+            <mj-all font-family="Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"></mj-text>
+            <mj-section padding="0px"></mj-section>
+        </mj-attributes>
+    </mj-head>
+    <mj-body background-color="#F2F2F2">
+        <mj-section padding="20px 0 0 0" />
+        <mj-section padding="20px 20px 0 20px" background-color="#FFFFFF">
+            <mj-column>
+                <mj-text align="left" font-size="20px" font-weight="500" color="#003A82">Thrive Health</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section padding="0 20px 0 20px" background-color="#FFFFFF">
+            <mj-column>
+                <mj-text align="center" font-weight="300" padding="30px 40px 30px 40px" font-size="32px" line-height="40px" color="#003A82">{% block title %}{% endblock %}</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#FFFFFF">
+            <mj-column>
+                <mj-text align="center" padding="0 40px 50px 40px" font-weight="300">{% block text %}{% endblock %}</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section padding="0 0 0 0" background-color="#FFFFFF">
+            <mj-column>
+                <mj-image src="https://static.mailjet.com/mjml-website/templates/card-bottom.png" alt="bottom border" align="center" border="none" padding="0px"></mj-image>
+            </mj-column>
+        </mj-section>
+        <mj-section padding="0 0 20px 0">
+            <mj-column>
+                <mj-text align="center" color="#9B9B9B" font-size="11px">
+                    <a href="https://www.thrive.health" style="color: #9B9B9B">Thrive Health</a> &middot; 250 25th Street West Vancouver BC V7V 4J1 Canada
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 import typing
-from pathlib import Path
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from django.apps import apps
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.template import TemplateDoesNotExist
+from django.template.loader import render_to_string
 
-from sandwich.core.service.template_service import LoaderDefinitions
-from sandwich.core.service.template_service import render
+from sandwich.core.service.markdown_service import markdown_to_html
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialLogin
@@ -19,20 +18,12 @@ if typing.TYPE_CHECKING:
     from sandwich.users.models import User
 
 
-def allauth_loaders() -> LoaderDefinitions:
-    allauth_templates = Path(apps.get_app_config("allauth").path) / "templates"
-    return [("django.template.loaders.filesystem.Loader", (allauth_templates,))]
-
-
-class DefaultAccountAdapterProtocol(typing.Protocol):
-    def get_from_email(self) -> str: ...
-
-
-class TemplatedMailMixin:
-    """Mixin to add Template email rendering to allauth adapters."""
+class AccountAdapter(DefaultAccountAdapter):
+    def is_open_for_signup(self, request: HttpRequest) -> bool:
+        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
     def render_mail(
-        self: DefaultAccountAdapterProtocol,
+        self,
         template_prefix: str,
         email: str,
         context: dict[str, typing.Any],
@@ -42,39 +33,44 @@ class TemplatedMailMixin:
         Renders an email with the given template prefix and context.
 
         The templates used are "{template_prefix}_subject.txt" and "{template_prefix}_message.txt".
-
-        The templates are looked up using two template loaders:
-        - The database loader, looking in the Template model for templates with the given slug
-        - The filesystem loader, looking in the "templates" directory of allauth
         """
 
+        # v -- this is copied directly from the superclass implementation
+        to = [email] if isinstance(email, str) else email
+        subject: str = render_to_string(f"{template_prefix}_subject.txt", context)
+        subject = " ".join(subject.splitlines()).strip()
+        subject = self.format_email_subject(subject)
+        from_email = self.get_from_email()
+        # ^ -- this is copied directly from the superclass implementation
+
         context.setdefault("app_url", settings.APP_URL)
+        try:
+            # if we have a HTML template, use it
+            body = render_to_string(f"{template_prefix}_message.html", context=context)
+        except TemplateDoesNotExist:
+            # but if it doesn't exist, render the allauth default text and wrap it in an HTML envelope
+            text_body = render_to_string(f"{template_prefix}_message.txt", context=context)
+            body = render_to_string(
+                "email/wrap_text_email.html",
+                context={
+                    **context,
+                    "subject": subject,
+                    "body": markdown_to_html(text_body, options={"linkify": "true"}),
+                },
+            )
+
         msg = EmailMessage(
-            subject=render(
-                f"{template_prefix}_subject.txt", context=context, loaders=allauth_loaders(), as_markdown=False
-            ).strip(),
-            body=render(f"{template_prefix}_message.txt", context=context, loaders=allauth_loaders()),
-            from_email=self.get_from_email(),
-            to=[email],
+            subject=subject,
+            body=body,
+            from_email=from_email,
+            to=to,
             headers=headers or {},
         )
         msg.content_subtype = "html"
         return msg
 
 
-class AccountAdapter(TemplatedMailMixin, DefaultAccountAdapter):
-    def is_open_for_signup(self, request: HttpRequest) -> bool:
-        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
-
-
-class SocialAccountAdapter(TemplatedMailMixin, DefaultSocialAccountAdapter):
-    def is_open_for_signup(
-        self,
-        request: HttpRequest,
-        sociallogin: SocialLogin,
-    ) -> bool:
-        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
-
+class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def populate_user(
         self,
         request: HttpRequest,
