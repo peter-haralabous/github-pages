@@ -1,12 +1,15 @@
 import base64
 import logging
 from enum import StrEnum
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
 import pydantic
 from pydantic.fields import Field
+from pypdf import PdfReader
+from pypdf import PdfWriter
 
 from sandwich.core.models.form import Form
 from sandwich.core.service.agent_service.config import configure
@@ -38,28 +41,33 @@ class DocType(StrEnum):
     CSV = "csv"
 
 
-def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text_prompt: str) -> None:
-    """
-    Generate a form schema from a file.
-    """
-    assert form.reference_file, "Form does not have a reference file attached."
+# Adapted from healthbox
+def _split_pdf_into_pages(pdf_content: bytes) -> list[bytes]:
+    """Split PDF into individual page PDFs and return as bytes."""
 
-    doc_bytes = form.reference_file.read()
-    thread_id = f"{form.id!s}_{uuid4()}"
+    try:
+        logger.info("Splitting PDF into individual pages")
+        pdf_reader = PdfReader(BytesIO(pdf_content))
+        page_pdfs = []
 
-    match doc_type:
-        case DocType.PDF:
-            document = {
-                "type": "file",
-                "base64": base64.b64encode(doc_bytes).decode(),
-                "mime_type": "application/pdf",
-                "name": "form_reference_file",
-            }
-        case DocType.CSV:
-            document = {
-                "text": f"CSV data: \n{doc_bytes.decode()}",
-            }
+        for page_num in range(len(pdf_reader.pages)):
+            # Create a new PDF writer for this page
+            pdf_writer = PdfWriter()
+            pdf_writer.add_page(pdf_reader.pages[page_num])
 
+            # Write the single page PDF to bytes
+            page_buf = BytesIO()
+            pdf_writer.write(page_buf)
+            page_buf.seek(0)
+            page_pdfs.append(page_buf.read())
+
+        return page_pdfs  # noqa: TRY300
+    except Exception:
+        logger.exception("Error splitting PDF into pages")
+        raise
+
+
+def _invoke_form_gen_agent(form: Form, document: dict, text_prompt: str, thread_id: str) -> None:
     with form_gen_agent(form) as agent:
         agent.invoke(
             input={
@@ -75,6 +83,39 @@ def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text
             },
             config=configure(thread_id),
         )
+
+
+def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text_prompt: str) -> None:
+    """
+    Generate a form schema from a file.
+    """
+    assert form.reference_file, "Form does not have a reference file attached."
+
+    doc_bytes = form.reference_file.read()
+    thread_id = f"{form.id!s}_{uuid4()}"
+
+    match doc_type:
+        case DocType.PDF:
+            pdf_pages = _split_pdf_into_pages(doc_bytes)
+            for i in range(len(pdf_pages)):
+                page = pdf_pages[i]
+                logger.info(
+                    "Form generator processing PDF page.",
+                    extra={"page_number": i + 1, "file_name": form.reference_file.name},
+                )
+                document = {
+                    "type": "file",
+                    "base64": base64.b64encode(page).decode(),
+                    "mime_type": "application/pdf",
+                    "name": "form_reference_file",
+                }
+                _invoke_form_gen_agent(form, document, text_prompt, thread_id)
+
+        case DocType.CSV:
+            document = {
+                "text": f"CSV data: \n{doc_bytes.decode()}",
+            }
+            _invoke_form_gen_agent(form, document, text_prompt, thread_id)
 
 
 @define_task
