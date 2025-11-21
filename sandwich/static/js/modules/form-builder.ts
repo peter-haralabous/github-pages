@@ -36,10 +36,6 @@ function saveSurveyJson(
     headers['X-CSRFToken'] = csrfToken;
   }
 
-  const successRedirectUrl = document
-    .getElementById('form-builder-container')
-    ?.getAttribute('data-success-url')!;
-
   fetch(url, {
     method: 'POST',
     headers,
@@ -51,7 +47,6 @@ function saveSurveyJson(
     .then((response) => {
       if (response.ok) {
         callback(saveNo, true);
-        window.location.replace(successRedirectUrl);
       } else {
         throw response.json();
       }
