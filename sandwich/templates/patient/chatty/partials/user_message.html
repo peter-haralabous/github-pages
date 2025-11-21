@@ -1,14 +1,8 @@
 {% if oob %}<div hx-swap-oob="beforeend:#chat-messages">{% endif %}
   <div class="user-message chat chat-end">
     <div class="chat-image avatar">
-      <div class="w-10 rounded-full">
-        <div tabindex="0"
-             role="button"
-             class="btn btn-ghost btn-circle border-none avatar avatar-placeholder">
-          <div class="bg-primary text-primary-content w-10 rounded-full">
-            <span class="text-sm">{{ patient.initials }}</span>
-          </div>
-        </div>
+      <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+        <span class="text-sm">{{ patient.initials }}</span>
       </div>
     </div>
     {# user messages are plaintext; whitespace-pre-wrap preserves newlines #}
