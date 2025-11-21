@@ -7,6 +7,7 @@ from django.test import Client
 from django.urls import reverse
 
 from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.factories.summary import SummaryFactory
 from sandwich.core.factories.summary_template import SummaryTemplateFactory
 from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import Encounter
@@ -16,6 +17,7 @@ from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.role import RoleName
+from sandwich.core.models.summary import SummaryStatus
 from sandwich.core.service.organization_service import assign_organization_role
 from sandwich.core.urls_test import UrlRegistration
 from sandwich.core.urls_test import get_all_urls
@@ -80,6 +82,8 @@ def _build_url_kwargs(url: UrlRegistration, test_objects: dict[str, Any]) -> dic
         kwargs["form_version_id"] = test_objects["form"].get_current_version().pgh_id
     if ":template_id>" in url.pattern:
         kwargs["template_id"] = test_objects["template"].pk
+    if ":summary_id>" in url.pattern:
+        kwargs["summary_id"] = test_objects["summary"].pk
     if url.name in {
         "list_preference_settings",
         "organization_preference_settings_detail",
@@ -132,6 +136,11 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
     # Need a summary template for the summary template routes
     template = SummaryTemplateFactory.create(organization=organization, form=form)
 
+    # Need a summary for the summary detail route
+    summary = SummaryFactory.create(
+        patient=patient, organization=organization, encounter=encounter, status=SummaryStatus.SUCCEEDED
+    )
+
     test_objects = {
         "encounter": encounter,
         "organization": organization,
@@ -140,6 +149,7 @@ def test_provider_http_get_urls_return_status_200(db, user, organization, url) -
         "attribute": attribute,
         "form": form,
         "template": template,
+        "summary": summary,
     }
     kwargs = _build_url_kwargs(url, test_objects)
 

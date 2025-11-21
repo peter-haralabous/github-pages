@@ -11,13 +11,16 @@ from sandwich.core.factories.patient import PatientFactory
 from sandwich.core.factories.summary import SummaryFactory
 from sandwich.core.factories.summary_template import SummaryTemplateFactory
 from sandwich.core.factories.task import TaskFactory
+from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.form_submission import FormSubmission
 from sandwich.core.models.form_submission import FormSubmissionStatus
+from sandwich.core.models.patient import Patient
 from sandwich.core.models.summary import Summary
 from sandwich.core.models.summary import SummaryStatus
 from sandwich.core.service.summary_service import generate_summary_task
 from sandwich.core.service.summary_service import render_summary_template
 from sandwich.core.service.summary_service import trigger_summary_generation
+from sandwich.users.models import User
 
 
 @pytest.fixture
@@ -268,3 +271,56 @@ def test_generate_summary_task_nonexistent_summary(mock_job_context):
     fake_id = str(uuid.uuid4())
     generate_summary_task(mock_job_context, summary_id=fake_id)
     assert not Summary.objects.filter(id=fake_id).exists()
+
+
+@pytest.mark.django_db
+def test_assign_default_summary_perms_for_providers(
+    encounter: Encounter,
+    patient: Patient,
+    provider: User,
+) -> None:
+    assert patient.organization is not None
+    template = SummaryTemplateFactory.create(organization=patient.organization)
+    submission = FormSubmission.objects.create(
+        patient=patient,
+        status=FormSubmissionStatus.COMPLETED,
+        data={},
+    )
+    summary = Summary.objects.create(
+        patient=patient,
+        organization=patient.organization,
+        encounter=encounter,
+        template=template,
+        submission=submission,
+        title="Test Summary",
+        body="",
+        status=SummaryStatus.PENDING,
+    )
+
+    assert provider.has_perm("view_summary", summary)
+
+
+@pytest.mark.django_db
+def test_assign_default_summary_perms_for_patient_user(
+    patient: Patient,
+) -> None:
+    assert patient.organization is not None
+    template = SummaryTemplateFactory.create(organization=patient.organization)
+    submission = FormSubmission.objects.create(
+        patient=patient,
+        status=FormSubmissionStatus.COMPLETED,
+        data={},
+    )
+    summary = Summary.objects.create(
+        patient=patient,
+        organization=patient.organization,
+        encounter=None,
+        template=template,
+        submission=submission,
+        title="Test Summary",
+        body="",
+        status=SummaryStatus.PENDING,
+    )
+
+    assert patient.user is not None
+    assert patient.user.has_perm("view_summary", summary)

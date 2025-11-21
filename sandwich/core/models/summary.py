@@ -17,6 +17,15 @@ class SummaryStatus(models.TextChoices):
     FAILED = "failed", _("Failed")
 
 
+class SummaryManager(models.Manager["Summary"]):
+    def create(self, **kwargs) -> "Summary":
+        from sandwich.core.service.summary_service import assign_default_summary_perms  # noqa: PLC0415
+
+        created = super().create(**kwargs)
+        assign_default_summary_perms(created)
+        return created
+
+
 class Summary(BaseModel):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, help_text="Patient this summary is about")
 
@@ -51,6 +60,8 @@ class Summary(BaseModel):
     status: models.Field[SummaryStatus, SummaryStatus] = EnumField(
         SummaryStatus, default=SummaryStatus.PENDING, help_text="Current generation status"
     )
+
+    objects = SummaryManager()
 
     class Meta:
         verbose_name_plural = "Summaries"

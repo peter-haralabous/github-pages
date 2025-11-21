@@ -5,7 +5,9 @@ from typing import TYPE_CHECKING
 
 from django.template import Context
 from django.template import Template
+from guardian.shortcuts import assign_perm
 
+from sandwich.core.models.role import RoleName
 from sandwich.core.models.summary import Summary
 from sandwich.core.models.summary import SummaryStatus
 from sandwich.core.models.summary_template import SummaryTemplate
@@ -17,6 +19,47 @@ if TYPE_CHECKING:
     from sandwich.core.models.form_submission import FormSubmission
 
 logger = logging.getLogger(__name__)
+
+
+def assign_default_summary_perms(summary: Summary) -> None:
+    """Assign default permissions for a summary to organization roles and patient user."""
+    if summary.organization:
+        for role_name in [RoleName.OWNER, RoleName.ADMIN, RoleName.STAFF]:
+            role = summary.organization.get_role(role_name)
+            assign_perm("view_summary", role.group, summary)
+        logger.info(
+            "Providers from org have been given summary permissions",
+            extra={
+                "organization_id": summary.organization.id,
+                "patient_id": summary.patient.id,
+                "summary_id": summary.id,
+            },
+        )
+    else:
+        logger.info(
+            "Summary has no organization for permissions",
+            extra={
+                "patient_id": summary.patient.id,
+                "summary_id": summary.id,
+            },
+        )
+    if summary.patient.user:
+        assign_perm("view_summary", summary.patient.user, summary)
+        logger.info(
+            "Patient has been given summary permissions",
+            extra={
+                "patient_id": summary.patient.id,
+                "summary_id": summary.id,
+            },
+        )
+    else:
+        logger.info(
+            "Patient has no associated user for summary permissions",
+            extra={
+                "patient_id": summary.patient.id,
+                "summary_id": summary.id,
+            },
+        )
 
 
 @define_task

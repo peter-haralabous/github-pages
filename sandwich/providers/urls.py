@@ -38,6 +38,7 @@ from .views.patient import patient_edit
 from .views.patient import patient_list
 from .views.patient import patient_resend_invite
 from .views.search import search
+from .views.summary import summary_detail
 from .views.summary_templates import summary_template_add
 from .views.summary_templates import summary_template_delete
 from .views.summary_templates import summary_template_edit
@@ -115,6 +116,12 @@ urlpatterns = [
         "organization/<uuid:organization_id>/templates/summary/<uuid:template_id>/delete",
         summary_template_delete,
         name="summary_template_delete",
+    ),
+    # Summary detail endpoint
+    path(
+        "organization/<uuid:organization_id>/summary/<uuid:summary_id>",
+        summary_detail,
+        name="summary_detail",
     ),
     path("organization/<uuid:organization_id>/encounters", encounter_list, name="encounter_list"),
     path(

@@ -15,7 +15,7 @@
               <div class="font-medium mb-1">{{ task.name }}</div>
               <div class="flex items-center gap-2 text-sm">
                 {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
-                <span class="text-base-content/60">• Created {{ task.created_at|date:DJANGO_DATE_FORMAT }}</span>
+                <span class="text-base-content/60">• Created {{ task.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
               </div>
             </div>
             {% lucide "chevron-right" class="size-5 text-base-content/60" %}
@@ -30,7 +30,7 @@
               <div class="font-medium mb-1">{{ document.name }}</div>
               <div class="flex items-center gap-2 text-sm text-base-content/60">
                 <span>{{ document.get_category_display }}</span>
-                <span>• {{ document.created_at|date:DJANGO_DATE_FORMAT }}</span>
+                <span>• {{ document.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
               </div>
             </div>
             {% lucide "chevron-right" class="size-5 text-base-content/60" %}

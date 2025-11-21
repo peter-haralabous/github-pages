@@ -134,6 +134,8 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
     encounters = patient.encounter_set.all().order_by("-created_at")
     pending_invitation = get_unaccepted_invitation(patient)
 
+    summaries = patient.summary_set.all().select_related("template", "encounter")
+
     logger.debug(
         "Patient details loaded",
         extra={
@@ -153,6 +155,7 @@ def patient_details(request: AuthenticatedHttpRequest, organization: Organizatio
         "past_encounters": past_encounters,
         "encounters": encounters,
         "pending_invitation": pending_invitation,
+        "summaries": summaries,
     }
     return render(request, "provider/patient_details.html", context)
 

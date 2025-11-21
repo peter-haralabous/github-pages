@@ -1,0 +1,39 @@
+{% extends "provider/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
+     href="{{ breadcrumb_url }}">
+    {% lucide "chevron-left" class="size-4" %}
+    {{ breadcrumb_text }}
+  </a>
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h1 class="mb-2">{{ summary.title }}</h1>
+        <div class="text-sm text-base-content/60 space-y-1">
+          <div>
+            <span class="font-medium">Patient:</span> {{ patient.last_name }}, {{ patient.first_name }}
+          </div>
+          {% if summary.template %}
+            <div>
+              <span class="font-medium">Template:</span> {{ summary.template.name }}
+            </div>
+          {% endif %}
+          {% if encounter %}
+            <div>
+              <span class="font-medium">Encounter:</span> {{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}
+            </div>
+          {% endif %}
+          <div>
+            <span class="font-medium">Generated:</span> {{ summary.created_at|date:DJANGO_DATE_TIME_FORMAT }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-box border border-base-200 bg-base-100 p-8">
+      <div class="prose max-w-none">{{ summary.body|safe }}</div>
+    </div>
+  </div>
+{% endblock content %}

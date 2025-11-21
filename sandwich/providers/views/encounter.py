@@ -50,9 +50,6 @@ from sandwich.providers.forms.inline_edit import InlineEditForm
 from sandwich.providers.forms.inline_edit import create_inline_edit_form
 from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_filters
 
-if TYPE_CHECKING:
-    from uuid import UUID
-
 logger = logging.getLogger(__name__)
 
 
@@ -74,6 +71,8 @@ def encounter_details(
 
     if not request.user.has_perm("view_invitation", pending_invitation):
         pending_invitation = None
+
+    summaries = encounter.summary_set.all().select_related("template", "patient")
 
     # Get custom attributes for encounters in this organization
     content_type = ContentType.objects.get_for_model(Encounter)
@@ -127,6 +126,7 @@ def encounter_details(
         "documents": documents,
         "pending_invitation": pending_invitation,
         "enriched_attributes": enriched_attributes,
+        "summaries": summaries,
     }
 
     if request.GET.get("slideout"):
