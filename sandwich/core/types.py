@@ -9,7 +9,10 @@ type HtmlStr = Annotated[str, "HTML formatted string"]
 type RePattern = Annotated[str, "A non-compiled regex pattern"]
 type UrlNamespace = Annotated[str, "A namespace for urls"]
 type UrlName = Annotated[str, "A name for a url"]
+type UuidStr = Annotated[str, "A string representation of a UUID"]
 type ViewName = Annotated[str, "[<UrlNamespace>:]<UrlName>"]
+
+type ModelLabel = Annotated[str, "Django model label in the form 'app_label.model_name'"]
 
 # Json; see https://www.json.org/json-en.html
 type JsonPrimitive = str | int | float | bool | None
