@@ -67,3 +67,38 @@ test('form-builder module renders real creator and updates on script change', as
     expect(creator.text).not.toContain('Your form is empty');
   });
 });
+
+test('shows error detail in notification when save fails', async () => {
+  // Setup DOM with required attributes
+  const container = document.getElementById('form-builder-container')!;
+  container.setAttribute('data-form-save-url', '/api/save-form');
+
+  // Mock fetch to return an error response
+  global.fetch = vi.fn().mockResolvedValue({
+    ok: false,
+    json: () => Promise.resolve({ detail: 'Custom error message' }),
+  });
+
+  // Import and initialize
+  await import('./form-builder');
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  // Wait for creator to be available
+  await vi.waitFor(() => expect((window as any).SurveyCreator).toBeTruthy());
+
+  const creator = (window as any).SurveyCreator;
+
+  // Mock the notify method to capture calls
+  const notifySpy = vi.fn();
+  creator.notify = notifySpy;
+
+  // Trigger save
+  const saveCallback = vi.fn();
+  creator.saveSurveyFunc(1, saveCallback);
+
+  // Wait for async error handling
+  await vi.waitFor(() => {
+    expect(notifySpy).toHaveBeenCalledWith('Custom error message', 'error');
+    expect(saveCallback).toHaveBeenCalledWith(1, false);
+  });
+});

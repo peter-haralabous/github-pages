@@ -53,11 +53,17 @@ function saveSurveyJson(
         callback(saveNo, true);
         window.location.replace(successRedirectUrl);
       } else {
-        callback(saveNo, false);
+        throw response.json();
       }
     })
     .catch((error) => {
-      console.error('Error saving survey JSON:', error);
+      error
+        .then((errorData: { detail: string }) => {
+          (window as any).SurveyCreator.notify(errorData.detail, 'error');
+        })
+        .catch(() => {
+          console.error('Error saving survey JSON:', error);
+        });
       callback(saveNo, false);
     });
 }
