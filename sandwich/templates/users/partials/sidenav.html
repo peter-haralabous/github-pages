@@ -34,7 +34,8 @@
             <ul class="menu menu-sm">
               <li>
                 <a href="{% url 'providers:custom_attribute_list' organization_id=organization.id %}"
-                   class="{% if 'custom_attribute_' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Custom Fields</a>
+                   class="{% if 'custom_attribute_' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Custom
+                Fields</a>
               </li>
               <li>
                 <a href="{% url 'providers:organization_list_preferences' organization_id=organization.id %}"
@@ -42,11 +43,13 @@
               </li>
               <li>
                 <a href="{% url "providers:form_templates_list" organization_id=organization.id %}"
-                   class="{% if 'form_template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Form Templates</a>
+                   class="{% if 'form_template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Form
+                Templates</a>
               </li>
               <li>
                 <a href="{% url 'providers:summary_template_list' organization_id=organization.id %}"
-                   class="{% if 'summary_template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Summary Templates</a>
+                   class="{% if 'summary_template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Summary
+                Templates</a>
               </li>
             </ul>
           </li>
@@ -55,38 +58,43 @@
     </li>
   {% endif %}
   <li>
-    <a href="{% url 'account_email' %}"
-       class="{% if request.resolver_match.url_name == 'account_email' %}menu-active{% endif %}">
-      {% lucide "mail" class="size-6" %}
-      <span>Email addresses</span>
-    </a>
-  </li>
-  <li>
-    <a href="{% url 'core:account_notifications' %}"
-       class="{% if request.resolver_match.url_name == 'account_notifications' %}menu-active{% endif %}">
-      {% lucide "bell-ring" class="size-6" %}
-      <span>Notifications</span>
-    </a>
-  </li>
-  <li>
-    <a href="{% url 'mfa_index' %}"
-       class="{% if request.resolver_match.url_name == 'mfa_index' %}menu-active{% endif %}">
-      {% lucide "shield-check" class="size-6" %}
-      <span>Multi-Factor Auth</span>
-    </a>
-  </li>
-  <li>
-    <a href="{% url "core:legal" %}"
-       class="{% if request.resolver_match.url_name == 'legal' %}menu-active{% endif %}">
-      {% lucide "archive" class="size-6" %}
-      <span>Legal</span>
-    </a>
-  </li>
-  <li>
-    <a href="{% url 'core:account_delete' %}"
-       class="{% if request.resolver_match.url_name == 'account_delete' %}menu-active{% endif %}">
-      {% lucide "user" class="size-6" %}
-      <span>Delete Account</span>
-    </a>
+    <h2 class="menu-title">Account</h2>
+    <ul class="space-y-2">
+      <li>
+        <a href="{% url 'account_email' %}"
+           class="{% if request.resolver_match.url_name == 'account_email' %}menu-active{% endif %}">
+          {% lucide "mail" class="size-6" %}
+          <span>Email addresses</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'core:account_notifications' %}"
+           class="{% if request.resolver_match.url_name == 'account_notifications' %}menu-active{% endif %}">
+          {% lucide "bell-ring" class="size-6" %}
+          <span>Notifications</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mfa_index' %}"
+           class="{% if request.resolver_match.url_name == 'mfa_index' %}menu-active{% endif %}">
+          {% lucide "shield-check" class="size-6" %}
+          <span>Multi-Factor Auth</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url "core:legal" %}"
+           class="{% if request.resolver_match.url_name == 'legal' %}menu-active{% endif %}">
+          {% lucide "archive" class="size-6" %}
+          <span>Legal</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'core:account_delete' %}"
+           class="{% if request.resolver_match.url_name == 'account_delete' %}menu-active{% endif %}">
+          {% lucide "user" class="size-6" %}
+          <span>Delete Account</span>
+        </a>
+      </li>
+    </ul>
   </li>
 {% endblock sidenav-items %}
