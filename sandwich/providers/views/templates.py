@@ -22,6 +22,7 @@ from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models import Form
 from sandwich.core.models import Organization
 from sandwich.core.service.form_generation.generate_form import generate_form_schema
+from sandwich.core.service.form_service import assign_default_form_permissions
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -30,6 +31,11 @@ logger = logging.getLogger(__name__)
 
 
 class UploadReferenceForm(forms.Form):
+    name = forms.CharField(
+        label="Form Name",
+        required=True,
+        widget=forms.TextInput(),
+    )
     file = forms.FileField(
         required=True,
         label="Upload File",
@@ -233,25 +239,29 @@ def form_file_upload(request: AuthenticatedHttpRequest, organization: Organizati
 
         if upload_reference_form.is_valid():
             messages.add_message(request, messages.SUCCESS, "Form upload successful, processing document.")
+            form_name = upload_reference_form.cleaned_data.get("name")
             reference_file = upload_reference_form.cleaned_data.get("file")
             assert isinstance(reference_file, InMemoryUploadedFile)
             assert reference_file.name, "Uploaded file has no name"
 
-            form_title = reference_file.name.split(".")[0]
-            form = Form.objects.create(
-                # TODO(MM): Title should be a field in the
-                # upload_reference_form. Let's not rely on AI to generate a
-                # title that should really be defined by the user. That also
-                # solves the problem of the title changing after AI generation
-                name=form_title,
+            form, created = Form.objects.get_or_create(
+                name=form_name,
                 organization=organization,
-                reference_file=reference_file,
+                defaults={"reference_file": reference_file, "schema": {"title": form_name}},
             )
-            generate_form_schema.defer(form_id=str(form.id))
+            if created:
+                assign_default_form_permissions(form)
+                generate_form_schema.defer(form_id=str(form.id))
 
-            res = HttpResponse(status=HTTPStatus.OK)
-            res["HX-Redirect"] = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
-            return res
+                res = HttpResponse(status=HTTPStatus.OK)
+                res["HX-Redirect"] = reverse(
+                    "providers:form_templates_list", kwargs={"organization_id": organization.id}
+                )
+                return res
+
+            # Form already exists
+            upload_reference_form.add_error("title", "A form with this title already exists.")
+
     else:
         upload_reference_form = UploadReferenceForm()
         form_post_url = reverse("providers:form_file_upload", kwargs={"organization_id": organization.id})
