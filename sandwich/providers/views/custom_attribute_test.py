@@ -17,7 +17,7 @@ from sandwich.users.models import User
 
 
 @pytest.mark.django_db
-def test_organization_edit_deny_access(user: User, organization: Organization) -> None:
+def test_attribute_edit_deny_access(user: User, organization: Organization) -> None:
     assign_organization_role(organization, RoleName.PATIENT, user)
 
     client = Client()
