@@ -86,8 +86,8 @@ def extract_facts_from_document_job(document_id: str, llm_name: str = ModelName.
 @define_task
 def extract_records_from_document_job(document_id: str, document_context: ProcessDocumentContext | None = None):
     from sandwich.core.service.chat_service.chat import ChatContext  # noqa: PLC0415
-    from sandwich.core.service.chat_service.event import FileUploadEvent
-    from sandwich.core.service.chat_service.event import receive_chat_event
+    from sandwich.core.service.chat_service.event import FileUploadEvent  # noqa: PLC0415
+    from sandwich.core.service.chat_service.event import receive_chat_event  # noqa: PLC0415
 
     document = Document.objects.get(id=document_id)
     patient = document.patient

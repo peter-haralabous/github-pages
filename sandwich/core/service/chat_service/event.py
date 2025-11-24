@@ -3,14 +3,13 @@ import dataclasses
 import datetime
 import uuid
 from enum import StrEnum
+from typing import TYPE_CHECKING
 from typing import Unpack
 
 from django.utils import timezone
 from langchain_core.messages import HumanMessage
-from langgraph._internal._typing import StateLike
 from pydantic import BaseModel
 
-from sandwich.core.service.agent_service.agent import AgentParameters
 from sandwich.core.service.chat_service.agents import chat_agent
 from sandwich.core.service.chat_service.chat import ChatContext
 from sandwich.core.service.chat_service.response import ChatResponse
@@ -19,6 +18,20 @@ from sandwich.core.service.chat_service.sse import send_assistant_thinking
 from sandwich.core.service.ingest.extract_records import RecordsResponse
 from sandwich.core.service.prompt_service.chat import document_upload_template
 from sandwich.core.service.prompt_service.chat import file_upload_context
+
+if TYPE_CHECKING:
+    from langgraph._internal._typing import StateLike
+
+    from sandwich.core.service.agent_service.agent import AgentParameters
+
+
+class AssistantResponseMixin(abc.ABC):
+    """Mixin for chat events that require an assistant response."""
+
+    needs_assistant_response = True
+
+    @abc.abstractmethod
+    def input_for_assistant_response(self) -> "StateLike": ...
 
 
 class ChatEventType(StrEnum):
@@ -41,26 +54,27 @@ class AssistantMessageEvent(ChatEvent):
 
 
 class IncomingChatEvent(ChatEvent, abc.ABC):
-    @abc.abstractmethod
-    def build_state(self) -> "StateLike":
-        """Build the agent state for this event."""
+    needs_assistant_response: bool = False
+
+    def input_for_assistant_response(self) -> "StateLike":
+        raise NotImplementedError("This event does not support assistant responses.")
 
 
-class FileUploadEvent(IncomingChatEvent):
+class FileUploadEvent(AssistantResponseMixin, IncomingChatEvent):
     type: ChatEventType = ChatEventType.FILE_UPLOADED
     document_id: str
     document_filename: str
     records: RecordsResponse
 
-    def build_state(self) -> "StateLike":
+    def input_for_assistant_response(self) -> "StateLike":
         return document_upload_template.invoke(file_upload_context(self))
 
 
-class UserMessageEvent(IncomingChatEvent):
+class UserMessageEvent(AssistantResponseMixin, IncomingChatEvent):
     type: ChatEventType = ChatEventType.USER_MESSAGE
     content: str
 
-    def build_state(self) -> "StateLike":
+    def input_for_assistant_response(self) -> "StateLike":
         return {  # type: ignore[return-value]
             "messages": [
                 HumanMessage(
@@ -78,17 +92,18 @@ def receive_chat_event(
     event: "IncomingChatEvent",
     **params: "Unpack[AgentParameters]",
 ) -> None:
-    # 1. Notify that the assistant is thinking
-    send_assistant_thinking(event)
+    if event.needs_assistant_response:
+        # 1. Notify that the assistant is thinking
+        send_assistant_thinking(event)
 
-    # 2. Process the event with the chat agent
-    with chat_agent(event.context.user, event.context.patient, **params) as agent:
-        response = agent.invoke(
-            agent=agent,
-            input=event.build_state(),
-            config=event.context.config(),
-        )
+        # 2. Process the event with the chat agent
+        with chat_agent(event.context.user, event.context.patient, **params) as agent:
+            response = agent.invoke(
+                agent=agent,
+                input=event.input_for_assistant_response(),
+                config=event.context.config(),
+            )
 
-    # 3. Send the assistant's message
-    message = AssistantMessageEvent(response=response["structured_response"], context=event.context)
-    send_assistant_message(message)
+        # 3. Send the assistant's message
+        message = AssistantMessageEvent(response=response["structured_response"], context=event.context)
+        send_assistant_message(message)
