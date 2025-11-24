@@ -46,8 +46,8 @@ def test_form_list_filters_allowed_forms(client: Client, provider: User, organiz
     url = reverse("providers:form_templates_list", kwargs={"organization_id": organization.id})
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
-    # The forms shown are only for the org the provider is in.
-    assert response.context["forms"].object_list == [form1, form2]
+    # The forms shown are only for the org the provider is in, and in descending order by created_at.
+    assert response.context["forms"].object_list == [form2, form1]
 
     # Remove form2's view_form permission from the provider group to demonstrate that it would not be shown.
     provider_group = organization.get_role(RoleName.STAFF).group

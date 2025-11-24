@@ -69,7 +69,7 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         extra={"user_id": request.user.id, "organization_id": organization.id},
     )
     organization_forms = (
-        Form.objects.filter(organization=organization).exclude(status=FormStatus.FAILED).order_by("name")
+        Form.objects.filter(organization=organization).exclude(status=FormStatus.FAILED).order_by("-created_at")
     )
     authorized_org_forms = get_objects_for_user(request.user, ["view_form"], organization_forms)
 
