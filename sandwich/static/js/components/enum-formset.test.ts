@@ -11,7 +11,7 @@ function createFormsetContainer(
   const { initialFormCount = 1, includeDeleteCheckbox = false } = options;
 
   const container = document.createElement('div');
-  container.id = 'data-enum-formset';
+  container.setAttribute('data-enum-formset', '');
 
   const totalFormsInput = document.createElement('input');
   totalFormsInput.type = 'hidden';
@@ -98,7 +98,7 @@ describe('CustomAttributeEnumFormset', () => {
 
     it('throws error when required elements are missing', () => {
       const container = document.createElement('div');
-      container.id = 'data-enum-formset';
+      container.setAttribute('data-enum-formset', '');
       document.body.appendChild(container);
 
       const consoleErrorSpy = vi

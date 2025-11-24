@@ -43,7 +43,7 @@ def test_edit_custom_attribute(live_server, owner_page: Page, organization: Orga
     name_field.click()
     name_field.type("Edit Test")
 
-    enum_form = owner_page.locator("#data-enum-formset")
+    enum_form = owner_page.locator("[data-enum-formset]")
     assert enum_form.is_visible()
 
     name_field = owner_page.locator("#id_enums-0-label")
@@ -96,7 +96,7 @@ def test_remove_custom_enum(live_server, owner_page: Page, organization: Organiz
     owner_page.goto(url)
     owner_page.wait_for_load_state("networkidle")
 
-    enum_form = owner_page.locator("#data-enum-formset")
+    enum_form = owner_page.locator("[data-enum-formset]")
     assert enum_form.is_visible()
 
     owner_page.locator("button.delete-option-btn").first.click()
@@ -135,7 +135,7 @@ def test_add_custom_enum(live_server, owner_page: Page, organization: Organizati
     owner_page.goto(url)
     owner_page.wait_for_load_state("networkidle")
 
-    enum_form = owner_page.locator("#data-enum-formset")
+    enum_form = owner_page.locator("[data-enum-formset]")
     assert enum_form.is_visible()
 
     owner_page.locator("#add-option-btn").click()
@@ -186,7 +186,7 @@ def test_edit_custom_attribute_validation(live_server, owner_page: Page, organiz
     owner_page.goto(url)
     owner_page.wait_for_load_state("networkidle")
 
-    enum_form = owner_page.locator("#data-enum-formset")
+    enum_form = owner_page.locator("[data-enum-formset]")
     assert enum_form.is_visible()
 
     # Remove all option and test validation

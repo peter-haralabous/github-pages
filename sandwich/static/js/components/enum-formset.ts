@@ -184,7 +184,7 @@ const initializedFormsets = new WeakSet<HTMLElement>();
 
 export function initCustomAttributeEnumFormsets(): void {
   document
-    .querySelectorAll<HTMLElement>('#data-enum-formset')
+    .querySelectorAll<HTMLElement>('[data-enum-formset]')
     .forEach((container) => {
       if (initializedFormsets.has(container)) {
         return;

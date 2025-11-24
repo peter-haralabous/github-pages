@@ -1,6 +1,6 @@
 {% load crispy_forms_tags lucide %}
 
-<div class="mb-4" id="data-enum-formset">
+<div class="mb-4" data-enum-formset>
   <h5 class="text-lg font-semibold mb-3">Options</h5>
   {{ formset.management_form }}
   <div id="enum-forms" class="space-y-3">
@@ -27,5 +27,5 @@
   </button>
 </div>
 <script nonce="{{ request.csp_nonce }}">
-  htmx.trigger('#data-enum-formset', 'data-enum-formset:init')
+  htmx.trigger('[data-enum-formset]', 'data-enum-formset:init')
 </script>
