@@ -41,7 +41,6 @@ from sandwich.core.service.list_preference_service import parse_filters_from_que
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.service.task_service import ordered_tasks_for_encounter
-from sandwich.core.service.task_service import ordered_tasks_for_encounter
 from sandwich.core.types import DATE_DISPLAY_FORMAT
 from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -461,6 +460,14 @@ def _build_edit_form_context(encounter: Encounter, field_name: str, organization
     }
 
 
+def _get_visible_column_meta(user, organization: Organization) -> list[dict]:
+    """Helper to get visible column metadata for columns in encounter list preference"""
+    preference = get_list_view_preference(user, organization, ListViewType.ENCOUNTER_LIST)
+    available_columns = get_available_columns(ListViewType.ENCOUNTER_LIST, organization)
+    index = {c["value"]: c for c in available_columns}
+    return [index[v] for v in preference.visible_columns if v in index]
+
+
 @login_required
 @authorize_objects(
     [
@@ -565,7 +572,38 @@ def encounter_edit_field(
         },
     )
 
-    return render(request, "provider/partials/inline_edit_display.html", context)
+    # Render the full encounter row with updated data for HTMX OOB swap
+    visible_column_meta = _get_visible_column_meta(request.user, organization)
+    content_type = ContentType.objects.get_for_model(Encounter)
+    preference = get_list_view_preference(request.user, organization, ListViewType.ENCOUNTER_LIST)
+
+    # Re-query and annotate the encounter with custom attributes to ensure all fields are fresh
+    annotated_qs = annotate_custom_attributes(
+        Encounter.objects.filter(id=encounter.id).select_related("patient"),
+        preference.visible_columns,
+        organization,
+        content_type,
+    )
+    annotated_encounter = annotated_qs.first() or encounter
+
+    # Render the complete row with oob_swap=True, adding hx-swap-oob="outerHTML"
+    # to the <tr> element via template conditional
+    row_html = render(
+        request,
+        "provider/partials/encounter_row.html",
+        {
+            "encounter": annotated_encounter,
+            "organization": organization,
+            "visible_column_meta": visible_column_meta,
+            "oob_swap": True,  # Triggers OOB swap in template
+        },
+    ).content.decode()
+
+    # Render the updated cell in edit mode as usual
+    cell_html = render(request, "provider/partials/inline_edit_display.html", context).content.decode()
+
+    # Return both: cell replaces the target, row swaps out-of-band by ID
+    return HttpResponse(row_html + cell_html)
 
 
 def _render_form_with_errors(
