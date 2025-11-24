@@ -5,7 +5,6 @@ from http import HTTPStatus
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -84,7 +83,6 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         {
             "organization": organization,
             "forms": forms_page,
-            "ai_form_generation_enabled": settings.FEATURE_PROVIDER_AI_FORM_GENERATION,
         },
     )
 
