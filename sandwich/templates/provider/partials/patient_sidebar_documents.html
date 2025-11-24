@@ -3,19 +3,22 @@
 <div class="bg-white border border-gray-200 rounded-lg p-4">
   {# Header with back button #}
   <button class="flex items-center gap-2 p-2 mb-4 rounded-lg hover:bg-gray-100 w-full text-left"
-          hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
-          hx-swap="none"
-          hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">
+          hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
+          hx-target="#patient-sidebar"
+          hx-swap="innerHTML">
     {% lucide "arrow-left" class="size-5 text-gray-600" %}
-    <p class="text-gray-900 text-base font-medium">Documents</p>
+    <span class="text-gray-900 text-base font-medium">Back</span>
   </button>
+  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2 mb-2">Documents</h3>
   {# Documents list #}
   <ul class="flex flex-col gap-1">
     {% for document in documents %}
-      <li class="flex h-12 items-center gap-4 rounded-lg px-4 cursor-pointer {% if selected_document_id == document.id|stringformat:'s' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">
-        <p class="text-sm truncate {% if selected_document_id == document.id|stringformat:'s' %}font-semibold text-gray-900{% else %}text-gray-700{% endif %}">
-          {{ document.original_filename }}
-        </p>
+      <li class="js-open-tab flex h-12 items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tab-type="document"
+          data-tab-id="{{ document.id }}"
+          data-tab-label="{{ document.original_filename }}">
+        {% lucide "file-text" class="size-4 text-gray-400 shrink-0" %}
+        <p class="text-sm truncate text-gray-700">{{ document.original_filename }}</p>
       </li>
     {% empty %}
       <li class="flex h-12 items-center gap-4 rounded-lg px-4">

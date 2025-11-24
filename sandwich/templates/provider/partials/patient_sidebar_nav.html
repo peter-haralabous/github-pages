@@ -3,53 +3,72 @@
 <div class="bg-white border border-gray-200 rounded-lg p-4">
   <nav>
     <ul class="flex flex-col gap-1">
+      {# Overview - opens as a tab #}
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg {% if viewing_overview %}bg-blue-100 text-gray-900 font-semibold{% else %}hover:bg-gray-100 text-gray-700{% endif %}"
-                hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
-                hx-target="closest div"
-                hx-select="#patient-sidebar, #patient-content"
-                hx-swap="multi:#patient-sidebar,#patient-content"
-                hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">
-          <span class="text-base {% if viewing_overview %}{% else %}font-medium{% endif %}">Overview</span>
+        <button class="js-open-tab w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tab-type="overview"
+                data-tab-id="overview"
+                data-tab-label="Overview">
+          {% lucide "layout-grid" class="size-5" %}
+          <span class="text-base font-medium">Overview</span>
         </button>
       </li>
+      <li class="pt-2 pb-1">
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3">Directories</span>
+      </li>
+      {# Encounters folder - expands to show list #}
       <li>
         <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
                 hx-get="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
                 hx-push-url="false">
-          <span class="text-base font-medium">Encounters</span>
+          <span class="flex items-center gap-3">
+            {% lucide "calendar" class="size-5" %}
+            <span class="text-base font-medium">Encounters</span>
+          </span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>
+      {# Forms folder - expands to show list #}
       <li>
         <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
                 hx-get="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
                 hx-push-url="false">
-          <span class="text-base font-medium">Forms</span>
+          <span class="flex items-center gap-3">
+            {% lucide "file-pen-line" class="size-5" %}
+            <span class="text-base font-medium">Forms</span>
+          </span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>
+      {# Summaries folder - expands to show list #}
       <li>
         <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
                 hx-get="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
                 hx-push-url="false">
-          <span class="text-base font-medium">Summaries</span>
+          <span class="flex items-center gap-3">
+            {% lucide "file-check" class="size-5" %}
+            <span class="text-base font-medium">Summaries</span>
+          </span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>
+      {# Documents folder - expands to show list #}
       <li>
         <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
                 hx-get="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
                 hx-push-url="false">
-          <span class="text-base font-medium">Documents</span>
+          <span class="flex items-center gap-3">
+            {% lucide "file-text" class="size-5" %}
+            <span class="text-base font-medium">Documents</span>
+          </span>
           {% lucide "chevron-right" class="size-5" %}
         </button>
       </li>

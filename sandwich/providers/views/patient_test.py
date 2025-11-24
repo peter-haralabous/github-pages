@@ -320,10 +320,13 @@ def test_patient_add_task_redirects_user_to_patient_details(
     )
 
     assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse(  # type: ignore[attr-defined]
+    # Redirect includes encounter_id query param to show the encounter with the new task
+    expected_base = reverse(
         "providers:patient",
         kwargs={"organization_id": organization.id, "patient_id": patient.id},
     )
+    assert res.url.startswith(expected_base)  # type: ignore[attr-defined]
+    assert "encounter_id=" in res.url  # type: ignore[attr-defined]
 
 
 def test_patient_add_task_redirects_user_to_encounter_details(
@@ -348,9 +351,13 @@ def test_patient_add_task_redirects_user_to_encounter_details(
     )
 
     assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse(  # type: ignore[attr-defined]
-        "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
+    # Redirect goes to patient page with encounter_id to show the encounter with the new task
+    expected_base = reverse(
+        "providers:patient",
+        kwargs={"organization_id": organization.id, "patient_id": patient.id},
     )
+    assert res.url.startswith(expected_base)  # type: ignore[attr-defined]
+    assert f"encounter_id={encounter.id}" in res.url  # type: ignore[attr-defined]
 
 
 def test_patient_add_task_deny_access(user: User, organization: Organization, patient: Patient) -> None:

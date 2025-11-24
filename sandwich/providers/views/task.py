@@ -58,6 +58,36 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
     if form_submission:
         initial_data = form_submission.data
 
+    # Check if this is a tab request (embedded in patient details page)
+    in_tab = request.GET.get("tab") == "true"
+
+    # Use unique IDs for JSON script elements to avoid conflicts when multiple forms are open
+    task_id_str = str(task.id).replace("-", "")
+    schema_id = f"form_schema_{task_id_str}"
+    data_id = f"initial_data_{task_id_str}"
+
+    # For tab requests, we stay on the patient details page after completion
+    complete_url = reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
+
+    if in_tab:
+        return render(
+            request,
+            "provider/partials/patient_task_content.html",
+            context={
+                "organization": organization,
+                "patient": patient,
+                "task": task,
+                "form_schema": form_schema,
+                "initial_data": initial_data,
+                "read_only": read_only,
+                "submit_url": submit_url,
+                "save_draft_url": save_draft_url,
+                "complete_url": complete_url,
+                "schema_id": schema_id,
+                "data_id": data_id,
+            },
+        )
+
     return render(
         request,
         "provider/task.html",

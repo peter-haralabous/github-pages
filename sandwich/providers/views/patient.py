@@ -23,6 +23,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import get_objects_for_user
 
+from sandwich.core.decorators import surveyjs_csp
 from sandwich.core.models import Form
 from sandwich.core.models import ListViewType
 from sandwich.core.models.custom_attribute import CustomAttribute
@@ -122,6 +123,7 @@ class PatientAdd(forms.ModelForm[Patient]):
         }
 
 
+@surveyjs_csp
 @login_required
 @authorize_objects(
     [ObjPerm(Patient, "patient_id", ["view_patient"]), ObjPerm(Organization, "organization_id", ["view_organization"])]
@@ -838,6 +840,28 @@ def patient_encounter_content(
     tasks = encounter.task_set.all()
     from_list = request.GET.get("from_list") == "true"
     in_slideout = request.GET.get("slideout") == "true"
+    in_tab = request.GET.get("tab") == "true"
+
+    # If in tab mode, return just the encounter content for the tab panel
+    if in_tab:
+        content_type = ContentType.objects.get_for_model(Encounter)
+        custom_attributes = list(
+            CustomAttribute.objects.filter(
+                organization=organization,
+                content_type=content_type,
+            ).order_by("name")
+        )
+        formatted_attributes = _format_attributes(encounter, custom_attributes)
+
+        context = {
+            "patient": patient,
+            "organization": organization,
+            "encounter": encounter,
+            "tasks": tasks,
+            "formatted_attributes": formatted_attributes,
+            "in_tab": True,
+        }
+        return render(request, "provider/partials/patient_encounter_content.html", context)
 
     # If in slideout mode, just return the encounter content
     if in_slideout:

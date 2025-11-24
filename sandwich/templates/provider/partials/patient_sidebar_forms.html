@@ -3,22 +3,22 @@
 <div class="bg-white border border-gray-200 rounded-lg p-4">
   {# Header with back button #}
   <button class="flex items-center gap-2 p-2 mb-4 rounded-lg hover:bg-gray-100 w-full text-left"
-          hx-get="{% url 'providers:patient_nav_overview' organization_id=organization.id patient_id=patient.id %}"
-          hx-swap="none"
-          hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">
+          hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
+          hx-target="#patient-sidebar"
+          hx-swap="innerHTML">
     {% lucide "arrow-left" class="size-5 text-gray-600" %}
-    <p class="text-gray-900 text-base font-medium">Forms</p>
+    <span class="text-gray-900 text-base font-medium">Back</span>
   </button>
-  {# Forms list #}
+  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2 mb-2">Forms</h3>
+  {# Forms list - clicking opens a new tab (forms navigate to task page) #}
   <ul class="flex flex-col gap-1">
     {% for task in forms %}
-      <li>
-        <a href="{% url 'providers:task' organization_id=organization.id patient_id=patient.id task_id=task.id %}"
-           class="flex h-12 items-center gap-4 rounded-lg px-4 cursor-pointer {% if selected_form_id == task.id|stringformat:'s' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">
-          <p class="text-sm truncate {% if selected_form_id == task.id|stringformat:'s' %}font-semibold text-gray-900{% else %}text-gray-700{% endif %}">
-            {{ task.name }}
-          </p>
-        </a>
+      <li class="js-open-tab flex h-12 items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tab-type="form"
+          data-tab-id="{{ task.id }}"
+          data-tab-label="{{ task.name }}">
+        {% lucide "file-pen-line" class="size-4 text-gray-400 shrink-0" %}
+        <p class="text-sm truncate text-gray-700">{{ task.name }}</p>
       </li>
     {% empty %}
       <li class="flex h-12 items-center gap-4 rounded-lg px-4">
