@@ -29,7 +29,6 @@ from .views.list_preferences import save_organization_preference
 from .views.organization import organization_add
 from .views.organization import organization_delete
 from .views.organization import organization_edit
-from .views.patient import address_search
 from .views.patient import patient_add
 from .views.patient import patient_add_encounter
 from .views.patient import patient_add_task
@@ -57,7 +56,6 @@ app_name = "providers"
 urlpatterns = [
     path("", home, name="home"),
     path("api/", api.urls, name="api"),
-    path("address-search/", address_search, name="address_search"),
     path("organization/add", organization_add, name="organization_add"),
     path("organization/<uuid:organization_id>", organization_home, name="organization"),
     path("organization/<uuid:organization_id>/edit", organization_edit, name="organization_edit"),

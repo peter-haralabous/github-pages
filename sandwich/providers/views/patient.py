@@ -6,7 +6,6 @@ from crispy_forms.layout import Div
 from crispy_forms.layout import Layout
 from crispy_forms.layout import Submit
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -16,14 +15,11 @@ from django.db.models import OuterRef
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.http import HttpResponseNotFound
-from django.http import JsonResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from guardian.shortcuts import get_objects_for_user
 
 from sandwich.core.models import Form
@@ -608,37 +604,3 @@ def patient_resend_invite(
     return HttpResponseRedirect(
         reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
     )
-
-
-@login_required
-@require_http_methods(["GET"])
-def address_search(request: AuthenticatedHttpRequest) -> HttpResponse:
-    logger.info("Address autocomplete endpoint accessed", extra={"user_id": request.user.id})
-    query = request.GET.get("query", "").strip()
-    logger.debug("Address autocomplete query received", extra={"query": query})
-
-    # No address to lookup?
-    if not query:
-        return JsonResponse([], safe=False)
-
-    # List of supported Google APIs:
-    # https://github.com/googleapis/google-api-python-client/blob/main/docs/dyn/index.md
-    # https://googleapis.github.io/google-api-python-client/docs/dyn/places_v1.places.html#autocomplete
-    suggestions = []
-    with build("places", "v1", developerKey=settings.GOOGLE_API_KEY) as service:
-        try:
-            # TODO: do we need to limit requests returned? seems like its always 5 returned
-            #  - do we need to filter by fields? client api had toggles for this, don't see any for server api
-            #  - add "sessionToken" param to improve billing, but how to generate it? can't find docs for this
-            #  - add location bias params? countries outside canada being returned in results.
-            response = service.places().autocomplete(body={"input": query}).execute()
-        except HttpError as e:
-            logger.info(f"Error response status code : {e.status_code}, reason : {e.error_details}")  # noqa: G004
-
-        if response:
-            for autocomplete_suggestion in response.get("suggestions", []):
-                place_prediction = autocomplete_suggestion.get("placePrediction")
-                address = place_prediction.get("text").get("text")
-                suggestions.append(address)
-
-    return JsonResponse(suggestions, safe=False)

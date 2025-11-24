@@ -38,6 +38,7 @@ def test_all_views_permissioned() -> None:
 
     allowed_unpermissioned_routes = {
         "",
+        "address-search/",
         "favicon.ico",
         "healthcheck/",
         "policy/<slug:slug>/",
@@ -63,7 +64,6 @@ def test_all_views_permissioned() -> None:
         "providers/api/docs",
         "providers/api/openapi.json",
         "providers/organization/add",
-        "providers/address-search/",
         "patients/invite/<str:token>/accept",
         # These views are permissioned but not using the decorator
         "patients/condition/<uuid:condition_id>",
