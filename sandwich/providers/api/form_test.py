@@ -65,6 +65,6 @@ def test_save_form_duplicate_form_name(client: Client, owner: User, organization
     response = client.post(url, data=payload, content_type="application/json")
 
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.json()["detail"] == "Form with the same title already exists. Please choose a different title."
+    assert response.json()["detail"] == "Form with this Organization and Name already exists."
     form1.refresh_from_db()
     assert form1.name == "Intake (Copy)"  # name unchanged

@@ -4,7 +4,7 @@ from typing import Annotated
 from typing import cast
 
 import ninja
-from django.db import IntegrityError
+from django import forms
 from django.http import JsonResponse
 from ninja.errors import HttpError
 from ninja.security import SessionAuth
@@ -17,6 +17,12 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 logger = logging.getLogger(__name__)
 router = ninja.Router()
 require_login = SessionAuth()
+
+
+class SurveyFormInput(forms.ModelForm):
+    class Meta:
+        model = Form
+        fields = ["name", "schema", "organization"]
 
 
 class FormSavedResponse(JsonResponse):
@@ -48,7 +54,7 @@ def save_form(
 
     # Check payload for form ID to determine create vs. edit (and check form permissions)
     form_id = payload.get("form_id")
-    form = None
+    instance = None
     if form_id:
         logger.debug(
             "Form ID found in payload, handling save as form edit",
@@ -59,7 +65,9 @@ def save_form(
                 "payload": payload,
             },
         )
-        form = cast("Form", get_authorized_object_or_404(request.user, ["view_form", "change_form"], Form, id=form_id))
+        instance = cast(
+            "Form", get_authorized_object_or_404(request.user, ["view_form", "change_form"], Form, id=form_id)
+        )
 
     # Validation: Guard against empty title in payload as Form.name is required.
     schema = payload.get("schema")
@@ -71,32 +79,31 @@ def save_form(
         )
         raise HttpError(400, "Form must include a title: 'General' section missing 'Survey title'")
 
-    try:
-        if form_id and form:
-            form.name = name
-            form.schema = schema
-            form.save(update_fields=["name", "schema", "updated_at"])
-        else:
-            form = Form.objects.create(organization=organization, name=name, schema=schema)
-    except IntegrityError as ex:
+    form_data = {"name": name, "schema": schema, "organization": organization}
+
+    survey_form = SurveyFormInput(data=form_data, instance=instance)
+
+    if survey_form.is_valid():
+        form = survey_form.save()
         logger.info(
-            "Form save failed: Form with same name exists in organization",
+            "Form saved successfully",
             extra={
                 "user_id": request.user.id,
-                "organization_id": organization_id,
-                "form_name": name,
-                "payload": payload,
+                "organization_id": organization.id,
+                "form_id": form.id,
+                "form_name": form.name,
             },
         )
-        raise HttpError(400, "Form with the same title already exists. Please choose a different title.") from ex
-
-    logger.info(
-        "Form saved successfully",
-        extra={
-            "user_id": request.user.id,
-            "organization_id": organization.id,
-            "form_id": form.id,
-            "form_name": form.name,  # should not contain PHI.
-        },
+        return FormSavedResponse.success(form=form, message="Form saved successfully")
+    errors = survey_form.errors
+    logger.warning(
+        "Form save failed: Validation Error",
+        extra={"user_id": request.user.id, "organization_id": organization.id, "errors": errors},
     )
-    return FormSavedResponse.success(form=form, message="Form saved successfully")
+
+    first_field = next(iter(errors.keys()))
+    first_msg = errors[first_field][0]
+
+    display_msg = first_msg if first_field in ["__all__", "schema"] else f"{first_field.capitalize()}: {first_msg}"
+
+    raise HttpError(400, f"{display_msg}")

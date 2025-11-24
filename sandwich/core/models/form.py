@@ -6,6 +6,7 @@ from private_storage.fields import PrivateFileField
 from sandwich.core.mixins.versioning import VersionMixin
 from sandwich.core.models.abstract import BaseModel
 from sandwich.core.models.organization import Organization
+from sandwich.core.validators.surveyjs_form_validator import validate_survey_json
 
 
 class FormManager(models.Manager["Form"]):
@@ -33,8 +34,7 @@ class Form(VersionMixin, BaseModel):
 
     name = models.CharField(max_length=255, help_text="The name of the form")
     schema = models.JSONField(
-        default=dict,
-        help_text="The surveyjs JSON schema of the form",
+        default=dict, help_text="The surveyjs JSON schema of the form", blank=True, validators=[validate_survey_json]
     )
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     reference_file = PrivateFileField(upload_to="form_reference_files/", null=True, blank=True)
