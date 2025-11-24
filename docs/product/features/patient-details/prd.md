@@ -64,6 +64,8 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Key Insight**: Works well when users need to review multiple items sequentially while keeping list visible
 
+**Visual Examples**: See Figures 3-6 in Appendix for examples from Asana, Notion, and Linear showing side panel implementations.
+
 ### Research Findings
 - **EHR Navigation Studies**: Providers navigate screens in highly variable patterns; reducing context switching improves efficiency[7][8][10]
 - **Multi-EMR Research**: Integrated views showing data from multiple sources within primary context improve workflow and reduce safety risks[9]
@@ -337,7 +339,8 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 ### Visual Examples
 
 **Figure 1: Epic EMR - Patient Chart with MAR Tab**
-![Epic EMR MAR View](EPIC-EMR.png)
+
+![Epic EMR MAR View](images/EPIC-EMR-Chart.png)
 
 This screenshot demonstrates Epic's tabbed approach within the patient chart. Key observations:
 - Patient context (Ellie Johnson, demographics, allergies) always visible in left sidebar
@@ -346,7 +349,8 @@ This screenshot demonstrates Epic's tabbed approach within the patient chart. Ke
 - User can switch between different data views (medications, encounters, labs) via tabs while maintaining awareness of which patient they're viewing
 
 **Figure 2: Epic EMR - Encounter Details Within Patient Chart**
-![Epic EMR Encounter View](EPIC-EMR-Encounter.png)
+
+![Epic EMR Encounter View](images/EPIC-EMR-Encounter.png)
 
 This screenshot shows how Epic displays encounter details while maintaining patient context:
 - Patient information (Test Test, demographics) remains in left sidebar
@@ -356,6 +360,54 @@ This screenshot shows how Epic displays encounter details while maintaining pati
 - Patient's medical history, medications, and social determinants visible in sidebar
 
 **Key Pattern**: Both examples show how Epic never separates encounter details from patient context. Whether viewing medications, encounters, or documentation, the patient sidebar remains consistently visible, preventing users from losing context about which patient they're working with.
+
+---
+
+**Figure 3: Asana - Side Panel Detail View**
+
+![Asana Side Panel](images/Asana-Side-Panel.png)
+
+Asana's implementation of the side panel pattern for task details:
+- Task list remains visible on the left (master view)
+- Task details slide in from the right (detail panel)
+- Users can click through multiple tasks without losing context of the project/list
+- Panel can be closed to return to full list view
+
+**Figure 4: Asana - Tab View Within Panel**
+
+![Asana Tab View](images/Asana-tab-view.png)
+
+Asana organizes task details using tabs within the side panel:
+- Main task information in default view
+- Additional tabs for subtasks, attachments, comments
+- Tabs keep the panel organized while providing access to comprehensive information
+- Pattern combines tabs + side panel for maximum organization
+
+**Figure 5: Notion - Side Panel for Page Details**
+
+![Notion Side Panel](images/Notion-Side-Panel.png)
+
+Notion's side panel pattern for viewing page details:
+- Main workspace remains visible in background
+- Page details open in right panel
+- Users can reference multiple pages simultaneously
+- Maintains context while drilling into specific content
+
+**Figure 6: Linear - Collapsible Side Panel**
+
+![Linear Collapsible Side Panel](images/Linear-Collapsible-Side-Panel.png)
+
+Linear's collapsible side panel for issue details:
+- Issue list visible on left
+- Issue details in expandable right panel
+- Panel can be resized or collapsed as needed
+- Supports rapid issue triage while maintaining list context
+
+**Key Pattern Across Modern Apps**: All examples show detail panels that:
+1. Maintain visual connection to the master list
+2. Allow interaction with both master and detail simultaneously
+3. Support sequential navigation (next/prev) within the panel
+4. Can be closed/collapsed to return to full master view
 
 ### References
 
