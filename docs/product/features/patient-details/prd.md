@@ -427,31 +427,29 @@ Linear's collapsible side panel for issue details:
 
 **Internal Documents**
 
-**Provider User Interviews - Codebook**
-https://docs.google.com/document/d/1svSyUI48qHtXXlLGqaLLJGelYn2v9ipRxpRAUhzYpWg/edit?usp=drive_link
-
-**Epic EMR Pattern**
-1. University of Iowa Epic Education - Chart Review: https://epicsupport.sites.uiowa.edu/epic-resources/chart-review
-2. Johns Hopkins Medicine - Epic Tips and Tricks (2019): https://www.hopkinsmedicine.org/news/articles/2019/08/epic-shortcuts-experts-share-their-favorite-tips
-
-**Master-Detail UI Patterns**
-3. Oracle Alta UI - Master-Detail Pattern: https://www.oracle.com/webfolder/ux/middleware/alta/patterns/MasterDetail.html
-
-4. Oracle Alta Mobile - Master Detail: https://www.oracle.com/webfolder/ux/mobile/pattern/masterdetail.html
-
-5. Microsoft Windows Developer Blog - Master the Master-Detail Pattern (2017): https://blogs.windows.com/windowsdeveloper/2017/05/01/master-master-detail-pattern/
-
-6. Web App Huddle - Master-Detail UI Pattern Design (2019): https://webapphuddle.com/master-detail-ui-pattern-design/
-
-**EHR Navigation Research**
-7. Coleman et al. - Analysing EHR navigation patterns and digital workflows among physicians during ICU pre-rounds: https://pmc.ncbi.nlm.nih.gov/articles/PMC8435833/
-
-8. Usability Challenges in Electronic Health Records: Impact on Documentation Burden and Clinical Workflow (2025): https://pmc.ncbi.nlm.nih.gov/articles/PMC12206486/
-
-9. Studying workflow and workarounds in EHR-supported work to improve health system performance: https://pmc.ncbi.nlm.nih.gov/articles/PMC8061456/
-
-10. Melton et al. - Usability Testing of Two Ambulatory EHR Navigators (2016): https://pmc.ncbi.nlm.nih.gov/articles/PMC4941856/
+## Provider User Interviews - Codebook
+- [Provider User Interviews - Codebook Document](https://docs.google.com/document/d/1svSyUI48qHtXXlLGqaLLJGelYn2v9ipRxpRAUhzYpWg/edit?usp=drive_link)
 
 ---
 
-*Document Version 0.1 - Discovery Phase*
+## Epic EMR Pattern
+1. University of Iowa Epic Education - Chart Review: [https://epicsupport.sites.uiowa.edu/epic-resources/chart-review](https://epicsupport.sites.uiowa.edu/epic-resources/chart-review)
+2. Johns Hopkins Medicine - Epic Tips and Tricks (2019): [https://www.hopkinsmedicine.org/news/articles/2019/08/epic-shortcuts-experts-share-their-favorite-tips](https://www.hopkinsmedicine.org/news/articles/2019/08/epic-shortcuts-experts-share-their-favorite-tips)
+
+---
+
+## Master-Detail UI Patterns
+3. Oracle Alta UI - Master-Detail Pattern: [https://www.oracle.com/webfolder/ux/middleware/alta/patterns/MasterDetail.html](https://www.oracle.com/webfolder/ux/middleware/alta/patterns/MasterDetail.html)
+4. Oracle Alta Mobile - Master Detail: [https://www.oracle.com/webfolder/ux/mobile/pattern/masterdetail.html](https://www.oracle.com/webfolder/ux/mobile/pattern/masterdetail.html)
+5. Microsoft Windows Developer Blog - Master the Master-Detail Pattern (2017): [https://blogs.windows.com/windowsdeveloper/2017/05/01/master-master-detail-pattern/](https://blogs.windows.com/windowsdeveloper/2017/05/01/master-master-detail-pattern/)
+6. Web App Huddle - Master-Detail UI Pattern Design (2019): [https://webapphuddle.com/master-detail-ui-pattern-design/](https://webapphuddle.com/master-detail-ui-pattern-design/)
+
+---
+
+## EHR Navigation Research
+7. Coleman et al. - Analysing EHR navigation patterns and digital workflows among physicians during ICU pre-rounds: [https://pmc.ncbi.nlm.nih.gov/articles/PMC8435833/](https://pmc.ncbi.nlm.nih.gov/articles/PMC8435833/)
+8. Usability Challenges in Electronic Health Records: Impact on Documentation Burden and Clinical Workflow (2025): [https://pmc.ncbi.nlm.nih.gov/articles/PMC12206486/](https://pmc.ncbi.nlm.nih.gov/articles/PMC12206486/)
+9. Studying workflow and workarounds in EHR-supported work to improve health system performance: [https://pmc.ncbi.nlm.nih.gov/articles/PMC8061456/](https://pmc.ncbi.nlm.nih.gov/articles/PMC8061456/)
+10. Melton et al. - Usability Testing of Two Ambulatory EHR Navigators (2016): [https://pmc.ncbi.nlm.nih.gov/articles/PMC4941856/](https://pmc.ncbi.nlm.nih.gov/articles/PMC4941856/)
+
+---
