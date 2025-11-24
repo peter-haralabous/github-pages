@@ -25,10 +25,14 @@ Healthcare providers are confused by multiple similar views for encounter detail
 - Current design suggests: "Encounters as separate from patients" (flat)
 - Workflow naturally flows from worklist → patient → encounter details, not worklist → standalone encounter
 
+**Visual Examples**: See Figures A-B in [Appendix](#appendix) for images of our current state.
+
 ### Impact
 - **Who**: Healthcare providers, clinical staff
 - **Frequency**: Multiple times per patient encounter (high-frequency workflow)
 - **Current Workaround**: Manual navigation between pages, losing context and efficiency
+
+
 
 ---
 
@@ -46,7 +50,7 @@ How do other healthcare systems solve multi-context navigation problems?
 
 
 
-**Visual Example**: See Figures 1-2 in [Appendix](#appendix) for Epic EMR screenshots showing patient context with tabbed navigation (Summary, Chart Review, MAR, etc.) and encounter details within patient chart.
+**Visual Example**: See Figures 1-2 in [Appendix](#isual-examples) for Epic EMR screenshots showing patient context with tabbed navigation (Summary, Chart Review, MAR, etc.) and encounter details within patient chart.
 
 ### Master-Detail Pattern (Industry Standard)
 **Pattern**: Parent view (master) maintains connection to child view (detail)[3][4][5][6]
@@ -58,7 +62,7 @@ How do other healthcare systems solve multi-context navigation problems?
 **Key Insight**: Multiple implementation options depending on content complexity and device
 
 ### Drawer/Side Panel Pattern (Modern Web Apps)
-**Used by**: Asana, Notion, Linear, Height
+**Used by**: Asana, Notion, Linear
 
 **When**: Showing detailed information without losing master list context
 - User can interact with both master list and detail panel
@@ -67,7 +71,7 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Key Insight**: Works well when users need to review multiple items sequentially while keeping list visible
 
-**Visual Examples**: See Figures 3-6 in [Appendix](#appendix) for examples from Asana, Notion, and Linear showing side panel implementations.
+**Visual Examples**: See Figures 3-6 in [Appendix](#visual-examples) for examples from Asana, Notion, and Linear showing side panel implementations.
 
 ### Research Findings
 - **EHR Navigation Studies**: Providers navigate screens in highly variable patterns; reducing context switching improves efficiency[7][8][10]
@@ -299,7 +303,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 ### Testing Approach
 - **Method**: Moderated usability testing with interactive prototypes
-- **Participants**: 5-8 healthcare providers (mix of experience levels)
+- **Participants**: 3-5 healthcare providers (mix of experience levels)
 - **Tasks**:
   1. Start from worklist, find encounter, review details
   2. While viewing encounter, answer question about patient (requires context)
@@ -310,10 +314,9 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 ---
 
 ## Next Steps
-
-1. **User Interviews** - Gather insights on current pain points and workflow patterns
-2. **Design Prototypes** - Create interactive prototypes for each solution proposal
-3. **Usability Testing** - Test prototypes with 5-8 providers
+1. **Design Prototypes** - Create interactive prototypes for each solution proposal
+2. **User Interviews** - Gather insights on current pain points and workflow patterns
+3. **Usability Testing** - Test prototypes with 3-5 providers
 4. **Analysis** - Synthesize findings and recommend solution
 5. **Detailed Requirements** - Create specs for chosen solution
 6. **Implementation** - Phased rollout
@@ -328,6 +331,14 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 1. Click encounter row → slideout opens
 2. Review quick details
 3. Click "View Patient" → loses slideout context
+
+**Figure A: Current State: Encounter Details**
+
+![Current State: Encounter Details](images/current-state-encounter-details.png)
+
+**Figure B: Current State: Patient Details**
+
+![Current State: Patient Details](images/current-state-patient-details.png)
 
 **Workflow B: Worklist → Patient Details**
 1. Click kebab → "Patient Details"
