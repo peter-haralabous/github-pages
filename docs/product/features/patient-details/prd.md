@@ -1,6 +1,6 @@
 # PRD: Encounter Details Consolidation
 
-**JIRA**: HC-225 | **Version**: 0.1 Discovery | **Author**: Peter | **Date**: Nov 24, 2025
+**JIRA**: [HC-225](https://new-hippo.atlassian.net/browse/HC-225) &nbsp;|&nbsp; **Author**: [Peter Haralabous](https://home.atlassian.com/o/787759e2-0bbc-494d-b27d-26930e7600ab/people/618e9ea320c676007090a9c0?cloudId=c7306235-0180-4269-ae60-6513d0ef7dd6) &nbsp;|&nbsp; **Date**: Nov 24, 2025
 
 ---
 
@@ -44,7 +44,9 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Key Insight**: Never separate encounters from patient context
 
-**Visual Example**: See Figures 1-2 in Appendix for Epic EMR screenshots showing patient context with tabbed navigation (Summary, Chart Review, MAR, etc.) and encounter details within patient chart.
+
+
+**Visual Example**: See Figures 1-2 in [Appendix](#appendix) for Epic EMR screenshots showing patient context with tabbed navigation (Summary, Chart Review, MAR, etc.) and encounter details within patient chart.
 
 ### Master-Detail Pattern (Industry Standard)
 **Pattern**: Parent view (master) maintains connection to child view (detail)[3][4][5][6]
@@ -57,6 +59,7 @@ How do other healthcare systems solve multi-context navigation problems?
 
 ### Drawer/Side Panel Pattern (Modern Web Apps)
 **Used by**: Asana, Notion, Linear, Height
+
 **When**: Showing detailed information without losing master list context
 - User can interact with both master list and detail panel
 - Good for sequential review (next/prev navigation)
@@ -64,7 +67,7 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Key Insight**: Works well when users need to review multiple items sequentially while keeping list visible
 
-**Visual Examples**: See Figures 3-6 in Appendix for examples from Asana, Notion, and Linear showing side panel implementations.
+**Visual Examples**: See Figures 3-6 in [Appendix](#appendix) for examples from Asana, Notion, and Linear showing side panel implementations.
 
 ### Research Findings
 - **EHR Navigation Studies**: Providers navigate screens in highly variable patterns; reducing context switching improves efficiency[7][8][10]
