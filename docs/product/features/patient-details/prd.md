@@ -111,11 +111,11 @@ Providers consistently identified scattered information as a fundamental problem
 
 Providers expressed strong preference for information being immediately visible without requiring multiple clicks or navigation steps.
 
-<span style="color: #00BCD4;">
 
-> "I think that to to make things intuitive is to to use eye movement and what I can actually gather in terms of data as much as possible without using other things... if it's given to me before I click on a tab I appreciate it because I'm not so that saves me one click" (AA, Primary Care Physician)
 
-</span>
+> <span style="color: #00BCD4;">"I think that to to make things intuitive is to to use eye movement and what I can actually gather in terms of data as much as possible without using other things... if it's given to me before I click on a tab I appreciate it because I'm not so that saves me one click" (AA, Primary Care Physician)</span>
+
+
 
 **Implication**: Solution should minimize clicks and screen transitions. Favors embedded approaches (tabs, drawers) over patterns requiring navigation between separate pages.
 
