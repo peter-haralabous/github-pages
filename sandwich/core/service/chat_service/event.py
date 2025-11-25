@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from typing import Unpack
 
 from django.utils import timezone
+from django.utils.safestring import SafeString
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel
 
@@ -15,6 +16,7 @@ from sandwich.core.service.chat_service.chat import ChatContext
 from sandwich.core.service.chat_service.response import ChatResponse
 from sandwich.core.service.chat_service.sse import send_assistant_message
 from sandwich.core.service.chat_service.sse import send_assistant_thinking
+from sandwich.core.service.chat_service.sse import send_feed_item
 from sandwich.core.service.ingest.extract_records import RecordsResponse
 from sandwich.core.service.prompt_service.chat import document_upload_template
 from sandwich.core.service.prompt_service.chat import file_upload_context
@@ -32,6 +34,15 @@ class AssistantResponseMixin(abc.ABC):
 
     @abc.abstractmethod
     def input_for_assistant_response(self) -> "StateLike": ...
+
+
+class UpdatesFeedMixin(abc.ABC):
+    """Mixin for chat events that should update the chat feed."""
+
+    updates_feed = True
+
+    @abc.abstractmethod
+    def feed_item_html(self) -> SafeString: ...
 
 
 class ChatEventType(StrEnum):
@@ -55,9 +66,13 @@ class AssistantMessageEvent(ChatEvent):
 
 class IncomingChatEvent(ChatEvent, abc.ABC):
     needs_assistant_response: bool = False
+    updates_feed: bool = False
 
     def input_for_assistant_response(self) -> "StateLike":
         raise NotImplementedError("This event does not support assistant responses.")
+
+    def feed_item_html(self) -> SafeString:
+        raise NotImplementedError("This event does not support feed items")
 
 
 class FileUploadEvent(AssistantResponseMixin, IncomingChatEvent):
@@ -92,6 +107,9 @@ def receive_chat_event(
     event: "IncomingChatEvent",
     **params: "Unpack[AgentParameters]",
 ) -> None:
+    if event.updates_feed:
+        send_feed_item(event)
+
     if event.needs_assistant_response:
         # 1. Notify that the assistant is thinking
         send_assistant_thinking(event)

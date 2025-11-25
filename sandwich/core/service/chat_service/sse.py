@@ -12,6 +12,7 @@ from sandwich.core.service.sse_service import sse_send_json
 if TYPE_CHECKING:
     from sandwich.core.service.chat_service.event import AssistantMessageEvent
     from sandwich.core.service.chat_service.event import ChatEvent
+    from sandwich.core.service.chat_service.event import IncomingChatEvent
     from sandwich.core.service.chat_service.event import UserMessageEvent
 
 logger = logging.getLogger(__name__)
@@ -58,6 +59,14 @@ def send_assistant_message(event: "AssistantMessageEvent") -> None:
                 "message_id": event.id,
             },
         ),
+    )
+
+
+def send_feed_item(event: "IncomingChatEvent") -> None:
+    sse_send_html(
+        sse_patient_channel(event.context.patient),
+        EventType.FEED_ITEM,
+        event.feed_item_html(),
     )
 
 
