@@ -8,8 +8,8 @@ from googleapiclient.errors import HttpError
 logger = logging.getLogger(__name__)
 
 
-class LocationBias:
-    """Location bias configurations for Google Places API autocomplete."""
+class LocationBoundary:
+    """Location boundary configurations for Google Places API autocomplete."""
 
     CANADA = {
         "rectangle": {
@@ -57,7 +57,7 @@ def get_autocomplete_suggestions(query: str) -> dict[str, Any]:
                 .autocomplete(
                     body={
                         "input": query,
-                        "locationBias": LocationBias.CANADA,
+                        "locationRestriction": LocationBoundary.CANADA,
                     }
                 )
                 .execute()
