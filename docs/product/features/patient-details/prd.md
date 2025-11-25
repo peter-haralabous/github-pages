@@ -97,13 +97,12 @@ Provider interviews (July-October 2025) validated the core problem and surfaced 
 
 Providers consistently identified scattered information as a fundamental problem affecting clinical decision-making and efficiency.
 
-<span style="color: #00BCD4;">
+```diff
++ "I feel like the optimal area to start with is just like helping people get it all in one place. That's it. Like because we don't do it well now." (JB, Exercise Physiologist)
 
-> "I feel like the optimal area to start with is just like helping people get it all in one place. That's it. Like because we don't do it well now." (JB, Exercise Physiologist)
++ "this is one of the biggest bug bears in medicine is um uh access to information, efficient use of medical information, communicating uh it's where a lot of mistakes happen." (MB, Family Physician)
+```
 
-> "this is one of the biggest bug bears in medicine is um uh access to information, efficient use of medical information, communicating uh it's where a lot of mistakes happen." (MB, Family Physician)
-
-</span>
 
 **Implication**: The encounter details consolidation directly addresses this need by eliminating duplicate views and bringing encounter information into patient context.
 
@@ -111,11 +110,9 @@ Providers consistently identified scattered information as a fundamental problem
 
 Providers expressed strong preference for information being immediately visible without requiring multiple clicks or navigation steps.
 
-
-
-> <span style="color: #00BCD4;">"I think that to to make things intuitive is to to use eye movement and what I can actually gather in terms of data as much as possible without using other things... if it's given to me before I click on a tab I appreciate it because I'm not so that saves me one click" (AA, Primary Care Physician)</span>
-
-
+```diff
++ "I think that to to make things intuitive is to to use eye movement and what I can actually gather in terms of data as much as possible without using other things... if it's given to me before I click on a tab I appreciate it because I'm not so that saves me one click" (AA, Primary Care Physician)
+```
 
 **Implication**: Solution should minimize clicks and screen transitions. Favors embedded approaches (tabs, drawers) over patterns requiring navigation between separate pages.
 
@@ -123,11 +120,9 @@ Providers expressed strong preference for information being immediately visible 
 
 Providers need to verify information and maintain awareness of broader patient context while reviewing specific details.
 
-<span style="color: #00BCD4;">
-
-> "clinicians will really really want that or they'll want to know like yeah was this self-reported on an intake Q&A or was this like from a referral letter" (JB, Exercise Physiologist)
-
-</span>
+```diff
++ "clinicians will really really want that or they'll want to know like yeah was this self-reported on an intake Q&A or was this like from a referral letter" (JB, Exercise Physiologist)
+```
 
 **Implication**: Whichever solution is chosen must maintain visible patient context (name, MRN, demographics) while viewing encounter details. Supports Solutions 1-4 over Solution 5 (full-page navigation).
 
@@ -135,13 +130,13 @@ Providers need to verify information and maintain awareness of broader patient c
 
 Providers described significant time spent navigating between multiple systems and views to gather patient information before making clinical decisions.
 
-<span style="color: #00BCD4;">
 
-> "Pre-prescribed, I probably spent sometimes 10 to 15 minutes for a complex case. If it's here in the hospital, it can be as long as half an hour sometimes—clicking on Cerner and clicking on Care Connect, opening, closing, opening, closing." (P4, Internal Medicine)
 
-> "I just don't know if it would be worth an implementation process for cost, and now there's another portal to be a part of, there's another place to look for information." (P16, Allied Health)
+```diff
++ "Pre-prescribed, I probably spent sometimes 10 to 15 minutes for a complex case. If it's here in the hospital, it can be as long as half an hour sometimes—clicking on Cerner and clicking on Care Connect, opening, closing, opening, closing." (P4, Internal Medicine)
 
-</span>
++ "I just don't know if it would be worth an implementation process for cost, and now there's another portal to be a part of, there's another place to look for information." (P16, Allied Health)
+```
 
 **Implication**: Solutions that consolidate information within existing workflows (rather than adding new places to look) will have higher adoption. The encounter consolidation must reduce, not add to, the number of places providers need to check.
 
