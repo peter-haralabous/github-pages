@@ -11,6 +11,10 @@
 {% block expand_icon %}{% lucide "panel-right-open" class="size-6" %}{% endblock expand_icon %}
 {# djlint:on #}
 {% block panel_content %}
+  <div class="overflow-y-auto p-4 space-y-6 relative" id="feed-items">
+    <ul id="feed-items-list" class="list">
+    </ul>
+  </div>
   <div class="flex-1 overflow-y-auto p-4 space-y-6 relative"
        id="summary-content">
     {# Health Summary Card - extracted to separate partial for better organization #}

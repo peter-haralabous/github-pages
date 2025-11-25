@@ -13,7 +13,6 @@ class EventType(StrEnum):
     ASSISTANT_MESSAGE = "assistant_message"
     ASSISTANT_THINKING = "assistant_thinking"
     FEED_ITEM = "feed_item"
-    INGEST_PROGRESS = "ingest_progress"
     RECORDS_UPDATED = "records_updated"
     USER_MESSAGE = "user_message"
 
