@@ -62,7 +62,9 @@ DATABASE_URL = env.str("DATABASE_URL", default="postgres://sandwich:sandwich@loc
 DATABASES = {"default": env.db_url_config(DATABASE_URL)}
 DATABASES["default"]["OPTIONS"] = {
     # see https://www.psycopg.org/psycopg3/docs/api/pool.html#psycopg_pool.ConnectionPool for pool config options
-    "pool": True
+    "pool": {
+        "max_size": 8,
+    },
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
