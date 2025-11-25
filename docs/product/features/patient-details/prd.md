@@ -97,52 +97,51 @@ Provider interviews (July-October 2025) validated the core problem and surfaced 
 
 Providers consistently identified scattered information as a fundamental problem affecting clinical decision-making and efficiency.
 
-```markdown
-> "I feel like the optimal area to start with is just like helping people get it all in one place. That's it. Like because we don't do it well now." (JB, Exercise Physiologist)
-```
 
-```markdown
+> "I feel like the optimal area to start with is just like helping people get it all in one place. That's it. Like because we don't do it well now." (JB, Exercise Physiologist)
+
 > "this is one of the biggest bug bears in medicine is um uh access to information, efficient use of medical information, communicating uh it's where a lot of mistakes happen." (MB, Family Physician)
-```
 
 
 **Implication**: The encounter details consolidation directly addresses this need by eliminating duplicate views and bringing encounter information into patient context.
 
+&nbsp;
 ### Navigation Efficiency & Minimal Interaction Cost
 
 Providers expressed strong preference for information being immediately visible without requiring multiple clicks or navigation steps.
 
-```markdown
+
 > "I think that to to make things intuitive is to to use eye movement and what I can actually gather in terms of data as much as possible without using other things... if it's given to me before I click on a tab I appreciate it because I'm not so that saves me one click" (AA, Primary Care Physician)
-```
+
 
 **Implication**: Solution should minimize clicks and screen transitions. Favors embedded approaches (tabs, drawers) over patterns requiring navigation between separate pages.
 
+&nbsp;
 ### Context Retention Requirements
 
 Providers need to verify information and maintain awareness of broader patient context while reviewing specific details.
 
-```markdown
+
 > "clinicians will really really want that or they'll want to know like yeah was this self-reported on an intake Q&A or was this like from a referral letter" (JB, Exercise Physiologist)
-```
+
 
 **Implication**: Whichever solution is chosen must maintain visible patient context (name, MRN, demographics) while viewing encounter details. Supports Solutions 1-4 over Solution 5 (full-page navigation).
+
+&nbsp;
 
 ### Fragmented Systems Create "Chart Archaeology"
 
 Providers described significant time spent navigating between multiple systems and views to gather patient information before making clinical decisions.
 
 
-
-```markdown
 > "Pre-prescribed, I probably spent sometimes 10 to 15 minutes for a complex case. If it's here in the hospital, it can be as long as half an hour sometimes—clicking on Cerner and clicking on Care Connect, opening, closing, opening, closing." (P4, Internal Medicine)
-```
 
-```markdown
 > "I just don't know if it would be worth an implementation process for cost, and now there's another portal to be a part of, there's another place to look for information." (P16, Allied Health)
-```
+
 
 **Implication**: Solutions that consolidate information within existing workflows (rather than adding new places to look) will have higher adoption. The encounter consolidation must reduce, not add to, the number of places providers need to check.
+
+&nbsp;
 
 ### Key Takeaway
 
@@ -155,11 +154,23 @@ Provider interviews confirm that **information consolidation and navigation effi
 
 The specific navigation pattern (tabs vs drawer vs split view) should be validated through prototype testing, but all solutions should prioritize keeping patient context visible and minimizing navigation clicks.
 
+&nbsp;
 ---
 
 ## Solution Proposals
 
 We'll prototype and test 5 different approaches to solve the navigation and context problem:
+
+### Solutions at a Glance
+
+1. **Embedded Tabs (Epic Pattern)** - Encounter details become a tab within Patient Details page
+2. **Right-Side Drawer (Modern App Pattern)** - Encounter details slide in from right side, overlaying part of patient view
+3. **Split View (Desktop Master-Detail)** - Side-by-side layout with patient on left, encounter on right
+4. **Enhanced Slideout with Patient Context** - Improve existing slideout by embedding more patient context
+5. **Drill-Down with Sticky Patient Header** - Navigate to encounter as separate view, but keep patient context visible
+
+&nbsp;
+---
 
 ### Solution 1: Embedded Tabs (Epic Pattern)
 
@@ -183,6 +194,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 **Best for**: Users who frequently switch between patient info and encounter details
 
+&nbsp;
 ---
 
 ### Solution 2: Right-Side Drawer (Modern App Pattern)
@@ -208,6 +220,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 **Best for**: Users who need to reference patient info while reading encounter details
 
+&nbsp;
 ---
 
 ### Solution 3: Split View (Desktop Master-Detail)
@@ -261,6 +274,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 **Best for**: Users who like current slideout but need patient context
 
+&nbsp;
 ---
 
 ### Solution 5: Drill-Down with Sticky Patient Header
@@ -287,6 +301,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 **Best for**: Users who prefer full-page views but need patient context reminder
 
+&nbsp;
 ---
 
 ## Prototype Testing Plan
@@ -326,6 +341,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
   4. Return to worklist
 - **Data Collection**: Time-on-task, click tracking, think-aloud protocol, post-task survey
 
+&nbsp;
 ---
 
 ## Next Steps
@@ -336,6 +352,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 5. **Detailed Requirements** - Create specs for chosen solution
 6. **Implementation** - Phased rollout
 
+&nbsp;
 ---
 
 ## Appendix
