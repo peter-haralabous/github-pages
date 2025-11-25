@@ -1,0 +1,94 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: Allergies\nDocument
+        allergies with severity:\n\n- Penicillin: Anaphylaxis (Severe)\n\n- Shellfish:
+        Urticaria (Moderate)\n\n## Section 2: Chronic Disease Management\nSummarize
+        chronic conditions and current management:\n\n- Type 2 Diabetes: Diagnosed 2015,
+        Currently Well-controlled on oral agents\n\n- Hypertension: Diagnosed 2018,
+        Currently Controlled on monotherapy\n\n## Section 3: Assessment\nBased on the
+        above data, provide a clinical assessment:\n- Patient age: 58\n- Active concerns:
+        Recent weight gain, fatigue\n- Risk factors: Family history of CAD, sedentary
+        lifestyle, elevated BMI\n\n---\n\nEach section should start with a markdown
+        heading (##)."}]}], "system": [{"text": "You are a medical AI assistant specialized
+        in generating concise, accurate clinical summaries.\n\nYour role is to:\n- Analyze
+        patient medical information and generate clear, professional summaries\n- Organize
+        information into well-structured sections with appropriate headings\n- Use medical
+        terminology appropriately while remaining clear\n- Focus on clinically relevant
+        information\n- Format output as markdown with proper section headers (using
+        ##)\n- Be concise but comprehensive\n\nIMPORTANT:\n- You MUST return sections
+        in the EXACT ORDER they are requested\n- Each section should have a clear heading
+        starting with ##\n- Write in a professional medical tone\n- Do not include disclaimers
+        or meta-commentary\n- Do not make up information - only summarize what is provided\n-
+        If information is insufficient, note that briefly\n"}], "inferenceConfig": {},
+        "toolConfig": {"tools": [{"toolSpec": {"name": "AISummaryResponse", "description":
+        "\nResponse from AI containing multiple sections in order.\n", "inputSchema":
+        {"json": {"properties": {"sections": {"description": "Array of markdown sections.
+        MUST be in the same order as requested.", "items": {"type": "string"}, "type":
+        "array"}}, "required": ["sections"], "type": "object"}}}}], "toolChoice": {"any":
+        {}}}}'
+      headers:
+        Content-Length:
+          - '2093'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MjIzWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            OGIzMmIwYjYtY2ViMy00ZDIyLTg1NmYtNmMxNTViM2JlN2Q0
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":9521},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Allergies\n\n**Penicillin** - Anaphylaxis (Severe)\n- Critical allergy requiring
+          absolute avoidance\n- Alternative antibiotic classes must be used for any
+          bacterial infections\n\n**Shellfish** - Urticaria (Moderate)\n- Dietary restriction
+          advised\n- Patient counseled on avoidance and recognition of cross-contamination
+          risks","## Chronic Disease Management\n\n**Type 2 Diabetes Mellitus**\n- Diagnosed:
+          2015\n- Current status: Well-controlled on oral hypoglycemic agents\n- Management:
+          Continue current oral medication regimen with routine monitoring\n\n**Hypertension**\n-
+          Diagnosed: 2018\n- Current status: Controlled on monotherapy\n- Management:
+          Continue single-agent antihypertensive therapy with regular blood pressure
+          monitoring","## Assessment\n\n58-year-old patient with controlled chronic
+          conditions presenting with recent weight gain and fatigue. \n\n**Current Concerns:**\n-
+          Recent weight gain requiring evaluation\n- Fatigue - warrants investigation
+          given history of diabetes and potential for glycemic variability or other
+          metabolic etiologies\n\n**Cardiovascular Risk Profile:**\n- Multiple risk
+          factors present including family history of coronary artery disease, sedentary
+          lifestyle, and elevated BMI\n- Combination of hypertension, type 2 diabetes,
+          and modifiable lifestyle factors places patient at increased cardiovascular
+          risk\n\n**Recommendations:**\n- Evaluate recent weight gain and fatigue with
+          focused laboratory assessment including HbA1c, TSH, CBC\n- Address lifestyle
+          modifications with emphasis on physical activity and dietary counseling\n-
+          Continue monitoring of chronic conditions\n- Consider cardiovascular risk
+          stratification given multiple risk factors"]},"name":"AISummaryResponse","toolUseId":"tooluse_LDNOU2EtSWyF064ytwe8cA","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1041,"outputTokens":451,"serverToolUsage":{},"totalTokens":1492}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '2128'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:42:33 GMT
+        x-amzn-RequestId:
+          - 9c5ad95b-547e-4b08-b35d-66497e55f32e
+      status:
+        code: 200
+        message: OK
+version: 1

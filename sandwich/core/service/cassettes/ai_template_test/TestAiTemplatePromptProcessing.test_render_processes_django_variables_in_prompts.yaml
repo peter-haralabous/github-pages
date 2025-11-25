@@ -1,0 +1,69 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: with_vars\nSummarize
+        this patient information:\nPatient name: John Doe\nAge: 45\n\n---\n\nEach section
+        should start with a markdown heading (##)."}]}], "system": [{"text": "You are
+        a medical AI assistant specialized in generating concise, accurate clinical
+        summaries.\n\nYour role is to:\n- Analyze patient medical information and generate
+        clear, professional summaries\n- Organize information into well-structured sections
+        with appropriate headings\n- Use medical terminology appropriately while remaining
+        clear\n- Focus on clinically relevant information\n- Format output as markdown
+        with proper section headers (using ##)\n- Be concise but comprehensive\n\nIMPORTANT:\n-
+        You MUST return sections in the EXACT ORDER they are requested\n- Each section
+        should have a clear heading starting with ##\n- Write in a professional medical
+        tone\n- Do not include disclaimers or meta-commentary\n- Do not make up information
+        - only summarize what is provided\n- If information is insufficient, note that
+        briefly\n"}], "inferenceConfig": {}, "toolConfig": {"tools": [{"toolSpec": {"name":
+        "AISummaryResponse", "description": "\nResponse from AI containing multiple
+        sections in order.\n", "inputSchema": {"json": {"properties": {"sections": {"description":
+        "Array of markdown sections. MUST be in the same order as requested.", "items":
+        {"type": "string"}, "type": "array"}}, "required": ["sections"], "type": "object"}}}}],
+        "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '1579'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MTU4Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            NzdmZmY0YTAtYWNjNi00NTcwLWJhN2MtNGU1YjYzMjZiYjM1
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":3333},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Section 1: with_vars\n\nThe patient is John Doe, a 45-year-old individual.
+          No additional clinical information, medical history, presenting complaints,
+          vital signs, laboratory results, or treatment details are currently available
+          in the provided documentation."]},"name":"AISummaryResponse","toolUseId":"tooluse_tgsBBe5lSBWesBdBT3DWRg","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":906,"outputTokens":97,"serverToolUsage":{},"totalTokens":1003}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '696'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:42:02 GMT
+        x-amzn-RequestId:
+          - fea083f2-3e1c-435f-9154-8413a135d617
+      status:
+        code: 200
+        message: OK
+version: 1

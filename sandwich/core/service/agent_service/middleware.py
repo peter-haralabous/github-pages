@@ -17,7 +17,7 @@ def close_db_connections(
 ) -> ToolMessage | Command:
     response = handler(request)
     # Ensure database connections are closed after the tool call
-    django.db.close_old_connections()
+    django.db.close_old_connections()  # type: ignore[attr-defined]
     return response
 
 

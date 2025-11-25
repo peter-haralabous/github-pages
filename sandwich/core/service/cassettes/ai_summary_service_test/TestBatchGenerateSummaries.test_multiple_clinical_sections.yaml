@@ -1,0 +1,85 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: Chief Complaint\nSummarize:
+        Patient presenting with chest pain, onset 2 hours ago, described as pressure-like,
+        radiating to left arm, associated with shortness of breath\n\n## Section 2:
+        PMHx (Past Medical History)\nList relevant conditions: Hypertension (10 years),
+        Type 2 Diabetes (8 years), GERD (5 years), Previous MI (2020)\n\n## Section
+        3: Medications\nCurrent medications: Metoprolol 50mg BID, Metformin 1000mg BID,
+        Atorvastatin 80mg daily, Aspirin 81mg daily, Omeprazole 20mg daily\n\n## Section
+        4: Social History\nLifestyle factors: Non-smoker for 3 years (previously 1 PPD
+        x 20 years), Occasional alcohol use, Works as construction foreman, Lives with
+        spouse, Exercises irregularly\n\n---\n\nEach section should start with a markdown
+        heading (##)."}]}], "system": [{"text": "You are a medical AI assistant specialized
+        in generating concise, accurate clinical summaries.\n\nYour role is to:\n- Analyze
+        patient medical information and generate clear, professional summaries\n- Organize
+        information into well-structured sections with appropriate headings\n- Use medical
+        terminology appropriately while remaining clear\n- Focus on clinically relevant
+        information\n- Format output as markdown with proper section headers (using
+        ##)\n- Be concise but comprehensive\n\nIMPORTANT:\n- You MUST return sections
+        in the EXACT ORDER they are requested\n- Each section should have a clear heading
+        starting with ##\n- Write in a professional medical tone\n- Do not include disclaimers
+        or meta-commentary\n- Do not make up information - only summarize what is provided\n-
+        If information is insufficient, note that briefly\n"}], "inferenceConfig": {},
+        "toolConfig": {"tools": [{"toolSpec": {"name": "AISummaryResponse", "description":
+        "\nResponse from AI containing multiple sections in order.\n", "inputSchema":
+        {"json": {"properties": {"sections": {"description": "Array of markdown sections.
+        MUST be in the same order as requested.", "items": {"type": "string"}, "type":
+        "array"}}, "required": ["sections"], "type": "object"}}}}], "toolChoice": {"any":
+        {}}}}'
+      headers:
+        Content-Length:
+          - '2191'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MTQxWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            NmJmMzE4YzctM2MxYy00YjhkLWIzOTktZjM4MzZkMzRhNjJk
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":5434},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Chief Complaint\n\nThe patient presents with acute onset chest pain that began
+          2 hours prior to presentation. The pain is described as pressure-like in quality
+          and radiates to the left arm. The chest pain is accompanied by shortness of
+          breath.","## PMHx (Past Medical History)\n\n- Hypertension (10-year history)\n-
+          Type 2 Diabetes Mellitus (8-year history)\n- Gastroesophageal Reflux Disease
+          (5-year history)\n- Previous Myocardial Infarction (2020)","## Medications\n\n-
+          Metoprolol 50 mg twice daily\n- Metformin 1000 mg twice daily\n- Atorvastatin
+          80 mg once daily\n- Aspirin 81 mg once daily\n- Omeprazole 20 mg once daily","##
+          Social History\n\nThe patient is a former smoker who quit 3 years ago with
+          a prior smoking history of 1 pack per day for 20 years (20 pack-year history).
+          He reports occasional alcohol consumption. He is employed as a construction
+          foreman and lives with his spouse. Exercise habits are irregular."]},"name":"AISummaryResponse","toolUseId":"tooluse_yWv7tu3QQySMlvEHtVO5pQ","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1091,"outputTokens":320,"serverToolUsage":{},"totalTokens":1411}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '1366'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:41:47 GMT
+        x-amzn-RequestId:
+          - b59837c8-ee82-4f5b-a3bd-958c991fe878
+      status:
+        code: 200
+        message: OK
+version: 1

@@ -1,0 +1,127 @@
+# serializer version: 1
+# name: TestBatchGenerateSummaries.test_complex_medical_data_with_lists
+  dict({
+    'Allergies': '''
+      ## Allergies
+      
+      **Documented Allergies:**
+      
+      * Penicillin (Reaction: Anaphylaxis)
+      * Shellfish (Reaction: Hives)
+      * Latex (Reaction: Contact dermatitis)
+      
+      **Clinical Significance:**
+      
+      The patient has three documented allergies with varying severity levels that require careful consideration in treatment planning:
+      
+      * **Penicillin allergy with anaphylaxis** represents a severe, life-threatening Type I hypersensitivity reaction. This necessitates strict avoidance of all penicillin-based antibiotics and related beta-lactam agents. Alternative antibiotic classes (e.g., macrolides, fluoroquinolones, or non-beta-lactam alternatives) should be utilized when antimicrobial therapy is indicated. The patient should wear medical alert identification and have emergency epinephrine readily available.
+      
+      * **Shellfish allergy with urticarial reaction** indicates IgE-mediated hypersensitivity. While primarily a dietary concern, this allergy has potential implications for contrast media administration, as some older iodinated contrast agents were shellfish-derived. Current evidence suggests iodine allergy itself is not the issue, but heightened vigilance and pre-medication protocols should be considered for contrast studies.
+      
+      * **Latex contact dermatitis** suggests Type IV delayed hypersensitivity. Latex-free gloves, equipment, and surgical supplies must be used during all procedures and examinations. Operating room protocols should designate latex-free environments to prevent exposure.
+      
+      All healthcare providers, including emergency personnel, surgical teams, and pharmacy staff, must be notified of these allergies prior to any interventions.
+    ''',
+  })
+# ---
+# name: TestBatchGenerateSummaries.test_multiple_clinical_sections
+  dict({
+    'Chief Complaint': '''
+      ## Chief Complaint
+      
+      The patient presents with acute onset chest pain that began 2 hours prior to presentation. The pain is described as pressure-like in quality and radiates to the left arm. The chest pain is accompanied by shortness of breath.
+    ''',
+    'Medications': '''
+      ## Medications
+      
+      - Metoprolol 50 mg twice daily
+      - Metformin 1000 mg twice daily
+      - Atorvastatin 80 mg once daily
+      - Aspirin 81 mg once daily
+      - Omeprazole 20 mg once daily
+    ''',
+    'PMHx (Past Medical History)': '''
+      ## PMHx (Past Medical History)
+      
+      - Hypertension (10-year history)
+      - Type 2 Diabetes Mellitus (8-year history)
+      - Gastroesophageal Reflux Disease (5-year history)
+      - Previous Myocardial Infarction (2020)
+    ''',
+    'Social History': '''
+      ## Social History
+      
+      The patient is a former smoker who quit 3 years ago with a prior smoking history of 1 pack per day for 20 years (20 pack-year history). He reports occasional alcohol consumption. He is employed as a construction foreman and lives with his spouse. Exercise habits are irregular.
+    ''',
+  })
+# ---
+# name: TestBatchGenerateSummaries.test_patient_history_summary
+  dict({
+    'Patient History Summary': '''
+      ## Patient History Summary
+      
+      This patient is a college-educated accountant who presents with multiple chronic medical conditions. 
+      
+      **Medical History:**
+      The patient has a significant past medical history including Type 2 Diabetes Mellitus diagnosed in 2015, Hypertension diagnosed in 2018, and Hyperlipidemia. Surgical history is notable for an appendectomy in 2010 and cholecystectomy in 2019. Family history is significant for cardiovascular disease (father with myocardial infarction at age 62), Type 2 Diabetes Mellitus (mother), and malignancy (sister with breast cancer), indicating increased risk for cardiovascular and metabolic disorders.
+      
+      **Social History:**
+      The patient is a former smoker who successfully quit 5 years ago. Current alcohol consumption is moderate at 2-3 drinks per week, and the patient denies recreational drug use. The patient maintains an active lifestyle with daily 30-minute walks. Married with 2 adult children, the patient works as an accountant.
+      
+      **Medications and Allergies:**
+      Current medication regimen includes Metformin 1000mg twice daily for diabetes management, Lisinopril 20mg daily for hypertension, and Atorvastatin 40mg daily for hyperlipidemia. The patient also takes Vitamin D supplementation 2000 IU daily and Aspirin 81mg daily for cardiovascular prophylaxis. Known drug allergies include Penicillin (causing rash) and Sulfa drugs (causing hives).
+    ''',
+  })
+# ---
+# name: TestBuildSystemPrompt.test_system_prompt_matches_snapshot
+  '''
+  You are a medical AI assistant specialized in generating concise, accurate clinical summaries.
+  
+  Your role is to:
+  - Analyze patient medical information and generate clear, professional summaries
+  - Organize information into well-structured sections with appropriate headings
+  - Use medical terminology appropriately while remaining clear
+  - Focus on clinically relevant information
+  - Format output as markdown with proper section headers (using ##)
+  - Be concise but comprehensive
+  
+  IMPORTANT:
+  - You MUST return sections in the EXACT ORDER they are requested
+  - Each section should have a clear heading starting with ##
+  - Write in a professional medical tone
+  - Do not include disclaimers or meta-commentary
+  - Do not make up information - only summarize what is provided
+  - If information is insufficient, note that briefly
+  
+  '''
+# ---
+# name: TestBuildUserPrompt.test_multiple_requests_matches_snapshot
+  '''
+  Generate medical summary sections IN THE EXACT ORDER listed below:
+  
+  ## Section 1: Medications
+  Med prompt
+  
+  ## Section 2: Allergies
+  Allergy prompt
+  
+  ## Section 3: Conditions
+  Condition prompt
+  
+  ---
+  
+  Each section should start with a markdown heading (##).
+  '''
+# ---
+# name: TestBuildUserPrompt.test_single_request_matches_snapshot
+  '''
+  Generate medical summary sections IN THE EXACT ORDER listed below:
+  
+  ## Section 1: Medications
+  List all current medications
+  
+  ---
+  
+  Each section should start with a markdown heading (##).
+  '''
+# ---

@@ -1,0 +1,72 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: with_tags\nSummarize
+        patient conditions: diabetes, hypertension\n\n---\n\nEach section should start
+        with a markdown heading (##)."}]}], "system": [{"text": "You are a medical AI
+        assistant specialized in generating concise, accurate clinical summaries.\n\nYour
+        role is to:\n- Analyze patient medical information and generate clear, professional
+        summaries\n- Organize information into well-structured sections with appropriate
+        headings\n- Use medical terminology appropriately while remaining clear\n- Focus
+        on clinically relevant information\n- Format output as markdown with proper
+        section headers (using ##)\n- Be concise but comprehensive\n\nIMPORTANT:\n-
+        You MUST return sections in the EXACT ORDER they are requested\n- Each section
+        should have a clear heading starting with ##\n- Write in a professional medical
+        tone\n- Do not include disclaimers or meta-commentary\n- Do not make up information
+        - only summarize what is provided\n- If information is insufficient, note that
+        briefly\n"}], "inferenceConfig": {}, "toolConfig": {"tools": [{"toolSpec": {"name":
+        "AISummaryResponse", "description": "\nResponse from AI containing multiple
+        sections in order.\n", "inputSchema": {"json": {"properties": {"sections": {"description":
+        "Array of markdown sections. MUST be in the same order as requested.", "items":
+        {"type": "string"}, "type": "array"}}, "required": ["sections"], "type": "object"}}}}],
+        "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '1563'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MjAyWg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            MzAwMTI3NmQtZjBlMy00ODM0LTkyODktMDExZmNlNmZhZTk0
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":3977},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Section 1: with_tags\n\n**Diabetes:** Insufficient information provided regarding
+          the patient''s diabetes status, including type (Type 1, Type 2, or other),
+          duration, current management, glycemic control (HbA1c levels), complications,
+          or current medications.\n\n**Hypertension:** Insufficient information provided
+          regarding the patient''s hypertension, including blood pressure readings,
+          duration of diagnosis, current antihypertensive medications, target blood
+          pressure goals, or presence of end-organ damage."]},"name":"AISummaryResponse","toolUseId":"tooluse_FQazU9CIRvqMG4afry6qWA","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":898,"outputTokens":155,"serverToolUsage":{},"totalTokens":1053}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '946'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:42:07 GMT
+        x-amzn-RequestId:
+          - 25f7d896-1f3f-4bf8-9e26-95f1a2034ccd
+      status:
+        code: 200
+        message: OK
+version: 1

@@ -1,0 +1,99 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: Chief Complaint\nSummarize
+        the primary concern: Chest pain\nDuration: 2 hours\nSeverity: 7/10\n\n## Section
+        2: HPI (History of Presenting Illness)\nProvide a detailed narrative of the
+        current issue:\n- Onset: Sudden, started at rest\n- Character: Pressure-like,
+        substernal\n- Associated symptoms: Shortness of breath, diaphoresis, nausea\n-
+        Aggravating factors: Movement, deep breathing\n- Relieving factors: None identified\n-
+        Previous treatment attempts: Took antacid without relief\n\n## Section 3: PMHx
+        (Past Medical History)\nList relevant chronic conditions and past illnesses:\nHypertension
+        (10 years), Type 2 DM (8 years), Hyperlipidemia (5 years)\nPrevious hospitalizations:
+        MI 2020, treated with PCI\n\n## Section 4: Medications\nList all current medications:\n-
+        Prescriptions: Metoprolol 50mg BID, Metformin 1000mg BID, Atorvastatin 80mg
+        QD\n- OTC: Aspirin 81mg daily\n- Supplements: Vitamin D, Fish oil\n\n## Section
+        5: Social History\nDescribe lifestyle and social factors:\n- Smoking: Former
+        smoker, quit 3 years ago (20 pack-year history)\n- Alcohol: Occasional, 1-2
+        drinks per week\n- Occupation: Construction foreman\n- Living situation: Lives
+        with spouse\n- Physical activity: Minimal due to work demands\n\n---\n\nEach
+        section should start with a markdown heading (##)."}]}], "system": [{"text":
+        "You are a medical AI assistant specialized in generating concise, accurate
+        clinical summaries.\n\nYour role is to:\n- Analyze patient medical information
+        and generate clear, professional summaries\n- Organize information into well-structured
+        sections with appropriate headings\n- Use medical terminology appropriately
+        while remaining clear\n- Focus on clinically relevant information\n- Format
+        output as markdown with proper section headers (using ##)\n- Be concise but
+        comprehensive\n\nIMPORTANT:\n- You MUST return sections in the EXACT ORDER they
+        are requested\n- Each section should have a clear heading starting with ##\n-
+        Write in a professional medical tone\n- Do not include disclaimers or meta-commentary\n-
+        Do not make up information - only summarize what is provided\n- If information
+        is insufficient, note that briefly\n"}], "inferenceConfig": {}, "toolConfig":
+        {"tools": [{"toolSpec": {"name": "AISummaryResponse", "description": "\nResponse
+        from AI containing multiple sections in order.\n", "inputSchema": {"json": {"properties":
+        {"sections": {"description": "Array of markdown sections. MUST be in the same
+        order as requested.", "items": {"type": "string"}, "type": "array"}}, "required":
+        ["sections"], "type": "object"}}}}], "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '2722'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MjE1Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            NDhiMGIzMGMtZjM2OS00ODgwLWI3NTktNmVmMjVhYTUyNzgw
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":7436},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Chief Complaint\n\nThe patient presents with chest pain of 2 hours duration,
+          rated 7/10 in severity.","## HPI (History of Presenting Illness)\n\nThe patient
+          reports sudden onset of chest pain that began at rest approximately 2 hours
+          prior to presentation. The pain is described as pressure-like in quality,
+          located substernally. Associated symptoms include shortness of breath, diaphoresis,
+          and nausea. The pain is aggravated by movement and deep breathing. No relieving
+          factors have been identified. The patient attempted self-treatment with an
+          antacid, which provided no relief.","## PMHx (Past Medical History)\n\nThe
+          patient has a significant past medical history including:\n- Hypertension
+          (diagnosed 10 years ago)\n- Type 2 Diabetes Mellitus (diagnosed 8 years ago)\n-
+          Hyperlipidemia (diagnosed 5 years ago)\n- Previous myocardial infarction in
+          2020, treated with percutaneous coronary intervention (PCI)","## Medications\n\n**Prescription
+          Medications:**\n- Metoprolol 50 mg twice daily\n- Metformin 1000 mg twice
+          daily\n- Atorvastatin 80 mg once daily\n\n**Over-the-Counter Medications:**\n-
+          Aspirin 81 mg daily\n\n**Supplements:**\n- Vitamin D\n- Fish oil","## Social
+          History\n\n**Tobacco Use:** Former smoker who quit 3 years ago, with a 20
+          pack-year smoking history.\n\n**Alcohol Use:** Occasional alcohol consumption,
+          averaging 1-2 drinks per week.\n\n**Occupation:** Works as a construction
+          foreman.\n\n**Living Situation:** Currently resides with spouse.\n\n**Physical
+          Activity:** Minimal physical activity due to work demands."]},"name":"AISummaryResponse","toolUseId":"tooluse_LWwrloMqTmqjL9qYxiKrsQ","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1242,"outputTokens":480,"serverToolUsage":{},"totalTokens":1722}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '1979'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:42:23 GMT
+        x-amzn-RequestId:
+          - 7fdd8f9a-4c2d-4bf4-9ac1-672e4a56d1dd
+      status:
+        code: 200
+        message: OK
+version: 1

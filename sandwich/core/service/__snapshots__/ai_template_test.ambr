@@ -1,0 +1,125 @@
+# serializer version: 1
+# name: TestAiTemplateIntakeForm.test_clinical_assessment_multiple_sections
+  '''
+  <h1>Clinical Assessment - Jane Doe</h1>
+  <h2>Demographics</h2>
+  <ul>
+  <li>DOB: 1975-06-15</li>
+  <li>PHN: 9876543210</li>
+  </ul>
+  <h2>Clinical Sections</h2>
+  <h2>Chief Complaint</h2>
+  <p>The patient presents with chest pain of 2 hours duration, rated 7/10 in severity.</p>
+  <h2>HPI (History of Presenting Illness)</h2>
+  <p>The patient reports sudden onset of chest pain that began at rest approximately 2 hours prior to presentation. The pain is described as pressure-like in quality, located substernally. Associated symptoms include shortness of breath, diaphoresis, and nausea. The pain is aggravated by movement and deep breathing. No relieving factors have been identified. The patient attempted self-treatment with an antacid, which provided no relief.</p>
+  <h2>PMHx (Past Medical History)</h2>
+  <p>The patient has a significant past medical history including:</p>
+  <ul>
+  <li>Hypertension (diagnosed 10 years ago)</li>
+  <li>Type 2 Diabetes Mellitus (diagnosed 8 years ago)</li>
+  <li>Hyperlipidemia (diagnosed 5 years ago)</li>
+  <li>Previous myocardial infarction in 2020, treated with percutaneous coronary intervention (PCI)</li>
+  </ul>
+  <h2>Medications</h2>
+  <p><strong>Prescription Medications:</strong></p>
+  <ul>
+  <li>Metoprolol 50 mg twice daily</li>
+  <li>Metformin 1000 mg twice daily</li>
+  <li>Atorvastatin 80 mg once daily</li>
+  </ul>
+  <p><strong>Over-the-Counter Medications:</strong></p>
+  <ul>
+  <li>Aspirin 81 mg daily</li>
+  </ul>
+  <p><strong>Supplements:</strong></p>
+  <ul>
+  <li>Vitamin D</li>
+  <li>Fish oil</li>
+  </ul>
+  <h2>Social History</h2>
+  <p><strong>Tobacco Use:</strong> Former smoker who quit 3 years ago, with a 20 pack-year smoking history.</p>
+  <p><strong>Alcohol Use:</strong> Occasional alcohol consumption, averaging 1-2 drinks per week.</p>
+  <p><strong>Occupation:</strong> Works as a construction foreman.</p>
+  <p><strong>Living Situation:</strong> Currently resides with spouse.</p>
+  <p><strong>Physical Activity:</strong> Minimal physical activity due to work demands.</p>
+  
+  '''
+# ---
+# name: TestAiTemplateIntakeForm.test_intake_form_with_patient_history
+  '''
+  <h1>Intake Form Summary: John Smith</h1>
+  <h2>Patient History Summary</h2>
+  <p>This patient is a college-educated accountant who is married with two adult children. The patient presents with a significant medical history including chronic metabolic and cardiovascular conditions.</p>
+  <p><strong>Medical History:</strong></p>
+  <p>The patient has a documented history of Type 2 Diabetes Mellitus diagnosed in 2015, Hypertension diagnosed in 2018, and Hyperlipidemia. Surgical history includes an appendectomy performed in 2010 and cholecystectomy in 2019. Family history is significant for premature coronary artery disease with father experiencing myocardial infarction at age 62, and maternal history of Type 2 Diabetes Mellitus, indicating genetic predisposition to cardiometabolic disease.</p>
+  <p><strong>Social History:</strong></p>
+  <p>The patient is a former smoker who successfully quit 5 years ago. Current alcohol consumption is moderate at 2-3 drinks per week for social purposes. The patient denies any recreational drug use. The patient maintains an active lifestyle with daily walking exercise for 30 minutes, demonstrating good health maintenance behaviors.</p>
+  <p><strong>Medications and Allergies:</strong></p>
+  <p>Current prescription medications include Metformin 1000mg twice daily for diabetes management, Lisinopril 20mg daily for blood pressure control, and Atorvastatin 40mg daily for lipid management. The patient also takes over-the-counter Aspirin 81mg daily for cardiovascular protection and Vitamin D supplementation 2000 IU daily. Known drug allergies include Penicillin (manifesting as rash) and Sulfa drugs (manifesting as hives), which should be considered in all prescribing decisions.</p>
+  
+  '''
+# ---
+# name: TestAiTemplateIntakeForm.test_template_with_conditional_sections
+  '''
+  <h1>Medical Summary</h1>
+  <h2>Allergies</h2>
+  <p><strong>Penicillin</strong> - Anaphylaxis (Severe)</p>
+  <ul>
+  <li>Critical allergy requiring absolute avoidance</li>
+  <li>Alternative antibiotic classes must be used for any bacterial infections</li>
+  </ul>
+  <p><strong>Shellfish</strong> - Urticaria (Moderate)</p>
+  <ul>
+  <li>Dietary restriction advised</li>
+  <li>Patient counseled on avoidance and recognition of cross-contamination risks</li>
+  </ul>
+  <h2>Chronic Disease Management</h2>
+  <p><strong>Type 2 Diabetes Mellitus</strong></p>
+  <ul>
+  <li>Diagnosed: 2015</li>
+  <li>Current status: Well-controlled on oral hypoglycemic agents</li>
+  <li>Management: Continue current oral medication regimen with routine monitoring</li>
+  </ul>
+  <p><strong>Hypertension</strong></p>
+  <ul>
+  <li>Diagnosed: 2018</li>
+  <li>Current status: Controlled on monotherapy</li>
+  <li>Management: Continue single-agent antihypertensive therapy with regular blood pressure monitoring</li>
+  </ul>
+  <h2>Assessment</h2>
+  <p>58-year-old patient with controlled chronic conditions presenting with recent weight gain and fatigue.</p>
+  <p><strong>Current Concerns:</strong></p>
+  <ul>
+  <li>Recent weight gain requiring evaluation</li>
+  <li>Fatigue - warrants investigation given history of diabetes and potential for glycemic variability or other metabolic etiologies</li>
+  </ul>
+  <p><strong>Cardiovascular Risk Profile:</strong></p>
+  <ul>
+  <li>Multiple risk factors present including family history of coronary artery disease, sedentary lifestyle, and elevated BMI</li>
+  <li>Combination of hypertension, type 2 diabetes, and modifiable lifestyle factors places patient at increased cardiovascular risk</li>
+  </ul>
+  <p><strong>Recommendations:</strong></p>
+  <ul>
+  <li>Evaluate recent weight gain and fatigue with focused laboratory assessment including HbA1c, TSH, CBC</li>
+  <li>Address lifestyle modifications with emphasis on physical activity and dietary counseling</li>
+  <li>Continue monitoring of chronic conditions</li>
+  <li>Consider cardiovascular risk stratification given multiple risk factors</li>
+  </ul>
+  
+  '''
+# ---
+# name: TestAiTemplatePromptProcessing.test_render_handles_nested_template_tags_in_prompts
+  '''
+  <h2>Section 1: with_tags</h2>
+  <p><strong>Diabetes:</strong> Insufficient information provided regarding the patient's diabetes status, including type (Type 1, Type 2, or other), duration, current management, glycemic control (HbA1c levels), complications, or current medications.</p>
+  <p><strong>Hypertension:</strong> Insufficient information provided regarding the patient's hypertension, including blood pressure readings, duration of diagnosis, current antihypertensive medications, target blood pressure goals, or presence of end-organ damage.</p>
+  
+  '''
+# ---
+# name: TestAiTemplatePromptProcessing.test_render_processes_django_variables_in_prompts
+  '''
+  <h2>Section 1: with_vars</h2>
+  <p>The patient is John Doe, a 45-year-old individual. No additional clinical information, medical history, presenting complaints, vital signs, laboratory results, or treatment details are currently available in the provided documentation.</p>
+  
+  '''
+# ---

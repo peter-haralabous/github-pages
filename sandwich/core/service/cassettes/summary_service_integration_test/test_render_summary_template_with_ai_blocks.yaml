@@ -1,0 +1,90 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate the following
+        sections for a medical summary:\n\n## Section 1: Clinical Assessment\nBased
+        on the following patient data, provide a clinical assessment:\n- Chief Complaint:
+        Severe headache for 3 days\n- Pain Scale: 8/10\n- Associated Symptoms: nausea,
+        photophobia\n\n---\n\nPlease generate all sections with appropriate markdown
+        headings (##) for each section title."}]}], "system": [{"text": "You are a medical
+        AI assistant specialized in generating concise, accurate clinical summaries.\n\nYour
+        role is to:\n- Analyze patient medical information and generate clear, professional
+        summaries\n- Organize information into well-structured sections with appropriate
+        headings\n- Use medical terminology appropriately while remaining clear\n- Focus
+        on clinically relevant information\n- Format output as markdown with proper
+        section headers (using ##)\n- Be concise but comprehensive\n\nIMPORTANT:\n-
+        Each section should have a clear heading starting with ##\n- Write in a professional
+        medical tone\n- Do not include disclaimers or meta-commentary\n- Do not make
+        up information - only summarize what is provided\n- If information is insufficient,
+        note that briefly\n"}], "inferenceConfig": {}, "toolConfig": {"tools": [{"toolSpec":
+        {"name": "AISummaryResponse", "description": "Response from AI containing multiple
+        sections.", "inputSchema": {"json": {"properties": {"sections": {"description":
+        "List of sections in the AI-generated summary", "items": {"description": "Represents
+        a single section in an AI-generated summary.", "properties": {"title": {"description":
+        "The section title/heading", "type": "string"}, "content": {"description": "The
+        markdown content for this section", "type": "string"}}, "required": ["title",
+        "content"], "type": "object"}, "type": "array"}}, "required": ["sections"],
+        "type": "object"}}}}], "toolChoice": {"any": {}}}}'
+      headers:
+        Content-Length:
+          - '1906'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9aLGIs
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjRUMjI0MzI0Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            MWNiYjNjYjgtMmVjNi00MjhjLWFhMzgtMjIwYzNlOGUwYWI2
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":9116},"output":{"message":{"content":[{"toolUse":{"input":{"sections":[{"title":"Clinical
+          Assessment","content":"The patient presents with a severe headache of 3 days
+          duration, rated 8/10 on the pain scale, indicating significant pain severity.
+          The headache is accompanied by nausea and photophobia (light sensitivity),
+          which are notable associated symptoms.\n\nThis clinical presentation raises
+          concern for several potential diagnoses:\n\n**Primary Considerations:**\n-
+          **Migraine headache**: The triad of severe headache, nausea, and photophobia
+          is highly characteristic of migraine. The 3-day duration is consistent with
+          migraine (which can last 4-72 hours untreated).\n- **Tension-type headache**:
+          Less likely given the severity (8/10) and presence of photophobia, though
+          possible.\n\n**Secondary Headache Considerations (Red Flags):**\n- **Meningitis/Encephalitis**:
+          Must be ruled out, especially if fever, neck stiffness, or altered mental
+          status present.\n- **Subarachnoid hemorrhage**: Particularly if headache onset
+          was sudden/thunderclap.\n- **Intracranial mass or increased intracranial pressure**:
+          Consider if headache is progressively worsening or associated with focal neurological
+          deficits.\n\n**Clinical Significance:**\nThe high pain intensity (8/10) and
+          3-day duration indicate significant functional impairment requiring prompt
+          evaluation and management. The presence of photophobia and nausea suggests
+          meningeal irritation or migraine pathophysiology. Further history, physical
+          examination including neurological assessment, and potentially diagnostic
+          studies are warranted to establish definitive diagnosis and exclude serious
+          secondary causes."}]},"name":"AISummaryResponse","toolUseId":"tooluse_W-CwjdWGRRikmR-b5hol9Q","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":982,"outputTokens":428,"serverToolUsage":{},"totalTokens":1410}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '2029'
+        Content-Type:
+          - application/json
+        Date:
+          - Mon, 24 Nov 2025 22:43:33 GMT
+        x-amzn-RequestId:
+          - b5dc144c-6560-405e-b5a8-49038fb6c23a
+      status:
+        code: 200
+        message: OK
+version: 1
