@@ -2,8 +2,7 @@
 
 **JIRA**: [HC-225](https://new-hippo.atlassian.net/browse/HC-225) &nbsp;|&nbsp; **Author**: [Peter Haralabous](https://home.atlassian.com/o/787759e2-0bbc-494d-b27d-26930e7600ab/people/618e9ea320c676007090a9c0?cloudId=c7306235-0180-4269-ae60-6513d0ef7dd6) &nbsp;|&nbsp; **Date**: Nov 24, 2025
 
----
-
+&nbsp;
 ## Problem Statement
 
 Healthcare providers are confused by multiple similar views for encounter details and struggle to navigate between patient context and encounter information.
@@ -33,13 +32,14 @@ Healthcare providers are confused by multiple similar views for encounter detail
 - **Current Workaround**: Manual navigation between pages, losing context and efficiency
 
 
----
+&nbsp;
 
 
 ## Competitive Analysis
 
 How do other healthcare systems solve multi-context navigation problems?
 
+&nbsp;
 ### Epic EMR: Tabs Within Patient Chart
 **Pattern**: All encounter information lives as tabs within the patient chart[1][2]
 - Patient context always visible
@@ -52,6 +52,7 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Visual Example**: See Figures 1-2 in [Appendix](#isual-examples) for Epic EMR screenshots showing patient context with tabbed navigation (Summary, Chart Review, MAR, etc.) and encounter details within patient chart.
 
+&nbsp;
 ### Master-Detail Pattern (Industry Standard)
 **Pattern**: Parent view (master) maintains connection to child view (detail)[3][4][5][6]
 - **Split View**: Side-by-side panels (common on desktop)
@@ -73,6 +74,8 @@ How do other healthcare systems solve multi-context navigation problems?
 
 **Visual Examples**: See Figures 3-6 in [Appendix](#visual-examples) for examples from Asana, Notion, and Linear showing side panel implementations.
 
+&nbsp;
+
 ### Research Findings
 - **EHR Navigation Studies**: Providers navigate screens in highly variable patterns; reducing context switching improves efficiency[7][8][10]
 - **Multi-EMR Research**: Integrated views showing data from multiple sources within primary context improve workflow and reduce safety risks[9]
@@ -87,7 +90,7 @@ How do other healthcare systems solve multi-context navigation problems?
 | Slide-out Panel | ✓ Medium | Efficient | Low | ✓ Yes |
 | Separate Page | ✗ Low | Maximum | Medium | ✓ Yes |
 
----
+&nbsp;
 
 ## User Interview Insights
 
@@ -155,7 +158,7 @@ Provider interviews confirm that **information consolidation and navigation effi
 The specific navigation pattern (tabs vs drawer vs split view) should be validated through prototype testing, but all solutions should prioritize keeping patient context visible and minimizing navigation clicks.
 
 &nbsp;
----
+
 
 ## Solution Proposals
 
@@ -247,6 +250,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 
 **Best for**: Desktop users who need simultaneous access to both views
 
+&nbsp;
 ---
 
 ### Solution 4: Enhanced Slideout with Patient Context
@@ -275,7 +279,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 **Best for**: Users who like current slideout but need patient context
 
 &nbsp;
----
+
 
 ### Solution 5: Drill-Down with Sticky Patient Header
 
@@ -302,13 +306,14 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 **Best for**: Users who prefer full-page views but need patient context reminder
 
 &nbsp;
----
 
 ## Prototype Testing Plan
 
 ### Test Goals
 - **Primary**: Which solution helps users maintain patient context while reviewing encounters?
 - **Secondary**: Which solution feels most intuitive for the worklist → patient → encounter workflow?
+
+&nbsp;
 
 ### Success Metrics
 
@@ -331,6 +336,8 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 - Net Promoter Score (likelihood to recommend)
 - Perceived ease of use (SUS - System Usability Scale)
 
+&nbsp;
+
 ### Testing Approach
 - **Method**: Moderated usability testing with interactive prototypes
 - **Participants**: 3-5 healthcare providers (mix of experience levels)
@@ -342,7 +349,7 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 - **Data Collection**: Time-on-task, click tracking, think-aloud protocol, post-task survey
 
 &nbsp;
----
+
 
 ## Next Steps
 1. **Design Prototypes** - Create interactive prototypes for each solution proposal
@@ -353,7 +360,6 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 6. **Implementation** - Phased rollout
 
 &nbsp;
----
 
 ## Appendix
 
@@ -382,6 +388,8 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 2. No patient context visible
 3. Confusion about where you are
 
+&nbsp;
+
 ### Visual Examples
 
 **Figure 1: Epic EMR - Patient Chart with MAR Tab**
@@ -393,6 +401,9 @@ This screenshot demonstrates Epic's tabbed approach within the patient chart. Ke
 - Top navigation tabs: Summary, Chart Review, Work List, MAR, Flowsheets, Notes, etc.
 - Current view shows MAR (Medication Administration Record) without losing patient context
 - User can switch between different data views (medications, encounters, labs) via tabs while maintaining awareness of which patient they're viewing
+
+&nbsp;
+---
 
 **Figure 2: Epic EMR - Encounter Details Within Patient Chart**
 
@@ -407,6 +418,7 @@ This screenshot shows how Epic displays encounter details while maintaining pati
 
 **Key Pattern**: Both examples show how Epic never separates encounter details from patient context. Whether viewing medications, encounters, or documentation, the patient sidebar remains consistently visible, preventing users from losing context about which patient they're working with.
 
+&nbsp;
 ---
 
 **Figure 3: Asana - Side Panel Detail View**
@@ -455,21 +467,17 @@ Linear's collapsible side panel for issue details:
 3. Support sequential navigation (next/prev) within the panel
 4. Can be closed/collapsed to return to full master view
 
+&nbsp;
 ## References
-
-**Internal Documents**
 
 ### Provider User Interviews - Codebook
 - [Provider User Interviews - Codebook Document](https://docs.google.com/document/d/1svSyUI48qHtXXlLGqaLLJGelYn2v9ipRxpRAUhzYpWg/edit?usp=drive_link)
-
----
 
 
 ### Epic EMR Pattern
 1. University of Iowa Epic Education - Chart Review: [https://epicsupport.sites.uiowa.edu/epic-resources/chart-review](https://epicsupport.sites.uiowa.edu/epic-resources/chart-review)
 2. Johns Hopkins Medicine - Epic Tips and Tricks (2019): [https://www.hopkinsmedicine.org/news/articles/2019/08/epic-shortcuts-experts-share-their-favorite-tips](https://www.hopkinsmedicine.org/news/articles/2019/08/epic-shortcuts-experts-share-their-favorite-tips)
 
----
 
 ### Master-Detail UI Patterns
 3. Oracle Alta UI - Master-Detail Pattern: [https://www.oracle.com/webfolder/ux/middleware/alta/patterns/MasterDetail.html](https://www.oracle.com/webfolder/ux/middleware/alta/patterns/MasterDetail.html)
@@ -477,12 +485,9 @@ Linear's collapsible side panel for issue details:
 5. Microsoft Windows Developer Blog - Master the Master-Detail Pattern (2017): [https://blogs.windows.com/windowsdeveloper/2017/05/01/master-master-detail-pattern/](https://blogs.windows.com/windowsdeveloper/2017/05/01/master-master-detail-pattern/)
 6. Web App Huddle - Master-Detail UI Pattern Design (2019): [https://webapphuddle.com/master-detail-ui-pattern-design/](https://webapphuddle.com/master-detail-ui-pattern-design/)
 
----
 
 ### EHR Navigation Research
 7. Coleman et al. - Analysing EHR navigation patterns and digital workflows among physicians during ICU pre-rounds: [https://pmc.ncbi.nlm.nih.gov/articles/PMC8435833/](https://pmc.ncbi.nlm.nih.gov/articles/PMC8435833/)
 8. Usability Challenges in Electronic Health Records: Impact on Documentation Burden and Clinical Workflow (2025): [https://pmc.ncbi.nlm.nih.gov/articles/PMC12206486/](https://pmc.ncbi.nlm.nih.gov/articles/PMC12206486/)
 9. Studying workflow and workarounds in EHR-supported work to improve health system performance: [https://pmc.ncbi.nlm.nih.gov/articles/PMC8061456/](https://pmc.ncbi.nlm.nih.gov/articles/PMC8061456/)
 10. Melton et al. - Usability Testing of Two Ambulatory EHR Navigators (2016): [https://pmc.ncbi.nlm.nih.gov/articles/PMC4941856/](https://pmc.ncbi.nlm.nih.gov/articles/PMC4941856/)
-
----
