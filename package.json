@@ -5,6 +5,11 @@
   "dependencies": {
     "@datadog/browser-rum": "^6.21.1",
     "@tiptap/core": "^3.11.0",
+    "@tiptap/extension-highlight": "^3.11.0",
+    "@tiptap/extension-link": "^3.11.0",
+    "@tiptap/extension-placeholder": "^3.11.0",
+    "@tiptap/extension-text-align": "^3.11.0",
+    "@tiptap/extension-underline": "^3.11.0",
     "@tiptap/markdown": "^3.11.0",
     "@tiptap/pm": "^3.11.0",
     "@tiptap/starter-kit": "^3.11.0",

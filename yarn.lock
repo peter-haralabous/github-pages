@@ -2154,6 +2154,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-highlight@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "@tiptap/extension-highlight@npm:3.11.0"
+  peerDependencies:
+    "@tiptap/core": ^3.11.0
+  checksum: 10c0/d42b64ced1b04c1817d832110068cc97c0c5a5042bb765589626c62928fc4f76d2c12663eeb9ae24f2db47bba78753762c0e7e5f38e29475c6764889f239a9d4
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-horizontal-rule@npm:^3.11.0":
   version: 3.11.0
   resolution: "@tiptap/extension-horizontal-rule@npm:3.11.0"
@@ -2231,12 +2240,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-placeholder@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "@tiptap/extension-placeholder@npm:3.11.0"
+  peerDependencies:
+    "@tiptap/extensions": ^3.11.0
+  checksum: 10c0/90349e047a6fa41c33521bf552e337023fea526e272d7837cace2811b6a57dc67b34a13bf0f5ebb2b809ca62ee8d5bd48fe544722dc24916e3f53db595612ef9
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-strike@npm:^3.11.0":
   version: 3.11.0
   resolution: "@tiptap/extension-strike@npm:3.11.0"
   peerDependencies:
     "@tiptap/core": ^3.11.0
   checksum: 10c0/242bd9cda194f9d59c88310ad38fb063239ba5cff9b7322b01c2347f34200be50c7803d73888ce00e4fee4bf90f180f3dad89f1ddb97d6daec885508972c9024
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-text-align@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "@tiptap/extension-text-align@npm:3.11.0"
+  peerDependencies:
+    "@tiptap/core": ^3.11.0
+  checksum: 10c0/bb88c51230167cfb5f5ef584506ba0e8ac240e94b923a0b1b16bc0764f2547fca9e9ded127a201e38356cbe11f4213f371fb13fd5f695b255138b44285b2a8a2
   languageName: node
   linkType: hard
 
@@ -6534,6 +6561,11 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/user-event": "npm:^14.6.1"
     "@tiptap/core": "npm:^3.11.0"
+    "@tiptap/extension-highlight": "npm:^3.11.0"
+    "@tiptap/extension-link": "npm:^3.11.0"
+    "@tiptap/extension-placeholder": "npm:^3.11.0"
+    "@tiptap/extension-text-align": "npm:^3.11.0"
+    "@tiptap/extension-underline": "npm:^3.11.0"
     "@tiptap/markdown": "npm:^3.11.0"
     "@tiptap/pm": "npm:^3.11.0"
     "@tiptap/starter-kit": "npm:^3.11.0"

@@ -1,20 +1,44 @@
 import { LitElement, html, css, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Editor } from '@tiptap/core';
-import { Placeholder } from '@tiptap/extensions';
+import { Placeholder } from '@tiptap/extension-placeholder';
 import { Markdown } from '@tiptap/markdown';
+import { Underline } from '@tiptap/extension-underline';
+import { TextAlign } from '@tiptap/extension-text-align';
+import { Link } from '@tiptap/extension-link';
+import { Highlight } from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 
 const styles = css`
-  /* Placeholder */
-  wysiwyg-editor .is-editor-empty:first-child::before {
-    color: #adb5bd;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
+  .tiptap {
+    outline: none;
+    min-height: 300px;
+
+    /* Placeholder */
+    .is-editor-empty:first-child::before {
+      color: hsl(var(--bc) / 0.4);
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      pointer-events: none;
+    }
+
+    p {
+      margin: 0.5em 0;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.5rem;
+      margin: 0.5em 0;
+    }
+    ul li {
+      list-style-type: disc;
+    }
+    ol li {
+      list-style-type: decimal;
+    }
   }
 `.styleSheet!;
 
@@ -25,11 +49,10 @@ export class WysiwygEditor extends LitElement {
   @property({ type: String }) accessor placeholder = '';
 
   @state() accessor _content = '';
+  @state() accessor _editor: Editor | null = null;
 
   @query('.editor')
   accessor _container!: HTMLDivElement;
-
-  _editor = null as Editor | null;
 
   attributeChangedCallback(
     name: string,
@@ -60,21 +83,39 @@ export class WysiwygEditor extends LitElement {
         Markdown,
         StarterKit,
         Placeholder.configure({ placeholder: this.placeholder }),
+        Underline,
+        Highlight,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            class: 'link',
+          },
+        }),
       ],
-      editorProps: {
-        attributes: {
-          class:
-            'textarea textarea-bordered w-full font-mono text-sm min-h-[500px]',
-        },
-      },
       onUpdate: ({ editor }) => {
         this._content = editor.getMarkdown();
       },
     });
   }
 
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._editor?.destroy();
+  }
+
   render() {
-    return html`<div class="editor"></div>
-      <input name="${this.name}" type="hidden" .value=${this._content} />`;
+    return html`<div
+      class="textarea textarea-bordered w-full font-mono text-sm min-h-[500px]"
+    >
+      <wysiwyg-editor-toolbar
+        .editor=${this._editor}
+        if=${this._editor}
+      ></wysiwyg-editor-toolbar>
+      <div class="editor p-1"></div>
+      <input name="${this.name}" type="hidden" .value=${this._content} />
+    </div> `;
   }
 }
