@@ -8,37 +8,22 @@
         data-tab-label="Overview"
         title="Overview">{% lucide "layout-grid" class="size-5" %}</button>
 {# Encounters Folder - Loads encounters in full sidebar #}
-<button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
-        hx-get="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
-        hx-target="#patient-sidebar"
-        hx-swap="innerHTML"
-        hx-on::after-request="document.getElementById('mobile-sidebar-back-collapsed').classList.remove('hidden')"
+<button class="js-sidebar-directory w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
+        data-directory="encounters"
+        data-url="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
         title="Encounters">{% lucide "calendar" class="size-5" %}</button>
 {# Forms Folder #}
-<button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
-        hx-get="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
-        hx-target="#patient-sidebar"
-        hx-swap="innerHTML"
-        hx-on::after-request="document.getElementById('mobile-sidebar-back-collapsed').classList.remove('hidden')"
+<button class="js-sidebar-directory w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
+        data-directory="forms"
+        data-url="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
         title="Forms">{% lucide "file-pen-line" class="size-5" %}</button>
 {# Summaries Folder #}
-<button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
-        hx-get="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
-        hx-target="#patient-sidebar"
-        hx-swap="innerHTML"
-        hx-on::after-request="document.getElementById('mobile-sidebar-back-collapsed').classList.remove('hidden')"
+<button class="js-sidebar-directory w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
+        data-directory="summaries"
+        data-url="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
         title="Summaries">{% lucide "file-check" class="size-5" %}</button>
 {# Documents Folder #}
-<button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
-        hx-get="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
-        hx-target="#patient-sidebar"
-        hx-swap="innerHTML"
-        hx-on::after-request="document.getElementById('mobile-sidebar-back-collapsed').classList.remove('hidden')"
+<button class="js-sidebar-directory w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600"
+        data-directory="documents"
+        data-url="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
         title="Documents">{% lucide "file-text" class="size-5" %}</button>
-<script>
-  // Hide back button when returning to main nav
-  const backBtn = document.getElementById('mobile-sidebar-back-collapsed');
-  if (backBtn) {
-    backBtn.classList.add('hidden');
-  }
-</script>

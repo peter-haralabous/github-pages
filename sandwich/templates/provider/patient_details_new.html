@@ -566,6 +566,31 @@
           closeSidebar();
         }
       });
+
+      // Handle directory button clicks in collapsed sidebar
+      // Use event delegation to handle dynamically loaded buttons
+      document.addEventListener('click', function(e) {
+        const directoryBtn = e.target.closest('.js-sidebar-directory');
+        if (directoryBtn) {
+          e.preventDefault();
+          const url = directoryBtn.dataset.url;
+          const directory = directoryBtn.dataset.directory;
+
+          if (url && window.htmx) {
+            // Load the directory content into the full sidebar
+            htmx.ajax('GET', url, {
+              target: '#patient-sidebar',
+              swap: 'innerHTML'
+            }).then(() => {
+              // Show back button after content loads
+              const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
+              if (backBtnCollapsed) {
+                backBtnCollapsed.classList.remove('hidden');
+              }
+            });
+          }
+        }
+      });
     })();
   </script>
 {% endblock content %}
