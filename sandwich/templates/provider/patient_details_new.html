@@ -13,17 +13,22 @@
     /* Sidebar collapsed state - hide text, show icons only */
     @media (max-width: 1023px) {
 
+      /* Hide text labels, badges, and right-side chevrons in collapsed state */
       #patient-sidebar-container[data-collapsed="true"] p,
-      #patient-sidebar-container[data-collapsed="true"] span:not(.lucide):not([class*="size-"]),
+      #patient-sidebar-container[data-collapsed="true"] span:not(.lucide):not([class*="size-"]):not(.sidebar-icon-collapsed):not(.sidebar-icon-expanded),
       #patient-sidebar-container[data-collapsed="true"] .text-xs,
       #patient-sidebar-container[data-collapsed="true"] .text-sm,
       #patient-sidebar-container[data-collapsed="true"] .badge,
-      #patient-sidebar-container[data-collapsed="true"] .sidebar-content-expanded,
-      #patient-sidebar-container[data-collapsed="true"] [class*="chevron"] {
+      #patient-sidebar-container[data-collapsed="true"] .sidebar-content-expanded {
         display: none !important;
       }
 
-      /* Show collapsed icon, hide expanded icon */
+      /* Hide ONLY the chevron-right icons on the right side of nav items */
+      #patient-sidebar-container[data-collapsed="true"] svg[data-lucide="chevron-right"] {
+        display: none !important;
+      }
+
+      /* Toggle button icons */
       #patient-sidebar-container[data-collapsed="true"] .sidebar-icon-expanded {
         display: none !important;
       }
@@ -47,7 +52,7 @@
         width: 320px !important;
       }
 
-      /* Hide collapsed icon, show expanded icon */
+      /* Toggle button icons */
       #patient-sidebar-container[data-collapsed="false"] .sidebar-icon-collapsed {
         display: none !important;
       }
