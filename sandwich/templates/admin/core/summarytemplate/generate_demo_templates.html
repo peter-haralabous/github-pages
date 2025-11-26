@@ -1,0 +1,13 @@
+{% extends "admin/generic_form.html" %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label="core" %}">Core</a>
+    &rsaquo; <a href="{% url 'admin:core_summarytemplate_changelist' %}">Summary Templates</a>
+    &rsaquo; Generate Demo Forms & Templates
+  </div>
+{% endblock breadcrumbs %}
+{% block component_preamble %}
+  <p class="help">Select an organization and demo workflows to create forms and templates.</p>
+{% endblock component_preamble %}

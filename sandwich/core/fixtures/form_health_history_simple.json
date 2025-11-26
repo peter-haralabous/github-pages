@@ -1,0 +1,203 @@
+[
+  {
+    "model": "core.form",
+    "pk": "5f2aa871-194b-42aa-b003-48b992ead85c",
+    "fields": {
+      "created_at": "2025-11-26T20:00:00.000Z",
+      "updated_at": "2025-11-26T20:00:00.000Z",
+      "name": "Simple Health History",
+      "schema": {
+        "title": "Simple Health History Form",
+        "pages": [
+          {
+            "name": "health_history_simple",
+            "title": "Health History",
+            "elements": [
+              {
+                "type": "html",
+                "name": "intro",
+                "html": "<h4>Please complete this brief health history form</h4>"
+              },
+              {
+                "type": "html",
+                "name": "section_lifestyle",
+                "html": "<h5>Lifestyle</h5>"
+              },
+              {
+                "type": "checkbox",
+                "name": "smoker",
+                "title": "I am or have been a smoker",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "drinks_alcohol",
+                "title": "I drink alcohol regularly",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "section_cardiac",
+                "html": "<h5>Heart & Circulation</h5>"
+              },
+              {
+                "type": "checkbox",
+                "name": "high_blood_pressure",
+                "title": "High blood pressure",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_disease",
+                "title": "Heart disease (heart attack, angina, irregular heartbeat)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_thinners",
+                "title": "I take blood thinners (aspirin, warfarin, Plavix, etc.)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "section_respiratory",
+                "html": "<h5>Breathing</h5>"
+              },
+              {
+                "type": "checkbox",
+                "name": "asthma_copd",
+                "title": "Asthma or COPD (emphysema/chronic bronchitis)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "sleep_apnea",
+                "title": "Sleep apnea",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "section_other",
+                "html": "<h5>Other Medical Conditions</h5>"
+              },
+              {
+                "type": "checkbox",
+                "name": "diabetes",
+                "title": "Diabetes",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "kidney_problems",
+                "title": "Kidney problems",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "stroke",
+                "title": "Stroke or mini-stroke (TIA)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "seizures",
+                "title": "Seizures or epilepsy",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "bleeding_disorder",
+                "title": "Bleeding or clotting disorder",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "section_anesthesia",
+                "html": "<h5>Anesthesia History</h5>"
+              },
+              {
+                "type": "checkbox",
+                "name": "anesthetic_problems",
+                "title": "I or a family member have had problems with anesthesia",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "anesthetic_problems_specify",
+                "visibleIf": "{anesthetic_problems} contains 'Yes'",
+                "title": "Please specify:"
+              },
+              {
+                "type": "html",
+                "name": "section_medications",
+                "html": "<h5>Medications & Allergies</h5>"
+              },
+              {
+                "type": "comment",
+                "name": "medications",
+                "title": "List all current medications (including over-the-counter, vitamins, and herbal supplements):",
+                "rows": 3
+              },
+              {
+                "type": "paneldynamic",
+                "name": "allergies",
+                "title": "Allergies",
+                "templateElements": [
+                  {
+                    "type": "text",
+                    "name": "allergy_substance",
+                    "title": "Allergic to:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "allergy_reaction",
+                    "title": "Reaction:"
+                  }
+                ],
+                "addPanelText": "Add allergy",
+                "removePanelText": "Remove"
+              },
+              {
+                "type": "html",
+                "name": "section_surgery",
+                "html": "<h5>Surgery History</h5>"
+              },
+              {
+                "type": "paneldynamic",
+                "name": "surgeries",
+                "title": "Previous surgeries or procedures",
+                "templateElements": [
+                  {
+                    "type": "text",
+                    "name": "surgery_procedure",
+                    "title": "Surgery/Procedure:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "surgery_date",
+                    "title": "Year:",
+                    "inputType": "number"
+                  }
+                ],
+                "addPanelText": "Add surgery",
+                "removePanelText": "Remove"
+              },
+              {
+                "type": "html",
+                "name": "section_additional",
+                "html": "<h5>Additional Information</h5>"
+              },
+              {
+                "type": "comment",
+                "name": "other_conditions",
+                "title": "Any other medical conditions or concerns we should know about:",
+                "rows": 3
+              }
+            ]
+          }
+        ]
+      },
+      "organization": ["ardella-medical"]
+    }
+  }
+]

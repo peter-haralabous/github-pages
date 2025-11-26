@@ -1,0 +1,1193 @@
+[
+  {
+    "model": "core.form",
+    "pk": "4e1ff647-093a-42aa-b002-39a892ead74b",
+    "fields": {
+      "created_at": "2025-11-26T20:00:00.000Z",
+      "updated_at": "2025-11-26T20:00:00.000Z",
+      "name": "Health History Assessment",
+      "schema": {
+        "title": "Pre admission form",
+        "pages": [
+          {
+            "name": "general_health",
+            "title": "General Health Questions",
+            "elements": [
+              {
+                "type": "html",
+                "name": "general_health_title",
+                "html": "<h4>Do you have or have you ever had any of the following? (tick all that apply)</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "anesthetic_problems_patient",
+                "title": "I have had problems with local freezing (anesthetic) or general anesthetic",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "anesthetic_problems_patient_specify",
+                "visibleIf": "{anesthetic_problems_patient} contains 'Yes'",
+                "title": "Please specify:"
+              },
+              {
+                "type": "checkbox",
+                "name": "anesthetic_problems_relative",
+                "title": "A blood relative of mine has had problems with local freezing (anesthetic) or general anesthetic",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "anesthetic_problems_relative_specify",
+                "visibleIf": "{anesthetic_problems_relative} contains 'Yes'",
+                "title": "Please specify:"
+              },
+              {
+                "type": "checkbox",
+                "name": "mouth_neck_difficulty",
+                "title": "I have trouble or difficulty opening my mouth or moving my neck",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "smoker",
+                "title": "I have been a smoker",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "smoker_details",
+                "visibleIf": "{smoker} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "smoking_years",
+                    "title": "For how many years?",
+                    "inputType": "number"
+                  },
+                  {
+                    "type": "text",
+                    "name": "cigarettes_per_day",
+                    "title": "How many cigarettes a day?",
+                    "inputType": "number"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "drinks_alcohol",
+                "title": "I drink alcohol",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "alcohol_weekly",
+                "visibleIf": "{drinks_alcohol} contains 'Yes'",
+                "title": "How much do you drink in a week?"
+              },
+              {
+                "type": "checkbox",
+                "name": "street_drugs",
+                "title": "I use street drugs",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "street_drugs_types",
+                "visibleIf": "{street_drugs} contains 'Yes'",
+                "title": "Types:"
+              },
+              {
+                "type": "checkbox",
+                "name": "pregnant",
+                "title": "I am pregnant or could be pregnant",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "pregnancy_details",
+                "visibleIf": "{pregnant} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "due_date",
+                    "title": "Due Date:",
+                    "inputType": "date"
+                  },
+                  {
+                    "type": "text",
+                    "name": "last_menstrual_period",
+                    "title": "Date of last menstrual period:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "general_body_pain",
+                "title": "I have general body pain",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "ongoing_pain",
+                "title": "I have ongoing pain",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "ongoing_pain_location",
+                "visibleIf": "{ongoing_pain} contains 'Yes'",
+                "title": "Where?"
+              },
+              {
+                "type": "checkbox",
+                "name": "hiv_positive",
+                "title": "I am HIV positive",
+                "choices": ["Yes"]
+              }
+            ]
+          },
+          {
+            "name": "heart_history",
+            "title": "Heart (Medical History)",
+            "elements": [
+              {
+                "type": "html",
+                "name": "heart_section_title",
+                "html": "<h4>HEART</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "chest_pain_angina",
+                "title": "Chest Pain or Angina",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "chest_pain_details",
+                "visibleIf": "{chest_pain_angina} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "chest_pain_frequency",
+                    "title": "How often:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "chest_pain_last_date",
+                    "title": "Last date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "chest_pain_stairs",
+                "title": "I get chest pain, pressure, or tightness when I climb 2 flights of stairs or less",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_attack",
+                "title": "Heart Attack(s)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "heart_attack_date",
+                "visibleIf": "{heart_attack} contains 'Yes'",
+                "title": "Date of most recent:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "abnormal_ecg",
+                "title": "Abnormal ECG/Heart Tracing",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "high_blood_pressure",
+                "title": "High Blood Pressure",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "high_blood_pressure_years",
+                "visibleIf": "{high_blood_pressure} contains 'Yes'",
+                "title": "For how many years?",
+                "inputType": "number"
+              },
+              {
+                "type": "checkbox",
+                "name": "congestive_heart_failure",
+                "title": "Congestive Heart Failure",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "congestive_heart_failure_years",
+                "visibleIf": "{congestive_heart_failure} contains 'Yes'",
+                "title": "For how many years?",
+                "inputType": "number"
+              },
+              {
+                "type": "checkbox",
+                "name": "irregular_heartbeat",
+                "title": "Irregular Heart Beat, Palpitations",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "aicd",
+                "title": "Automatic Implantable Cardioverter Defibrillator (AICD)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "aicd_date",
+                "visibleIf": "{aicd} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_murmur",
+                "title": "Heart Murmur, Valve Problems, Leaky Valve",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "pacemaker",
+                "title": "Pacemaker",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "pacemaker_date",
+                "visibleIf": "{pacemaker} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_surgery",
+                "title": "Heart Surgery or Bypass Surgery",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "heart_surgery_date",
+                "visibleIf": "{heart_surgery} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "angioplasty",
+                "title": "Angioplasty",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "angioplasty_date",
+                "visibleIf": "{angioplasty} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              }
+            ]
+          },
+          {
+            "name": "breathing_history",
+            "title": "Breathing (Medical History)",
+            "elements": [
+              {
+                "type": "html",
+                "name": "breathing_section_title",
+                "html": "<h4>BREATHING</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "hospital_shortness_breath",
+                "title": "I have been admitted to the hospital within the last 6 months with shortness of breath",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "breathing_stairs",
+                "title": "I have trouble breathing or become short of breath when I climb 2 flights of stairs or less",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "breath_walking",
+                "title": "I get short of breath walking 2 blocks or less",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "asthma",
+                "title": "I have Asthma",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "puffers",
+                "title": "I use puffers regularly and/or frequently",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "puffers_frequency",
+                "visibleIf": "{puffers} contains 'Yes'",
+                "title": "How often?"
+              },
+              {
+                "type": "checkbox",
+                "name": "asthma_emergency",
+                "title": "I have gone to the emergency department because of my asthma",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "asthma_emergency_date",
+                "visibleIf": "{asthma_emergency} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "copd",
+                "title": "I have Chronic Obstructive Pulmonary Disease (emphysema or chronic bronchitis)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "home_oxygen",
+                "title": "I use home oxygen",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "sleep_apnea",
+                "title": "I have Sleep Apnea (stop breathing while you're sleeping)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "cpap_machine",
+                "title": "I use a CPAP machine",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "bipap_machine",
+                "title": "I use a BIPAP machine",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "pneumonia",
+                "title": "Pneumonia in the past",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "pneumonia_last_treated",
+                "visibleIf": "{pneumonia} contains 'Yes'",
+                "title": "Last treated:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "tuberculosis",
+                "title": "Tuberculosis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "tuberculosis_date",
+                "visibleIf": "{tuberculosis} contains 'Yes'",
+                "title": "Date treated:",
+                "inputType": "date"
+              }
+            ]
+          },
+          {
+            "name": "circulation_history",
+            "title": "Circulation (Medical History)",
+            "elements": [
+              {
+                "type": "html",
+                "name": "circulation_section_title",
+                "html": "<h4>CIRCULATION</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "bruising_bleeding",
+                "title": "I have a lot of bruising or bleeding that does NOT seem to have a cause",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "bleeding_clotting_disorder",
+                "title": "I have a bleeding or clotting disorder",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "hemophilia",
+                "title": "I have hemophilia",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_clots_lungs",
+                "title": "Blood clots in lungs (pulmonary embolism)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_clots_legs",
+                "title": "Blood clots in legs (DVT)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "blood_thinners_title",
+                "html": "<strong>I take blood thinners:</strong>"
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_thinner_aspirin",
+                "title": "Aspirin",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_thinner_warfarin",
+                "title": "Warfarin or Coumadin",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "blood_thinner_plavix",
+                "title": "Plavix",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "blood_thinner_other",
+                "title": "Other:"
+              }
+            ]
+          },
+          {
+            "name": "physical_activity",
+            "title": "Physical Activity / Function / Social Support",
+            "elements": [
+              {
+                "type": "html",
+                "name": "physical_activity_title",
+                "html": "<h4>PHYSICAL ACTIVITY / FUNCTION / SOCIAL SUPPORT</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "walk_frequency",
+                "title": "I go for a walk",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "walk_times_per_week",
+                "visibleIf": "{walk_frequency} contains 'Yes'",
+                "title": "Times per week:",
+                "inputType": "number"
+              },
+              {
+                "type": "checkbox",
+                "name": "walker_cane",
+                "title": "I use walker or cane",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "fallen_recently",
+                "title": "I have fallen in last 3 months",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "need_help_daily",
+                "title": "I need help with eating, bathing, dressing, toileting and walking",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "family_helps",
+                "title": "My family helps me with cleaning, driving, shopping, cooking",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "community_support",
+                "title": "I receive community home support",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "memory_issues",
+                "title": "My memory is not as good as before",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "medication_help",
+                "title": "I need help with taking my medication",
+                "choices": ["Yes"]
+              }
+            ]
+          },
+          {
+            "name": "digestive_liver_endocrine",
+            "title": "Digestive System, Liver, and Endocrine",
+            "elements": [
+              {
+                "type": "html",
+                "name": "digestive_title",
+                "html": "<h4>DIGESTIVE SYSTEM</h4>"
+              },
+              {
+                "type": "radiogroup",
+                "name": "weight_loss",
+                "title": "In the last 6 months I have lost weight without trying:",
+                "choices": [
+                  "2 to 13 lb",
+                  "14 to 23 lb",
+                  "24 to 33 lb",
+                  "more than 34 lb",
+                  "unsure",
+                  "No weight loss"
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "eating_poorly",
+                "title": "I have been eating poorly because of a decreased appetite or chewing/swallowing difficulties",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "heartburn_reflux",
+                "title": "Heart burn, hiatus hernia, gastric reflux",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "liver_title",
+                "html": "<h4>LIVER</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "hepatitis_jaundice",
+                "title": "Hepatitis or Jaundice (yellowing in the skin)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "cirrhosis",
+                "title": "Cirrhosis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "html",
+                "name": "endocrine_title",
+                "html": "<h4>ENDOCRINE</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "thyroid_problems",
+                "title": "Thyroid Problems",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "thyroid_problems_specify",
+                "visibleIf": "{thyroid_problems} contains 'Yes'",
+                "title": "Please specify:"
+              },
+              {
+                "type": "checkbox",
+                "name": "diabetes",
+                "title": "Diabetes",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "diabetes_management",
+                "visibleIf": "{diabetes} contains 'Yes'",
+                "title": "Diabetes management:",
+                "choices": ["Taking insulin", "Taking pills", "Diet controlled"]
+              }
+            ]
+          },
+          {
+            "name": "kidneys_muscles_nerves",
+            "title": "Kidneys, Muscles/Joints/Nerves",
+            "elements": [
+              {
+                "type": "html",
+                "name": "kidneys_title",
+                "html": "<h4>KIDNEYS</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "bladder_problems",
+                "title": "Bladder problems",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "prostate_problems",
+                "title": "Prostate problems",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "kidney_problems",
+                "title": "Kidney problems",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "kidney_failure",
+                "title": "Kidney failure",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "hemodialysis",
+                "title": "On Hemodialysis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "peritoneal_dialysis",
+                "title": "On Peritoneal dialysis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "kidney_transplant",
+                "title": "Kidney transplant",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "kidney_transplant_date",
+                "visibleIf": "{kidney_transplant} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "html",
+                "name": "muscles_joints_nerves_title",
+                "html": "<h4>MUSCLES / JOINTS / NERVES</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "weakness_paralysis",
+                "title": "History of weakness, paralysis, numbness, black outs",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "weakness_paralysis_specify",
+                "visibleIf": "{weakness_paralysis} contains 'Yes'",
+                "title": "Please specify:"
+              },
+              {
+                "type": "checkbox",
+                "name": "arthritis",
+                "title": "Arthritis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "osteoarthritis",
+                "title": "Osteoarthritis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "rheumatoid_arthritis",
+                "title": "Rheumatoid arthritis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "stroke",
+                "title": "Stroke",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "stroke_date",
+                "visibleIf": "{stroke} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "mini_stroke",
+                "title": "Mini-stroke (TIA)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "text",
+                "name": "mini_stroke_date",
+                "visibleIf": "{mini_stroke} contains 'Yes'",
+                "title": "Date:",
+                "inputType": "date"
+              },
+              {
+                "type": "checkbox",
+                "name": "seizures_epilepsy",
+                "title": "Seizures/Epilepsy",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "multiple_sclerosis",
+                "title": "Multiple Sclerosis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "myasthenia_gravis",
+                "title": "Myasthenia Gravis",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "checkbox",
+                "name": "muscular_dystrophy",
+                "title": "Muscular Dystrophy",
+                "choices": ["Yes"]
+              }
+            ]
+          },
+          {
+            "name": "medical_tests",
+            "title": "Medical Tests",
+            "elements": [
+              {
+                "type": "html",
+                "name": "tests_title",
+                "html": "<h4>Have you ever had a:</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "exercise_stress_test",
+                "title": "Exercise stress test (treadmill)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "exercise_stress_test_details",
+                "visibleIf": "{exercise_stress_test} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "exercise_stress_test_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "exercise_stress_test_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "nuclear_medicine_scan",
+                "title": "Nuclear medicine heart scan (MIBI) test",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "nuclear_medicine_scan_details",
+                "visibleIf": "{nuclear_medicine_scan} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "nuclear_medicine_scan_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "nuclear_medicine_scan_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_catheterization",
+                "title": "Heart catheterization (angiogram)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "heart_catheterization_details",
+                "visibleIf": "{heart_catheterization} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "heart_catheterization_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "heart_catheterization_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "heart_echo_test",
+                "title": "Heart echo test (ultrasound of the heart)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "heart_echo_test_details",
+                "visibleIf": "{heart_echo_test} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "heart_echo_test_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "heart_echo_test_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "holter_monitor",
+                "title": "Holter monitor (worn a heart monitor for 24 hours)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "holter_monitor_details",
+                "visibleIf": "{holter_monitor} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "holter_monitor_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "holter_monitor_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "lung_function_test",
+                "title": "Lung function test (Pulmonary function test)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "lung_function_test_details",
+                "visibleIf": "{lung_function_test} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "lung_function_test_where",
+                    "title": "Where was the test done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "lung_function_test_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "medical_specialists",
+            "title": "Medical Specialists",
+            "elements": [
+              {
+                "type": "html",
+                "name": "specialists_title",
+                "html": "<h4>Have you ever been seen by a:</h4>"
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_cardiologist",
+                "title": "Heart Specialist (Cardiologist)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "cardiologist_details",
+                "visibleIf": "{seen_cardiologist} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "cardiologist_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "cardiologist_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_respirologist",
+                "title": "Lung Specialist (Respirologist)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "respirologist_details",
+                "visibleIf": "{seen_respirologist} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "respirologist_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "respirologist_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_neurologist",
+                "title": "Nerve Specialist (Neurologist)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "neurologist_details",
+                "visibleIf": "{seen_neurologist} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "neurologist_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "neurologist_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_hematologist",
+                "title": "Blood Specialist (Hematologist)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "hematologist_details",
+                "visibleIf": "{seen_hematologist} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "hematologist_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "hematologist_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_other_specialist_1",
+                "title": "Other Specialist",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "other_specialist_1_details",
+                "visibleIf": "{seen_other_specialist_1} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "other_specialist_1_type",
+                    "title": "Specialist type:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "other_specialist_1_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "other_specialist_1_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "seen_other_specialist_2",
+                "title": "Other Specialist (2nd)",
+                "choices": ["Yes"]
+              },
+              {
+                "type": "panel",
+                "name": "other_specialist_2_details",
+                "visibleIf": "{seen_other_specialist_2} contains 'Yes'",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "other_specialist_2_type",
+                    "title": "Specialist type:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "other_specialist_2_name",
+                    "title": "Name of Doctor:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "other_specialist_2_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "surgery_allergies",
+            "title": "Surgery History and Allergies",
+            "elements": [
+              {
+                "type": "html",
+                "name": "surgery_title",
+                "html": "<h4>List any surgeries or minor procedures you have had in the past using anesthesia</h4>"
+              },
+              {
+                "type": "paneldynamic",
+                "name": "surgeries",
+                "title": "Surgeries/Procedures",
+                "templateElements": [
+                  {
+                    "type": "text",
+                    "name": "surgery_procedure",
+                    "title": "Operation/Minor procedure"
+                  },
+                  {
+                    "type": "text",
+                    "name": "surgery_location",
+                    "title": "Where was it done?"
+                  },
+                  {
+                    "type": "text",
+                    "name": "surgery_date",
+                    "title": "Date:",
+                    "inputType": "date"
+                  }
+                ],
+                "addPanelText": "Add surgery/procedure",
+                "removePanelText": "Remove"
+              },
+              {
+                "type": "html",
+                "name": "allergies_title",
+                "html": "<h4>Do you have any allergies? (for example: medicine, food, latex, tape, bandages)</h4>"
+              },
+              {
+                "type": "paneldynamic",
+                "name": "allergies",
+                "title": "Allergies",
+                "templateElements": [
+                  {
+                    "type": "text",
+                    "name": "allergy_substance",
+                    "title": "I am allergic to:"
+                  },
+                  {
+                    "type": "text",
+                    "name": "allergy_reaction",
+                    "title": "My reaction:"
+                  }
+                ],
+                "addPanelText": "Add allergy",
+                "removePanelText": "Remove"
+              }
+            ]
+          },
+          {
+            "name": "medications_other",
+            "title": "Medications and Other Information",
+            "elements": [
+              {
+                "type": "html",
+                "name": "medications_title",
+                "html": "<h4>List all of the medicines that you take (including herbal, vitamins, and non-prescription drugs)</h4>"
+              },
+              {
+                "type": "comment",
+                "name": "medications",
+                "title": "Medications:",
+                "rows": 5
+              },
+              {
+                "type": "html",
+                "name": "other_illnesses_title",
+                "html": "<h4>Tell us about any other serious illnesses or limitations that have not been identified already?</h4>"
+              },
+              {
+                "type": "comment",
+                "name": "other_illnesses",
+                "title": "Other illnesses or limitations:",
+                "rows": 3
+              }
+            ]
+          }
+        ]
+      },
+      "organization": ["ardella-medical"]
+    }
+  }
+]
