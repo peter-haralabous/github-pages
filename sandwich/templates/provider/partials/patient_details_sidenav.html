@@ -1,7 +1,8 @@
 {% load lucide %}
 
 {# Mobile Overlay Backdrop - shown when sidebar is expanded on mobile #}
-<div class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden"
+{# Positioned below the top nav (top-16 = 64px) to keep nav accessible #}
+<div class="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-black/50 z-30 hidden"
      id="mobile-sidebar-overlay"></div>
 {# Unified Sidebar - Responsive with collapsed/expanded states #}
 {# Mobile: Fixed, collapsible (80px collapsed, 320px expanded) #}
