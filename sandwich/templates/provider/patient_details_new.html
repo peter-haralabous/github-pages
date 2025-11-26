@@ -9,6 +9,36 @@
   {{ block.super }}
   {% render_bundle 'survey' 'css' %}
   {% render_bundle 'survey' 'js' %}
+  <style nonce="{{ request.csp_nonce }}">
+    /* Collapsed sidebar: hide labels, show icons only */
+    .sidebar-collapsed p,
+    .sidebar-collapsed span:not(.lucide):not(.size-5):not(.size-4),
+    .sidebar-collapsed .text-xs,
+    .sidebar-collapsed .text-sm,
+    .sidebar-collapsed .badge {
+      display: none !important;
+    }
+
+    /* Center icons in collapsed sidebar */
+    .sidebar-collapsed button,
+    .sidebar-collapsed a {
+      justify-content: center !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+      min-width: 3rem;
+    }
+
+    /* Hide chevron icons in collapsed view */
+    .sidebar-collapsed [class*="chevron"] {
+      display: none !important;
+    }
+
+    /* Adjust spacing for collapsed view */
+    .sidebar-collapsed .space-y-2>*+*,
+    .sidebar-collapsed .space-y-1>*+* {
+      margin-top: 0.25rem !important;
+    }
+  </style>
 {% endblock extra_head %}
 {% block topnav %}
   {% include 'provider/partials/patient_details_topnav.html' %}
@@ -526,69 +556,25 @@
         }
       });
 
-      // Handle HTMX navigation in collapsed sidebar
-      // When directory buttons are clicked, update the collapsed sidebar nav
+      // Handle HTMX navigation - sync between full sidebar and collapsed sidebar
       document.body.addEventListener('htmx:afterSwap', function(e) {
         const target = e.detail.target;
 
-        // Sync navigation state between full sidebar and collapsed sidebar
+        // When sidebar navigation changes, sync the collapsed sidebar
         if (target.id === 'patient-sidebar') {
-          // Navigation changed in full sidebar, update collapsed sidebar if needed
-          const backBtn = document.getElementById('mobile-sidebar-back');
-          const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
-
-          if (backBtn && backBtnCollapsed) {
-            // Sync visibility of back buttons
-            if (!backBtn.classList.contains('hidden')) {
-              backBtnCollapsed.classList.remove('hidden');
-            } else {
-              backBtnCollapsed.classList.add('hidden');
-            }
+          // Clone the updated navigation to the collapsed sidebar
+          const collapsedNav = document.getElementById('mobile-sidebar-nav-collapsed');
+          if (collapsedNav) {
+            // Clone the content from full sidebar to collapsed sidebar
+            collapsedNav.innerHTML = target.innerHTML;
           }
         }
       });
-
-      // Handle back button in collapsed sidebar
-      const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
-      if (backBtnCollapsed) {
-        backBtnCollapsed.addEventListener('click', function() {
-          // Trigger the back button in the full sidebar
-          const backBtn = document.getElementById('mobile-sidebar-back');
-          if (backBtn) {
-            backBtn.click();
-          }
-        });
-      }
 
       // Close sidebar on escape key
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
           closeSidebar();
-        }
-      });
-
-      // Handle directory button clicks in collapsed sidebar
-      // Use event delegation to handle dynamically loaded buttons
-      document.addEventListener('click', function(e) {
-        const directoryBtn = e.target.closest('.js-sidebar-directory');
-        if (directoryBtn) {
-          e.preventDefault();
-          const url = directoryBtn.dataset.url;
-          const directory = directoryBtn.dataset.directory;
-
-          if (url && window.htmx) {
-            // Load the directory content into the full sidebar
-            htmx.ajax('GET', url, {
-              target: '#patient-sidebar',
-              swap: 'innerHTML'
-            }).then(() => {
-              // Show back button after content loads
-              const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
-              if (backBtnCollapsed) {
-                backBtnCollapsed.classList.remove('hidden');
-              }
-            });
-          }
         }
       });
     })();

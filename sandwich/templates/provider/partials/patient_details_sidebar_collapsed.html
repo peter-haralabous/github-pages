@@ -1,19 +1,23 @@
 {% load lucide %}
 
 {# Mobile Collapsed Sidebar - Icon-only navigation (80px wide) #}
-<aside class="lg:hidden fixed left-0 top-16 bottom-0 w-20 bg-white border-r border-gray-200 z-20 flex flex-col items-center py-4 gap-2"
+{# Uses same navigation structure as full sidebar, but hides labels with CSS #}
+<aside class="lg:hidden fixed left-0 top-16 bottom-0 w-20 bg-gray-50 border-r border-gray-200 z-20 overflow-y-auto py-4"
        id="mobile-collapsed-sidebar">
-  {# Expand button #}
-  <button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 mb-2"
-          id="mobile-sidebar-expand-btn"
-          title="Expand sidebar">{% lucide "chevrons-right" class="size-5" %}</button>
-  {# Back button - shown when in a directory #}
-  <button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 hidden"
-          id="mobile-sidebar-back-collapsed"
-          title="Back">{% lucide "arrow-left" class="size-5" %}</button>
-  {# Navigation content - dynamically loaded #}
-  <div id="mobile-sidebar-nav-collapsed" class="flex flex-col gap-2">
-    {# Default: Main navigation icons #}
-    {% include 'provider/partials/patient_sidebar_nav_icons.html' %}
+  <div class="flex flex-col items-center gap-2">
+    {# Expand button #}
+    <button class="w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 mb-2"
+            id="mobile-sidebar-expand-btn"
+            title="Expand sidebar">{% lucide "chevrons-right" class="size-5" %}</button>
+    {# Navigation content - same structure as full sidebar #}
+    {# CSS hides labels and adjusts layout for icon-only view #}
+    <div id="mobile-sidebar-nav-collapsed"
+         class="sidebar-collapsed w-full px-2">
+      {% if show_current_encounter %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=False selected_encounter_id=selected_encounter_id %}
+      {% else %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=True selected_encounter_id=None %}
+      {% endif %}
+    </div>
   </div>
 </aside>
