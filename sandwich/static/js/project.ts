@@ -8,6 +8,7 @@ import './components/inline-edit-field';
 import './components/message-alert';
 import './components/sortable-columns';
 import './components/toggle-container';
+import './copy-summary';
 import { initializeDatadog } from './lib/datadog';
 
 /* Project specific Javascript goes here. */

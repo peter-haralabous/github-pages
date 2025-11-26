@@ -19,6 +19,10 @@ module.exports = {
       import: path.resolve(__dirname, '../sandwich/static/js/creator'),
       dependOn: 'vendors',
     },
+    wysiwyg: {
+      import: path.resolve(__dirname, '../sandwich/static/js/wysiwyg'),
+      dependOn: 'vendors',
+    },
   },
   output: {
     path: path.resolve(__dirname, '../sandwich/static/webpack_bundles/'),

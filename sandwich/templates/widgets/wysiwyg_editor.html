@@ -1,0 +1,4 @@
+{% load render_bundle from webpack_loader %}
+
+{% render_bundle 'wysiwyg' 'js' %}
+<wysiwyg-editor name="{{ widget.name }}" value="{{ widget.value|default:'' }}" placeholder="{{ widget.attrs.placeholder }}"></wysiwyg-editor>

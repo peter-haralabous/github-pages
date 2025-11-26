@@ -4,16 +4,16 @@ from typing import TYPE_CHECKING
 from django.template import loader
 
 from sandwich.core.models import Patient
-from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.service.sse_service import EventType
 from sandwich.core.service.sse_service import sse_patient_channel
 from sandwich.core.service.sse_service import sse_send_html
 from sandwich.core.service.sse_service import sse_send_json
 
 if TYPE_CHECKING:
-    from sandwich.core.service.chat_service.chat import AssistantMessageEvent
-    from sandwich.core.service.chat_service.chat import ChatEvent
-    from sandwich.core.service.chat_service.chat import UserMessageEvent
+    from sandwich.core.service.chat_service.event import AssistantMessageEvent
+    from sandwich.core.service.chat_service.event import ChatEvent
+    from sandwich.core.service.chat_service.event import IncomingChatEvent
+    from sandwich.core.service.chat_service.event import UserMessageEvent
 
 logger = logging.getLogger(__name__)
 
@@ -45,18 +45,28 @@ def send_assistant_thinking(event: "ChatEvent") -> None:
 
 
 def send_assistant_message(event: "AssistantMessageEvent") -> None:
+    from sandwich.core.service.chat_service.chat import assistant_message  # noqa: PLC0415
+
     sse_send_html(
         sse_patient_channel(event.context.patient),
         EventType.ASSISTANT_MESSAGE,
-        loader.render_to_string(
-            "patient/chatty/partials/assistant_message.html",
+        assistant_message(
+            content=event.response.message,
+            buttons=event.response.buttons,
+            timestamp=event.timestamp,
             context={
-                "message": markdown_to_html(event.response.message),
-                "buttons": event.response.buttons,
                 "oob": True,
                 "message_id": event.id,
             },
         ),
+    )
+
+
+def send_feed_item(event: "IncomingChatEvent") -> None:
+    sse_send_html(
+        sse_patient_channel(event.context.patient),
+        EventType.FEED_ITEM,
+        event.feed_item_html(),
     )
 
 

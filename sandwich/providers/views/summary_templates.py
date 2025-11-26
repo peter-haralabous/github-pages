@@ -24,6 +24,7 @@ from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.service.summary_template_service import assign_default_summarytemplate_permissions
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.widgets import WysiwygWidget
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +66,8 @@ class SummaryTemplateForm(forms.ModelForm[SummaryTemplate]):
         model = SummaryTemplate
         fields = ("name", "description", "text", "form")
         widgets = {
-            "text": forms.Textarea(
+            "text": WysiwygWidget(
                 attrs={
-                    "rows": 25,  # Here for semantic purpose; actual height got overwritten by daisyUI, so we set min-h
-                    "class": "textarea textarea-bordered w-full font-mono text-sm min-h-[500px]",
                     "placeholder": "Enter template content using Django template syntax with {% ai %} tags...",
                 }
             ),

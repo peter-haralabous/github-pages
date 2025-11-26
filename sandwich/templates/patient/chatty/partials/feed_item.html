@@ -1,0 +1,16 @@
+{% load lucide %}
+
+<div {# hx-swap-oob: by default, append to list #}
+  hx-swap-oob="beforeend:#feed-items-list"
+  {# hxSwapOobReplaceIfExists: replace existing if possible #}
+  data-hx-swap-oob-replace-if-exists="feed-item-{{ document_id }}"
+  >
+  <li class="list-row my-1 {{ item_background_class }}"
+      id="feed-item-{{ document_id }}">
+    <div>{% lucide item_icon_name class=item_icon_class %}</div>
+    <div>
+      <div>{{ item_name }}</div>
+      <div class="font-semibold opacity-60">{{ item_status }}</div>
+    </div>
+  </li>
+</div>

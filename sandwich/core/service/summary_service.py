@@ -11,6 +11,7 @@ from sandwich.core.models.role import RoleName
 from sandwich.core.models.summary import Summary
 from sandwich.core.models.summary import SummaryStatus
 from sandwich.core.models.summary_template import SummaryTemplate
+from sandwich.core.service.ai_template import AiTemplate
 from sandwich.core.service.markdown_service import markdown_to_html
 from sandwich.core.types import HtmlStr
 from sandwich.core.util.procrastinate import define_task
@@ -76,7 +77,8 @@ def generate_summary_task(summary_id: str) -> None:
         return
 
     updated = Summary.objects.filter(id=summary_id, status=SummaryStatus.PENDING).update(
-        status=SummaryStatus.PROCESSING
+        status=SummaryStatus.PROCESSING,
+        body="",  # Clear body to avoid showing stale data during regeneration
     )
 
     if not updated:
@@ -174,12 +176,32 @@ def render_summary_template(
     template: "SummaryTemplate",
     submission: "FormSubmission",
 ) -> HtmlStr:
-    """Render a summary template with form submission data."""
+    """
+    Render a summary template with form submission data.
+    """
     context = {
         "patient": submission.patient,
         "submission": submission,
     }
 
+    if "{% ai " in template.text:
+        logger.info(
+            "Rendering AI-enhanced template",
+            extra={
+                "template_id": str(template.id),
+                "submission_id": str(submission.id),
+            },
+        )
+        ai_template = AiTemplate(template.text)
+        return ai_template.render(context)
+
+    logger.info(
+        "Rendering traditional template",
+        extra={
+            "template_id": str(template.id),
+            "submission_id": str(submission.id),
+        },
+    )
     django_template = Template(template.text)
     django_context = Context(context)
 

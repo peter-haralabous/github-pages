@@ -1,12 +1,10 @@
 import base64
 import logging
 from enum import StrEnum
-from io import BytesIO
 from pathlib import Path
 from uuid import uuid4
 
-from pypdf import PdfReader
-from pypdf import PdfWriter
+from langgraph.graph.state import RunnableConfig
 
 from sandwich.core.models.form import Form
 from sandwich.core.models.form import FormStatus
@@ -24,32 +22,6 @@ class DocType(StrEnum):
     CSV = "csv"
 
 
-# Adapted from healthbox
-def _split_pdf_into_pages(pdf_content: bytes) -> list[bytes]:
-    """Split PDF into individual page PDFs and return as bytes."""
-
-    try:
-        logger.info("Splitting PDF into individual pages")
-        pdf_reader = PdfReader(BytesIO(pdf_content))
-        page_pdfs = []
-
-        for page_num in range(len(pdf_reader.pages)):
-            # Create a new PDF writer for this page
-            pdf_writer = PdfWriter()
-            pdf_writer.add_page(pdf_reader.pages[page_num])
-
-            # Write the single page PDF to bytes
-            page_buf = BytesIO()
-            pdf_writer.write(page_buf)
-            page_buf.seek(0)
-            page_pdfs.append(page_buf.read())
-
-        return page_pdfs  # noqa: TRY300
-    except Exception:
-        logger.exception("Error splitting PDF into pages")
-        raise
-
-
 def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text_prompt: str) -> None:
     """
     Generate a form schema from a file.
@@ -58,55 +30,47 @@ def generate_form_schema_from_reference_file(form: Form, doc_type: DocType, text
 
     doc_bytes = form.reference_file.read()
     thread_id = f"{form.id!s}_{uuid4()}"
+    # NB: Default is 25 which is too low for some complex forms. 100 was
+    # arbitrarily chosen to give us more headroom -- adjust as needed.
+    agent_recursion_limit = 100
 
     with form_gen_agent(form) as agent:
-        match doc_type:
-            case DocType.PDF:
-                pdf_pages = _split_pdf_into_pages(doc_bytes)
-                for i, page in enumerate(pdf_pages):
-                    logger.info(
-                        "Form generator processing PDF page.",
-                        extra={"page_number": i + 1, "file_name": form.reference_file.name},
-                    )
-                    document = {
-                        "type": "file",
-                        "base64": base64.b64encode(page).decode(),
-                        "mime_type": "application/pdf",
-                        "name": f"form_reference_file_page{i + 1}",
-                    }
-                    agent.invoke(
-                        input={
-                            "messages": [
-                                {
-                                    "role": "user",
-                                    "content": [
-                                        {"text": text_prompt},
-                                        document,
-                                    ],
-                                }
-                            ]
-                        },
-                        config=configure(thread_id),
-                    )
+        if doc_type == DocType.PDF:
+            document = {
+                "type": "file",
+                "base64": base64.b64encode(doc_bytes).decode(),
+                "mime_type": "application/pdf",
+                "name": "form_reference_file",
+            }
 
-            case DocType.CSV:
-                document = {
-                    "text": f"CSV data: \n{doc_bytes.decode()}",
-                }
-                agent.invoke(
-                    input={
-                        "messages": [
-                            {
-                                "role": "user",
-                                "content": [
-                                    {"text": text_prompt},
-                                    document,
-                                ],
-                            }
-                        ]
-                    },
-                    config=configure(thread_id),
-                )
+        elif doc_type == DocType.CSV:
+            document = {
+                "text": f"CSV data: \n{doc_bytes.decode()}",
+            }
+
+        if not document:
+            logger.error(
+                "[Form generation] a document was not provided.",
+                extra={
+                    "form_id": form.id,
+                },
+            )
+            raise ValueError("Must provide a document.")
+
+        agent.invoke(
+            input={
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"text": text_prompt},
+                            document,
+                        ],
+                    }
+                ]
+            },
+            config=configure(thread_id, config=RunnableConfig(recursion_limit=agent_recursion_limit)),
+        )
 
 
 @define_task
@@ -133,10 +97,13 @@ def generate_form_schema(form_id: str, description: str | None = None) -> None:
         generate_form_schema_from_reference_file(form=form, doc_type=doc_type, text_prompt=prompt)
         form.refresh_from_db()
         form.status = FormStatus.ACTIVE
+        logger.info("Form generation completed successfully", extra={"form_id": form_id, "form_name": form.name})
 
-    except Exception:
-        # TODO(MM): Report failure to users
+    except Exception as e:
         form.status = FormStatus.FAILED
-        logger.exception("Unexpected error generating form", extra={"form_id": form_id})
+        error_msg = str(e)
+        logger.exception(
+            "Form generation failed", extra={"form_id": form_id, "form_name": form.name, "error": error_msg}
+        )
 
     form.save()

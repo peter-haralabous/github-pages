@@ -1,7 +1,7 @@
 import logging
 from collections.abc import Callable
 
-import django
+from django.db import close_old_connections
 from langchain.agents.middleware import wrap_tool_call
 from langchain_core.messages import ToolMessage
 from langgraph.prebuilt.tool_node import ToolCallRequest
@@ -17,7 +17,7 @@ def close_db_connections(
 ) -> ToolMessage | Command:
     response = handler(request)
     # Ensure database connections are closed after the tool call
-    django.db.close_old_connections()
+    close_old_connections()
     return response
 
 

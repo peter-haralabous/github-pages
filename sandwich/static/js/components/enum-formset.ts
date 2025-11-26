@@ -109,6 +109,8 @@ class EnumFormset {
 
     this.updateFormIndices(newForm, formIndex);
 
+    // In case we're copying a hidden "deleted" form
+    newForm.classList.remove('hidden');
     newForm
       .querySelectorAll<HTMLInputElement>('input[type="text"]')
       .forEach((input) => {
@@ -200,6 +202,6 @@ export function initCustomAttributeEnumFormsets(): void {
     });
 }
 
-document.addEventListener('htmx:afterSwap', () => {
+document.addEventListener('data-enum-formset:init', () => {
   initCustomAttributeEnumFormsets();
 });

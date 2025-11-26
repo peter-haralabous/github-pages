@@ -34,10 +34,12 @@
         <label class="label">
           <span class="label-text font-semibold">{% trans "Visible Columns" %}</span>
         </label>
-        <sortable-columns id="sortable-columns" columns-data='{{ columns_data_json|safe }}'></sortable-columns>
         <label class="label">
           <span class="label-text-alt text-xs opacity-70">{% trans "Tip: Drag columns to reorder them in the table" %}</span>
         </label>
+        <sortable-columns id="sortable-columns" columns-data='{{ columns_data_json|safe }}'></sortable-columns>
+        <a href="{% url "providers:custom_attribute_list" organization_id=organization.id %}"
+           class="btn w-full mt-2">{% lucide "plus" class="size-4" %} {% trans "Add or edit fields" %}</a>
       </div>
       <div class="form-control">
         <label class="label">

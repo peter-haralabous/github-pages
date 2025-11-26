@@ -1,0 +1,86 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate the following
+        sections for a medical summary:\n\n## Section 1: Clinical Notes\nGenerate notes
+        for patient with symptoms: fatigue\n\n---\n\nPlease generate all sections with
+        appropriate markdown headings (##) for each section title."}]}], "system": [{"text":
+        "You are a medical AI assistant specialized in generating concise, accurate
+        clinical summaries.\n\nYour role is to:\n- Analyze patient medical information
+        and generate clear, professional summaries\n- Organize information into well-structured
+        sections with appropriate headings\n- Use medical terminology appropriately
+        while remaining clear\n- Focus on clinically relevant information\n- Format
+        output as markdown with proper section headers (using ##)\n- Be concise but
+        comprehensive\n\nIMPORTANT:\n- Each section should have a clear heading starting
+        with ##\n- Write in a professional medical tone\n- Do not include disclaimers
+        or meta-commentary\n- Do not make up information - only summarize what is provided\n-
+        If information is insufficient, note that briefly\n"}], "inferenceConfig": {},
+        "toolConfig": {"tools": [{"toolSpec": {"name": "AISummaryResponse", "description":
+        "Response from AI containing multiple sections.", "inputSchema": {"json": {"properties":
+        {"sections": {"description": "List of sections in the AI-generated summary",
+        "items": {"description": "Represents a single section in an AI-generated summary.",
+        "properties": {"title": {"description": "The section title/heading", "type":
+        "string"}, "content": {"description": "The markdown content for this section",
+        "type": "string"}}, "required": ["title", "content"], "type": "object"}, "type":
+        "array"}}, "required": ["sections"], "type": "object"}}}}], "toolChoice": {"any":
+        {}}}}'
+      headers:
+        Content-Length:
+          - '1772'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9aLEQs
+            YiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjRUMTUyOTM0Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            Mzc2Mzk0YjMtOWM0MS00OTU4LTg4YmYtY2ZjM2Y2MjY5MzQ4
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":7705},"output":{"message":{"content":[{"toolUse":{"input":{"sections":[{"title":"Clinical
+          Notes","content":"**Chief Complaint:** Fatigue\n\n**History of Present Illness:**\nPatient
+          presents with complaint of fatigue. Further evaluation is needed to determine:\n-
+          Duration and onset of symptoms (acute vs. chronic)\n- Severity and impact
+          on daily activities\n- Pattern (constant vs. intermittent, worse at specific
+          times)\n- Associated symptoms (fever, weight changes, sleep disturbances,
+          mood changes)\n- Exacerbating or relieving factors\n\n**Assessment:**\nFatigue
+          is a nonspecific symptom requiring systematic evaluation to identify underlying
+          etiology. Differential diagnosis may include:\n- Anemia (iron deficiency,
+          B12 deficiency, chronic disease)\n- Thyroid dysfunction (hypothyroidism)\n-
+          Infectious processes (viral illness, chronic infections)\n- Sleep disorders
+          (sleep apnea, insomnia)\n- Cardiovascular conditions\n- Metabolic disorders
+          (diabetes, electrolyte imbalances)\n- Psychiatric conditions (depression,
+          anxiety)\n- Medication side effects\n- Chronic fatigue syndrome\n- Malignancy\n\n**Plan:**\n-
+          Complete history and physical examination\n- Laboratory workup: CBC, comprehensive
+          metabolic panel, TSH, vitamin B12, vitamin D, ferritin\n- Review current medications\n-
+          Assess sleep quality and mental health screening\n- Consider additional testing
+          based on initial findings\n- Follow-up appointment to review results and adjust
+          management plan"}]},"name":"AISummaryResponse","toolUseId":"tooluse_xKB6cfpJQeezVtEGqhWBuw","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":942,"outputTokens":397,"serverToolUsage":{},"totalTokens":1339}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '1827'
+        Content-Type:
+          - application/json
+        Date:
+          - Mon, 24 Nov 2025 15:29:42 GMT
+        x-amzn-RequestId:
+          - 785e6c6f-7de5-4c93-9041-d69a92682ebc
+      status:
+        code: 200
+        message: OK
+version: 1

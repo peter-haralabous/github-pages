@@ -364,6 +364,7 @@ def _generic_edit_view(record_type: HealthRecordType, request: AuthenticatedHttp
     form.helper.attrs["hx-target"] = "closest dialog"
     form.helper.attrs["hx-swap"] = "outerHTML"
     context = {
+        "instance": instance,
         "record_type": record_type,
         "record_type_name": form_class.verbose_name(),
         "form": form,

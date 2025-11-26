@@ -10,7 +10,15 @@
       New form
     </button>
   </div>
-  <div id="form_table_container">{% include "provider/partials/form_list_table.html" %}</div>
+  <div id="form_table_container"
+       {% if has_generating_forms %}hx-get="{% url 'providers:form_templates_list' organization_id=organization.id %}?generating_ids={% for form in forms %}{% if form.is_generating %}{{ form.id }}{% if not forloop.last %},{% endif %}
+       {% endif %}
+       {% endfor %}
+       "
+       hx-trigger="every 3s"
+       hx-select="#form_table_container"
+       hx-swap="outerHTML"
+       {% endif %}>{% include "provider/partials/form_list_table.html" %}</div>
   {% include "provider/partials/new_form_modal.html" %}
 {% endblock content %}
 {% block inline_javascript %}

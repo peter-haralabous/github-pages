@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 from sandwich.core.models import Patient
 from sandwich.core.service.agent_service.memory import purge_thread
 from sandwich.core.service.chat_service.chat import ChatContext
-from sandwich.core.service.chat_service.chat import UserMessageEvent
-from sandwich.core.service.chat_service.chat import receive_chat_event
+from sandwich.core.service.chat_service.event import UserMessageEvent
+from sandwich.core.service.chat_service.event import receive_chat_event
 from sandwich.core.service.chat_service.sse import send_user_message
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects

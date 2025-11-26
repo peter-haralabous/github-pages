@@ -1,0 +1,316 @@
+# serializer version: 1
+# name: TestAiTemplateIntakeForm.test_clinical_assessment_multiple_sections
+  '''
+  <h1>Clinical Assessment - Jane Doe</h1>
+  <h2>Demographics</h2>
+  <ul>
+  <li>DOB: 1975-06-15</li>
+  <li>PHN: 9876543210</li>
+  </ul>
+  <h2>Clinical Sections</h2>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Chief Complaint</h2>
+  <p>The patient presents with chest pain of 2 hours duration, rated 7/10 in severity.</p>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>HPI (History of Presenting Illness)</h2>
+  <p>The patient reports sudden onset of chest pain that began at rest approximately 2 hours prior to presentation. The pain is described as pressure-like in quality, located substernally. Associated symptoms include shortness of breath, diaphoresis, and nausea. The pain is aggravated by movement and deep breathing. No relieving factors have been identified. The patient attempted self-treatment with an antacid, which provided no relief.</p>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>PMHx (Past Medical History)</h2>
+  <p>The patient has a significant past medical history including:</p>
+  <ul>
+  <li>Hypertension (diagnosed 10 years ago)</li>
+  <li>Type 2 Diabetes Mellitus (diagnosed 8 years ago)</li>
+  <li>Hyperlipidemia (diagnosed 5 years ago)</li>
+  <li>Previous myocardial infarction in 2020, treated with percutaneous coronary intervention (PCI)</li>
+  </ul>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Medications</h2>
+  <p><strong>Prescription Medications:</strong></p>
+  <ul>
+  <li>Metoprolol 50 mg twice daily</li>
+  <li>Metformin 1000 mg twice daily</li>
+  <li>Atorvastatin 80 mg once daily</li>
+  </ul>
+  <p><strong>Over-the-Counter Medications:</strong></p>
+  <ul>
+  <li>Aspirin 81 mg daily</li>
+  </ul>
+  <p><strong>Supplements:</strong></p>
+  <ul>
+  <li>Vitamin D</li>
+  <li>Fish oil</li>
+  </ul>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Social History</h2>
+  <p><strong>Tobacco Use:</strong> Former smoker who quit 3 years ago, with a 20 pack-year smoking history.</p>
+  <p><strong>Alcohol Use:</strong> Occasional alcohol consumption, averaging 1-2 drinks per week.</p>
+  <p><strong>Occupation:</strong> Works as a construction foreman.</p>
+  <p><strong>Living Situation:</strong> Currently resides with spouse.</p>
+  <p><strong>Physical Activity:</strong> Minimal physical activity due to work demands.</p>
+  </div>
+  </div>
+  
+  '''
+# ---
+# name: TestAiTemplateIntakeForm.test_intake_form_with_patient_history
+  '''
+  <h1>Intake Form Summary: John Smith</h1>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Patient History Summary</h2>
+  <p>This patient is a college-educated accountant who is married with two adult children. The patient presents with a significant medical history including chronic metabolic and cardiovascular conditions.</p>
+  <p><strong>Medical History:</strong></p>
+  <p>The patient has a documented history of Type 2 Diabetes Mellitus diagnosed in 2015, Hypertension diagnosed in 2018, and Hyperlipidemia. Surgical history includes an appendectomy performed in 2010 and cholecystectomy in 2019. Family history is significant for premature coronary artery disease with father experiencing myocardial infarction at age 62, and maternal history of Type 2 Diabetes Mellitus, indicating genetic predisposition to cardiometabolic disease.</p>
+  <p><strong>Social History:</strong></p>
+  <p>The patient is a former smoker who successfully quit 5 years ago. Current alcohol consumption is moderate at 2-3 drinks per week for social purposes. The patient denies any recreational drug use. The patient maintains an active lifestyle with daily walking exercise for 30 minutes, demonstrating good health maintenance behaviors.</p>
+  <p><strong>Medications and Allergies:</strong></p>
+  <p>Current prescription medications include Metformin 1000mg twice daily for diabetes management, Lisinopril 20mg daily for blood pressure control, and Atorvastatin 40mg daily for lipid management. The patient also takes over-the-counter Aspirin 81mg daily for cardiovascular protection and Vitamin D supplementation 2000 IU daily. Known drug allergies include Penicillin (manifesting as rash) and Sulfa drugs (manifesting as hives), which should be considered in all prescribing decisions.</p>
+  </div>
+  </div>
+  
+  '''
+# ---
+# name: TestAiTemplateIntakeForm.test_template_with_conditional_sections
+  '''
+  <h1>Medical Summary</h1>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Allergies</h2>
+  <p><strong>Penicillin</strong> - Anaphylaxis (Severe)</p>
+  <ul>
+  <li>Critical allergy requiring absolute avoidance</li>
+  <li>Alternative antibiotic classes must be used for any bacterial infections</li>
+  </ul>
+  <p><strong>Shellfish</strong> - Urticaria (Moderate)</p>
+  <ul>
+  <li>Dietary restriction advised</li>
+  <li>Patient counseled on avoidance and recognition of cross-contamination risks</li>
+  </ul>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Chronic Disease Management</h2>
+  <p><strong>Type 2 Diabetes Mellitus</strong></p>
+  <ul>
+  <li>Diagnosed: 2015</li>
+  <li>Current status: Well-controlled on oral hypoglycemic agents</li>
+  <li>Management: Continue current oral medication regimen with routine monitoring</li>
+  </ul>
+  <p><strong>Hypertension</strong></p>
+  <ul>
+  <li>Diagnosed: 2018</li>
+  <li>Current status: Controlled on monotherapy</li>
+  <li>Management: Continue single-agent antihypertensive therapy with regular blood pressure monitoring</li>
+  </ul>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Assessment</h2>
+  <p>58-year-old patient with controlled chronic conditions presenting with recent weight gain and fatigue.</p>
+  <p><strong>Current Concerns:</strong></p>
+  <ul>
+  <li>Recent weight gain requiring evaluation</li>
+  <li>Fatigue - warrants investigation given history of diabetes and potential for glycemic variability or other metabolic etiologies</li>
+  </ul>
+  <p><strong>Cardiovascular Risk Profile:</strong></p>
+  <ul>
+  <li>Multiple risk factors present including family history of coronary artery disease, sedentary lifestyle, and elevated BMI</li>
+  <li>Combination of hypertension, type 2 diabetes, and modifiable lifestyle factors places patient at increased cardiovascular risk</li>
+  </ul>
+  <p><strong>Recommendations:</strong></p>
+  <ul>
+  <li>Evaluate recent weight gain and fatigue with focused laboratory assessment including HbA1c, TSH, CBC</li>
+  <li>Address lifestyle modifications with emphasis on physical activity and dietary counseling</li>
+  <li>Continue monitoring of chronic conditions</li>
+  <li>Consider cardiovascular risk stratification given multiple risk factors</li>
+  </ul>
+  </div>
+  </div>
+  
+  '''
+# ---
+# name: TestAiTemplatePromptProcessing.test_render_handles_nested_template_tags_in_prompts
+  '''
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Section 1: with_tags</h2>
+  <p><strong>Diabetes:</strong> Insufficient information provided regarding the patient's diabetes status, including type (Type 1, Type 2, or other), duration, current management, glycemic control (HbA1c levels), complications, or current medications.</p>
+  <p><strong>Hypertension:</strong> Insufficient information provided regarding the patient's hypertension, including blood pressure readings, duration of diagnosis, current antihypertensive medications, target blood pressure goals, or presence of end-organ damage.</p>
+  </div>
+  </div>
+  
+  '''
+# ---
+# name: TestAiTemplatePromptProcessing.test_render_processes_django_variables_in_prompts
+  '''
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><h2>Section 1: with_vars</h2>
+  <p>The patient is John Doe, a 45-year-old individual. No additional clinical information, medical history, presenting complaints, vital signs, laboratory results, or treatment details are currently available in the provided documentation.</p>
+  </div>
+  </div>
+  
+  '''
+# ---
+# name: TestDuplicateTitleValidation.test_unique_titles_render_successfully
+  '''
+  <h1>Medical Report</h1>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><p>[Summary for Section 1 is temporarily unavailable]</p>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><p>[Summary for Section 2 is temporarily unavailable]</p>
+  </div>
+  </div>
+  <div class="border-2 border-blue-400 rounded-lg p-4 my-4">
+    <div class="flex items-center gap-2 mb-2 text-blue-600 font-semibold">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+    <path d="M20 3v4" />
+    <path d="M22 5h-4" />
+    <path d="M4 17v2" />
+    <path d="M5 18H3" />
+  </svg>
+      <span>AI Generated</span>
+    </div>
+    <div class="prose prose-sm max-w-none"><p>[Summary for Section 3 is temporarily unavailable]</p>
+  </div>
+  </div>
+  
+  '''
+# ---

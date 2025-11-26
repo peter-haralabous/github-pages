@@ -17,6 +17,7 @@ def update_env_from_ssm() -> None:
     params = {
         "GOOGLE_OAUTH_CLIENT_ID": "/integration/sandwich/google_oauth_client_id",
         "GOOGLE_OAUTH_SECRET": "/integration/sandwich/google_oauth_secret",
+        "GOOGLE_API_KEY": "/integration/sandwich/google_api_key",
     }
 
     try:

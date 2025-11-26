@@ -403,10 +403,6 @@ describe('Survey form renders', () => {
     expect(input).toBeInTheDocument();
     await user.type(input, 'test');
     expect(input).toHaveValue('test');
-
-    // Single page form does not render with side nav
-    const sideNav = document.querySelector('.sv_progress-toc');
-    expect(sideNav).not.toBeInTheDocument();
   });
 
   it('renders in read only mode', async () => {
@@ -457,35 +453,5 @@ describe('Survey form renders', () => {
     await vi.waitFor(() =>
       getByText(document.body, 'Failed to load initial data: data invalid.'),
     );
-  });
-
-  it('renders side nav for multipage forms', async () => {
-    loadSchemaScript({
-      title: 'Test Survey',
-      pages: [
-        {
-          name: 'page1',
-          title: 'Page, the First',
-          elements: [{ name: 'test1', type: 'text' }],
-        },
-        {
-          name: 'page2',
-          title: 'Page, the Second',
-          elements: [{ name: 'test2', type: 'text' }],
-        },
-      ],
-    });
-    loadSurveyComponent();
-
-    await vi.waitFor(() => getByText(document.body, 'Test Survey'));
-    const sideNav = document.querySelector('.sv_progress-toc');
-    expect(sideNav).toBeInTheDocument();
-
-    expect(
-      getByText(sideNav as HTMLElement, 'Page, the First'),
-    ).toBeInTheDocument();
-    expect(
-      getByText(sideNav as HTMLElement, 'Page, the Second'),
-    ).toBeInTheDocument();
   });
 });

@@ -1,14 +1,15 @@
 import logging
 from datetime import date
 from http import HTTPStatus
+from typing import Any
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.core.paginator import Paginator
 from django.core.validators import FileExtensionValidator
 from django.http import HttpResponse
@@ -56,6 +57,21 @@ class UploadReferenceForm(forms.Form):
         self.helper.attrs = {"hx-target": "#generate-form-modal", "hx-swap": "outerHTML"}
         self.helper.add_input(Submit("upload", "Upload"))
 
+    def clean(self) -> dict[str, Any] | None:
+        # NB: Bedrock accepts a max of 4.5MB
+        # https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html
+        max_file_size = 4.5 * 1024 * 1024  # 4.5 MB
+
+        data = super().clean()
+        if data is not None:
+            uploaded_file = data.get("file")
+            if uploaded_file:
+                if uploaded_file.size > max_file_size:
+                    self.add_error("file", "File cannot be larger than 4.5MB.")
+                    return None
+
+        return data
+
 
 @require_GET
 @login_required
@@ -69,14 +85,31 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         "Accessing organization form list",
         extra={"user_id": request.user.id, "organization_id": organization.id},
     )
-    organization_forms = (
-        Form.objects.filter(organization=organization).exclude(status=FormStatus.FAILED).order_by("name")
-    )
+    organization_forms = Form.objects.filter(organization=organization).order_by("-created_at")
     authorized_org_forms = get_objects_for_user(request.user, ["view_form"], organization_forms)
 
     page = request.GET.get("page", 1)
     paginator = Paginator(authorized_org_forms, 25)
     forms_page = paginator.get_page(page)
+
+    # Show notifications for forms that just completed
+    if request.headers.get("HX-Request"):
+        generating_ids = request.GET.get("generating_ids", "")
+        if generating_ids:
+            form_ids = [fid.strip() for fid in generating_ids.split(",") if fid.strip()]
+            completed_forms = Form.objects.filter(organization=organization, id__in=form_ids).exclude(
+                status=FormStatus.GENERATING
+            )
+
+            for form in completed_forms:
+                if form.status == FormStatus.ACTIVE:
+                    messages.add_message(request, messages.SUCCESS, f"Form '{form.name}' generation successful.")
+                elif form.status == FormStatus.FAILED:
+                    messages.add_message(
+                        request, messages.ERROR, f"Form '{form.name}' generation failed, you can try again."
+                    )
+
+    has_generating_forms = any(form.is_generating for form in forms_page)
 
     return render(
         request,
@@ -84,7 +117,7 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         {
             "organization": organization,
             "forms": forms_page,
-            "ai_form_generation_enabled": settings.FEATURE_PROVIDER_AI_FORM_GENERATION,
+            "has_generating_forms": has_generating_forms,
         },
     )
 
@@ -244,7 +277,13 @@ def form_file_upload(request: AuthenticatedHttpRequest, organization: Organizati
             messages.add_message(request, messages.SUCCESS, "Form upload successful, processing document.")
             form_name = upload_reference_form.cleaned_data.get("name")
             reference_file = upload_reference_form.cleaned_data.get("file")
-            assert isinstance(reference_file, InMemoryUploadedFile)
+
+            # Django uses `InMemory` or `Temporary` based on file size
+            if not isinstance(reference_file, InMemoryUploadedFile) and not isinstance(
+                reference_file, TemporaryUploadedFile
+            ):
+                raise ValueError("Uploaded file is not a valid uploaded file type.")
+
             assert reference_file.name, "Uploaded file has no name"
 
             form, created = Form.objects.get_or_create(

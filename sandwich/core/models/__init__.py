@@ -1,3 +1,4 @@
+from .attachment import Attachment
 from .condition import Condition
 from .consent import Consent
 from .custom_attribute import CustomAttribute
@@ -35,6 +36,7 @@ from .task import Task
 from .template import Template
 
 __all__ = [
+    "Attachment",
     "CheckpointBlobs",
     "CheckpointMigrations",
     "CheckpointWrites",

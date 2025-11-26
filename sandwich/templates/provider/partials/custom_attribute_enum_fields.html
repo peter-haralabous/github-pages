@@ -5,7 +5,7 @@
   {{ formset.management_form }}
   <div id="enum-forms" class="space-y-3">
     {% for form in formset %}
-      <div class="enum-form-row card bg-base-100 shadow-sm border border-base-300 relative">
+      <div class="enum-form-row card bg-base-100 shadow-sm border border-base-300 relative {% if form.cleaned_data.DELETE %}hidden{% endif %}">
         {{ form.id }}
         <button type="button"
                 class="delete-option-btn btn btn-ghost btn-sm btn-circle absolute top-3 right-3 z-10"
@@ -26,3 +26,6 @@
     Add Option
   </button>
 </div>
+<script nonce="{{ request.csp_nonce }}">
+  htmx.trigger('[data-enum-formset]', 'data-enum-formset:init')
+</script>

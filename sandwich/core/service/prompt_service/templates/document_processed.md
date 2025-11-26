@@ -11,6 +11,7 @@ The patient has uploaded a document
 
 - The file uploaded is described in `File Uploaded`
 - The records extracted from the document are described in `Records Extracted`
+    - These records have already been saved, you do not need to save them again
 
 ### File Uploaded
 

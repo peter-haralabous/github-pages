@@ -14,10 +14,48 @@
         {% include 'provider/partials/summary_content.html' with title_tag='h1' badge_size='md' %}
       </div>
     </div>
-    <div class="card bg-base-100 border border-base-200 shadow-sm">
-      <div class="card-body">
-        <div class="prose max-w-none">{{ summary.body|safe }}</div>
+    {% if summary.status == "processing" or summary.status == "pending" %}
+      {# Show loading indicator for summaries being generated #}
+      <div class="rounded-box border border-base-200 bg-base-100 p-8">
+        <div class="flex flex-col items-center justify-center py-12">
+          <span class="loading loading-spinner loading-lg text-primary mb-4"></span>
+          <p class="text-base-content/60 text-center">
+            {% if summary.status == "processing" %}
+              Generating summary with AI assistance...
+            {% else %}
+              Summary generation is queued...
+            {% endif %}
+          </p>
+          <p class="text-sm text-base-content/40 mt-2">This may take 30-60 seconds</p>
+        </div>
       </div>
-    </div>
+    {% elif summary.status == "failed" %}
+      {# Show error state #}
+      <div class="rounded-box border border-error bg-error/10 p-8">
+        <div class="flex items-start gap-3">
+          {% lucide "circle-alert" class="size-5 text-error flex-shrink-0 mt-1" %}
+          <div>
+            <h3 class="font-medium text-error mb-2">Summary Generation Failed</h3>
+            <p class="text-sm text-base-content/70">
+              An error occurred while generating this summary. Please try again or contact support if the problem persists.
+            </p>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {# Show completed summary #}
+      <div class="flex justify-end mb-6">
+        <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
+                data-copy-text="{{ summary.body }}">
+          {% lucide "copy" class="size-4" %}
+          Copy Summary
+        </button>
+      </div>
+      <div class="card bg-base-100 border border-base-200 shadow-sm">
+        <div class="card-body">
+          <div class="prose max-w-none">{{ summary.body|safe }}</div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock content %}

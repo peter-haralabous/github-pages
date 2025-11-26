@@ -198,6 +198,38 @@ def test_summary_detail_htmx_request_returns_modal(
 
 
 @pytest.mark.django_db
+def test_summary_detail_modal_includes_cleanup_script(
+    provider: User, organization: Organization, patient, encounter: Encounter
+) -> None:
+    """Verify that the modal includes JavaScript to remove itself from DOM when closed."""
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Test Summary",
+        body="<p>Test content</p>",
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+
+    result = client.get(url, HTTP_HX_REQUEST="true")
+
+    assert result.status_code == 200
+    content = result.content.decode("utf-8")
+
+    # Verify the modal has the correct ID
+    assert 'id="summary-modal"' in content
+
+    # Verify the cleanup script is present
+    assert 'modal.addEventListener("close"' in content
+    assert "modal.remove()" in content
+    assert "once: true" in content  # Flexible to handle different formatting
+
+
+@pytest.mark.django_db
 def test_summary_detail_regular_request_returns_full_page(
     provider: User, organization: Organization, patient, encounter: Encounter
 ) -> None:
@@ -482,3 +514,99 @@ def test_summary_workflow_end_to_end(  # noqa: PLR0915
     # Verify modal is closed/removed
     provider_page.wait_for_timeout(300)
     expect(modal).not_to_be_visible()
+
+
+@pytest.mark.e2e
+@pytest.mark.django_db
+def test_summary_modal_cleanup_when_opening_multiple_summaries(
+    live_server, provider_page: Page, organization: Organization, provider: User, encounter: Encounter
+) -> None:
+    """
+    Test that opening multiple summary modals in sequence shows the correct content each time.
+    This prevents regression of a bug where stale modals accumulated in the DOM, causing
+    subsequent summary clicks to show the first summary's content instead of the new one.
+    """
+    patient = encounter.patient
+
+    # Create two different summaries with distinct content
+    summary1 = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="First Summary",
+        body="<p>This is the first summary content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary1)
+
+    summary2 = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Second Summary",
+        body="<p>This is the second summary content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary2)
+
+    # Navigate to patient details page
+    patient_url = (
+        f"{live_server.url}"
+        f"{reverse('providers:patient', kwargs={'organization_id': organization.id, 'patient_id': patient.id})}"
+    )
+    provider_page.goto(patient_url)
+    provider_page.wait_for_load_state("networkidle")
+
+    # Open first summary modal
+    first_summary_card = provider_page.locator(f"text={summary1.title}").locator("xpath=ancestor::a").first
+    expect(first_summary_card).to_be_visible()
+    first_summary_card.click()
+    provider_page.wait_for_timeout(500)
+
+    # Verify first summary modal is displayed with correct content
+    modal = provider_page.locator("#summary-modal")
+    expect(modal).to_be_visible()
+    expect(modal.locator("text=This is the first summary content")).to_be_visible()
+    expect(modal.locator("text=This is the second summary content")).not_to_be_visible()
+
+    # Verify only one modal exists in the DOM
+    all_modals = provider_page.locator("#summary-modal").all()
+    assert len(all_modals) == 1, f"Expected exactly 1 modal in DOM, found {len(all_modals)}"
+
+    # Close the first modal
+    close_button = modal.locator("button.btn-circle")
+    close_button.click()
+    provider_page.wait_for_timeout(300)
+
+    # Verify modal is removed from DOM (not just hidden)
+    all_modals_after_close = provider_page.locator("#summary-modal").all()
+    assert len(all_modals_after_close) == 0, (
+        f"Expected modal to be removed from DOM after closing, but found {len(all_modals_after_close)} modals"
+    )
+
+    # Open second summary modal
+    second_summary_card = provider_page.locator(f"text={summary2.title}").locator("xpath=ancestor::a").first
+    expect(second_summary_card).to_be_visible()
+    second_summary_card.click()
+    provider_page.wait_for_timeout(500)
+
+    # Verify second summary modal is displayed with correct content
+    modal_after_reopen = provider_page.locator("#summary-modal")
+    expect(modal_after_reopen).to_be_visible()
+    expect(modal_after_reopen.locator("text=This is the second summary content")).to_be_visible()
+    expect(modal_after_reopen.locator("text=This is the first summary content")).not_to_be_visible()
+
+    # Verify still only one modal exists in the DOM
+    all_modals_final = provider_page.locator("#summary-modal").all()
+    assert len(all_modals_final) == 1, f"Expected exactly 1 modal in DOM, found {len(all_modals_final)}"
+
+    # Close the second modal
+    close_button_2 = modal_after_reopen.locator("button.btn-circle")
+    close_button_2.click()
+    provider_page.wait_for_timeout(300)
+
+    # Verify modal is removed from DOM
+    all_modals_end = provider_page.locator("#summary-modal").all()
+    assert len(all_modals_end) == 0, (
+        f"Expected modal to be removed from DOM after closing, but found {len(all_modals_end)} modals"
+    )

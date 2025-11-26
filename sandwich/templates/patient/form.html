@@ -34,9 +34,18 @@
             {% endif %}
             {% if initial_data %}{{ initial_data | json_script:"initial_data" }}{% endif %}
             {{ form_schema | json_script:"form_schema" }}
-            <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data" data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'patients:patient_details' patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}"
-            {% if read_only %}readonly{% endif %}
+            {# djlint:off #}
+            <survey-form
+              data-schema-id="form_schema"
+              data-initial-data-id="initial_data"
+              data-submit-url="{{ submit_url }}"
+              data-csrf-token="{{ csrf_token }}"
+              data-complete-url="{% url 'patients:patient_details' patient_id=patient.id %}"
+              data-save-draft-url="{{ save_draft_url }}"
+              data-address-url="{{ address_autocomplete_url }}"
+              {% if read_only %}readonly{% endif %}
             />
+            {# djlint:on #}
           </main>
         </div>
       </div>

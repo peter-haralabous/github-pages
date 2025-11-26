@@ -7,6 +7,13 @@
       {% include 'provider/partials/summary_content.html' with title_tag='h3' badge_size='sm' title_class='font-bold text-lg' %}
     </div>
     <div class="divider my-2"></div>
+    <div class="flex justify-end mb-4">
+      <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
+              data-copy-text="{{ summary.body }}">
+        {% lucide "copy" class="size-4" %}
+        Copy Summary
+      </button>
+    </div>
     <div class="overflow-y-auto max-h-96 mb-4">
       <div class="rounded-lg border border-base-300 bg-base-50 p-6">
         <div class="prose prose-sm max-w-none">{{ summary.body|safe }}</div>
@@ -31,4 +38,11 @@
 <script nonce="{{ request.csp_nonce }}" type="module">
   const modal = document.getElementById("summary-modal");
   modal.showModal();
+
+  // Remove the modal from DOM when it closes to prevent stale modals from accumulating
+  modal.addEventListener("close", () => {
+    modal.remove();
+  }, {
+    once: true
+  });
 </script>

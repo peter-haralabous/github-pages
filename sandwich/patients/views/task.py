@@ -64,5 +64,6 @@ def task(request: AuthenticatedHttpRequest, patient: Patient, task: Task) -> Htt
         "save_draft_url": save_draft_url,
         "read_only": read_only,
         "task": task,
+        "address_autocomplete_url": reverse("core:address_search"),
     } | _patient_context(request, patient)
     return render(request, "patient/form.html", context=context)

@@ -11,10 +11,13 @@ from private_storage.views import PrivateStorageDetailView
 
 from sandwich.core.models.document import Document
 from sandwich.core.models.patient import Patient
+from sandwich.core.service.chat_service.chat import ChatContext
+from sandwich.core.service.chat_service.event import FileUploadedEvent
+from sandwich.core.service.chat_service.event import receive_chat_event
 from sandwich.core.service.chat_service.sse import send_records_updated
 from sandwich.core.service.document_service import assign_default_document_permissions
+from sandwich.core.service.ingest_service import ProcessDocumentContext
 from sandwich.core.service.ingest_service import process_document_job
-from sandwich.core.service.ingest_service import send_ingest_progress
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
@@ -87,11 +90,18 @@ def document_upload_and_extract(request: AuthenticatedHttpRequest, patient: Pati
                 },
             )
 
-            try:
-                process_document_job.defer(
-                    document_id=str(document.id), document_context=form.cleaned_data.get("context")
+            document_context = form.cleaned_data.get("context")
+            if document_context and document_context == ProcessDocumentContext.PATIENT_CHAT:
+                receive_chat_event(
+                    FileUploadedEvent(
+                        context=ChatContext(patient_id=str(patient.id)),
+                        document_id=str(document.id),
+                        document_filename=document.original_filename,
+                    )
                 )
-                send_ingest_progress(patient, text=f"Uploaded {document.original_filename}...")
+
+            try:
+                process_document_job.defer(document_id=str(document.id), document_context=document_context)
                 logger.info(
                     "Document processing job enqueued",
                     extra={

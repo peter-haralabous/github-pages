@@ -118,10 +118,32 @@ def _extract_records(document: Document) -> RecordsResponse:
 
 
 def _save_records(document: Document, records: RecordsResponse) -> None:
+    patient = document.patient
+
+    # Count records before saving
+    conditions_before = Condition.objects.filter(patient=patient).count()
+    immunizations_before = Immunization.objects.filter(patient=patient).count()
+    practitioners_before = Practitioner.objects.filter(patient=patient).count()
+
+    logger.info(
+        "Starting record ingestion",
+        extra={
+            "document_id": document.id,
+            "patient_id": patient.id,
+            "conditions_before": conditions_before,
+            "immunizations_before": immunizations_before,
+            "practitioners_before": practitioners_before,
+        },
+    )
+
+    conditions_created = 0
+    immunizations_created = 0
+    practitioners_created = 0
+
     with pghistory.context(llm=ModelName.CLAUDE_SONNET_4_5, document=document.id):
         for condition_data in records.conditions:
             # TODO: update onset/abatement dates if the record already exists
-            Condition.objects.get_or_create(
+            _, created = Condition.objects.get_or_create(
                 patient=document.patient,
                 name__iexact=condition_data.name,
                 defaults={
@@ -132,9 +154,11 @@ def _save_records(document: Document, records: RecordsResponse) -> None:
                     "unattested": True,
                 },
             )
+            if created:
+                conditions_created += 1
 
         for immunization_data in records.immunizations:
-            Immunization.objects.get_or_create(
+            _, created = Immunization.objects.get_or_create(
                 patient=document.patient,
                 name__iexact=immunization_data.name,
                 date=immunization_data.date,
@@ -143,9 +167,11 @@ def _save_records(document: Document, records: RecordsResponse) -> None:
                     "unattested": True,
                 },
             )
+            if created:
+                immunizations_created += 1
 
         for practitioner_data in records.practitioners:
-            Practitioner.objects.get_or_create(
+            _, created = Practitioner.objects.get_or_create(
                 patient=document.patient,
                 name__iexact=practitioner_data.name,
                 defaults={
@@ -153,9 +179,34 @@ def _save_records(document: Document, records: RecordsResponse) -> None:
                     "unattested": True,
                 },
             )
+            if created:
+                practitioners_created += 1
 
         if records.update_document(document):
             document.save()
+
+    # Count records after saving
+    conditions_after = Condition.objects.filter(patient=patient).count()
+    immunizations_after = Immunization.objects.filter(patient=patient).count()
+    practitioners_after = Practitioner.objects.filter(patient=patient).count()
+
+    logger.info(
+        "Completed record ingestion",
+        extra={
+            "document_id": document.id,
+            "patient_id": patient.id,
+            "conditions_created": conditions_created,
+            "conditions_before": conditions_before,
+            "conditions_after": conditions_after,
+            "immunizations_created": immunizations_created,
+            "immunizations_before": immunizations_before,
+            "immunizations_after": immunizations_after,
+            "practitioners_created": practitioners_created,
+            "practitioners_before": practitioners_before,
+            "practitioners_after": practitioners_after,
+            "total_records_created": conditions_created + immunizations_created + practitioners_created,
+        },
+    )
 
 
 def extract_records(document: Document) -> RecordsResponse:

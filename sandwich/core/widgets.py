@@ -38,3 +38,9 @@ class MultiSelectWidget(forms.SelectMultiple):
 
         context["widget"]["value"] = value
         return context
+
+
+class WysiwygWidget(forms.Textarea):
+    """Widget that renders a WYSIWYG editor."""
+
+    template_name = "widgets/wysiwyg_editor.html"

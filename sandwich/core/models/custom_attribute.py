@@ -37,6 +37,7 @@ class CustomAttributeEnum(BaseModel):
 
     class Meta:
         unique_together = ("attribute", "value")
+        ordering = ["label"]
 
 
 class CustomAttributeValue(BaseModel):

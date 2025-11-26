@@ -3,6 +3,7 @@ import { getSurveyLicenseKey } from '../lib/survey-license-keys';
 import { slk } from 'survey-core';
 import * as SurveyCore from 'survey-core';
 import CustomSandwichTheme from '../lib/survey-form-theme';
+import { registerCustomComponents } from '../components/forms/custom-components';
 import '../components/message-alert';
 
 const ENVIRONMENT = JSON.parse(
@@ -76,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const licenseKey = getSurveyLicenseKey(ENVIRONMENT);
   if (licenseKey) slk(licenseKey);
+
+  // Register custom components before initializing the creator.
+  registerCustomComponents();
 
   const creator = new SurveyCreator(creatorOptions);
   creator.theme = CustomSandwichTheme;

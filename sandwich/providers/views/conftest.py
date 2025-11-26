@@ -23,3 +23,9 @@ def login(live_server, page: Page, user: User) -> Page:
 def provider_page(live_server, page: Page, provider: User) -> Page:
     """Fixture that returns a logged-in provider page for E2E tests."""
     return login(live_server, page, provider)
+
+
+@pytest.fixture
+def owner_page(live_server, page: Page, owner: User) -> Page:
+    """Fixture that returns a logged-in owner page."""
+    return login(live_server, page, owner)

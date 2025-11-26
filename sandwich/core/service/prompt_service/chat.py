@@ -9,8 +9,7 @@ from sandwich.core.service.prompt_service.template import template_contents
 from sandwich.core.service.template_service import ContextDict
 
 if TYPE_CHECKING:
-    from sandwich.core.service.chat_service.chat import FileUploadEvent
-
+    from sandwich.core.service.chat_service.event import FileProcessedEvent
 
 chat_template = ChatPromptTemplate(
     [
@@ -69,14 +68,14 @@ def user_context(user):
     return template_contents("user_context.md").format(user_full_name=user.get_full_name())
 
 
-document_upload_template = ChatPromptTemplate(
+file_processed_template = ChatPromptTemplate(
     [
-        ("system", template_contents("document_upload.md")),
+        ("system", template_contents("document_processed.md")),
     ]
 )
 
 
-def file_upload_context(event: "FileUploadEvent") -> ContextDict:
+def file_processed_context(event: "FileProcessedEvent") -> ContextDict:
     document = Document.objects.get(pk=event.document_id)
     return {
         "file_id": str(document.pk),

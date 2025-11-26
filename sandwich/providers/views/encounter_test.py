@@ -813,7 +813,7 @@ def test_inline_edit_custom_attribute_on_encounter_details_page(
 
 @pytest.mark.e2e
 @pytest.mark.django_db(transaction=True)
-def test_inline_edit_custom_attribute_in_encounter_slideout(
+def test_inline_edit_custom_attribute_in_encounter_slideout(  # noqa: PLR0915
     live_server, page: Page, provider: User, organization: Organization, encounter: Encounter
 ) -> None:
     """Test that inline editing custom attributes works in the encounter details slideout."""
@@ -842,6 +842,15 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(
     encounter.attributes.create(
         attribute=enum_attr,
         value_enum=routine,
+    )
+
+    # Save list preference to show the custom attribute column in the table
+    save_list_view_preference(
+        organization=organization,
+        list_type=ListViewType.ENCOUNTER_LIST,
+        user=provider,
+        visible_columns=["patient__first_name", "status", str(enum_attr.id)],
+        saved_filters={},
     )
 
     # Create auth cookies for the provider
@@ -924,3 +933,21 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(
     value = encounter.attributes.filter(attribute=enum_attr).first()
     assert value is not None
     assert value.value_enum == urgent
+
+    # Close the slideout by clicking the backdrop
+    backdrop = page.locator(f"#encounter-details-backdrop-{encounter.id}")
+    backdrop.click(position={"x": 10, "y": 10})
+
+    # Wait for slideout to close
+    page.wait_for_function(
+        f"document.querySelector('#encounter-details-modal-{encounter.id}').classList.contains('translate-x-full')"
+    )
+    page.wait_for_timeout(500)
+
+    # Verify the table row was updated via OOB swap
+    # Find the encounter row in the table and check the Urgency column shows "Urgent"
+    patient_link_in_table = page.locator(f'a.link:has-text("{patient_name}")').first
+    encounter_row = patient_link_in_table.locator("xpath=ancestor::tr")
+    table_urgency_cell = encounter_row.locator("td.inline-edit-cell").filter(has_text="Urgent")
+    expect(table_urgency_cell).to_be_visible(timeout=2000)
+    expect(table_urgency_cell).to_contain_text("Urgent")

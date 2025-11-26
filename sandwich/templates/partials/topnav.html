@@ -42,23 +42,37 @@
             </li>
             <hr class="!my-1" />
             <li>
-              <a href="{% url 'account_email' %}" class="flex gap-2">
-                <div>{% lucide "user" class="size-4" %}</div>
-                <p>{% translate "Account Settings" %}</p>
-              </a>
-            </li>
-            {% block avatar_nav_items %}
-              {% if active_organization %}
-                {% comment %} Note: will need to swap this out for org perms {% endcomment %}
+              <h2 class="menu-title">Settings</h2>
+              <ul>
+                {% for patient in user_patients %}
+                  <li>
+                    <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
+                       class="flex gap-2">
+                      <div>{% lucide "circle-user" class="size-4" %}</div>
+                      <span>{{ patient.full_name }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
                 <li>
-                  <a href="{% url 'providers:organization_edit' organization_id=active_organization.id %}"
-                     class="flex gap-2">
-                    <div>{% lucide "settings" class="size-4" %}</div>
-                    <p>Organization Settings</p>
+                  <a href="{% url 'account_email' %}" class="flex gap-2">
+                    <div>{% lucide "user" class="size-4" %}</div>
+                    <p>{% translate "Account" %}</p>
                   </a>
                 </li>
-              {% endif %}
-            {% endblock avatar_nav_items %}
+                {% block avatar_nav_items %}
+                  {% if active_organization %}
+                    {% comment %} Note: will need to swap this out for org perms {% endcomment %}
+                    <li>
+                      <a href="{% url 'providers:organization_edit' organization_id=active_organization.id %}"
+                         class="flex gap-2">
+                        <div>{% lucide "settings" class="size-4" %}</div>
+                        <p>Organization</p>
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endblock avatar_nav_items %}
+              </ul>
+            </li>
             <hr class="!my-1" />
             <li>
               <form action="{% url 'account_logout' %}" method="post">

@@ -1,11 +1,4 @@
-/* Survey page navigation.*/
-.sv_progress-toc {
-  /* Unset base unit for the survey nav container width. */
-  --survey-nav-base-unit: 8px;
-  min-width: calc(
-    32 * (var(--survey-nav-base-unit, var(--survey-nav-base-unit)))
-  );
-  max-width: calc(
-    42 * (var(--survey-nav-base-unit, var(--survey-nav-base-unit)))
-  );
+/* Address Autocomplete - hide second title */
+[data-name='suggested_addresses'] .sd-question__header {
+  display: none;
 }

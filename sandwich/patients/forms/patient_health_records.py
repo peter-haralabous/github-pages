@@ -1,6 +1,9 @@
+import logging
 from datetime import date
 
 from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML
+from crispy_forms.layout import Layout
 from crispy_forms.layout import Submit
 from django import forms
 from pydantic import BaseModel
@@ -13,6 +16,8 @@ from sandwich.core.models import Practitioner
 from sandwich.core.models.condition import ConditionStatus
 from sandwich.core.models.health_record import HealthRecord
 from sandwich.core.validators.date_time import not_in_future
+
+logger = logging.getLogger(__name__)
 
 
 class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
@@ -38,12 +43,30 @@ class HealthRecordForm[M: HealthRecord](forms.ModelForm[M]):
     # NOTE: patient is marked as optional here to prevent mypy from complaining that the signature is incompatible
     #       with the base class, but a database constraint will prevent the form from being submitted without a patient
     def save(self, commit: bool = True, patient: Patient | None = None) -> M:  # noqa: FBT001,FBT002
+        is_new_record = self.instance.pk is None
+        was_unattested = self.instance.unattested if not is_new_record else False
+
         instance = super().save(commit=False)
         instance.unattested = False  # the user is either correcting or confirming an unattested record
         if patient is not None:
             instance.patient = patient
+
         if commit:
             instance.save()
+
+            # Log after successful save
+            logger.info(
+                "Health record saved",
+                extra={
+                    "record_type": instance.__class__.__name__,
+                    "record_id": instance.pk,
+                    "patient_id": instance.patient.id,
+                    "is_new": is_new_record,
+                    "was_unattested": was_unattested,
+                    "attested": not instance.unattested,
+                },
+            )
+
         return instance
 
     @classmethod
@@ -80,6 +103,23 @@ class ConditionForm(HealthRecordForm[Condition]):
 class DocumentForm(HealthRecordForm[Document]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+
+        self.helper.layout = Layout(
+            "original_filename",
+            HTML("""
+            {% load lucide %}
+            <div class="-mt-2 pb-2 text-xs text-blue-600">
+                <a target="_blank" href="{% url "patients:document_download" instance.pk %}">
+                    View file {% lucide "external-link" size=12 class="inline align-top" %}
+                </a>
+            </div>
+            """),
+            "content_type",
+            "size",
+            "date",
+            "category",
+        )
+
         for field in ("original_filename", "content_type", "size"):
             self.fields[field].disabled = True
 

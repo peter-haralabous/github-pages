@@ -22,6 +22,8 @@
           <td>{{ attribute.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
           <td>{{ attribute.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
           <td class="text-right">
+            <a href="{% url "providers:custom_attribute_edit" organization_id=organization.id attribute_id=attribute.id %}"
+               class="btn btn-ghost btn-sm">{% lucide "pencil" class="h-4 w-4 text-gray-800" %}</a>
             <button class="btn btn-ghost btn-sm"
                     type="button"
                     hx-get="{% url 'providers:custom_attribute_archive' organization_id=organization.id attribute_id=attribute.id %}"

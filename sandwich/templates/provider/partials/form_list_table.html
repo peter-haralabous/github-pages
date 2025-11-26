@@ -1,5 +1,6 @@
 {% load sortable %}
 
+{% include "partials/messages_oob.html" %}
 <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
   <table class="table">
     <thead>
@@ -12,25 +13,28 @@
     </thead>
     <tbody>
       {% for form in forms %}
-        <tr>
-          {# TODO(MM): improve this UI #}
-          {% if form.is_generating %}
-            <td class="text-gray-400">{{ form.name }}</td>
-            <td class="text-gray-400">
-              <i>Generating...</i>
-            </td>
-          {% else %}
-            <td>
+        <tr {% if form.is_generating %}class="bg-gray-100"{% elif form.status == "failed" %}class="bg-error/10"{% endif %}>
+          <td {% if form.is_generating %}class="text-gray-400"{% elif form.status == "failed" %}class="text-error"{% endif %}>
+            {% if form.is_generating or form.status == "failed" %}
+              {{ form.name }}
+            {% else %}
               <a class="link"
                  href="{% url "providers:form_template_edit" organization_id=organization.id form_id=form.id %}">{{ form.name }}</a>
-            </td>
-            <td>
+            {% endif %}
+          </td>
+          <td {% if form.is_generating %}class="text-gray-400"{% elif form.status == "failed" %}class="text-error"{% endif %}>
+            {% if form.is_generating %}
+              <span class="loading loading-spinner loading-xs" slot="icon"></span>
+              <i>Generating...</i>
+            {% elif form.status == "failed" %}
+              <i>Generation failed</i>
+            {% else %}
               <a class="link"
                  href="{% url "providers:form_template" organization_id=organization.id form_id=form.id %}">
                 <span class="badge badge-info">{{ form.current_version }}</span>
               </a>
-            </td>
-          {% endif %}
+            {% endif %}
+          </td>
           <td>{{ form.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
           <td>{{ form.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
         </tr>

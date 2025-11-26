@@ -9,7 +9,7 @@
     {% include 'patient/chatty/partials/topnav.html' %}
     <div class="overflow-hidden">
       {# The sse-swap here is misleading; messages include a hx-swap-oob with their real target #}
-      <div sse-swap="assistant_message,assistant_thinking,user_message,ingest_progress"></div>
+      <div sse-swap="assistant_message,assistant_thinking,user_message,feed_item"></div>
       <div class="flex flex-row gap-2 p-1 lg:p-6 h-full">
         {# Left Panel #}
         {% block left_panel %}
@@ -97,6 +97,8 @@
       const chatInput = chatPanel.querySelector("textarea");
       const chatAttach = document.getElementById('chat-attach');
 
+
+
       // Mobile navigation
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
       const mobileViews = {
@@ -156,6 +158,21 @@
         }
       });
 
+      document.addEventListener("htmx:oobBeforeSwap", (event) => {
+        // Listen for out-of-band swaps that have the data-hx-swap-oob-replace-if-exists attribute
+        const replaceTargetId = event.detail.fragment.dataset.hxSwapOobReplaceIfExists;
+        if (replaceTargetId) {
+          const existingElement = document.getElementById(replaceTargetId)
+          const newElement = event.detail.fragment.querySelector(`#${replaceTargetId}`)
+          if (newElement && existingElement) {
+            // Replace existing item instead of adding a duplicate
+            existingElement.replaceWith(newElement);
+            // Prevent default swap behavior
+            event.detail.shouldSwap = false;
+          }
+        }
+      });
+
       document.addEventListener("htmx:oobAfterSwap", (event) => {
         if (event.detail.target?.id === "chat-messages") {
           event.detail.target.children[event.detail.target.children.length - 1]?.scrollIntoView({
@@ -167,6 +184,7 @@
       const hoverIndicator = document.getElementById('global-upload-hover');
       const uploadForm = document.getElementById('global-upload-form');
       const fileInput = uploadForm.querySelector('input');
+      const fileInputHeader = document.getElementById('file-upload-card-header');
 
       // Drag and drop events for the whole window
       window.addEventListener('dragover', e => {
@@ -197,6 +215,7 @@
         uploadForm.requestSubmit();
       });
       // Manual file selection (optional: add a button if desired)
+      fileInputHeader.addEventListener("click", () => fileInput.click());
       fileInput.addEventListener('change', () => {
         uploadForm.requestSubmit();
       });

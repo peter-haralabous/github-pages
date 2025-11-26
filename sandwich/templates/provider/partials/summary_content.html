@@ -10,15 +10,17 @@
       {% lucide "user" class="size-4 text-base-content/60 mt-0.5 flex-shrink-0" %}
       <div>
         <span class="font-medium text-base-content/70">Patient:</span>
-        <span class="text-base-content">{{ patient.last_name }}, {{ patient.first_name }}</span>
+        <a href="{% url 'providers:patient' organization_id=summary.organization.id patient_id=patient.id %}"
+           class="link">{{ patient.last_name }}, {{ patient.first_name }}</a>
       </div>
     </div>
     {% if summary.template %}
       <div class="flex items-start gap-2">
         {% lucide "layout-template" class="size-4 text-base-content/60 mt-0.5 flex-shrink-0" %}
         <div>
-          <span class="font-medium text-base-content/70">Template:</span>
-          <span class="text-base-content">{{ summary.template.name }}</span>
+          <span class="font-medium text-base-content/70">Summary Template:</span>
+          <a href="{% url 'providers:summary_template_edit' organization_id=summary.organization.id template_id=summary.template.id %}"
+             class="link">{{ summary.template.name }}</a>
         </div>
       </div>
     {% endif %}
@@ -28,6 +30,16 @@
         <div>
           <span class="font-medium text-base-content/70">Encounter:</span>
           <span class="text-base-content">{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
+        </div>
+      </div>
+    {% endif %}
+    {% if summary.submission.task %}
+      <div class="flex items-start gap-2">
+        {% lucide "file-text" class="size-4 text-base-content/60 mt-0.5 flex-shrink-0" %}
+        <div>
+          <span class="font-medium text-base-content/70">Form Submission:</span>
+          <a href="{% url 'providers:task' organization_id=summary.organization.id patient_id=patient.id task_id=summary.submission.task.id %}"
+             class="link">{{ summary.submission.task.form_version.name }}</a>
         </div>
       </div>
     {% endif %}

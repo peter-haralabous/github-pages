@@ -11,6 +11,8 @@
 @theme {
   /* Custom animations */
   --animate-gelatine: gelatine 1s ease-in-out 1;
+  --animate-tada: tada 1s;
+
   @keyframes gelatine {
     from,
     to {
@@ -24,6 +26,30 @@
     }
     75% {
       transform: scale(0.95, 1.05);
+    }
+  }
+
+  @keyframes tada {
+    0% {
+      transform: scale3d(1, 1, 1);
+    }
+    10%,
+    20% {
+      transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+    }
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: scale3d(1.2, 1.2, 1.2) rotate3d(0, 0, 1, 3deg);
+    }
+    40%,
+    60%,
+    80% {
+      transform: scale3d(1.2, 1.2, 1.2) rotate3d(0, 0, 1, -3deg);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
     }
   }
 }

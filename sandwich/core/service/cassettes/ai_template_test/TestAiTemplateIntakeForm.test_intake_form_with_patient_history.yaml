@@ -1,0 +1,98 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"text": "Generate medical summary
+        sections IN THE EXACT ORDER listed below:\n\n## Section 1: Patient History Summary\nPlease
+        write a concise clinical narrative summary of the patient''s history based on
+        the following intake data.\nGroup the information into Medical History, Social
+        History, and Medications/Allergies.\n\n**Medical History:**\n- Past Medical
+        History: Type 2 Diabetes (2015), Hypertension (2018), Hyperlipidemia\n- Surgeries/Procedures:
+        Appendectomy (2010), Cholecystectomy (2019)\n- Family History: Father - MI at
+        62, Mother - Type 2 DM\n\n**Lifestyle & Social:**\n- Smoker: Former smoker,
+        quit 5 years ago\n- Alcohol: Social, 2-3 drinks/week\n- Recreational Drugs:
+        No\n- Exercise: Yes\n  (Walks 30 min daily)\n- Education/Occupation: College
+        graduate, accountant\n- Family/Dependents: Married, 2 adult children\n\n**Medications
+        & Allergies:**\n- Prescriptions: Metformin 1000mg BID, Lisinopril 20mg daily,
+        Atorvastatin 40mg daily\n- OTC/Supplements: Vitamin D 2000 IU daily, Aspirin
+        81mg daily\n- Allergies:\n  * Penicillin (Reaction: Rash)\n  * Sulfa drugs (Reaction:
+        Hives)\n\n---\n\nEach section should start with a markdown heading (##)."}]}],
+        "system": [{"text": "You are a medical AI assistant specialized in generating
+        concise, accurate clinical summaries.\n\nYour role is to:\n- Analyze patient
+        medical information and generate clear, professional summaries\n- Organize information
+        into well-structured sections with appropriate headings\n- Use medical terminology
+        appropriately while remaining clear\n- Focus on clinically relevant information\n-
+        Format output as markdown with proper section headers (using ##)\n- Be concise
+        but comprehensive\n\nIMPORTANT:\n- You MUST return sections in the EXACT ORDER
+        they are requested\n- Each section should have a clear heading starting with
+        ##\n- Write in a professional medical tone\n- Do not include disclaimers or
+        meta-commentary\n- Do not make up information - only summarize what is provided\n-
+        If information is insufficient, note that briefly\n"}], "inferenceConfig": {},
+        "toolConfig": {"tools": [{"toolSpec": {"name": "AISummaryResponse", "description":
+        "\nResponse from AI containing multiple sections in order.\n", "inputSchema":
+        {"json": {"properties": {"sections": {"description": "Array of markdown sections.
+        MUST be in the same order as requested.", "items": {"type": "string"}, "type":
+        "array"}}, "required": ["sections"], "type": "object"}}}}], "toolChoice": {"any":
+        {}}}}'
+      headers:
+        Content-Length:
+          - '2498'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNS4xLjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLFos
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMjVUMTc0MjA3Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            MjZkN2UxZDQtODNmYy00MjNiLTkwZmEtN2VmZTBkNzg1NTBh
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string:
+          '{"metrics":{"latencyMs":7755},"output":{"message":{"content":[{"toolUse":{"input":{"sections":["##
+          Patient History Summary\n\nThis patient is a college-educated accountant who
+          is married with two adult children. The patient presents with a significant
+          medical history including chronic metabolic and cardiovascular conditions.\n\n**Medical
+          History:**\n\nThe patient has a documented history of Type 2 Diabetes Mellitus
+          diagnosed in 2015, Hypertension diagnosed in 2018, and Hyperlipidemia. Surgical
+          history includes an appendectomy performed in 2010 and cholecystectomy in
+          2019. Family history is significant for premature coronary artery disease
+          with father experiencing myocardial infarction at age 62, and maternal history
+          of Type 2 Diabetes Mellitus, indicating genetic predisposition to cardiometabolic
+          disease.\n\n**Social History:**\n\nThe patient is a former smoker who successfully
+          quit 5 years ago. Current alcohol consumption is moderate at 2-3 drinks per
+          week for social purposes. The patient denies any recreational drug use. The
+          patient maintains an active lifestyle with daily walking exercise for 30 minutes,
+          demonstrating good health maintenance behaviors.\n\n**Medications and Allergies:**\n\nCurrent
+          prescription medications include Metformin 1000mg twice daily for diabetes
+          management, Lisinopril 20mg daily for blood pressure control, and Atorvastatin
+          40mg daily for lipid management. The patient also takes over-the-counter Aspirin
+          81mg daily for cardiovascular protection and Vitamin D supplementation 2000
+          IU daily. Known drug allergies include Penicillin (manifesting as rash) and
+          Sulfa drugs (manifesting as hives), which should be considered in all prescribing
+          decisions."]},"name":"AISummaryResponse","toolUseId":"tooluse_xUoyuQScRKS1N2U_WM08qw","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1207,"outputTokens":428,"serverToolUsage":{},"totalTokens":1635}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '2038'
+        Content-Type:
+          - application/json
+        Date:
+          - Tue, 25 Nov 2025 17:42:15 GMT
+        x-amzn-RequestId:
+          - 18cb2067-56ee-410d-aac7-0b991723f750
+      status:
+        code: 200
+        message: OK
+version: 1

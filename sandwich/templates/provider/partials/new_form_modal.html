@@ -12,29 +12,15 @@
           <h3 class="font-bold text-lg mt-3">Create Manually</h3>
           <p class="text-sm text-base-content/70 mt-1">Build your form from scratch using the form editor.</p>
         </a>
-        {# TODO(MM): Remove condition upon feature flag removal #}
-        {% if ai_form_generation_enabled %}
-          <a class="card bg-base-200 hover:bg-primary/10 hover:border-primary border-2 border-dashed border-base-300 transition-all text-center p-6 cursor-pointer"
-             hx-get="{% url "providers:form_file_upload" organization_id=organization.id %}"
-             hx-target="body"
-             hx-swap="beforeend"
-             hx-push-url="true">
-            {% lucide "sparkles" class="w-10 h-10 mx-auto text-primary" %}
-            <h3 class="font-bold text-lg mt-3">Build with AI</h3>
-            <p class="text-sm text-base-content/70 mt-1">Upload an existing document and let AI create a starting point.</p>
-          </a>
-        {% else %}
-          <div class="card bg-base-200 border-2 border-dashed border-base-300 text-center p-6 relative group cursor-not-allowed">
-            {% lucide "sparkles" class="w-10 h-10 mx-auto text-primary opacity-50 group-hover:opacity-30 transition-opacity" %}
-            <h3 class="font-bold text-lg mt-3 opacity-50 group-hover:opacity-30 transition-opacity">Build with AI</h3>
-            <p class="text-sm text-base-content/70 mt-1 opacity-50 group-hover:opacity-30 transition-opacity">
-              Upload an existing document and let AI create a starting point.
-            </p>
-            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800/90 rounded-box">
-              <span class="text-white font-bold text-lg">Coming Soon</span>
-            </div>
-          </div>
-        {% endif %}
+        <a class="card bg-base-200 hover:bg-primary/10 hover:border-primary border-2 border-dashed border-base-300 transition-all text-center p-6 cursor-pointer"
+           hx-get="{% url "providers:form_file_upload" organization_id=organization.id %}"
+           hx-target="body"
+           hx-swap="beforeend"
+           hx-push-url="true">
+          {% lucide "sparkles" class="w-10 h-10 mx-auto text-primary" %}
+          <h3 class="font-bold text-lg mt-3">Build with AI</h3>
+          <p class="text-sm text-base-content/70 mt-1">Upload an existing document and let AI create a starting point.</p>
+        </a>
       </div>
     </div>
   </div>

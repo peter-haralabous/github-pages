@@ -96,7 +96,9 @@ def build_write_patient_record_tool(user: User, patient: Patient, type_: HealthR
     def write_patient_record(**kwargs) -> "ModelDict | ErrorResponse":
         form = form_class(data=kwargs)
         if form.is_valid():
-            obj = form.save(patient=patient)
+            obj = form.save(patient=patient, commit=False)
+            obj.unattested = True  # The tool is making the update on behalf of the user.
+            obj.save()
             return PythonSerializer().serialize([obj])[0]
         return ErrorResponse(errors=form.errors)
 

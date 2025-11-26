@@ -2,7 +2,7 @@
 
 <div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4">
   <div class="flex justify-between items-center">
-    <h3 class="m-0">Forms & Documents</h3>
+    <h3 class="m-0">Forms</h3>
   </div>
   <div>
     {% if documents or tasks %}
@@ -38,7 +38,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="text-center py-8 text-base-content/60">No documents or forms for this encounter.</div>
+      <div class="text-center py-8 text-base-content/60">No forms for this encounter.</div>
     {% endif %}
   </div>
 </div>
