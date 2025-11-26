@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from django.urls import reverse
 from guardian.shortcuts import remove_perm
@@ -11,6 +12,7 @@ from sandwich.core.models import Patient
 from sandwich.core.models.form import FormStatus
 from sandwich.core.models.role import RoleName
 from sandwich.core.service.organization_service import assign_organization_role
+from sandwich.providers.views.templates import UploadReferenceForm
 from sandwich.users.models import User
 
 
@@ -290,3 +292,32 @@ def test_form_generation_failure_shows_toast(client: Client, provider: User, org
     assert "Failed Form" in messages[0].message
     assert "generation failed" in messages[0].message
     assert messages[0].level_tag == "error"
+
+
+def test_upload_reference_form_rejects_large_files() -> None:
+    over_upload_limit = 4.5 * 1024 * 1024 + 1  # 4.5MB + 1
+    form = UploadReferenceForm(
+        data={
+            "name": "Test",
+        },
+        files={
+            "file": SimpleUploadedFile(
+                name="large_file.pdf", content=b"a" * int(over_upload_limit), content_type="application/pdf"
+            )
+        },
+    )
+    assert not form.is_valid()
+    assert "file" in form.errors
+    assert form.errors["file"] == ["File cannot be larger than 4.5MB."]
+
+
+def test_upload_reference_form_rejects_unsupported_files() -> None:
+    form = UploadReferenceForm(
+        data={
+            "name": "Test",
+        },
+        files={"file": SimpleUploadedFile(name="large_file.png", content=b"content", content_type="image/png")},
+    )
+    assert not form.is_valid()
+    assert "file" in form.errors
+    assert form.errors["file"] == ["File extension “png” is not allowed. Allowed extensions are: pdf, csv."]

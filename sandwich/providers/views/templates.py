@@ -1,6 +1,7 @@
 import logging
 from datetime import date
 from http import HTTPStatus
+from typing import Any
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -8,6 +9,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.core.paginator import Paginator
 from django.core.validators import FileExtensionValidator
 from django.http import HttpResponse
@@ -54,6 +56,21 @@ class UploadReferenceForm(forms.Form):
         self.helper = FormHelper()
         self.helper.attrs = {"hx-target": "#generate-form-modal", "hx-swap": "outerHTML"}
         self.helper.add_input(Submit("upload", "Upload"))
+
+    def clean(self) -> dict[str, Any] | None:
+        # NB: Bedrock accepts a max of 4.5MB
+        # https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html
+        max_file_size = 4.5 * 1024 * 1024  # 4.5 MB
+
+        data = super().clean()
+        if data is not None:
+            uploaded_file = data.get("file")
+            if uploaded_file:
+                if uploaded_file.size > max_file_size:
+                    self.add_error("file", "File cannot be larger than 4.5MB.")
+                    return None
+
+        return data
 
 
 @require_GET
@@ -260,7 +277,13 @@ def form_file_upload(request: AuthenticatedHttpRequest, organization: Organizati
             messages.add_message(request, messages.SUCCESS, "Form upload successful, processing document.")
             form_name = upload_reference_form.cleaned_data.get("name")
             reference_file = upload_reference_form.cleaned_data.get("file")
-            assert isinstance(reference_file, InMemoryUploadedFile)
+
+            # Django uses `InMemory` or `Temporary` based on file size
+            if not isinstance(reference_file, InMemoryUploadedFile) and not isinstance(
+                reference_file, TemporaryUploadedFile
+            ):
+                raise ValueError("Uploaded file is not a valid uploaded file type.")
+
             assert reference_file.name, "Uploaded file has no name"
 
             form, created = Form.objects.get_or_create(
