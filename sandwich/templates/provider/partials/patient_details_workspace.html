@@ -4,9 +4,11 @@
   {# Mobile Patient Header - Fixed above tabs #}
   {% include 'provider/partials/patient_details_mobile_header.html' %}
   {# Tab bar - horizontal scrollable tabs #}
-  <div id="workspace-tab-bar"
-       class="flex items-center border-b border-gray-200 bg-white overflow-x-auto thin-scrollbar">
-    {# Tabs rendered dynamically by JavaScript #}
+  <div class="flex items-center border-b border-gray-200 bg-base-100 p-2 overflow-x-auto thin-scrollbar">
+    <div id="workspace-tab-bar"
+         class="flex items-center bg-neutral-100 rounded-lg p-1 gap-1">
+      {# Tabs rendered dynamically by JavaScript #}
+    </div>
   </div>
   {# Tab content panels - multiple cached panels, only active one visible #}
   <div id="workspace-panels" class="flex-1 relative">
@@ -20,6 +22,8 @@
       <p class="text-sm">Select a file from the sidebar to view details</p>
     </div>
     {# Panel container - panels are added/cached here #}
-    <div id="panel-container">{# Initial content based on URL state - will be managed by JS on load #}</div>
+    <div id="panel-container" class="p-4 lg:p-6">
+      {# Initial content based on URL state - will be managed by JS on load #}
+    </div>
   </div>
 </main>

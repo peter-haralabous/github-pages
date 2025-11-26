@@ -44,6 +44,11 @@
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
       }
+
+      /* Remove gap from icon containers in collapsed state */
+      #patient-sidebar-container[data-collapsed="true"] .flex.gap-3 {
+        gap: 0 !important;
+      }
     }
 
     /* Sidebar expanded state on mobile */
@@ -70,7 +75,7 @@
   {# Modal container for HTMX-loaded modals #}
   <div id="add-task-modal"></div>
   {# Main Layout: Sidebar + Content #}
-  <div class="flex gap-0 lg:gap-6">
+  <div class="flex -m-4 md:-m-6 gap-0">
     {# Unified Sidebar - Responsive (collapsed on mobile, expanded on desktop) #}
     {% include 'provider/partials/patient_details_sidenav.html' %}
     {# Main Workspace - includes mobile patient header #}
@@ -339,10 +344,10 @@
             const icon = TAB_ICONS[tab.type] || TAB_ICONS.document;
 
             return `
-              <button class="js-tab-switch group flex items-center gap-2 px-3 py-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${isActive ? 'border-primary text-gray-900 bg-gray-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
+              <button class="js-tab-switch group flex rounded-md items-center gap-2 pl-4 py-2 pr-3 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'text-gray-900 bg-base-100' : 'border-transparent text-gray-600 hover:text-gray-700  hover:bg-neutral-200'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
                 <span class="tab-icon shrink-0">${icon}</span>
                 <span class="tab-label truncate max-w-32">${this.escapeHtml(tab.label)}</span>
-                <span class="js-tab-close ml-1 p-0.5 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity" data-tab-id="${tab.id}">
+                <span class="js-tab-close p-0.5 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity" data-tab-id="${tab.id}">
                   ${CLOSE_ICON}
                 </span>
               </button>
