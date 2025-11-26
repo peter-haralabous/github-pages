@@ -1,0 +1,27 @@
+{% load lucide %}
+
+<div class="bg-white border border-gray-200 rounded-lg p-4">
+  {# Patient name with action menu #}
+  <div class="flex justify-between items-start mb-3">
+    <h2 class="text-xl font-bold text-gray-900">{{ patient.last_name }}, {{ patient.first_name }}</h2>
+    <button class="btn btn-ghost btn-xs btn-circle">{% lucide "ellipsis" class="size-4" %}</button>
+  </div>
+  {# Patient details #}
+  <div class="space-y-2 text-sm">
+    <div class="flex items-center gap-2 text-gray-600">
+      {% lucide "calendar" class="size-4 shrink-0" %}
+      <span><span class="font-medium">DOB:</span> {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }}</span>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      {% lucide "id-card" class="size-4 shrink-0" %}
+      <span><span class="font-medium">PHN:</span> {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
+    </div>
+    <div class="flex items-start gap-2 text-gray-600">
+      {% lucide "mail" class="size-4 shrink-0 mt-0.5" %}
+      <div>
+        <span class="font-medium">Contact:</span>
+        <div class="break-all">{{ patient.email|default:EMPTY_VALUE_DISPLAY }}</div>
+      </div>
+    </div>
+  </div>
+</div>

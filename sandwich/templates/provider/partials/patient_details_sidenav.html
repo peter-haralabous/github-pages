@@ -1,0 +1,16 @@
+{# Desktop Sidebar - Full width with patient header #}
+<aside class="hidden lg:flex lg:flex-col w-80 min-w-80 shrink-0 lg:sticky lg:top-0 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto bg-gray-50 p-4 rounded-lg"
+       id="patient-sidebar-container">
+  <div class="space-y-4">
+    {# Patient header card - moved into sidebar #}
+    {% include 'provider/partials/patient_sidebar_header.html' %}
+    {# Sidebar navigation #}
+    <div id="patient-sidebar">
+      {% if show_current_encounter %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=False selected_encounter_id=selected_encounter_id %}
+      {% else %}
+        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=True selected_encounter_id=None %}
+      {% endif %}
+    </div>
+  </div>
+</aside>

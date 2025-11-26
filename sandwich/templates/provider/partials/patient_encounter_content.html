@@ -4,18 +4,45 @@
 {% if in_tab %}
   <div class="space-y-6"
        data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
-    {# Header with title and status #}
+    {# Header with title, status badge, and actions #}
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <h2 class="text-xl font-bold text-gray-900">Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
+        <h2 class="text-2xl font-bold text-gray-900">Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
         {% if encounter.active %}
-          <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ encounter.get_status_display }}</span>
+          <span class="badge badge-success">In Progress</span>
         {% else %}
-          <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ encounter.get_status_display }}</span>
+          <span class="badge badge-neutral">{{ encounter.get_status_display }}</span>
         {% endif %}
       </div>
       <div class="flex items-center gap-2">
-        {% include 'provider/partials/encounter_content_actions.html' with in_slideout=False %}
+        <button class="btn btn-secondary"
+                hx-target="#add-task-modal"
+                hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}">
+          {% lucide "send" class="size-4" %}
+          Send Form
+        </button>
+        {# Dropdown menu with Archive option #}
+        <div class="dropdown dropdown-end">
+          <button tabindex="0" class="btn btn-ghost btn-circle">{% lucide "ellipsis-vertical" class="size-5" %}</button>
+          <ul tabindex="0"
+              class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200 mt-2">
+            <li>
+              <form action="{% url "providers:encounter_archive" organization_id=organization.id encounter_id=encounter.id %}"
+                    method="post">
+                {% csrf_token %}
+                <button type="submit" class="w-full text-left">
+                  {% if encounter.status == "completed" %}
+                    {% lucide "archive-restore" class="size-4" %}
+                    Unarchive Encounter
+                  {% else %}
+                    {% lucide "archive" class="size-4" %}
+                    Archive Encounter
+                  {% endif %}
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   {% elif not in_slideout %}
@@ -60,12 +87,17 @@
         {% endif %}
         {# Encounter Details Section #}
         <section>
-          <div class="bg-white border border-gray-200 rounded-lg">
-            <div class="p-4 border-b border-gray-200">
+          <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
               <h3 class="text-lg font-semibold text-gray-900">Encounter Details</h3>
+              {% if encounter.active %}
+                <span class="badge badge-success">Active</span>
+              {% else %}
+                <span class="badge badge-error">Archived</span>
+              {% endif %}
             </div>
             <div class="p-6">
-              <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
                   <div class="text-sm text-gray-600 mb-1">Created</div>
                   <div class="font-medium">{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</div>

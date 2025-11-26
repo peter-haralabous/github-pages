@@ -11,151 +11,15 @@
   {% render_bundle 'survey' 'js' %}
 {% endblock extra_head %}
 {% block topnav %}
-  <nav class="navbar bg-base-100 border-b border-base-200 px-6 print:hidden">
-    <div class="flex grow justify-between items-center">
-      <div>
-        <a href="{% url 'providers:encounter_list' organization_id=organization.id %}"
-           class="flex items-center gap-2 text-gray-800 hover:text-gray-600 transition-colors">
-          {% lucide "arrow-left" class="size-5" %}
-          <span class="text-base font-semibold">Encounters List</span>
-        </a>
-      </div>
-      {# Search bar #}
-      <label class="input">
-        {% lucide "search" class="size-5 opacity-50" %}
-        <input class="grow"
-               type="search"
-               id="command-palette-trigger"
-               placeholder="Type a command or search..." />
-        <span class="text-sm text-gray-400"></span>
-      </label>
-      <script nonce="{{request.csp_nonce}}">
-        document.addEventListener('DOMContentLoaded', () => {
-          const trigger = document.getElementById('command-palette-trigger');
-          trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
-
-          trigger.addEventListener('focus', (event) => {
-            document.querySelector('command-palette').isOpen = true;
-            event.target.blur();
-          });
-        })
-      </script>
-      {# Avatar menu #}
-      <div class="gap-2 items-center">
-        {% if request.user.is_authenticated %}
-          <div class="dropdown dropdown-end">
-            <div tabindex="0"
-                 role="button"
-                 class="btn btn-ghost btn-circle border-none avatar avatar-placeholder">
-              <div class="bg-neutral text-neutral-content w-10 rounded-full">
-                <span class="text-sm">{{ request.user.initials }}</span>
-              </div>
-            </div>
-            <ul tabindex="0"
-                class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 min-w-52 p-2 shadow">
-              <li>
-                <a href="{% url "core:switcher" %}">
-                  <div class="flex-col">
-                    {% if organization %}
-                      {{ organization.name }}
-                    {% else %}
-                      Switch context
-                    {% endif %}
-                    <div class="text-xs text-secondary">{{ user.email }}</div>
-                  </div>
-                  {% lucide "arrow-right-left" class="size-4" %}
-                </a>
-              </li>
-              <hr class="!my-1" />
-              <li>
-                <a href="{% url 'account_email' %}" class="flex gap-2">
-                  <div>{% lucide "user" class="size-4" %}</div>
-                  <p>{% translate "Account Settings" %}</p>
-                </a>
-              </li>
-              {% if organization %}
-                <li>
-                  <a href="{% url 'providers:organization_edit' organization_id=organization.id %}"
-                     class="flex gap-2">
-                    <div>{% lucide "settings" class="size-4" %}</div>
-                    <p>Organization Settings</p>
-                  </a>
-                </li>
-              {% endif %}
-              <hr class="!my-1" />
-              <li>
-                <form action="{% url 'account_logout' %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit">Sign Out</button>
-                </form>
-              </li>
-            </ul>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </nav>
+  {% include 'provider/partials/patient_details_topnav.html' %}
 {% endblock topnav %}
 {% block content %}
   {# Modal container for HTMX-loaded modals #}
   <div id="add-task-modal"></div>
-  {# Patient Header - Sticky/Fixed #}
-  <div class="sticky top-0 z-10 bg-white border rounded-xl border-gray-200 mb-6">
-    <div class="flex items-center justify-between py-4 pl-7 pr-4">
-      <div>
-        <h1 class="text-2xl font-bold">{{ patient.last_name }}, {{ patient.first_name }}</h1>
-        <p class="text-sm tracking-wide flex gap-6 mt-1 items-center text-gray-600">
-          <span class="flex items-center gap-1">
-            {% lucide "calendar" class="size-4" %}
-            DOB: {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }}
-          </span>
-          <span class="flex items-center gap-1">
-            {% lucide "id-card" class="size-4" %}
-            PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}
-          </span>
-          <span class="flex items-center gap-1">
-            {% lucide "info" class="size-4" %}
-            Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}
-          </span>
-        </p>
-      </div>
-      <div>
-        {# Patient-level action menu #}
-        {% include 'provider/partials/patient_header_actions.html' %}
-      </div>
-    </div>
-  </div>
   {# Main Layout: Sidebar + Content #}
-  <div class="flex gap-6">
-    {# Left Sidebar Navigation - Sticky with independent scroll #}
-    <aside class="w-64 min-w-64 shrink-0 md:sticky md:top-24 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto"
-           id="patient-sidebar">
-      {% if show_current_encounter %}
-        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=False selected_encounter_id=selected_encounter_id %}
-      {% else %}
-        {% include 'provider/partials/patient_sidebar_nav.html' with viewing_overview=True selected_encounter_id=None %}
-      {% endif %}
-    </aside>
-    {# Main Content Area - Workspace with multi-tab support #}
-    <main class="flex-1 min-w-0 flex flex-col" id="patient-workspace">
-      {# Tab bar - horizontal scrollable tabs #}
-      <div id="workspace-tab-bar"
-           class="flex items-center border-b border-gray-200 bg-white overflow-x-auto thin-scrollbar">
-        {# Tabs rendered dynamically by JavaScript #}
-      </div>
-      {# Tab content panels - multiple cached panels, only active one visible #}
-      <div id="workspace-panels" class="flex-1 relative">
-        {# Empty state - shown when no tabs are open #}
-        <div id="workspace-empty-state"
-             class="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 py-20">
-          {% lucide "layout-grid" class="size-16 mb-4 opacity-50" %}
-          <h3 class="text-lg font-medium text-gray-500 mb-2">No file selected</h3>
-          <p class="text-sm">Select a file from the sidebar to view details</p>
-        </div>
-        {# Panel container - panels are added/cached here #}
-        <div id="panel-container">{# Initial content based on URL state - will be managed by JS on load #}</div>
-      </div>
-    </main>
+  <div class="flex gap-0 lg:gap-6">
+    {% include 'provider/partials/patient_details_sidenav.html' %}
+    {% include 'provider/partials/patient_details_workspace.html' %}
   </div>
   {# Script for tab management and sidebar state #}
   <script nonce="{{ request.csp_nonce }}">

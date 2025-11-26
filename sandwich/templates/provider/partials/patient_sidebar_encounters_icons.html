@@ -1,0 +1,20 @@
+{% load lucide %}
+
+{# Icon-only encounters list for mobile collapsed sidebar #}
+{% for encounter in encounters %}
+  <button class="js-open-tab w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 relative"
+          data-tab-type="encounter"
+          data-tab-id="{{ encounter.id }}"
+          data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}"
+          title="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+    {% lucide "file-text" class="size-5" %}
+    {% if encounter.active %}<span class="absolute top-1 right-1 w-2 h-2 bg-success rounded-full"></span>{% endif %}
+  </button>
+{% empty %}
+  {# No encounters - show empty state icon #}
+  <div class="w-12 h-12 flex items-center justify-center text-gray-400">{% lucide "file-text" class="size-5" %}</div>
+{% endfor %}
+<script>
+  // Show back button
+  document.getElementById('mobile-sidebar-back').classList.remove('hidden');
+</script>

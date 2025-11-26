@@ -1,0 +1,49 @@
+{% load lucide %}
+
+<div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+  {# Header with back button #}
+  <div class="p-2">
+    <button class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 w-full"
+            :class="!mobileSidebarExpanded && 'justify-center'"
+            :title="mobileSidebarExpanded ? '' : 'Back'"
+            hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}?mobile=true"
+            hx-target="#mobile-patient-sidebar"
+            hx-swap="innerHTML">
+      {% lucide "arrow-left" class="size-5 text-gray-600 shrink-0" %}
+      <span class="text-gray-900 text-base font-medium"
+            x-show="mobileSidebarExpanded"
+            x-transition>Back</span>
+    </button>
+  </div>
+  {# Section header - only visible when expanded #}
+  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-4 mb-2"
+      x-show="mobileSidebarExpanded"
+      x-transition>Encounters</h3>
+  {# Encounters list #}
+  <ul class="flex flex-col gap-1 p-2">
+    {% for encounter in encounters %}
+      <li class="js-open-tab flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 relative"
+          :class="!mobileSidebarExpanded && 'justify-center'"
+          :title="mobileSidebarExpanded ? '' : 'Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}'"
+          data-tab-type="encounter"
+          data-tab-id="{{ encounter.id }}"
+          data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+        {% lucide "file-text" class="size-5 text-gray-400 shrink-0" %}
+        {% if encounter.active %}
+          <span class="absolute top-1 right-1 w-2 h-2 bg-success rounded-full"
+                x-show="mobileSidebarExpanded"
+                x-transition></span>
+        {% endif %}
+        <p class="text-sm truncate text-gray-700"
+           x-show="mobileSidebarExpanded"
+           x-transition>{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+      </li>
+    {% empty %}
+      <li class="flex items-center justify-center p-2 text-gray-500"
+          :title="mobileSidebarExpanded ? '' : 'No encounters'">
+        {% lucide "file-text" class="size-5 text-gray-400" %}
+        <p class="text-sm ml-3" x-show="mobileSidebarExpanded" x-transition>No encounters found.</p>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

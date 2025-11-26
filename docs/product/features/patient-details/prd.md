@@ -2,6 +2,7 @@
 
 **JIRA**: [HC-225](https://new-hippo.atlassian.net/browse/HC-225) &nbsp;|&nbsp; **Author**: [Peter Haralabous](https://home.atlassian.com/o/787759e2-0bbc-494d-b27d-26930e7600ab/people/618e9ea320c676007090a9c0?cloudId=c7306235-0180-4269-ae60-6513d0ef7dd6) &nbsp;|&nbsp; **Date**: Nov 24, 2025
 
+
 &nbsp;
 ## Problem Statement
 
@@ -29,7 +30,7 @@ Healthcare providers are confused by multiple similar views for encounter detail
 ### Impact
 - **Who**: Healthcare providers, clinical staff
 - **Frequency**: Multiple times per patient encounter (high-frequency workflow)
-- **Current Workaround**: Manual navigation between pages, losing context and efficiency
+- **Current Workaround**: Manual navigation between pages, losing context and Efficiency
 
 
 &nbsp;
@@ -370,18 +371,26 @@ We'll prototype and test 5 different approaches to solve the navigation and cont
 2. Review quick details
 3. Click "View Patient" → loses slideout context
 
+&nbsp;
+
 **Figure A: Current State: Encounter Details**
 
 ![Current State: Encounter Details](images/current-state-encounter-details.png)
+
+&nbsp;
 
 **Figure B: Current State: Patient Details**
 
 ![Current State: Patient Details](images/current-state-patient-details.png)
 
+&nbsp;
+
 **Workflow B: Worklist → Patient Details**
 1. Click kebab → "Patient Details"
 2. Opens patient page
 3. Must navigate to find encounter info
+
+&nbsp;
 
 **Workflow C: Worklist → Standalone Encounter Details** *(problematic)*
 1. Some path leads to standalone encounter page

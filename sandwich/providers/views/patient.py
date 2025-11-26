@@ -797,13 +797,20 @@ def patient_sidebar_main(
     request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
 ) -> HttpResponse:
     """HTMX endpoint to load the main sidebar navigation."""
+    is_mobile = request.GET.get("mobile") == "true"
+    template = (
+        "provider/partials/patient_sidebar_nav_mobile.html"
+        if is_mobile
+        else "provider/partials/patient_sidebar_nav.html"
+    )
+
     context = {
         "patient": patient,
         "organization": organization,
         "viewing_overview": True,
         "selected_encounter_id": None,
     }
-    return render(request, "provider/partials/patient_sidebar_nav.html", context)
+    return render(request, template, context)
 
 
 @login_required
@@ -814,6 +821,13 @@ def patient_sidebar_encounters(
     request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
 ) -> HttpResponse:
     """HTMX endpoint to load the encounters sidebar."""
+    is_mobile = request.GET.get("mobile") == "true"
+    template = (
+        "provider/partials/patient_sidebar_encounters_mobile.html"
+        if is_mobile
+        else "provider/partials/patient_sidebar_encounters.html"
+    )
+
     all_encounters = patient.encounter_set.all().order_by("-created_at")
 
     context = {
@@ -822,7 +836,7 @@ def patient_sidebar_encounters(
         "encounters": all_encounters,
         "selected_encounter_id": None,
     }
-    return render(request, "provider/partials/patient_sidebar_encounters.html", context)
+    return render(request, template, context)
 
 
 @login_required
@@ -999,6 +1013,13 @@ def patient_sidebar_forms(
     request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
 ) -> HttpResponse:
     """HTMX endpoint to load the forms sidebar."""
+    is_mobile = request.GET.get("mobile") == "true"
+    template = (
+        "provider/partials/patient_sidebar_forms_mobile.html"
+        if is_mobile
+        else "provider/partials/patient_sidebar_forms.html"
+    )
+
     forms = Task.objects.filter(patient=patient).order_by("-created_at")
 
     context = {
@@ -1007,7 +1028,7 @@ def patient_sidebar_forms(
         "forms": forms,
         "selected_form_id": None,
     }
-    return render(request, "provider/partials/patient_sidebar_forms.html", context)
+    return render(request, template, context)
 
 
 @login_required
@@ -1018,6 +1039,13 @@ def patient_sidebar_summaries(
     request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
 ) -> HttpResponse:
     """HTMX endpoint to load the summaries sidebar."""
+    is_mobile = request.GET.get("mobile") == "true"
+    template = (
+        "provider/partials/patient_sidebar_summaries_mobile.html"
+        if is_mobile
+        else "provider/partials/patient_sidebar_summaries.html"
+    )
+
     # Placeholder - summaries don't exist as a model yet
     summaries: list = []
 
@@ -1027,7 +1055,7 @@ def patient_sidebar_summaries(
         "summaries": summaries,
         "selected_summary_id": None,
     }
-    return render(request, "provider/partials/patient_sidebar_summaries.html", context)
+    return render(request, template, context)
 
 
 @login_required
@@ -1038,6 +1066,13 @@ def patient_sidebar_documents(
     request: AuthenticatedHttpRequest, organization: Organization, patient: Patient
 ) -> HttpResponse:
     """HTMX endpoint to load the documents sidebar."""
+    is_mobile = request.GET.get("mobile") == "true"
+    template = (
+        "provider/partials/patient_sidebar_documents_mobile.html"
+        if is_mobile
+        else "provider/partials/patient_sidebar_documents.html"
+    )
+
     documents = patient.document_set.all().order_by("-created_at")
 
     context = {
@@ -1046,7 +1081,7 @@ def patient_sidebar_documents(
         "documents": documents,
         "selected_document_id": None,
     }
-    return render(request, "provider/partials/patient_sidebar_documents.html", context)
+    return render(request, template, context)
 
 
 @login_required

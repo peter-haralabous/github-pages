@@ -1,0 +1,22 @@
+{# Main Content Area - Workspace with multi-tab support #}
+<main class="flex-1 min-w-0 flex flex-col" id="patient-workspace">
+  {# Tab bar - horizontal scrollable tabs #}
+  <div id="workspace-tab-bar"
+       class="flex items-center border-b border-gray-200 bg-white overflow-x-auto thin-scrollbar">
+    {# Tabs rendered dynamically by JavaScript #}
+  </div>
+  {# Tab content panels - multiple cached panels, only active one visible #}
+  <div id="workspace-panels" class="flex-1 relative">
+    {# Empty state - shown when no tabs are open #}
+    <div id="workspace-empty-state"
+         class="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 py-20">
+      {% load lucide %}
+
+      {% lucide "layout-grid" class="size-16 mb-4 opacity-50" %}
+      <h3 class="text-lg font-medium text-gray-500 mb-2">No file selected</h3>
+      <p class="text-sm">Select a file from the sidebar to view details</p>
+    </div>
+    {# Panel container - panels are added/cached here #}
+    <div id="panel-container">{# Initial content based on URL state - will be managed by JS on load #}</div>
+  </div>
+</main>
