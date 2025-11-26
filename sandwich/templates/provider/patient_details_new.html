@@ -10,33 +10,51 @@
   {% render_bundle 'survey' 'css' %}
   {% render_bundle 'survey' 'js' %}
   <style nonce="{{ request.csp_nonce }}">
-    /* Collapsed sidebar: hide labels, show icons only */
-    .sidebar-collapsed p,
-    .sidebar-collapsed span:not(.lucide):not(.size-5):not(.size-4),
-    .sidebar-collapsed .text-xs,
-    .sidebar-collapsed .text-sm,
-    .sidebar-collapsed .badge {
-      display: none !important;
+    /* Sidebar collapsed state - hide text, show icons only */
+    @media (max-width: 1023px) {
+
+      #patient-sidebar-container[data-collapsed="true"] p,
+      #patient-sidebar-container[data-collapsed="true"] span:not(.lucide):not([class*="size-"]),
+      #patient-sidebar-container[data-collapsed="true"] .text-xs,
+      #patient-sidebar-container[data-collapsed="true"] .text-sm,
+      #patient-sidebar-container[data-collapsed="true"] .badge,
+      #patient-sidebar-container[data-collapsed="true"] .sidebar-content-expanded,
+      #patient-sidebar-container[data-collapsed="true"] [class*="chevron"] {
+        display: none !important;
+      }
+
+      /* Show collapsed icon, hide expanded icon */
+      #patient-sidebar-container[data-collapsed="true"] .sidebar-icon-expanded {
+        display: none !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="true"] .sidebar-icon-collapsed {
+        display: inline !important;
+      }
+
+      /* Center icons in collapsed state */
+      #patient-sidebar-container[data-collapsed="true"] button,
+      #patient-sidebar-container[data-collapsed="true"] a {
+        justify-content: center !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+      }
     }
 
-    /* Center icons in collapsed sidebar */
-    .sidebar-collapsed button,
-    .sidebar-collapsed a {
-      justify-content: center !important;
-      padding-left: 0.5rem !important;
-      padding-right: 0.5rem !important;
-      min-width: 3rem;
-    }
+    /* Sidebar expanded state on mobile */
+    @media (max-width: 1023px) {
+      #patient-sidebar-container[data-collapsed="false"] {
+        width: 320px !important;
+      }
 
-    /* Hide chevron icons in collapsed view */
-    .sidebar-collapsed [class*="chevron"] {
-      display: none !important;
-    }
+      /* Hide collapsed icon, show expanded icon */
+      #patient-sidebar-container[data-collapsed="false"] .sidebar-icon-collapsed {
+        display: none !important;
+      }
 
-    /* Adjust spacing for collapsed view */
-    .sidebar-collapsed .space-y-2>*+*,
-    .sidebar-collapsed .space-y-1>*+* {
-      margin-top: 0.25rem !important;
+      #patient-sidebar-container[data-collapsed="false"] .sidebar-icon-expanded {
+        display: inline !important;
+      }
     }
   </style>
 {% endblock extra_head %}
@@ -46,11 +64,9 @@
 {% block content %}
   {# Modal container for HTMX-loaded modals #}
   <div id="add-task-modal"></div>
-  {# Main Layout: Collapsed Sidebar (mobile) + Expandable Sidebar + Content #}
+  {# Main Layout: Sidebar + Content #}
   <div class="flex gap-0 lg:gap-6">
-    {# Mobile Collapsed Sidebar - Icon-only navigation #}
-    {% include 'provider/partials/patient_details_sidebar_collapsed.html' %}
-    {# Full Sidebar - Desktop: sticky, Mobile: overlay #}
+    {# Unified Sidebar - Responsive (collapsed on mobile, expanded on desktop) #}
     {% include 'provider/partials/patient_details_sidenav.html' %}
     {# Main Workspace - includes mobile patient header #}
     {% include 'provider/partials/patient_details_workspace.html' %}
@@ -514,67 +530,60 @@
     })();
 
     // ===========================================
-    // Mobile Sidebar Overlay Management
+    // Mobile Sidebar Toggle Management
     // ===========================================
     (function() {
       const sidebar = document.getElementById('patient-sidebar-container');
       const overlay = document.getElementById('mobile-sidebar-overlay');
-      const expandBtn = document.getElementById('mobile-sidebar-expand-btn');
-      const collapsedSidebar = document.getElementById('mobile-collapsed-sidebar');
+      const toggleBtn = document.getElementById('mobile-sidebar-toggle');
 
-      if (!sidebar || !overlay || !expandBtn) return;
+      if (!sidebar || !overlay || !toggleBtn) return;
 
-      // Open sidebar overlay
-      function openSidebar() {
-        sidebar.classList.remove('-translate-x-full', 'hidden');
-        sidebar.classList.add('translate-x-0');
-        overlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
+      // Toggle sidebar expanded/collapsed state
+      function toggleSidebar() {
+        const isCollapsed = sidebar.dataset.collapsed === 'true';
+
+        if (isCollapsed) {
+          // Expand
+          sidebar.dataset.collapsed = 'false';
+          overlay.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        } else {
+          // Collapse
+          sidebar.dataset.collapsed = 'true';
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
       }
 
-      // Close sidebar overlay
-      function closeSidebar() {
-        sidebar.classList.add('-translate-x-full');
-        sidebar.classList.remove('translate-x-0');
+      // Toggle button click
+      toggleBtn.addEventListener('click', toggleSidebar);
+
+      // Overlay backdrop click - collapse sidebar
+      overlay.addEventListener('click', function() {
+        sidebar.dataset.collapsed = 'true';
         overlay.classList.add('hidden');
-        document.body.style.overflow = ''; // Restore scroll
-      }
+        document.body.style.overflow = '';
+      });
 
-      // Expand button click
-      expandBtn.addEventListener('click', openSidebar);
-
-      // Overlay backdrop click
-      overlay.addEventListener('click', closeSidebar);
-
-      // Close sidebar when a navigation item is clicked (auto-close on selection)
+      // Auto-collapse when navigation item is clicked on mobile
       document.addEventListener('click', function(e) {
-        // Check if click is on a tab-opening button inside the sidebar
         const tabBtn = e.target.closest('.js-open-tab');
-        if (tabBtn && sidebar.contains(tabBtn)) {
-          // Small delay to allow tab to open before closing
-          setTimeout(closeSidebar, 100);
+        if (tabBtn && sidebar.contains(tabBtn) && window.innerWidth < 1024) {
+          setTimeout(() => {
+            sidebar.dataset.collapsed = 'true';
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+          }, 100);
         }
       });
 
-      // Handle HTMX navigation - sync between full sidebar and collapsed sidebar
-      document.body.addEventListener('htmx:afterSwap', function(e) {
-        const target = e.detail.target;
-
-        // When sidebar navigation changes, sync the collapsed sidebar
-        if (target.id === 'patient-sidebar') {
-          // Clone the updated navigation to the collapsed sidebar
-          const collapsedNav = document.getElementById('mobile-sidebar-nav-collapsed');
-          if (collapsedNav) {
-            // Clone the content from full sidebar to collapsed sidebar
-            collapsedNav.innerHTML = target.innerHTML;
-          }
-        }
-      });
-
-      // Close sidebar on escape key
+      // Escape key to collapse
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          closeSidebar();
+        if (e.key === 'Escape' && sidebar.dataset.collapsed === 'false') {
+          sidebar.dataset.collapsed = 'true';
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
         }
       });
     })();

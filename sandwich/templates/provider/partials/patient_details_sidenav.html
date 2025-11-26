@@ -1,12 +1,22 @@
-{# Mobile Overlay Backdrop #}
+{# Mobile Overlay Backdrop - shown when sidebar is expanded on mobile #}
 <div class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden"
      id="mobile-sidebar-overlay"></div>
-{# Sidebar - Desktop: sticky sidebar, Mobile: slide-out overlay #}
-<aside class="hidden lg:flex lg:flex-col w-80 min-w-80 shrink-0 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto bg-gray-50 p-4 rounded-lg fixed lg:sticky top-16 lg:top-0 bottom-0 left-0 z-40 lg:z-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto"
-       id="patient-sidebar-container">
+{# Unified Sidebar - Responsive with collapsed/expanded states #}
+{# Mobile: Fixed, collapsible (80px collapsed, 320px expanded) #}
+{# Desktop: Sticky, always expanded (320px) #}
+<aside class="fixed lg:sticky left-0 top-16 lg:top-0 bottom-0 z-40 lg:z-auto bg-gray-50 border-r border-gray-200 transition-all duration-300 ease-in-out overflow-y-auto w-20 lg:w-80 lg:min-w-80 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:rounded-lg lg:p-4 p-2"
+       id="patient-sidebar-container"
+       data-collapsed="true">
+  {# Toggle button - only visible on mobile #}
+  <button class="lg:hidden w-12 h-12 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 mb-2 mx-auto"
+          id="mobile-sidebar-toggle"
+          title="Toggle sidebar">
+    <span class="sidebar-icon-collapsed">{% lucide "chevrons-right" class="size-5" %}</span>
+    <span class="sidebar-icon-expanded hidden">{% lucide "chevrons-left" class="size-5" %}</span>
+  </button>
   <div class="space-y-4">
-    {# Patient header card - moved into sidebar #}
-    {% include 'provider/partials/patient_sidebar_header.html' %}
+    {# Patient header card - hidden when collapsed on mobile #}
+    <div class="sidebar-content-expanded">{% include 'provider/partials/patient_sidebar_header.html' %}</div>
     {# Sidebar navigation #}
     <div id="patient-sidebar">
       {% if show_current_encounter %}
