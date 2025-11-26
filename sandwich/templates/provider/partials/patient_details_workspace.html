@@ -1,5 +1,8 @@
 {# Main Content Area - Workspace with multi-tab support #}
-<main class="flex-1 min-w-0 flex flex-col" id="patient-workspace">
+<main class="flex-1 min-w-0 flex flex-col ml-20 lg:ml-0"
+      id="patient-workspace">
+  {# Mobile Patient Header - Fixed above tabs #}
+  {% include 'provider/partials/patient_details_mobile_header.html' %}
   {# Tab bar - horizontal scrollable tabs #}
   <div id="workspace-tab-bar"
        class="flex items-center border-b border-gray-200 bg-white overflow-x-auto thin-scrollbar">

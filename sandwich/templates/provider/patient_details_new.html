@@ -16,9 +16,13 @@
 {% block content %}
   {# Modal container for HTMX-loaded modals #}
   <div id="add-task-modal"></div>
-  {# Main Layout: Sidebar + Content #}
+  {# Main Layout: Collapsed Sidebar (mobile) + Expandable Sidebar + Content #}
   <div class="flex gap-0 lg:gap-6">
+    {# Mobile Collapsed Sidebar - Icon-only navigation #}
+    {% include 'provider/partials/patient_details_sidebar_collapsed.html' %}
+    {# Full Sidebar - Desktop: sticky, Mobile: overlay #}
     {% include 'provider/partials/patient_details_sidenav.html' %}
+    {# Main Workspace - includes mobile patient header #}
     {% include 'provider/partials/patient_details_workspace.html' %}
   </div>
   {# Script for tab management and sidebar state #}
@@ -477,6 +481,91 @@
       } else {
         patientTabs.init();
       }
+    })();
+
+    // ===========================================
+    // Mobile Sidebar Overlay Management
+    // ===========================================
+    (function() {
+      const sidebar = document.getElementById('patient-sidebar-container');
+      const overlay = document.getElementById('mobile-sidebar-overlay');
+      const expandBtn = document.getElementById('mobile-sidebar-expand-btn');
+      const collapsedSidebar = document.getElementById('mobile-collapsed-sidebar');
+
+      if (!sidebar || !overlay || !expandBtn) return;
+
+      // Open sidebar overlay
+      function openSidebar() {
+        sidebar.classList.remove('-translate-x-full', 'hidden');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+      }
+
+      // Close sidebar overlay
+      function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = ''; // Restore scroll
+      }
+
+      // Expand button click
+      expandBtn.addEventListener('click', openSidebar);
+
+      // Overlay backdrop click
+      overlay.addEventListener('click', closeSidebar);
+
+      // Close sidebar when a navigation item is clicked (auto-close on selection)
+      document.addEventListener('click', function(e) {
+        // Check if click is on a tab-opening button inside the sidebar
+        const tabBtn = e.target.closest('.js-open-tab');
+        if (tabBtn && sidebar.contains(tabBtn)) {
+          // Small delay to allow tab to open before closing
+          setTimeout(closeSidebar, 100);
+        }
+      });
+
+      // Handle HTMX navigation in collapsed sidebar
+      // When directory buttons are clicked, update the collapsed sidebar nav
+      document.body.addEventListener('htmx:afterSwap', function(e) {
+        const target = e.detail.target;
+
+        // Sync navigation state between full sidebar and collapsed sidebar
+        if (target.id === 'patient-sidebar') {
+          // Navigation changed in full sidebar, update collapsed sidebar if needed
+          const backBtn = document.getElementById('mobile-sidebar-back');
+          const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
+
+          if (backBtn && backBtnCollapsed) {
+            // Sync visibility of back buttons
+            if (!backBtn.classList.contains('hidden')) {
+              backBtnCollapsed.classList.remove('hidden');
+            } else {
+              backBtnCollapsed.classList.add('hidden');
+            }
+          }
+        }
+      });
+
+      // Handle back button in collapsed sidebar
+      const backBtnCollapsed = document.getElementById('mobile-sidebar-back-collapsed');
+      if (backBtnCollapsed) {
+        backBtnCollapsed.addEventListener('click', function() {
+          // Trigger the back button in the full sidebar
+          const backBtn = document.getElementById('mobile-sidebar-back');
+          if (backBtn) {
+            backBtn.click();
+          }
+        });
+      }
+
+      // Close sidebar on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeSidebar();
+        }
+      });
     })();
   </script>
 {% endblock content %}

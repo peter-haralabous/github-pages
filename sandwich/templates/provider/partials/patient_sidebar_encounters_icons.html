@@ -16,5 +16,8 @@
 {% endfor %}
 <script>
   // Show back button
-  document.getElementById('mobile-sidebar-back').classList.remove('hidden');
+  const backBtn = document.getElementById('mobile-sidebar-back-collapsed');
+  if (backBtn) {
+    backBtn.classList.remove('hidden');
+  }
 </script>
