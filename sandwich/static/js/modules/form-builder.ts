@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const licenseKey = getSurveyLicenseKey(ENVIRONMENT);
   if (licenseKey) slk(licenseKey);
 
+  // Register custom components before initializing the creator.
   registerCustomComponents();
 
   const creator = new SurveyCreator(creatorOptions);

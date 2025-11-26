@@ -137,19 +137,25 @@ export class SurveyForm extends LitElement {
     }
   }
 
-  private fetchAddressSuggestions(
+  private async fetchAddressSuggestions(
     url: string,
     onloadSuccessCallback: (data: Array<string>) => void,
-  ) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        onloadSuccessCallback(JSON.parse(xhr.response));
+  ): Promise<void> {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        onloadSuccessCallback(data);
       }
-    };
-    xhr.send();
+    } catch (error) {
+      console.error('[survey-form] fetchAddressSuggestions error:', error);
+    }
   }
 
   // Initialize and render the Survey model into this component's container.
@@ -164,6 +170,7 @@ export class SurveyForm extends LitElement {
       );
     }
 
+    // Register custom components before initializing the survey.
     registerCustomComponents();
 
     // SurveyJS Model expects a loosely-typed config; cast from our safer
@@ -184,7 +191,7 @@ export class SurveyForm extends LitElement {
 
         if (options.filter) {
           const url = `${this._addressAutocompleteUrl}?query=${encodeURIComponent(options.filter)}`;
-          this.fetchAddressSuggestions(url, (data) => {
+          void this.fetchAddressSuggestions(url, (data) => {
             if (data.length) {
               options.setItems(data, data.length);
             }
