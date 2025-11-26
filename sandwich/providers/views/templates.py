@@ -97,8 +97,8 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         generating_ids = request.GET.get("generating_ids", "")
         if generating_ids:
             form_ids = [fid.strip() for fid in generating_ids.split(",") if fid.strip()]
-            completed_forms = Form.objects.filter(organization=organization, id__in=form_ids).exclude(
-                status=FormStatus.GENERATING
+            completed_forms = Form.objects.filter(
+                organization=organization, id__in=form_ids, status__in=[FormStatus.ACTIVE, FormStatus.FAILED]
             )
 
             for form in completed_forms:
@@ -109,7 +109,8 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
                         request, messages.ERROR, f"Form '{form.name}' generation failed, you can try again."
                     )
 
-    has_generating_forms = any(form.is_generating for form in forms_page)
+    # Collect currently generating form IDs for continued polling
+    generating_form_id_list = [str(form.id) for form in forms_page if form.is_generating]
 
     return render(
         request,
@@ -117,7 +118,7 @@ def form_list(request: AuthenticatedHttpRequest, organization: Organization):
         {
             "organization": organization,
             "forms": forms_page,
-            "has_generating_forms": has_generating_forms,
+            "generating_form_id_list": generating_form_id_list,
         },
     )
 
