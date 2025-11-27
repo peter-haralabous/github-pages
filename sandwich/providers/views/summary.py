@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 def summary_detail(request: AuthenticatedHttpRequest, organization: Organization, summary: Summary) -> HttpResponse:
     """Display summary detail - returns modal for HTMX requests, full page otherwise."""
     is_htmx = bool(request.headers.get("HX-Request"))
+    is_print = request.GET.get("print") == "true"
 
     logger.info(
         "Accessing summary detail",
@@ -33,6 +34,7 @@ def summary_detail(request: AuthenticatedHttpRequest, organization: Organization
             "summary_id": summary.id,
             "patient_id": summary.patient.id,
             "is_htmx": is_htmx,
+            "is_print": is_print,
         },
     )
 
@@ -42,6 +44,10 @@ def summary_detail(request: AuthenticatedHttpRequest, organization: Organization
         "patient": summary.patient,
         "encounter": summary.encounter,
     }
+
+    # If print request, return print template
+    if is_print:
+        return render(request, "provider/summary_detail_print.html", context)
 
     # If HTMX request, return modal partial
     if is_htmx:

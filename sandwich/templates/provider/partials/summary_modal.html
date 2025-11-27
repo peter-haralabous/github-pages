@@ -7,11 +7,16 @@
       {% include 'provider/partials/summary_content.html' with title_tag='h3' badge_size='sm' title_class='font-bold text-lg' %}
     </div>
     <div class="divider my-2"></div>
-    <div class="flex justify-end mb-4">
+    <div class="flex justify-end gap-2 mb-4">
       <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
               data-copy-text="{{ summary.body }}">
         {% lucide "copy" class="size-4" %}
         Copy Summary
+      </button>
+      <button class="btn btn-sm btn-outline btn-primary js-print-summary"
+              data-summary-url="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}">
+        {% lucide "printer" class="size-4" %}
+        Print Summary
       </button>
     </div>
     <div class="overflow-y-auto max-h-96 mb-4">
