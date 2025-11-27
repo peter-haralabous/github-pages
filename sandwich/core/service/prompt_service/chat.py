@@ -40,9 +40,9 @@ def patient_record_context(patient):
     template = Engine().from_string(template_code=template_contents("patient_record_context.md"))
     context = Context(
         {
-            "immunizations": list(patient.immunization_set.all()),
+            "immunizations": list(patient.immunization_set.all().order_by("-date")),
             "practitioners": list(patient.practitioner_set.all()),
-            "conditions": list(patient.condition_set.all()),
+            "conditions": list(patient.condition_set.all().order_by("-onset")),
         }
     )
 

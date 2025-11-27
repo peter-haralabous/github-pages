@@ -14,7 +14,7 @@ No practitioners found
 
 ## Conditions
 {% for condition in conditions %}
-[{{ condition.name }}]({{ condition.get_absolute_url }})
+[{{ condition.name }}]({{ condition.get_absolute_url }}) | Status: {{ condition.status }} | Onset: {{ condition.onset|date:"Y-m-d"|default:"Unknown" }}{% if condition.abatement %} | Resolved: {{ condition.abatement|date:"Y-m-d" }}{% endif %}
 {% empty %}
 No conditions found
 {% endfor %}

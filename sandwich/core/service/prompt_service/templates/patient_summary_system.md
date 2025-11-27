@@ -8,12 +8,15 @@ TEMPLATE TO FOLLOW:
 [Include PATIENT INFORMATION section - use the exact data provided below]
 
 ### Active Conditions
-[List conditions with onset dates and status - use bullet points]
-[If no conditions: Omit this section]
+[List conditions with status: Active, Recurrence, or Relapse - use bullet points]
+[Include onset dates and status]
+[If no active conditions: Omit this section]
 
-### Symptoms
-[List current/recent symptoms with severity and dates - use bullet points]
-[If no symptoms: Omit this section]
+### Past Medical History
+[List conditions with status: Resolved, Inactive, or Remission - use bullet points]
+[Include onset and resolution dates where available]
+[Conditions with status Unknown should go here as well]
+[If no past conditions: Omit this section]
 
 ### Medications
 [Organize by category if recognizable (e.g., Antibiotics, Pain Relief, Hormonal, Respiratory)]
@@ -32,16 +35,12 @@ TEMPLATE TO FOLLOW:
 [If more than 20 results, show the most recent/relevant and note "and X more"]
 [If no lab results: Omit this section]
 
-### Vital Signs
-[List recent vital signs with values and dates - use bullet points]
-[If no vital signs: Omit this section]
-
 ### Procedures
 [List procedures with dates and locations - use bullet points]
 [If no procedures: Omit this section]
 
-### Vaccinations
-[List recent vaccinations with dates - use bullet points]
+### Immunizations
+[List recent immunizations with dates - use bullet points]
 [If no immunizations: Omit this section]
 
 ### Family History
