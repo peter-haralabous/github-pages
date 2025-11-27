@@ -2,11 +2,14 @@ from typing import Annotated
 from typing import Any
 from typing import cast
 
+import pghistory
 from django.core.serializers.python import Serializer as PythonSerializer
 from guardian.shortcuts import get_objects_for_user
 from langchain_core.tools import BaseTool
 from langchain_core.tools import StructuredTool
 from langchain_core.tools import tool
+from langgraph.prebuilt import ToolRuntime
+from pydantic import ConfigDict
 
 from sandwich.core.models import Condition
 from sandwich.core.models import Document
@@ -15,6 +18,7 @@ from sandwich.core.models import Immunization
 from sandwich.core.models import Patient
 from sandwich.core.models import Practitioner
 from sandwich.core.models.health_record import HealthRecordType
+from sandwich.core.service.llm import ModelName
 from sandwich.core.service.tool_service.response import ErrorResponse
 from sandwich.core.service.tool_service.types import ModelDict  # noqa: TC001
 from sandwich.users.models import User
@@ -82,18 +86,27 @@ def build_write_patient_record_tool(user: User, patient: Patient, type_: HealthR
 
     form_class = _form_class(type_)
 
+    class ExtendedSchema(form_class.pydantic_schema()):  # type: ignore[misc]
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        runtime: ToolRuntime
+
     @tool(
         f"write_{type_.value.lower()}_record",
         description=f"Create {type_} records for {patient.full_name}",
-        args_schema=form_class.pydantic_schema(),
+        args_schema=ExtendedSchema,
     )
-    def write_patient_record(**kwargs) -> "ModelDict | ErrorResponse":
+    def write_patient_record(runtime: ToolRuntime, **kwargs) -> "ModelDict | ErrorResponse":
         form = form_class(data=kwargs)
         if form.is_valid():
-            obj = form.save(patient=patient, commit=False)
-            obj.unattested = True  # The tool is making the update on behalf of the user.
-            obj.save()
-            return PythonSerializer().serialize([obj])[0]
+            with pghistory.context(
+                llm=runtime.context.llm.value,  # type: ignore[attr-defined]
+                conversation=runtime.config["configurable"]["thread_id"],
+            ):
+                obj = form.save(patient=patient, commit=False)
+                obj.unattested = True  # The tool is making the update on behalf of the user.
+                obj.save()
+                return PythonSerializer().serialize([obj])[0]
         return ErrorResponse(errors=form.errors)
 
     return cast("StructuredTool", write_patient_record)
@@ -106,19 +119,26 @@ def build_update_patient_record_tool(user: User, patient: Patient, type_: Health
     form_class = _form_class(type_)
     model_class = form_class._meta.model  # noqa: SLF001
 
-    class ArgsSchema(form_class.pydantic_schema()):  # type: ignore[misc]
+    class ExtendedSchema(form_class.pydantic_schema()):  # type: ignore[misc]
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        runtime: ToolRuntime
         pk: Annotated[str, "The primary key of the record to update"]
 
     @tool(
         f"update_{type_.value.lower()}_record",
         description=f"Update {type_} records for {patient.full_name}",
-        args_schema=ArgsSchema,
+        args_schema=ExtendedSchema,
     )
-    def update_patient_record(pk: str, **kwargs) -> dict[str, Any]:
+    def update_patient_record(pk: str, runtime: ToolRuntime, **kwargs) -> dict[str, Any]:
         instance = model_class.objects.get(pk=pk, patient=patient)
         form = form_class(data=kwargs, instance=instance)
         if form.is_valid():
-            obj = form.save(patient=patient)
+            with pghistory.context(
+                llm=runtime.context.llm.value,  # type: ignore[attr-defined]
+                conversation=runtime.config["configurable"]["thread_id"],
+            ):
+                obj = form.save(patient=patient)
             return PythonSerializer().serialize([obj])[0]
         return {"errors": form.errors}
 

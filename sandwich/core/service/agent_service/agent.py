@@ -27,6 +27,7 @@ class AgentParameters(TypedDict, total=False):
     tools: list[BaseTool] | None
     checkpointer: BaseCheckpointSaver | None
     store: BaseStore | None
+    context_schema: object | None
 
 
 class ResponseMessage[T](TypedDict):

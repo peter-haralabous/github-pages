@@ -12,6 +12,7 @@ from django.utils.safestring import SafeString
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel
 
+from sandwich.core.service.chat_service.agents import ChatAgentContext
 from sandwich.core.service.chat_service.agents import chat_agent
 from sandwich.core.service.chat_service.chat import ChatContext
 from sandwich.core.service.chat_service.response import ChatResponse
@@ -174,6 +175,7 @@ def receive_chat_event(
                 agent=agent,
                 input=event.input_for_assistant_response(),
                 config=event.context.config(),
+                context=ChatAgentContext(),  # type: ignore[arg-type]
             )
 
         # 3. Send the assistant's message
