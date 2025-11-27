@@ -2,6 +2,7 @@ import { LitElement, html, type TemplateResult } from 'lit';
 import { Model } from 'survey-core';
 import CustomSandwichTheme from '../lib/survey-form-theme';
 import { registerCustomComponents } from './forms/custom-components';
+import { setupAddressAutocomplete } from '../lib/address-autocomplete';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
@@ -137,27 +138,6 @@ export class SurveyForm extends LitElement {
     }
   }
 
-  private async fetchAddressSuggestions(
-    url: string,
-    onloadSuccessCallback: (data: Array<string>) => void,
-  ): Promise<void> {
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        onloadSuccessCallback(data);
-      }
-    } catch (error) {
-      console.error('[survey-form] fetchAddressSuggestions error:', error);
-    }
-  }
-
   // Initialize and render the Survey model into this component's container.
   initSurvey(json: SurveyJson): Model {
     // Resolve the target element once and fail fast if it's missing.
@@ -177,28 +157,8 @@ export class SurveyForm extends LitElement {
     // SurveyJson to `any` for the library boundary.
     this.model = new Model(json as any);
 
-    this.model.onChoicesLazyLoad.add((_, options) => {
-      if (options.question.getType() !== 'dropdown') return;
-
-      // LazyLoad Choices for Address Autocomplete
-      // https://surveyjs.io/form-library/examples/lazy-loading-dropdown/vanillajs#content-code
-      // https://surveyjs.answerdesk.io/ticket/details/t16719/autocomplete-choicesbyurl-based-on-entered-text
-      if (options.question.name === 'suggested_addresses') {
-        if (!this._addressAutocompleteUrl) {
-          console.warn('No address autocomplete URL configured.');
-          return;
-        }
-
-        if (options.filter) {
-          const url = `${this._addressAutocompleteUrl}?query=${encodeURIComponent(options.filter)}`;
-          void this.fetchAddressSuggestions(url, (data) => {
-            if (data.length) {
-              options.setItems(data, data.length);
-            }
-          });
-        }
-      }
-    });
+    // Set up address autocomplete for the 'suggested_addresses' dropdown
+    setupAddressAutocomplete(this.model, this._addressAutocompleteUrl);
 
     this.model.onAfterRenderSurvey.add(() => {
       targetEl.setAttribute('data-survey-rendered', '1');
