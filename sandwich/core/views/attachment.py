@@ -16,29 +16,32 @@ from sandwich.core.util.http import AuthenticatedHttpRequest
 @require_POST
 @login_required
 def attachment_upload(request: AuthenticatedHttpRequest) -> HttpResponse:
-    uploaded = request.FILES.get("file-upload")
-    if not uploaded:
+    uploaded_files = request.FILES.getlist("file-upload")
+    if not uploaded_files:
         return HttpResponseBadRequest("No file was uploaded.")
 
-    # TODO: do we have a file size limit imposed on the infra side?
-    if uploaded.size and uploaded.size > 10 * 1024 * 1024:  # 10MB
-        return HttpResponseBadRequest("File is too large.")
+    response = []
+    for uploaded in uploaded_files:
+        # TODO: do we have a file size limit imposed on the infra side?
+        if uploaded.size and uploaded.size > 10 * 1024 * 1024:  # 10MB
+            return HttpResponseBadRequest("File is too large.")
 
-    attachment = Attachment.objects.create(
-        file=uploaded,
-        uploaded_by=request.user,
-        original_filename=uploaded.name or "untitled",
-        content_type=uploaded.content_type or "application/octet-stream",
-    )
+        attachment = Attachment.objects.create(
+            file=uploaded,
+            uploaded_by=request.user,
+            original_filename=uploaded.name or "untitled",
+            content_type=uploaded.content_type or "application/octet-stream",
+        )
+        response.append(
+            {
+                "id": attachment.pk,
+                "url": attachment.file.url,
+                "original_filename": attachment.original_filename,
+                "content_type": attachment.content_type,
+            }
+        )
 
-    return JsonResponse(
-        {
-            "id": attachment.pk,
-            "url": attachment.file.url,
-            "original_filename": attachment.original_filename,
-            "content_type": attachment.content_type,
-        }
-    )
+    return JsonResponse(response, safe=False)  # safe=False allows us to pass an array back instead of a dict
 
 
 @require_http_methods(["DELETE"])
