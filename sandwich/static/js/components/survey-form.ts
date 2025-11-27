@@ -28,7 +28,7 @@ export class SurveyForm extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <div id="${this._containerId}" data-survey-container="1"></div>
+      <div id=${this._containerId} data-survey-container="1"></div>
       <div
         id="${this._containerId}-loading"
         class="flex flex-col items-center justify-center p-6 space-y-3 mt-6"

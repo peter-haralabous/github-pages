@@ -55,7 +55,7 @@ export class ToggleButton extends LitElement {
 
   render() {
     return html`
-      <button class="${this.class_}" @click=${this.handleClick}>
+      <button class=${this.class_} @click=${this.handleClick}>
         <slot></slot>
       </button>
     `;

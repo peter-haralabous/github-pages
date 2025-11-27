@@ -118,7 +118,7 @@ export class SortableColumns extends LitElement {
           (column) => html`
             <div
               class="sortable-item flex items-center gap-2 p-2 bg-base-100 border border-base-300 rounded"
-              data-column-value="${column.value}"
+              data-column-value=${column.value}
               role="listitem"
             >
               <i
@@ -128,7 +128,7 @@ export class SortableColumns extends LitElement {
               ></i>
               <input
                 type="checkbox"
-                data-value="${column.value}"
+                data-value=${column.value}
                 aria-label="Toggle ${column.label} column visibility"
                 .checked=${column.checked}
                 @change=${(e: Event) =>

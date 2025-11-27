@@ -115,7 +115,7 @@ export class WysiwygEditor extends LitElement {
         if=${this._editor}
       ></wysiwyg-editor-toolbar>
       <div class="editor p-1"></div>
-      <input name="${this.name}" type="hidden" .value=${this._content} />
+      <input name=${this.name} type="hidden" .value=${this._content} />
     </div> `;
   }
 }

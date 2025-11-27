@@ -118,10 +118,10 @@ export class HtmxLoadingBar extends LitElement {
 
     return html`
       <div
-        class="${classes}"
+        class=${classes}
         role="progressbar"
         aria-live="polite"
-        aria-busy="${this.visible}"
+        aria-busy=${this.visible}
       >
         <div class="progress-inner"></div>
       </div>

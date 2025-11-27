@@ -303,7 +303,7 @@ class CommandPalette extends LitElement {
           <input
             class="palette-input"
             type="text"
-            placeholder="${this.placeholder}"
+            placeholder=${this.placeholder}
             @input=${this._onInput}
             @keydown=${this._onKeydown}
           />
