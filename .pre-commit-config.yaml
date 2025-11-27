@@ -28,6 +28,8 @@ repos:
         args: ['--tab-width', '2', '--single-quote']
         exclude: 'sandwich/templates/'
         types_or: [css, javascript, json, ts, tsx, yaml]
+        additional_dependencies:
+          - prettier@3.7.1
 
   - repo: https://github.com/adamchainz/django-upgrade
     rev: '1.28.0'
