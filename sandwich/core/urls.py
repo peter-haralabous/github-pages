@@ -14,6 +14,7 @@ from sandwich.core.views.attachment import attachment_upload
 from sandwich.core.views.healthcheck import healthcheck
 from sandwich.core.views.home import home
 from sandwich.core.views.legal import legal_view
+from sandwich.core.views.medication import medication_search
 from sandwich.core.views.notifications import account_notifications
 from sandwich.core.views.policy import policy_detail
 from sandwich.core.views.switcher import switcher
@@ -33,6 +34,7 @@ urlpatterns = [
     path("api/attachments/upload", attachment_upload, name="attachment_upload"),
     path("api/attachments/<uuid:attachment_id>/delete", attachment_delete, name="attachment_delete"),
     path("api/attachments/<uuid:attachment_id>/", attachment_by_id, name="attachment_by_id"),
+    path("api/medication-search/", medication_search, name="medication_search"),
 ]
 
 
