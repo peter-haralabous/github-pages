@@ -24,7 +24,7 @@ def _chatty_patient_details_context(request: AuthenticatedHttpRequest, patient: 
     records_count = get_total_health_record_count(patient)
     repository_count = patient.document_set.count()
     tasks_count = patient.task_set.filter(status__in=ACTIVE_TASK_STATUSES).count()
-    health_summary = PersonalSummary.objects.get_most_recent_health_summary_in_last_24hrs(patient)
+    health_summary = PersonalSummary.objects.get_most_recent_summary(patient)
 
     return {
         "records_count": records_count,
