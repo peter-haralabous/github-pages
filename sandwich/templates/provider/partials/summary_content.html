@@ -51,4 +51,22 @@
       </div>
     </div>
   </div>
+  <div class="divider my-4"></div>
+  {% if summary.status == "succeeded" %}
+    <div class="flex justify-end gap-2 mb-4">
+      <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
+              data-copy-text="{{ summary.body }}">
+        {% lucide "copy" class="size-4" %}
+        Copy Summary
+      </button>
+      <button class="btn btn-sm btn-outline btn-primary js-print"
+              data-print-url="{% url 'providers:summary_detail' organization_id=summary.organization.id summary_id=summary.id %}?print=true">
+        {% lucide "printer" class="size-4" %}
+        Print Summary
+      </button>
+    </div>
+    <div class="rounded-lg border border-base-300 bg-base-50 p-6">
+      <div class="prose prose-sm max-w-none">{{ summary.body|safe }}</div>
+    </div>
+  {% endif %}
 {% endwith %}

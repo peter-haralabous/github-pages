@@ -9,10 +9,8 @@
     {% if summaries %}
       <div class="space-y-4">
         {% for summary in summaries %}
-          <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}"
-             hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}"
-             hx-target="body"
-             hx-swap="beforeend"
+          <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}{% if is_slideout %}?slideout=1{% endif %}"
+             {% if is_slideout %}hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?slideout=1" hx-target="body" hx-swap="beforeend"{% endif %}
              class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
             <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
             <div class="flex-1">

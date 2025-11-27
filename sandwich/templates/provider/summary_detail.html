@@ -8,26 +8,7 @@
     {% lucide "chevron-left" class="size-4" %}
     <span>{{ breadcrumb_text }}</span>
   </a>
-  {% if summary.status == "succeeded" %}
-    <div class="flex justify-end gap-2 mb-4">
-      <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
-              data-copy-text="{{ summary.body }}">
-        {% lucide "copy" class="size-4" %}
-        Copy Summary
-      </button>
-      <button class="btn btn-sm btn-outline btn-primary js-print"
-              data-print-url="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?print=true">
-        {% lucide "printer" class="size-4" %}
-        Print Summary
-      </button>
-    </div>
-  {% endif %}
   <div class="mb-6">
-    <div class="card bg-base-100 border border-base-200 shadow-sm mb-6">
-      <div class="card-body">
-        {% include 'provider/partials/summary_content.html' with title_tag='h1' badge_size='md' %}
-      </div>
-    </div>
     {% if summary.status == "processing" or summary.status == "pending" %}
       {# Show loading indicator for summaries being generated #}
       <div class="rounded-box border border-base-200 bg-base-100 p-8">
@@ -56,13 +37,11 @@
           </div>
         </div>
       </div>
-    {% else %}
-      {# Show completed summary #}
-      <div class="card bg-base-100 border border-base-200 shadow-sm">
-        <div class="card-body">
-          <div class="prose max-w-none">{{ summary.body|safe }}</div>
-        </div>
-      </div>
     {% endif %}
+    <div class="card bg-base-100 border border-base-200 shadow-sm">
+      <div class="card-body">
+        {% include 'provider/partials/summary_content.html' with title_tag='h1' badge_size='md' %}
+      </div>
+    </div>
   </div>
 {% endblock content %}

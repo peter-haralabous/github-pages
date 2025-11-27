@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
     ]
 )
 def summary_detail(request: AuthenticatedHttpRequest, organization: Organization, summary: Summary) -> HttpResponse:
-    """Display summary detail - returns modal for HTMX requests, full page otherwise."""
+    """Display summary detail - returns slideout for HTMX requests, full page otherwise."""
     is_htmx = bool(request.headers.get("HX-Request"))
     is_print = request.GET.get("print") == "true"
 
@@ -49,9 +49,9 @@ def summary_detail(request: AuthenticatedHttpRequest, organization: Organization
     if is_print:
         return render(request, "provider/summary_detail_print.html", context)
 
-    # If HTMX request, return modal partial
+    # If HTMX request, return slideout partial
     if is_htmx:
-        return render(request, "provider/partials/summary_modal.html", context)
+        return render(request, "provider/partials/summary_slideout.html", context)
 
     # Otherwise return full page with breadcrumbs
     if summary.encounter:

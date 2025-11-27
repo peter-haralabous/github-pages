@@ -1,9 +1,10 @@
 {% load lucide %}
 
 <div id="encounter-details-backdrop-{{ encounter.id }}"
-     class="fixed inset-0 bg-black/50 z-40 opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+     class="fixed inset-0 bg-black/50 z-40 opacity-0 transition-opacity duration-300 pointer-events-none slideout-backdrop">
+</div>
 <div id="encounter-details-modal-{{ encounter.id }}"
-     class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full">
+     class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full slideout-modal">
   <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
     <div class="flex items-center gap-2 text-base-content/70">
       {% lucide "clipboard-list" class="size-5" %}

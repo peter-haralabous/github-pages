@@ -166,6 +166,7 @@ def encounter_details(
         "pending_invitation": pending_invitation,
         "enriched_attributes": enriched_attributes,
         "summaries": summaries,
+        "is_slideout": request.GET.get("slideout") is not None,
     }
 
     # Handle HTMX requests for specific sections
