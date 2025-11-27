@@ -610,3 +610,138 @@ def test_summary_modal_cleanup_when_opening_multiple_summaries(
     assert len(all_modals_end) == 0, (
         f"Expected modal to be removed from DOM after closing, but found {len(all_modals_end)} modals"
     )
+
+
+@pytest.mark.django_db
+def test_summary_detail_print_view(provider: User, organization: Organization, patient, encounter: Encounter) -> None:
+    """Test that print=true parameter returns the print template."""
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Test Summary",
+        body="<p>Test content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+    result = client.get(url, {"print": "true"})
+
+    assert result.status_code == 200
+    assert "provider/summary_detail_print.html" in [template.name for template in result.templates]
+    assert "base_print.html" in [template.name for template in result.templates]
+    # Should not include the regular base template
+    assert "provider/base.html" not in [template.name for template in result.templates]
+
+
+@pytest.mark.django_db
+def test_summary_detail_print_view_includes_metadata(
+    provider: User, organization: Organization, patient, encounter: Encounter
+) -> None:
+    """Test that print view includes patient and template metadata."""
+    summary_template = SummaryTemplateFactory.create(
+        organization=organization,
+        name="Test Template",
+    )
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        template=summary_template,
+        title="Test Summary",
+        body="<p>Test content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+    result = client.get(url, {"print": "true"})
+
+    content = result.content.decode("utf-8")
+    assert patient.first_name in content
+    assert patient.last_name in content
+    assert "Test Template" in content
+    assert "<p>Test content</p>" in content
+
+
+@pytest.mark.django_db
+def test_summary_detail_print_view_without_print_param(
+    provider: User, organization: Organization, patient, encounter: Encounter
+) -> None:
+    """Test that regular view is returned when print parameter is not set."""
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Test Summary",
+        body="<p>Test content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+    result = client.get(url)
+
+    assert result.status_code == 200
+    assert "provider/summary_detail.html" in [template.name for template in result.templates]
+    assert "provider/base.html" in [template.name for template in result.templates]
+    assert "base_print.html" not in [template.name for template in result.templates]
+
+
+@pytest.mark.django_db
+def test_summary_detail_page_has_print_button(
+    provider: User, organization: Organization, patient, encounter: Encounter
+) -> None:
+    """Test that summary detail page includes print button."""
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Test Summary",
+        body="<p>Test content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+    result = client.get(url)
+
+    content = result.content.decode("utf-8")
+    assert "js-print-summary" in content
+    assert "Print Summary" in content
+    assert "data-print-summary-url" in content
+
+
+@pytest.mark.django_db
+def test_summary_modal_has_print_button(
+    provider: User, organization: Organization, patient, encounter: Encounter
+) -> None:
+    """Test that summary modal includes print button."""
+    summary = SummaryFactory.create(
+        patient=patient,
+        encounter=encounter,
+        organization=organization,
+        title="Test Summary",
+        body="<p>Test content</p>",
+        status=SummaryStatus.SUCCEEDED,
+    )
+    assign_perm("view_summary", provider, summary)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
+    result = client.get(url, headers={"HX-Request": "true"})
+
+    content = result.content.decode("utf-8")
+    assert "js-print-summary" in content
+    assert "Print Summary" in content
+    assert "data-print-summary-url" in content

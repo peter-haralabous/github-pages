@@ -7,8 +7,12 @@ function handlePrintClick(this: Element, e: Event) {
   e.preventDefault();
 
   const button = this as HTMLElement;
-  const printUrl =
-    button.dataset.printUrl || button.dataset.summaryUrl + '?print=true';
+  const printUrl = button.dataset.printSummaryUrl;
+
+  if (!printUrl) {
+    console.error('Print URL not found on button');
+    return;
+  }
 
   // Find or create print iframe
   let iframe = document.getElementById('print-iframe') as HTMLIFrameElement;

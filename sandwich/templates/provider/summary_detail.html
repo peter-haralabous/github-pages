@@ -16,7 +16,7 @@
         Copy Summary
       </button>
       <button class="btn btn-sm btn-outline btn-primary js-print-summary"
-              data-print-url="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?print=true">
+              data-print-summary-url="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?print=true">
         {% lucide "printer" class="size-4" %}
         Print Summary
       </button>
