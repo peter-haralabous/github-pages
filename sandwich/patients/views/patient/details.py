@@ -2,13 +2,12 @@ import logging
 from typing import Any
 
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 
 from sandwich.core.models import Patient
+from sandwich.core.models import PersonalSummary
 from sandwich.core.models.task import ACTIVE_TASK_STATUSES
 from sandwich.core.service.health_record_service import get_total_health_record_count
 from sandwich.core.service.health_summary_service import generate_health_summary
@@ -25,27 +24,14 @@ def _chatty_patient_details_context(request: AuthenticatedHttpRequest, patient: 
     records_count = get_total_health_record_count(patient)
     repository_count = patient.document_set.count()
     tasks_count = patient.task_set.filter(status__in=ACTIVE_TASK_STATUSES).count()
+    health_summary = PersonalSummary.objects.get_most_recent_health_summary_in_last_24hrs(patient)
 
-    # Try to retrieve cached health summary
-    cache_key = f"health_summary:{patient.id}"
-    cached_summary = cache.get(cache_key)
-
-    if cached_summary:
-        return {
-            "records_count": records_count,
-            "repository_count": repository_count,
-            "tasks_count": tasks_count,
-            "health_summary_html": cached_summary["html"],
-            "health_summary_generated_at": cached_summary["generated_at"],
-        } | _chat_context(request, patient=patient)
-
-    # Health summary is not auto-generated - only generated on manual refresh
     return {
         "records_count": records_count,
         "repository_count": repository_count,
         "tasks_count": tasks_count,
-        "health_summary_html": None,
-        "health_summary_generated_at": None,
+        "health_summary_html": health_summary.body if health_summary else None,
+        "health_summary_generated_at": health_summary.created_at if health_summary else None,
     } | _chat_context(request, patient=patient)
 
 
@@ -66,8 +52,6 @@ def patient_details(request: AuthenticatedHttpRequest, patient: Patient) -> Http
 @require_POST
 def regenerate_health_summary(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
     """Regenerate the health summary and return the updated right panel."""
-    context = _chatty_patient_details_context(request, patient)
-
     # Generate health summary on-demand
     try:
         health_summary = generate_health_summary(patient)
@@ -80,19 +64,21 @@ def regenerate_health_summary(request: AuthenticatedHttpRequest, patient: Patien
                 "html_length": len(health_summary_html) if health_summary_html else 0,
             },
         )
-
-        # Cache the generated summary for 24 hours
-        cache_key = f"health_summary:{patient.id}"
-        cache.set(
-            cache_key,
-            {"html": health_summary_html, "generated_at": now()},
-            timeout=60 * 60 * 24,  # 24 hours
-        )
     except Exception:
-        logger.exception("Failed to generate health summary")
+        logger.exception("Failed to generate health summary", extra={"patient_id": str(patient.id)})
         health_summary_html = None
 
-    # Update context with generated summary
-    context.update({"health_summary_html": health_summary_html})
+    # If generation didn't produce any content or failed, skip saving to db.
+    if health_summary_html:
+        personal_summary = PersonalSummary.objects.create(
+            patient=patient,
+            body=health_summary_html,
+        )
+        logger.debug(
+            "Personal health summary saved to database",
+            extra={"patient_id": str(patient.id), "personal_summary_id": str(personal_summary.id)},
+        )
+
+    context = _chatty_patient_details_context(request, patient)
 
     return render(request, "patient/chatty/partials/right_panel.html", context)
