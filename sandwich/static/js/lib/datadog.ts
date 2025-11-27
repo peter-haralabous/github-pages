@@ -1,5 +1,11 @@
 import { datadogRum } from '@datadog/browser-rum';
 
+type DatadogVars = {
+  environment: string;
+  app_version: string;
+  user_id: string | null;
+};
+
 /**
  * Initialise Datadog RUM.
  * @param environment - The environment the application is deployed into. e.g. 'integration', 'production'
@@ -7,7 +13,11 @@ import { datadogRum } from '@datadog/browser-rum';
  *
  * @link https://app.datadoghq.eu/rum/application/d64d2af3-0ee8-43c9-a7b8-7da6507c895d
  */
-export function initializeDatadog(environment: string, app_version: string) {
+export function initializeDatadog({
+  environment,
+  app_version,
+  user_id,
+}: DatadogVars) {
   if (environment == 'local') {
     // Don't run datadog on localhost.
     return;
@@ -38,4 +48,10 @@ export function initializeDatadog(environment: string, app_version: string) {
     trackLongTasks: true,
     trackUserInteractions: true,
   });
+
+  if (user_id) {
+    datadogRum.setUser({
+      id: user_id,
+    });
+  }
 }

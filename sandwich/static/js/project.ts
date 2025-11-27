@@ -12,15 +12,11 @@ import './copy-summary';
 import { initializeDatadog } from './lib/datadog';
 
 /* Project specific Javascript goes here. */
-
-const ENVIRONMENT = JSON.parse(
-  document.getElementById('environment')?.textContent || '',
-);
-const APP_VERSION = JSON.parse(
-  document.getElementById('app_version')?.textContent || '',
+const datadog_vars = JSON.parse(
+  document.getElementById('datadog_vars')?.textContent || '',
 );
 
-initializeDatadog(ENVIRONMENT, APP_VERSION);
+initializeDatadog(datadog_vars);
 
 try {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

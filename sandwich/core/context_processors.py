@@ -11,8 +11,11 @@ from sandwich.core.types import EMPTY_VALUE_DISPLAY
 def settings_context(request: HttpRequest):
     """Returns context variables from settings."""
     return {
-        "environment": getattr(settings, "ENVIRONMENT", None),
-        "app_version": getattr(settings, "APP_VERSION", None),
+        "datadog_vars": {
+            "environment": getattr(settings, "ENVIRONMENT", None),
+            "app_version": getattr(settings, "APP_VERSION", None),
+            "user_id": request.user.id,
+        },
         "EMPTY_VALUE_DISPLAY": EMPTY_VALUE_DISPLAY,
         "DJANGO_DATE_FORMAT": DJANGO_DATE_FORMAT,
         "DJANGO_DATE_TIME_FORMAT": DJANGO_DATE_TIME_FORMAT,

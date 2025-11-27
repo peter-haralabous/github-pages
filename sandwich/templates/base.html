@@ -37,9 +37,8 @@
     {% endblock css %}
     {# Placed at the top of the document so pages load faster with defer #}
     {% block javascript %}
-      {# You can find these variables supplied by server.core.context_processors.settings_context #}
-      {% json_script_safe environment "environment" %}
-      {% json_script_safe app_version "app_version" %}
+      {# You can find these variables supplied by sandwich.core.context_processors.settings_context #}
+      {% json_script_safe datadog_vars "datadog_vars" %}
       {# Vendor dependencies bundled as one file #}
       {% render_bundle 'vendors' 'js' %}
       {# place project specific Javascript in this file #}
