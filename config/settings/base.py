@@ -62,9 +62,7 @@ DATABASE_URL = env.str("DATABASE_URL", default="postgres://sandwich:sandwich@loc
 DATABASES = {"default": env.db_url_config(DATABASE_URL)}
 DATABASES["default"]["OPTIONS"] = {
     # see https://www.psycopg.org/psycopg3/docs/api/pool.html#psycopg_pool.ConnectionPool for pool config options
-    "pool": {
-        "max_size": 8,
-    },
+    "pool": {"max_size": 4, "max_idle": 300},
 }
 
 # Note(WF): Testing turning off atomic requests, as it may be hogging database connections.
