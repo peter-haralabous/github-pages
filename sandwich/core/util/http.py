@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpRequest
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import ResolverMatch
 from django.urls import resolve
 
@@ -34,3 +36,23 @@ def validate_sort(sort: str | None, valid_sorts: list[str]) -> str | None:
     if field not in valid_sorts:
         return None
     return sort
+
+
+def htmx_redirect(request: HttpRequest, url: str) -> HttpResponse:
+    """
+    Return an HttpResponse with the HX-Redirect header.
+
+    This tells HTMX to perform a client-side redirect to the given URL,
+    preventing the redirect response HTML from being swapped into the current element.
+    This is especially important for forms in modal dialogs.
+
+    Args:
+        url: The URL to redirect to
+
+    Returns:
+        HttpResponse with HX-Redirect header set
+    """
+    if not request.headers.get("HX-Request", False):
+        return HttpResponseRedirect(url)
+
+    return HttpResponse(status=200, headers={"HX-Redirect": url})

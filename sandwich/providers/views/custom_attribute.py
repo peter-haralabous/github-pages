@@ -25,6 +25,7 @@ from sandwich.core.models.organization import Organization
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import htmx_redirect
 from sandwich.core.util.http import validate_sort
 
 logger = logging.getLogger(__name__)
@@ -401,7 +402,14 @@ def custom_attribute_archive(
             "Processing custom attribute deletion",
             extra={"user_id": request.user.id, "attribute_id": attribute_id, "organization_id": organization.id},
         )
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(
+            request.POST,
+            form_action=reverse(
+                "providers:custom_attribute_archive",
+                kwargs={"organization_id": organization.id, "attribute_id": attribute.id},
+            ),
+            hx_target="dialog",
+        )
 
         if form.is_valid():
             attribute_name = attribute.name
@@ -420,14 +428,13 @@ def custom_attribute_archive(
             messages.success(request, f"Custom field '{attribute_name}' has been deleted.")
 
             # Redirect back to the list page
-            return HttpResponseRedirect(
-                reverse("providers:custom_attribute_list", kwargs={"organization_id": organization.id})
+            return htmx_redirect(
+                request, reverse("providers:custom_attribute_list", kwargs={"organization_id": organization.id})
             )
         logger.warning(
             "Invalid custom attribute delete confirmation",
             extra={"user_id": request.user.id, "attribute_id": attribute_id},
         )
-        messages.error(request, "Invalid confirmation. Please type 'DELETE' to confirm.")
         # Rerender the full page with the modal open
         modal_context = {"form": form, "attribute": attribute, "organization": organization}
         context = _get_custom_attribute_list_context(request, organization)
@@ -439,7 +446,8 @@ def custom_attribute_archive(
         form_action=reverse(
             "providers:custom_attribute_archive",
             kwargs={"organization_id": organization.id, "attribute_id": attribute.id},
-        )
+        ),
+        hx_target="dialog",
     )
     modal_context = {"form": form, "attribute": attribute, "organization": organization}
 

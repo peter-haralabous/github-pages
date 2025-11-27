@@ -199,10 +199,11 @@ def test_delete_custom_attribute_with_confirmation(
 
     # Post with correct confirmation
     data = {"confirmation": "DELETE"}
-    res = client.post(url, data)
+    res = client.post(url, data, headers={"HX-Request": True})
 
-    # Should redirect or return success
-    assert res.status_code in [HTTPStatus.FOUND, HTTPStatus.OK]
+    # Should return 200 with HX-Redirect header
+    assert res.status_code == HTTPStatus.OK
+    assert "HX-Redirect" in res.headers
 
     # Attribute should be deleted
     assert not CustomAttribute.objects.filter(id=attribute.id).exists()

@@ -24,6 +24,7 @@ from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.service.summary_template_service import assign_default_summarytemplate_permissions
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import htmx_redirect
 from sandwich.core.widgets import WysiwygWidget
 
 logger = logging.getLogger(__name__)
@@ -308,7 +309,7 @@ def summary_template_delete(
             "Processing summary template deletion",
             extra={"user_id": request.user.id, "organization_id": organization.id, "template_id": template.id},
         )
-        form = DeleteConfirmationForm(request.POST, form_action=form_action)
+        form = DeleteConfirmationForm(request.POST, form_action=form_action, hx_target="dialog")
         if form.is_valid():
             template_name = template.name
             logger.info(
@@ -317,8 +318,8 @@ def summary_template_delete(
             )
             template.delete()
             messages.add_message(request, messages.SUCCESS, f"Template '{template_name}' deleted successfully.")
-            return HttpResponseRedirect(
-                reverse("providers:summary_template_list", kwargs={"organization_id": organization.id})
+            return htmx_redirect(
+                request, reverse("providers:summary_template_list", kwargs={"organization_id": organization.id})
             )
 
         # Form is invalid - fall through to render with validation errors
@@ -328,7 +329,7 @@ def summary_template_delete(
         )
     else:
         # GET request - create a new form
-        form = DeleteConfirmationForm(form_action=form_action)
+        form = DeleteConfirmationForm(form_action=form_action, hx_target="dialog")
 
     modal_context = {"form": form, "template": template, "organization": organization}
 

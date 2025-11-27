@@ -274,10 +274,10 @@ def test_summary_template_delete(client: Client, provider: User, organization: O
         "providers:summary_template_delete", kwargs={"organization_id": organization.id, "template_id": template.id}
     )
 
-    response = client.post(url, {"confirmation": "DELETE"})
+    response = client.post(url, {"confirmation": "DELETE"}, headers={"HX-Request": True})
 
-    assert response.status_code == HTTPStatus.FOUND
-    assert response["Location"] == reverse(
+    assert response.status_code == HTTPStatus.OK
+    assert response.headers["HX-Redirect"] == reverse(
         "providers:summary_template_list", kwargs={"organization_id": organization.id}
     )
 

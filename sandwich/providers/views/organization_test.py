@@ -46,10 +46,10 @@ def test_organization_delete_success(user: User, organization: Organization) -> 
     client.force_login(user)
     url = reverse("providers:organization_delete", kwargs={"organization_id": organization.id})
     data = {"confirmation": "DELETE"}
-    result = client.post(url, data)
+    result = client.post(url, data, headers={"HX-Request": True})
 
-    assert result.status_code == 302
-    assert result.url == reverse("providers:home")  # type: ignore[attr-defined]
+    assert result.status_code == 200
+    assert result.headers["HX-Redirect"] == reverse("providers:home")
     assert not Organization.objects.filter(id=organization.id).exists()
 
 

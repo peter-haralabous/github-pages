@@ -20,7 +20,7 @@ def account_delete(request: AuthenticatedHttpRequest) -> HttpResponse:
 
     if request.method == "POST":
         logger.info("Processing account delete form", extra={"user_id": request.user.id})
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(request.POST, form_action=reverse("core:account_delete"), hx_target="body")
         if not form.is_valid():
             return render(request, "users/account_delete.html", context={"form": form})
 
@@ -32,7 +32,10 @@ def account_delete(request: AuthenticatedHttpRequest) -> HttpResponse:
         return redirect(reverse("account_login"))
 
     logger.debug("Rendering account delete form", extra={"user_id": request.user.id})
-    form = DeleteConfirmationForm()
+    form = DeleteConfirmationForm(
+        form_action=reverse("core:account_delete"),
+        hx_target="body",
+    )
 
     context = {"form": form}
     return render(request, "users/account_delete.html", context)

@@ -18,6 +18,7 @@ from sandwich.core.service.ingest_service import process_document_job
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import htmx_redirect
 from sandwich.core.validators.phn import phn_attr_for_province
 from sandwich.patients.forms.patient_edit import PatientEdit
 from sandwich.patients.views.patient import _patient_context
@@ -74,9 +75,11 @@ def get_phn_validation(request: AuthenticatedHttpRequest) -> HttpResponse:
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient", "change_patient"])])
 def patient_delete_health_records(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
     """Delete all health records for a patient, including documents."""
+    form_action = reverse("patients:patient_delete_health_records", kwargs={"patient_id": patient.id})
+
     if request.method == "POST":
         logger.info("Processing health records deletion", extra={"user_id": request.user.id, "patient_id": patient.id})
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(request.POST, form_action=form_action, hx_target="dialog")
         if form.is_valid():
             with transaction.atomic():
                 # Delete all health records (includes documents, conditions, immunizations, practitioners)
@@ -90,11 +93,11 @@ def patient_delete_health_records(request: AuthenticatedHttpRequest, patient: Pa
                     extra={"user_id": request.user.id, "patient_id": patient.id},
                 )
             messages.add_message(request, messages.SUCCESS, "All health records have been deleted successfully.")
-            return HttpResponseRedirect(reverse("patients:patient_edit", kwargs={"patient_id": patient.id}))
+            return htmx_redirect(request, reverse("patients:patient_edit", kwargs={"patient_id": patient.id}))
+        context = {"form": form, "patient": patient}
+        return render(request, "patient/partials/delete_health_records_modal.html", context)
+    form = DeleteConfirmationForm(form_action=form_action, hx_target="dialog")
 
-    form = DeleteConfirmationForm(
-        form_action=reverse("patients:patient_delete_health_records", kwargs={"patient_id": patient.id})
-    )
     context = {"form": form, "patient": patient}
     return render(request, "patient/partials/delete_health_records_modal.html", context)
 
@@ -102,13 +105,13 @@ def patient_delete_health_records(request: AuthenticatedHttpRequest, patient: Pa
 @login_required
 @authorize_objects([ObjPerm(Patient, "patient_id", ["view_patient", "change_patient"])])
 def patient_delete_and_reprocess(request: AuthenticatedHttpRequest, patient: Patient) -> HttpResponse:
-    """Delete non-document health records and re-process all documents."""
+    form_action = reverse("patients:patient_delete_and_reprocess", kwargs={"patient_id": patient.id})
     if request.method == "POST":
         logger.info(
             "Processing health records deletion and reprocessing",
             extra={"user_id": request.user.id, "patient_id": patient.id},
         )
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(request.POST, form_action=form_action, hx_target="dialog")
         if form.is_valid():
             with transaction.atomic():
                 # Delete non-document health records
@@ -137,10 +140,12 @@ def patient_delete_and_reprocess(request: AuthenticatedHttpRequest, patient: Pat
                 messages.SUCCESS,
                 f"Health records deleted and {document_count} document(s) queued for re-processing.",
             )
-            return HttpResponseRedirect(reverse("patients:patient_edit", kwargs={"patient_id": patient.id}))
-
+            return htmx_redirect(request, reverse("patients:patient_edit", kwargs={"patient_id": patient.id}))
+        context = {"form": form, "patient": patient}
+        return render(request, "patient/partials/delete_and_reprocess_modal.html", context)
     form = DeleteConfirmationForm(
-        form_action=reverse("patients:patient_delete_and_reprocess", kwargs={"patient_id": patient.id})
+        form_action=reverse("patients:patient_delete_and_reprocess", kwargs={"patient_id": patient.id}),
+        hx_target="dialog",
     )
     context = {"form": form, "patient": patient}
     return render(request, "patient/partials/delete_and_reprocess_modal.html", context)

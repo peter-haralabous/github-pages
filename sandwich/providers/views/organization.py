@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -21,6 +20,7 @@ from sandwich.core.service.organization_service import create_default_roles_and_
 from sandwich.core.service.permissions_service import ObjPerm
 from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import htmx_redirect
 
 logger = logging.getLogger(__name__)
 
@@ -132,17 +132,22 @@ def organization_add(request: AuthenticatedHttpRequest) -> HttpResponse:
 @login_required
 @authorize_objects([ObjPerm(Organization, "organization_id", ["view_organization", "delete_organization"])])
 def organization_delete(request: AuthenticatedHttpRequest, organization: Organization) -> HttpResponse:
+    form_action = reverse("providers:organization_delete", kwargs={"organization_id": organization.id})
     if request.method == "POST":
         logger.info("Processing organization deletion", extra={"user_id": request.user.id})
-        form = DeleteConfirmationForm(request.POST)
+        form = DeleteConfirmationForm(request.POST, form_action=form_action, hx_target="dialog")
         if form.is_valid():
             org = Organization.objects.get(id=str(organization.id))
             logger.info("Deleting organization", extra={"org_id": org.id})
             org.delete()
-            return redirect(reverse("providers:home"))
+            return htmx_redirect(request, reverse("providers:home"))
+        logger.warning(
+            "Invalid organization delete confirmation",
+            extra={"user_id": request.user.id, "organization_id": organization.id},
+        )
+        context = {"form": form, "organization": organization}
+        return render(request, "provider/partials/organization_delete_modal.html", context)
 
-    form = DeleteConfirmationForm(
-        form_action=reverse("providers:organization_delete", kwargs={"organization_id": organization.id})
-    )
-    context = {"form": form}
+    form = DeleteConfirmationForm(form_action=form_action, hx_target="dialog")
+    context = {"form": form, "organization": organization}
     return render(request, "provider/partials/organization_delete_modal.html", context)
