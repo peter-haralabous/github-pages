@@ -485,7 +485,6 @@ DRUGBANK_API_KEY = env.str("DRUGBANK_API_KEY", default=None)
 
 
 if ENVIRONMENT not in {"not set", "production"}:
-    DATABASES["default"]["ENGINE"] = "sandwich.core.util.db_engine"
     LOGGING["loggers"]["psycopg.pool"] = {  # type: ignore[index]
         "level": "INFO",
     }
