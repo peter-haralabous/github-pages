@@ -22,7 +22,7 @@
   <div class="space-y-3">
     {# Patient header card - hidden when collapsed on mobile #}
     <div class="hide-when-collapsed">{% include 'provider/partials/patient_sidebar_header.html' %}</div>
-    <div class="divider hidden show-when-collapsed px-2"></div>
+    <div class="divider hidden show-when-collapsed hide-when-expanded px-2"></div>
     {# Sidebar navigation #}
     <div id="patient-sidebar">
       {% if show_current_encounter %}
