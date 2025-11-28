@@ -20,7 +20,9 @@
           data-tab-id="{{ encounter.id }}"
           data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
         {% lucide "calendar" class="size-5 shrink-0" %}
-        <p class="text-sm truncate text-gray-700 hide-when-collapsed">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+        <p class="text-sm truncate text-gray-700 hide-when-collapsed">
+          Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}
+        </p>
       </li>
     {% empty %}
       <li class="flex h-12 items-center gap-4 hide-when-collapsed px-3">

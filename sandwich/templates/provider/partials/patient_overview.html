@@ -31,10 +31,10 @@
         <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
             data-tab-type="encounter"
             data-tab-id="{{ encounter.id }}"
-            data-tab-label="{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+            data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
           <div class="flex justify-between items-center">
             <div class="flex-1">
-              <p class="font-semibold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+              <p class="font-semibold text-gray-900">Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
               <p class="text-sm text-gray-600">
                 Status: {{ encounter.get_status_display }}
                 {% if encounter.ended_at %}• Ended: {{ encounter.ended_at|date:DJANGO_DATE_FORMAT }}{% endif %}

@@ -3,7 +3,7 @@
 {# Tab context - simplified header, no back button needed #}
 {% if in_tab %}
   <div class="space-y-6"
-       data-tab-label="{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+       data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
     {# Header with title, status badge, and actions #}
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">

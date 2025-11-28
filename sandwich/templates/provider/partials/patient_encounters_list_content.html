@@ -21,7 +21,7 @@
           hx-push-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}?encounter_id={{ encounter.id }}">
         <div class="flex justify-between items-center">
           <div class="flex-1">
-            <p class="font-semibold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+            <p class="font-semibold text-gray-900">Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
             <p class="text-sm text-gray-600">
               Status: {{ encounter.get_status_display }}
               {% if encounter.ended_at %}• Ended: {{ encounter.ended_at|date:DJANGO_DATE_FORMAT }}{% endif %}
