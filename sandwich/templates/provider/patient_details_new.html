@@ -57,6 +57,11 @@
         display: block !important;
       }
 
+      /* Keep toggle button's left chevron hidden during hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover #mobile-sidebar-toggle .hide-when-collapsed {
+        display: none !important;
+      }
+
       /* Hide "Directories" label on hover */
       #patient-sidebar-container[data-collapsed="true"]:hover .hide-when-expanded {
         display: none !important;
