@@ -29,15 +29,15 @@ interactions:
         User-Agent:
           - !!binary |
             Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
-            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjcgbWQvcHlpbXBsI0NQeXRob24gbS9ELGIs
-            WiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjMgbWQvcHlpbXBsI0NQeXRob24gbS9aLEQs
+            YiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
             cms6bGFuZ2NoYWluLWF3cw==
         X-Amz-Date:
           - !!binary |
-            MjAyNTExMjFUMjM0NjIxWg==
+            MjAyNTExMjhUMjM1ODUzWg==
         amz-sdk-invocation-id:
           - !!binary |
-            ODAzZmNmMWMtMWZmMC00Nzk5LWEzOTctMGQyYzE1MWZkNzQz
+            MTY1YWQ2YmItMDc3My00NmQ1LWE4NWUtZmQzMDc1OTgzYzZj
         amz-sdk-request:
           - !!binary |
             YXR0ZW1wdD0x
@@ -46,22 +46,22 @@ interactions:
     response:
       body:
         string:
-          '{"metrics":{"latencyMs":3784},"output":{"message":{"content":[{"text":"I''ll
-          convert this CSV document into a SurveyJS form. Based on the data, I can see:\n-
-          Title: \"Simple Form\"\n- One question (q1): \"First name\" as a text field\n\nLet
-          me create this form:"},{"toolUse":{"input":{"page_name":"page1","page_title":"Simple
-          Form","elements":[{"type":"text","name":"q1","title":"First name"}]},"name":"add_new_page_to_schema","toolUseId":"tooluse_RoiR3DzwShO5RMPW-G21Sw","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":901,"outputTokens":189,"serverToolUsage":{},"totalTokens":1090}}'
+          '{"metrics":{"latencyMs":3747},"output":{"message":{"content":[{"text":"I''ll
+          convert this CSV document into a SurveyJS form. The CSV describes a simple
+          form with a title and one text field question for first name.\n\nLet me create
+          the form:"},{"toolUse":{"input":{"page_name":"page1","page_title":"Simple
+          Form","elements":[{"type":"text","name":"q1","title":"First name"}]},"name":"add_new_page_to_schema","toolUseId":"tooluse_ICjt_ah4RqmVwHhKQ2eQ_w","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":901,"outputTokens":174,"serverToolUsage":{},"totalTokens":1075}}'
       headers:
         Connection:
           - keep-alive
         Content-Length:
-          - '734'
+          - '713'
         Content-Type:
           - application/json
         Date:
-          - Fri, 21 Nov 2025 23:47:25 GMT
+          - Fri, 28 Nov 2025 23:58:57 GMT
         x-amzn-RequestId:
-          - a415b51b-d92e-4d3b-a3dd-5192e2998e07
+          - 86609e7c-b544-47bd-83a8-73754315a305
       status:
         code: 200
         message: OK
@@ -72,46 +72,46 @@ interactions:
         it''s questions and wording, convert the document into a\n    SurveyJS form.\n\n    \n    "},
         {"text": "CSV data: \n\n    title,Simple Form\n    q1, First name, textfield\n    "}]},
         {"role": "assistant", "content": [{"text": "I''ll convert this CSV document
-        into a SurveyJS form. Based on the data, I can see:\n- Title: \"Simple Form\"\n-
-        One question (q1): \"First name\" as a text field\n\nLet me create this form:"},
-        {"toolUse": {"toolUseId": "tooluse_RoiR3DzwShO5RMPW-G21Sw", "input": {"page_name":
-        "page1", "page_title": "Simple Form", "elements": [{"type": "text", "name":
-        "q1", "title": "First name"}]}, "name": "add_new_page_to_schema"}}]}, {"role":
-        "user", "content": [{"toolResult": {"content": [{"text": "null"}], "toolUseId":
-        "tooluse_RoiR3DzwShO5RMPW-G21Sw", "status": "success"}}]}], "system": [{"text":
-        "\nYou are diligent form generation assistant specializing in turning PDFs and\nCSVs
-        into SurveyJS form schema.\n\nYou will be given file contents, use the provided
-        tools to write the contents\nto the form schema.\n\nThe order in which the form
-        is built is important, for complex operations\nrequiring multiple tool calls,
-        break the steps down and execute one at a time.\n"}], "inferenceConfig": {},
-        "toolConfig": {"tools": [{"toolSpec": {"name": "add_new_page_to_schema", "description":
-        "Adds a new page to the SurveyJS form schema.", "inputSchema": {"json": {"properties":
-        {"page_name": {"type": "string"}, "page_title": {"type": "string"}, "elements":
-        {"anyOf": [{"items": {"additionalProperties": true, "type": "object"}, "type":
-        "array"}, {"type": "null"}], "default": null}}, "required": ["page_name", "page_title"],
-        "type": "object"}}}}, {"toolSpec": {"name": "append_elements_to_existing_page",
-        "description": "Append elements to an existing page in the form schema.", "inputSchema":
-        {"json": {"properties": {"page_name": {"type": "string"}, "elements": {"anyOf":
-        [{"items": {"additionalProperties": true, "type": "object"}, "type": "array"},
-        {"type": "null"}], "default": null}}, "required": ["page_name"], "type": "object"}}}}]}}'
+        into a SurveyJS form. The CSV describes a simple form with a title and one text
+        field question for first name.\n\nLet me create the form:"}, {"toolUse": {"toolUseId":
+        "tooluse_ICjt_ah4RqmVwHhKQ2eQ_w", "input": {"page_name": "page1", "page_title":
+        "Simple Form", "elements": [{"type": "text", "name": "q1", "title": "First name"}]},
+        "name": "add_new_page_to_schema"}}]}, {"role": "user", "content": [{"toolResult":
+        {"content": [{"text": "null"}], "toolUseId": "tooluse_ICjt_ah4RqmVwHhKQ2eQ_w",
+        "status": "success"}}]}], "system": [{"text": "\nYou are diligent form generation
+        assistant specializing in turning PDFs and\nCSVs into SurveyJS form schema.\n\nYou
+        will be given file contents, use the provided tools to write the contents\nto
+        the form schema.\n\nThe order in which the form is built is important, for complex
+        operations\nrequiring multiple tool calls, break the steps down and execute
+        one at a time.\n"}], "inferenceConfig": {}, "toolConfig": {"tools": [{"toolSpec":
+        {"name": "add_new_page_to_schema", "description": "Adds a new page to the SurveyJS
+        form schema.", "inputSchema": {"json": {"properties": {"page_name": {"type":
+        "string"}, "page_title": {"type": "string"}, "elements": {"anyOf": [{"items":
+        {"additionalProperties": true, "type": "object"}, "type": "array"}, {"type":
+        "null"}], "default": null}}, "required": ["page_name", "page_title"], "type":
+        "object"}}}}, {"toolSpec": {"name": "append_elements_to_existing_page", "description":
+        "Append elements to an existing page in the form schema.", "inputSchema": {"json":
+        {"properties": {"page_name": {"type": "string"}, "elements": {"anyOf": [{"items":
+        {"additionalProperties": true, "type": "object"}, "type": "array"}, {"type":
+        "null"}], "default": null}}, "required": ["page_name"], "type": "object"}}}}]}}'
       headers:
         Content-Length:
-          - '2204'
+          - '2183'
         Content-Type:
           - !!binary |
             YXBwbGljYXRpb24vanNvbg==
         User-Agent:
           - !!binary |
             Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
-            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjcgbWQvcHlpbXBsI0NQeXRob24gbS9ELGIs
-            WiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjMgbWQvcHlpbXBsI0NQeXRob24gbS9aLEQs
+            YiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
             cms6bGFuZ2NoYWluLWF3cw==
         X-Amz-Date:
           - !!binary |
-            MjAyNTExMjFUMjM0NzI1Wg==
+            MjAyNTExMjhUMjM1ODU3Wg==
         amz-sdk-invocation-id:
           - !!binary |
-            NzAzMTlkMzItMDE3Ny00NTYzLTljZmItZDNhMjYxNjFhODhm
+            ZjA4MzFjYzgtZjI4OC00OTQwLWEwZjAtZTljMmM5ZTc1ZThi
         amz-sdk-request:
           - !!binary |
             YXR0ZW1wdD0x
@@ -120,22 +120,22 @@ interactions:
     response:
       body:
         string:
-          '{"metrics":{"latencyMs":2930},"output":{"message":{"content":[{"text":"Perfect!
+          '{"metrics":{"latencyMs":2767},"output":{"message":{"content":[{"text":"Perfect!
           I''ve successfully converted the CSV document into a SurveyJS form with:\n\n-
-          **Page Title**: \"Simple Form\"\n- **Question 1 (q1)**: \"First name\" - configured
-          as a text input field\n\nThe form is now ready and preserves the exact wording
-          from your CSV document."}],"role":"assistant"}},"stopReason":"end_turn","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1090,"outputTokens":73,"serverToolUsage":{},"totalTokens":1163}}'
+          **Page Title**: \"Simple Form\"\n- **Question (q1)**: \"First name\" as a
+          text field input\n\nThe form is now ready and preserves the exact wording
+          from the CSV document."}],"role":"assistant"}},"stopReason":"end_turn","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1075,"outputTokens":68,"serverToolUsage":{},"totalTokens":1143}}'
       headers:
         Connection:
           - keep-alive
         Content-Length:
-          - '589'
+          - '573'
         Content-Type:
           - application/json
         Date:
-          - Fri, 21 Nov 2025 23:47:29 GMT
+          - Fri, 28 Nov 2025 23:59:00 GMT
         x-amzn-RequestId:
-          - 4d8b3dc2-a340-4d37-ab3d-9625574dcb01
+          - c9d93203-7656-4d7f-a90b-58d5ad5ed5ac
       status:
         code: 200
         message: OK
