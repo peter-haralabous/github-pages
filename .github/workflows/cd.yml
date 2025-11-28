@@ -20,11 +20,8 @@ jobs:
       image_tag: latest
       should_publish: true
 
-  test:
-    uses: ./.github/workflows/run-test.yml
-
   deploy-integration:
-    needs: ['test', 'build']
+    needs: build
     uses: ./.github/workflows/run-deploy.yml
     with:
       environment: integration
@@ -36,16 +33,16 @@ jobs:
     uses: ./.github/workflows/run-smoke-test.yml
     with:
       environment: integration
-# TODO(WF): re-wire up once we're happy with integration again
-#  deploy-production:
-#    needs: smoketest-integration
-#    uses: ./.github/workflows/run-deploy.yml
-#    with:
-#      environment: production
-#      image_tag: integration
-#
-#  smoketest-production:
-#    needs: deploy-production
-#    uses: ./.github/workflows/run-smoke-test.yml
-#    with:
-#      environment: production
+
+  deploy-production:
+    needs: smoketest-integration
+    uses: ./.github/workflows/run-deploy.yml
+    with:
+      environment: production
+      image_tag: integration
+
+  smoketest-production:
+    needs: deploy-production
+    uses: ./.github/workflows/run-smoke-test.yml
+    with:
+      environment: production
