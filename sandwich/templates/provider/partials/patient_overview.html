@@ -14,7 +14,10 @@
             class="inline m-0 shrink-0"
             method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-md btn-outline shrink-0">Resend Invitation</button>
+        <button type="submit"
+                class="btn btn-md btn-outline hover:bg-neutral hover:text-neutral-content shrink-0">
+          Resend Invitation
+        </button>
       </form>
     </div>
   {% endif %}
