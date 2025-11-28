@@ -35,7 +35,7 @@
         <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
             data-tab-type="encounter"
             data-tab-id="{{ encounter.id }}"
-            data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+            data-tab-label="{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
           <div class="flex justify-between items-center">
             <div class="flex-1">
               <p class="font-semibold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>

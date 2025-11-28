@@ -10,60 +10,41 @@
   {% render_bundle 'survey' 'css' %}
   {% render_bundle 'survey' 'js' %}
   <style nonce="{{ request.csp_nonce }}">
-    /* Sidebar collapsed state - hide text, show icons only */
+    /* Mobile-only sidebar collapsed/expanded behavior */
     @media (max-width: 1023px) {
 
-      /* Hide text labels, badges, and right-side chevrons in collapsed state */
-      #patient-sidebar-container[data-collapsed="true"] p,
-      #patient-sidebar-container[data-collapsed="true"] span:not(.lucide):not([class*="size-"]):not(.sidebar-icon-collapsed):not(.sidebar-icon-expanded),
-      #patient-sidebar-container[data-collapsed="true"] .text-xs,
-      #patient-sidebar-container[data-collapsed="true"] .text-sm,
-      #patient-sidebar-container[data-collapsed="true"] .badge,
-      #patient-sidebar-container[data-collapsed="true"] .sidebar-content-expanded {
+      /* Helper classes for sidebar states - only active on mobile */
+      #patient-sidebar-container[data-collapsed="true"] .hide-when-collapsed {
         display: none !important;
       }
 
-      /* Hide ONLY the chevron-right icons on the right side of nav items */
-      #patient-sidebar-container[data-collapsed="true"] svg[data-lucide="chevron-right"] {
+      #patient-sidebar-container[data-collapsed="false"] .hide-when-expanded {
         display: none !important;
       }
 
-      /* Toggle button icons */
-      #patient-sidebar-container[data-collapsed="true"] .sidebar-icon-expanded {
+      #patient-sidebar-container[data-collapsed="true"] .show-when-collapsed {
+        display: flex !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="false"] .show-when-collapsed {
         display: none !important;
       }
 
-      #patient-sidebar-container[data-collapsed="true"] .sidebar-icon-collapsed {
-        display: inline !important;
-      }
-
-      /* Center icons in collapsed state */
+      /* Icon centering and gap removal in collapsed state */
       #patient-sidebar-container[data-collapsed="true"] button,
       #patient-sidebar-container[data-collapsed="true"] a {
         justify-content: center !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
 
-      /* Remove gap from icon containers in collapsed state */
       #patient-sidebar-container[data-collapsed="true"] .flex.gap-3 {
         gap: 0 !important;
       }
-    }
 
-    /* Sidebar expanded state on mobile */
-    @media (max-width: 1023px) {
+      /* Sidebar width changes */
       #patient-sidebar-container[data-collapsed="false"] {
         width: 320px !important;
-      }
-
-      /* Toggle button icons */
-      #patient-sidebar-container[data-collapsed="false"] .sidebar-icon-collapsed {
-        display: none !important;
-      }
-
-      #patient-sidebar-container[data-collapsed="false"] .sidebar-icon-expanded {
-        display: inline !important;
       }
     }
   </style>
@@ -344,7 +325,7 @@
             const icon = TAB_ICONS[tab.type] || TAB_ICONS.document;
 
             return `
-              <button class="js-tab-switch group flex rounded-md items-center gap-2 pl-4 py-2 pr-3 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'text-gray-900 bg-base-100' : 'border-transparent text-gray-600 hover:text-gray-700  hover:bg-neutral-200'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
+              <button class="js-tab-switch group flex rounded-md items-center gap-2 pl-4 py-2 pr-3 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'text-blue-800 bg-blue-100' : 'border-transparent text-gray-600 hover:text-gray-700  hover:bg-neutral-200'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
                 <span class="tab-icon shrink-0">${icon}</span>
                 <span class="tab-label truncate max-w-32">${this.escapeHtml(tab.label)}</span>
                 <span class="js-tab-close p-0.5 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity" data-tab-id="${tab.id}">

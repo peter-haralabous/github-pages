@@ -3,7 +3,7 @@
 {# Tab context - simplified header, no back button needed #}
 {% if in_tab %}
   <div class="space-y-6"
-       data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+       data-tab-label="{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
     {# Header with title, status badge, and actions #}
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -51,7 +51,7 @@
       <div class="p-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <h2 class="text-xl font-bold text-gray-900">Encounter - {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
+            <h2 class="text-xl font-bold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
             {% if encounter.active %}
               <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ encounter.get_status_display }}</span>
             {% else %}
@@ -70,7 +70,7 @@
         {# Slideout version - no outer card wrapper #}
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
-            <h2 class="text-xl font-bold text-gray-900">Encounter - {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
+            <h2 class="text-xl font-bold text-gray-900">{{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</h2>
             {% if encounter.active %}
               <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ encounter.get_status_display }}</span>
             {% else %}
@@ -88,7 +88,7 @@
         {# Encounter Details Section #}
         <section>
           <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-base-100">
               <h3 class="text-lg font-semibold text-gray-900">Encounter Details</h3>
               {% if encounter.active %}
                 <span class="badge badge-success">Active</span>

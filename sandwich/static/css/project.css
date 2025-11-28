@@ -89,6 +89,14 @@
     border-top: none;
     @apply divider;
   }
+  .divider {
+    height: 0.063rem; /* 1px */
+    overflow: hidden;
+    background-color: rgba(
+      var(--daisyui-border-color-rgb),
+      var(--tw-divide-opacity, 1)
+    );
+  }
 
   /* Fix alignment on checkboxes */
   .checkbox_wrapper {
