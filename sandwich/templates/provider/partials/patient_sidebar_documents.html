@@ -2,8 +2,7 @@
 
 <div class="bg-base-100">
   {# Header with back button #}
-  <button class="tooltip tooltip-right w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
-          data-tip="Back"
+  <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
           hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
           hx-target="#patient-sidebar"
           hx-swap="innerHTML">
@@ -16,8 +15,7 @@
   {# Documents list #}
   <ul class="flex flex-col gap-1">
     {% for document in documents %}
-      <li class="tooltip tooltip-right js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
-          data-tip="{{ document.original_filename }}"
+      <li class="js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
           data-tab-type="document"
           data-tab-id="{{ document.id }}"
           data-tab-label="{{ document.original_filename }}">

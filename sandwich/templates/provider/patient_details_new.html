@@ -47,19 +47,32 @@
         width: 320px !important;
       }
 
-      /* Hide tooltips when sidebar is expanded (labels are visible) */
-      #patient-sidebar-container[data-collapsed="false"] .tooltip::before,
-      #patient-sidebar-container[data-collapsed="false"] .tooltip::after {
+      /* Hover-to-expand: temporarily expand sidebar on hover when collapsed */
+      #patient-sidebar-container[data-collapsed="true"]:hover {
+        width: 320px !important;
+      }
+
+      /* Show labels when hovering over collapsed sidebar */
+      #patient-sidebar-container[data-collapsed="true"]:hover .hide-when-collapsed {
+        display: block !important;
+      }
+
+      /* Hide "Directories" label on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover .hide-when-expanded {
         display: none !important;
       }
-    }
 
-    /* Desktop - always hide tooltips since sidebar is always expanded */
-    @media (min-width: 1024px) {
+      /* Restore normal button alignment on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover button,
+      #patient-sidebar-container[data-collapsed="true"]:hover a {
+        justify-content: flex-start !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
 
-      #patient-sidebar .tooltip::before,
-      #patient-sidebar .tooltip::after {
-        display: none !important;
+      /* Restore gap on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover .flex.gap-3 {
+        gap: 0.75rem !important;
       }
     }
   </style>
