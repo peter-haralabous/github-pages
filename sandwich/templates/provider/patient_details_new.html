@@ -10,6 +10,15 @@
   {% render_bundle 'survey' 'css' %}
   {% render_bundle 'survey' 'js' %}
   <style nonce="{{ request.csp_nonce }}">
+    /* Empty state visibility control */
+    #workspace-empty-state[data-state="hidden"] {
+      display: none;
+    }
+
+    #workspace-empty-state[data-state="visible"] {
+      display: flex;
+    }
+
     /* Mobile-only sidebar collapsed/expanded behavior */
     @media (max-width: 1023px) {
 
@@ -85,287 +94,289 @@
 {% block topnav %}
   {% include 'provider/partials/patient_details_topnav.html' %}
 {% endblock topnav %}
-{% block content %}
-  {# Modal container for HTMX-loaded modals #}
-  <div id="add-task-modal"></div>
-  {# Main Layout: Sidebar + Content #}
-  <div class="flex -m-4 md:-m-6 gap-0">
-    {# Unified Sidebar - Responsive (collapsed on mobile, expanded on desktop) #}
-    {% include 'provider/partials/patient_details_sidenav.html' %}
-    {# Main Workspace - includes mobile patient header #}
-    {% include 'provider/partials/patient_details_workspace.html' %}
+{% block main %}
+  {# Override the default main block to remove padding and control scroll behavior #}
+  <div class="flex-1 flex flex-col overflow-hidden">
+    {# Modal container for HTMX-loaded modals #}
+    <div id="add-task-modal"></div>
+    {# Main Layout: Sidebar + Content #}
+    <div class="flex flex-1 gap-0 overflow-hidden">
+      {# Unified Sidebar - Responsive (collapsed on mobile, expanded on desktop) #}
+      {% include 'provider/partials/patient_details_sidenav.html' %}
+      {# Main Workspace - includes mobile patient header #}
+      {% include 'provider/partials/patient_details_workspace.html' %}
+    </div>
   </div>
-  {# Script for tab management and sidebar state #}
-  <script nonce="{{ request.csp_nonce }}">
-    (function() {
-      // ===========================================
-      // Tab Icons - SVG templates for each tab type
-      // ===========================================
-      const TAB_ICONS = {
-        overview: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>`,
-        encounter: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
-        form: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
-        summary: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
-        document: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`,
-        'encounters-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
-        'forms-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
-        'summaries-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
-        'documents-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`
-      };
+{% endblock main %}
+{# Script for tab management and sidebar state #}
+<script nonce="{{ request.csp_nonce }}">
+  (function() {
+    // ===========================================
+    // Tab Icons - SVG templates for each tab type
+    // ===========================================
+    const TAB_ICONS = {
+      overview: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>`,
+      encounter: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
+      form: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
+      summary: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
+      document: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`,
+      'encounters-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
+      'forms-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
+      'summaries-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
+      'documents-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`
+    };
 
-      const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>`;
+    const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>`;
 
-      // ===========================================
-      // URL Building Helpers
-      // ===========================================
-      const BASE_URL = "{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}";
-      // Build URLs with placeholder UUIDs that we'll replace at runtime
-      const ORG_ID = "{{ organization.id }}";
-      const PATIENT_ID = "{{ patient.id }}";
-      const CONTENT_URLS = {
-        overview: "{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}",
-        encounter: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/encounter/{id}/content`,
-        form: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/task/{id}`,
-        summary: "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
-        document: "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}",
-        'encounters-list': "{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}",
-        'forms-list': "{% url 'providers:patient_forms_list_content' organization_id=organization.id patient_id=patient.id %}",
-        'summaries-list': "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
-        'documents-list': "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}"
-      };
+    // ===========================================
+    // URL Building Helpers
+    // ===========================================
+    const BASE_URL = "{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}";
+    // Build URLs with placeholder UUIDs that we'll replace at runtime
+    const ORG_ID = "{{ organization.id }}";
+    const PATIENT_ID = "{{ patient.id }}";
+    const CONTENT_URLS = {
+      overview: "{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}",
+      encounter: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/encounter/{id}/content`,
+      form: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/task/{id}`,
+      summary: "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
+      document: "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}",
+      'encounters-list': "{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}",
+      'forms-list': "{% url 'providers:patient_forms_list_content' organization_id=organization.id patient_id=patient.id %}",
+      'summaries-list': "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
+      'documents-list': "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}"
+    };
 
-      // ===========================================
-      // Tab Manager
-      // ===========================================
-      const patientTabs = {
-        tabs: [], // Array of { id, type, label, loaded }
-        activeTabId: null, // Currently active tab ID
-        maxTabs: 50,
+    // ===========================================
+    // Tab Manager
+    // ===========================================
+    const patientTabs = {
+      tabs: [], // Array of { id, type, label, loaded }
+      activeTabId: null, // Currently active tab ID
+      maxTabs: 50,
 
-        // Initialize from URL hash or default state
-        init: function() {
+      // Initialize from URL hash or default state
+      init: function() {
+        this.restoreFromUrl();
+        this.render();
+        this.updateEmptyState();
+
+        // Listen for popstate to handle back/forward
+        window.addEventListener('popstate', () => {
           this.restoreFromUrl();
           this.render();
           this.updateEmptyState();
+        });
+      },
 
-          // Listen for popstate to handle back/forward
-          window.addEventListener('popstate', () => {
-            this.restoreFromUrl();
-            this.render();
-            this.updateEmptyState();
-          });
-        },
+      // Generate unique tab ID from type and resource ID
+      makeTabId: function(type, id) {
+        if (type === 'overview') return 'overview';
+        return `${type}:${id}`;
+      },
 
-        // Generate unique tab ID from type and resource ID
-        makeTabId: function(type, id) {
-          if (type === 'overview') return 'overview';
-          return `${type}:${id}`;
-        },
+      // Parse tab ID back to type and resource ID
+      parseTabId: function(tabId) {
+        if (tabId === 'overview') return {
+          type: 'overview',
+          id: 'overview'
+        };
+        const [type, id] = tabId.split(':');
+        return {
+          type,
+          id
+        };
+      },
 
-        // Parse tab ID back to type and resource ID
-        parseTabId: function(tabId) {
-          if (tabId === 'overview') return {
-            type: 'overview',
-            id: 'overview'
-          };
-          const [type, id] = tabId.split(':');
-          return {
-            type,
-            id
-          };
-        },
+      // Open a tab (or switch to it if already open)
+      openTab: function(type, id, label) {
+        const tabId = this.makeTabId(type, id);
 
-        // Open a tab (or switch to it if already open)
-        openTab: function(type, id, label) {
-          const tabId = this.makeTabId(type, id);
-
-          // Check if tab already exists
-          const existingTab = this.tabs.find(t => t.id === tabId);
-          if (existingTab) {
-            this.switchTab(tabId);
-            return;
-          }
-
-          // Check max tabs
-          if (this.tabs.length >= this.maxTabs) {
-            // Remove oldest non-active tab
-            const oldestIndex = this.tabs.findIndex(t => t.id !== this.activeTabId);
-            if (oldestIndex >= 0) {
-              this.removeTabAt(oldestIndex);
-            }
-          }
-
-          // Add new tab
-          const newTab = {
-            id: tabId,
-            type,
-            label,
-            loaded: false
-          };
-          this.tabs.push(newTab);
+        // Check if tab already exists
+        const existingTab = this.tabs.find(t => t.id === tabId);
+        if (existingTab) {
           this.switchTab(tabId);
-        },
+          return;
+        }
 
-        // Switch to an existing tab
-        switchTab: function(tabId) {
-          const tab = this.tabs.find(t => t.id === tabId);
-          if (!tab) return;
+        // Check max tabs
+        if (this.tabs.length >= this.maxTabs) {
+          // Remove oldest non-active tab
+          const oldestIndex = this.tabs.findIndex(t => t.id !== this.activeTabId);
+          if (oldestIndex >= 0) {
+            this.removeTabAt(oldestIndex);
+          }
+        }
 
-          this.activeTabId = tabId;
-          this.render();
-          this.syncUrl();
-          this.updateEmptyState();
-          this.updateSidebarHighlight();
+        // Add new tab
+        const newTab = {
+          id: tabId,
+          type,
+          label,
+          loaded: false
+        };
+        this.tabs.push(newTab);
+        this.switchTab(tabId);
+      },
 
-          // Load content if not cached
-          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
-          if (!tab.loaded || !panel) {
-            this.loadTabContent(tab);
+      // Switch to an existing tab
+      switchTab: function(tabId) {
+        const tab = this.tabs.find(t => t.id === tabId);
+        if (!tab) return;
+
+        this.activeTabId = tabId;
+        this.render();
+        this.syncUrl();
+        this.updateEmptyState();
+        this.updateSidebarHighlight();
+
+        // Load content if not cached
+        const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+        if (!tab.loaded || !panel) {
+          this.loadTabContent(tab);
+        } else {
+          this.showPanel(tabId);
+        }
+      },
+
+      // Close a tab
+      closeTab: function(tabId) {
+        const index = this.tabs.findIndex(t => t.id === tabId);
+        if (index < 0) return;
+
+        // Remove the panel from DOM
+        const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+        if (panel) panel.remove();
+
+        // Remove from tabs array
+        this.tabs.splice(index, 1);
+
+        // If closing active tab, switch to nearest
+        if (this.activeTabId === tabId) {
+          if (this.tabs.length > 0) {
+            // Switch to nearest tab (prefer right, then left)
+            const newIndex = Math.min(index, this.tabs.length - 1);
+            this.activeTabId = this.tabs[newIndex].id;
+            this.showPanel(this.activeTabId);
           } else {
-            this.showPanel(tabId);
+            this.activeTabId = null;
           }
-        },
+        }
 
-        // Close a tab
-        closeTab: function(tabId) {
-          const index = this.tabs.findIndex(t => t.id === tabId);
-          if (index < 0) return;
+        this.render();
+        this.syncUrl();
+        this.updateEmptyState();
+        this.updateSidebarHighlight();
+      },
 
-          // Remove the panel from DOM
-          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
-          if (panel) panel.remove();
+      // Remove tab at index (internal helper)
+      removeTabAt: function(index) {
+        const tab = this.tabs[index];
+        const panel = document.getElementById(`panel-${tab.id.replace(':', '-')}`);
+        if (panel) panel.remove();
+        this.tabs.splice(index, 1);
+      },
 
-          // Remove from tabs array
-          this.tabs.splice(index, 1);
+      // Load tab content via HTMX/fetch
+      loadTabContent: function(tab) {
+        const {
+          type,
+          id
+        } = this.parseTabId(tab.id);
+        let url = CONTENT_URLS[type];
 
-          // If closing active tab, switch to nearest
-          if (this.activeTabId === tabId) {
-            if (this.tabs.length > 0) {
-              // Switch to nearest tab (prefer right, then left)
-              const newIndex = Math.min(index, this.tabs.length - 1);
-              this.activeTabId = this.tabs[newIndex].id;
-              this.showPanel(this.activeTabId);
-            } else {
-              this.activeTabId = null;
-            }
-          }
+        if (type === 'encounter' || type === 'form') {
+          url = url.replace('{id}', id) + '?tab=true';
+        }
 
-          this.render();
-          this.syncUrl();
-          this.updateEmptyState();
-          this.updateSidebarHighlight();
-        },
+        // Create or get panel element
+        const panelId = `panel-${tab.id.replace(':', '-')}`;
+        let panel = document.getElementById(panelId);
 
-        // Remove tab at index (internal helper)
-        removeTabAt: function(index) {
-          const tab = this.tabs[index];
-          const panel = document.getElementById(`panel-${tab.id.replace(':', '-')}`);
-          if (panel) panel.remove();
-          this.tabs.splice(index, 1);
-        },
+        if (!panel) {
+          panel = document.createElement('div');
+          panel.id = panelId;
+          panel.className = 'workspace-panel hidden';
+          panel.dataset.tabId = tab.id;
+          document.getElementById('panel-container').appendChild(panel);
+        }
 
-        // Load tab content via HTMX/fetch
-        loadTabContent: function(tab) {
-          const {
-            type,
-            id
-          } = this.parseTabId(tab.id);
-          let url = CONTENT_URLS[type];
-
-          if (type === 'encounter' || type === 'form') {
-            url = url.replace('{id}', id) + '?tab=true';
-          }
-
-          // Create or get panel element
-          const panelId = `panel-${tab.id.replace(':', '-')}`;
-          let panel = document.getElementById(panelId);
-
-          if (!panel) {
-            panel = document.createElement('div');
-            panel.id = panelId;
-            panel.className = 'workspace-panel hidden';
-            panel.dataset.tabId = tab.id;
-            document.getElementById('panel-container').appendChild(panel);
-          }
-
-          // Show loading state
-          panel.innerHTML = `
+        // Show loading state
+        panel.innerHTML = `
             <div class="flex items-center justify-center py-20">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           `;
-          this.showPanel(tab.id);
+        this.showPanel(tab.id);
 
-          // Fetch content
-          fetch(url, {
-              headers: {
-                'HX-Request': 'true',
-                'X-CSRFToken': '{{ csrf_token }}'
-              }
-            })
-            .then(response => response.text())
-            .then(html => {
-              panel.innerHTML = html;
-              tab.loaded = true;
-              // Process any HTMX in the loaded content
-              if (window.htmx) {
-                htmx.process(panel);
-              }
-              // Extract label from loaded content if available
-              const labelEl = panel.querySelector('[data-tab-label]');
-              if (labelEl) {
-                tab.label = labelEl.dataset.tabLabel;
-                this.render();
-              }
-            })
-            .catch(err => {
-              panel.innerHTML = `
+        // Fetch content
+        fetch(url, {
+            headers: {
+              'HX-Request': 'true',
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+          .then(response => response.text())
+          .then(html => {
+            panel.innerHTML = html;
+            tab.loaded = true;
+            // Process any HTMX in the loaded content
+            if (window.htmx) {
+              htmx.process(panel);
+            }
+            // Extract label from loaded content if available
+            const labelEl = panel.querySelector('[data-tab-label]');
+            if (labelEl) {
+              tab.label = labelEl.dataset.tabLabel;
+              this.render();
+            }
+          })
+          .catch(err => {
+            panel.innerHTML = `
               <div class="flex flex-col items-center justify-center py-20 text-red-500">
                 <p>Failed to load content</p>
                 <button class="js-tab-retry mt-2 text-sm underline" data-tab-id="${tab.id}">Retry</button>
               </div>
             `;
-            });
-        },
-
-        // Show a specific panel, hide others
-        showPanel: function(tabId) {
-          const panels = document.querySelectorAll('#panel-container .workspace-panel');
-          panels.forEach(p => {
-            if (p.dataset.tabId === tabId) {
-              p.classList.remove('hidden');
-            } else {
-              p.classList.add('hidden');
-            }
           });
-        },
+      },
 
-        // Update empty state visibility
-        updateEmptyState: function() {
-          const emptyState = document.getElementById('workspace-empty-state');
-          const panelContainer = document.getElementById('panel-container');
-
-          if (this.tabs.length === 0) {
-            emptyState.classList.remove('hidden');
-            emptyState.classList.add('flex');
-            panelContainer.classList.add('hidden');
+      // Show a specific panel, hide others
+      showPanel: function(tabId) {
+        const panels = document.querySelectorAll('#panel-container .workspace-panel');
+        panels.forEach(p => {
+          if (p.dataset.tabId === tabId) {
+            p.classList.remove('hidden');
           } else {
-            emptyState.classList.add('hidden');
-            emptyState.classList.remove('flex');
-            panelContainer.classList.remove('hidden');
+            p.classList.add('hidden');
           }
-        },
+        });
+      },
 
-        // Render tab bar
-        render: function() {
-          const tabBar = document.getElementById('workspace-tab-bar');
-          if (!tabBar) return;
+      // Update empty state visibility
+      updateEmptyState: function() {
+        const emptyState = document.getElementById('workspace-empty-state');
+        const panelContainer = document.getElementById('panel-container');
 
-          tabBar.innerHTML = this.tabs.map(tab => {
-            const isActive = tab.id === this.activeTabId;
-            const icon = TAB_ICONS[tab.type] || TAB_ICONS.document;
+        if (this.tabs.length === 0) {
+          emptyState.dataset.state = 'visible';
+          panelContainer.classList.add('hidden');
+        } else {
+          emptyState.dataset.state = 'hidden';
+          panelContainer.classList.remove('hidden');
+        }
+      },
 
-            return `
+      // Render tab bar
+      render: function() {
+        const tabBar = document.getElementById('workspace-tab-bar');
+        if (!tabBar) return;
+
+        tabBar.innerHTML = this.tabs.map(tab => {
+          const isActive = tab.id === this.activeTabId;
+          const icon = TAB_ICONS[tab.type] || TAB_ICONS.document;
+
+          return `
               <button class="js-tab-switch group flex rounded-md items-center gap-2 pl-4 py-2 pr-3 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'text-blue-800 bg-blue-100' : 'border-transparent text-gray-600 hover:text-gray-700  hover:bg-neutral-200'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
                 <span class="tab-icon shrink-0">${icon}</span>
                 <span class="tab-label truncate max-w-48">${this.escapeHtml(tab.label)}</span>
@@ -374,255 +385,255 @@
                 </span>
               </button>
             `;
-          }).join('');
-        },
+        }).join('');
+      },
 
-        // Escape HTML for safe rendering
-        escapeHtml: function(text) {
-          const div = document.createElement('div');
-          div.textContent = text;
-          return div.innerHTML;
-        },
+      // Escape HTML for safe rendering
+      escapeHtml: function(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      },
 
-        // Sync state to URL hash
-        syncUrl: function() {
-          const tabsParam = this.tabs.map(t => t.id).join(',');
-          const hash = `tabs=${encodeURIComponent(tabsParam)}&active=${encodeURIComponent(this.activeTabId || '')}`;
+      // Sync state to URL hash
+      syncUrl: function() {
+        const tabsParam = this.tabs.map(t => t.id).join(',');
+        const hash = `tabs=${encodeURIComponent(tabsParam)}&active=${encodeURIComponent(this.activeTabId || '')}`;
 
-          // Update URL without triggering popstate
-          const newUrl = `${window.location.pathname}#${hash}`;
-          history.replaceState({
-            tabs: this.tabs,
-            active: this.activeTabId
-          }, '', newUrl);
-        },
+        // Update URL without triggering popstate
+        const newUrl = `${window.location.pathname}#${hash}`;
+        history.replaceState({
+          tabs: this.tabs,
+          active: this.activeTabId
+        }, '', newUrl);
+      },
 
-        // Restore state from URL hash
-        restoreFromUrl: function() {
-          const hash = window.location.hash.slice(1);
-          if (!hash) {
-            // No hash - check for legacy query params or start fresh
-            const urlParams = new URLSearchParams(window.location.search);
-            const encounterId = urlParams.get('encounter_id');
+      // Restore state from URL hash
+      restoreFromUrl: function() {
+        const hash = window.location.hash.slice(1);
+        if (!hash) {
+          // No hash - check for legacy query params or start fresh
+          const urlParams = new URLSearchParams(window.location.search);
+          const encounterId = urlParams.get('encounter_id');
 
-            if (encounterId) {
-              // Legacy URL with encounter_id - open that encounter
-              this.tabs = [];
-              this.activeTabId = null;
-              // We'll need to fetch the encounter label, for now use date placeholder
-              this.openTab('encounter', encounterId, 'Encounter');
-            }
-            return;
+          if (encounterId) {
+            // Legacy URL with encounter_id - open that encounter
+            this.tabs = [];
+            this.activeTabId = null;
+            // We'll need to fetch the encounter label, for now use date placeholder
+            this.openTab('encounter', encounterId, 'Encounter');
           }
+          return;
+        }
 
-          const params = new URLSearchParams(hash);
-          const tabsStr = params.get('tabs');
-          const activeId = params.get('active');
+        const params = new URLSearchParams(hash);
+        const tabsStr = params.get('tabs');
+        const activeId = params.get('active');
 
-          if (tabsStr) {
-            const tabIds = tabsStr.split(',').filter(Boolean);
-            this.tabs = tabIds.map(id => {
-              const {
-                type
-              } = this.parseTabId(id);
-              // Restore with placeholder label - will be updated when content loads
-              return {
-                id,
-                type,
-                label: this.getDefaultLabel(type, id),
-                loaded: false
-              };
-            });
-          }
-
-          if (activeId && this.tabs.find(t => t.id === activeId)) {
-            this.activeTabId = activeId;
-          } else if (this.tabs.length > 0) {
-            this.activeTabId = this.tabs[0].id;
-          }
-
-          // Load active tab content
-          if (this.activeTabId) {
-            const activeTab = this.tabs.find(t => t.id === this.activeTabId);
-            if (activeTab) {
-              this.loadTabContent(activeTab);
-            }
-          }
-        },
-
-        // Get default label for a tab type
-        getDefaultLabel: function(type, tabId) {
-          if (type === 'overview') return 'Overview';
-          if (type === 'encounter') return 'Encounter';
-          if (type === 'form') return 'Form';
-          if (type === 'summary') return 'Summary';
-          if (type === 'document') return 'Document';
-          if (type === 'encounters-list') return 'All Encounters';
-          if (type === 'forms-list') return 'All Forms';
-          if (type === 'summaries-list') return 'All Summaries';
-          if (type === 'documents-list') return 'All Documents';
-          return 'Tab';
-        },
-
-        // Update sidebar highlighting based on active tab
-        updateSidebarHighlight: function() {
-          if (!this.activeTabId) return;
-
-          const {
-            type,
-            id
-          } = this.parseTabId(this.activeTabId);
-
-          // Clear all highlights first
-          document.querySelectorAll('#patient-sidebar .bg-blue-100').forEach(el => {
-            el.classList.remove('bg-blue-100');
-            el.classList.add('hover:bg-gray-100');
+        if (tabsStr) {
+          const tabIds = tabsStr.split(',').filter(Boolean);
+          this.tabs = tabIds.map(id => {
+            const {
+              type
+            } = this.parseTabId(id);
+            // Restore with placeholder label - will be updated when content loads
+            return {
+              id,
+              type,
+              label: this.getDefaultLabel(type, id),
+              loaded: false
+            };
           });
-          document.querySelectorAll('#patient-sidebar .font-semibold').forEach(el => {
-            if (!el.classList.contains('text-base')) { // Don't remove from headers
-              el.classList.remove('font-semibold', 'text-gray-900');
-              el.classList.add('text-gray-700');
-            }
-          });
+        }
 
-          // Highlight based on active tab type using data attributes
-          // IMPORTANT: Only highlight items in the sidebar, not in the main content area
-          if (type === 'overview') {
-            const overviewBtn = document.querySelector('#patient-sidebar [data-tab-type="overview"]');
-            if (overviewBtn) {
-              overviewBtn.classList.add('bg-blue-100');
-              overviewBtn.classList.remove('hover:bg-gray-100');
-            }
-          } else {
-            const item = document.querySelector(`#patient-sidebar [data-tab-id="${id}"]`);
-            if (item) {
-              item.classList.add('bg-blue-100');
-              item.classList.remove('hover:bg-gray-100');
-              const textEl = item.querySelector('p');
-              if (textEl) {
-                textEl.classList.add('font-semibold', 'text-gray-900');
-                textEl.classList.remove('text-gray-700');
-              }
-            }
+        if (activeId && this.tabs.find(t => t.id === activeId)) {
+          this.activeTabId = activeId;
+        } else if (this.tabs.length > 0) {
+          this.activeTabId = this.tabs[0].id;
+        }
+
+        // Load active tab content
+        if (this.activeTabId) {
+          const activeTab = this.tabs.find(t => t.id === this.activeTabId);
+          if (activeTab) {
+            this.loadTabContent(activeTab);
           }
         }
-      };
+      },
 
-      // Expose to global scope
-      window.patientTabs = patientTabs;
+      // Get default label for a tab type
+      getDefaultLabel: function(type, tabId) {
+        if (type === 'overview') return 'Overview';
+        if (type === 'encounter') return 'Encounter';
+        if (type === 'form') return 'Form';
+        if (type === 'summary') return 'Summary';
+        if (type === 'document') return 'Document';
+        if (type === 'encounters-list') return 'All Encounters';
+        if (type === 'forms-list') return 'All Forms';
+        if (type === 'summaries-list') return 'All Summaries';
+        if (type === 'documents-list') return 'All Documents';
+        return 'Tab';
+      },
 
-      // ===========================================
-      // Event Delegation - handle all tab-related clicks
-      // ===========================================
-      document.addEventListener('click', function(e) {
-        // Handle tab open clicks (from sidebar items)
-        const openTabEl = e.target.closest('.js-open-tab');
-        if (openTabEl) {
-          e.preventDefault();
-          const type = openTabEl.dataset.tabType;
-          const id = openTabEl.dataset.tabId;
-          const label = openTabEl.dataset.tabLabel;
-          patientTabs.openTab(type, id, label);
-          return;
-        }
+      // Update sidebar highlighting based on active tab
+      updateSidebarHighlight: function() {
+        if (!this.activeTabId) return;
 
-        // Handle tab close clicks (X button on tabs)
-        const closeTabEl = e.target.closest('.js-tab-close');
-        if (closeTabEl) {
-          e.preventDefault();
-          e.stopPropagation();
-          const tabId = closeTabEl.dataset.tabId;
-          patientTabs.closeTab(tabId);
-          return;
-        }
+        const {
+          type,
+          id
+        } = this.parseTabId(this.activeTabId);
 
-        // Handle tab switch clicks (clicking on tab in tab bar)
-        const switchTabEl = e.target.closest('.js-tab-switch');
-        if (switchTabEl) {
-          e.preventDefault();
-          const tabId = switchTabEl.dataset.tabId;
-          patientTabs.switchTab(tabId);
-          return;
-        }
-
-        // Handle tab retry clicks (retry loading failed content)
-        const retryEl = e.target.closest('.js-tab-retry');
-        if (retryEl) {
-          e.preventDefault();
-          const tabId = retryEl.dataset.tabId;
-          const tab = patientTabs.tabs.find(t => t.id === tabId);
-          if (tab) {
-            patientTabs.loadTabContent(tab);
+        // Clear all highlights first
+        document.querySelectorAll('#patient-sidebar .bg-blue-100').forEach(el => {
+          el.classList.remove('bg-blue-100');
+          el.classList.add('hover:bg-gray-100');
+        });
+        document.querySelectorAll('#patient-sidebar .font-semibold').forEach(el => {
+          if (!el.classList.contains('text-base')) { // Don't remove from headers
+            el.classList.remove('font-semibold', 'text-gray-900');
+            el.classList.add('text-gray-700');
           }
-          return;
-        }
-      });
+        });
 
-      // Initialize on DOM ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => patientTabs.init());
-      } else {
-        patientTabs.init();
-      }
-    })();
-
-    // ===========================================
-    // Mobile Sidebar Toggle Management
-    // ===========================================
-    (function() {
-      const sidebar = document.getElementById('patient-sidebar-container');
-      const overlay = document.getElementById('mobile-sidebar-overlay');
-      const toggleBtn = document.getElementById('mobile-sidebar-toggle');
-
-      if (!sidebar || !overlay || !toggleBtn) return;
-
-      // Toggle sidebar expanded/collapsed state
-      function toggleSidebar() {
-        const isCollapsed = sidebar.dataset.collapsed === 'true';
-
-        if (isCollapsed) {
-          // Expand
-          sidebar.dataset.collapsed = 'false';
-          overlay.classList.remove('hidden');
-          document.body.style.overflow = 'hidden';
+        // Highlight based on active tab type using data attributes
+        // IMPORTANT: Only highlight items in the sidebar, not in the main content area
+        if (type === 'overview') {
+          const overviewBtn = document.querySelector('#patient-sidebar [data-tab-type="overview"]');
+          if (overviewBtn) {
+            overviewBtn.classList.add('bg-blue-100');
+            overviewBtn.classList.remove('hover:bg-gray-100');
+          }
         } else {
-          // Collapse
-          sidebar.dataset.collapsed = 'true';
-          overlay.classList.add('hidden');
-          document.body.style.overflow = '';
+          const item = document.querySelector(`#patient-sidebar [data-tab-id="${id}"]`);
+          if (item) {
+            item.classList.add('bg-blue-100');
+            item.classList.remove('hover:bg-gray-100');
+            const textEl = item.querySelector('p');
+            if (textEl) {
+              textEl.classList.add('font-semibold', 'text-gray-900');
+              textEl.classList.remove('text-gray-700');
+            }
+          }
         }
       }
+    };
 
-      // Toggle button click
-      toggleBtn.addEventListener('click', toggleSidebar);
+    // Expose to global scope
+    window.patientTabs = patientTabs;
 
-      // Overlay backdrop click - collapse sidebar
-      overlay.addEventListener('click', function() {
+    // ===========================================
+    // Event Delegation - handle all tab-related clicks
+    // ===========================================
+    document.addEventListener('click', function(e) {
+      // Handle tab open clicks (from sidebar items)
+      const openTabEl = e.target.closest('.js-open-tab');
+      if (openTabEl) {
+        e.preventDefault();
+        const type = openTabEl.dataset.tabType;
+        const id = openTabEl.dataset.tabId;
+        const label = openTabEl.dataset.tabLabel;
+        patientTabs.openTab(type, id, label);
+        return;
+      }
+
+      // Handle tab close clicks (X button on tabs)
+      const closeTabEl = e.target.closest('.js-tab-close');
+      if (closeTabEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        const tabId = closeTabEl.dataset.tabId;
+        patientTabs.closeTab(tabId);
+        return;
+      }
+
+      // Handle tab switch clicks (clicking on tab in tab bar)
+      const switchTabEl = e.target.closest('.js-tab-switch');
+      if (switchTabEl) {
+        e.preventDefault();
+        const tabId = switchTabEl.dataset.tabId;
+        patientTabs.switchTab(tabId);
+        return;
+      }
+
+      // Handle tab retry clicks (retry loading failed content)
+      const retryEl = e.target.closest('.js-tab-retry');
+      if (retryEl) {
+        e.preventDefault();
+        const tabId = retryEl.dataset.tabId;
+        const tab = patientTabs.tabs.find(t => t.id === tabId);
+        if (tab) {
+          patientTabs.loadTabContent(tab);
+        }
+        return;
+      }
+    });
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => patientTabs.init());
+    } else {
+      patientTabs.init();
+    }
+  })();
+
+  // ===========================================
+  // Mobile Sidebar Toggle Management
+  // ===========================================
+  (function() {
+    const sidebar = document.getElementById('patient-sidebar-container');
+    const overlay = document.getElementById('mobile-sidebar-overlay');
+    const toggleBtn = document.getElementById('mobile-sidebar-toggle');
+
+    if (!sidebar || !overlay || !toggleBtn) return;
+
+    // Toggle sidebar expanded/collapsed state
+    function toggleSidebar() {
+      const isCollapsed = sidebar.dataset.collapsed === 'true';
+
+      if (isCollapsed) {
+        // Expand
+        sidebar.dataset.collapsed = 'false';
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      } else {
+        // Collapse
         sidebar.dataset.collapsed = 'true';
         overlay.classList.add('hidden');
         document.body.style.overflow = '';
-      });
+      }
+    }
 
-      // Auto-collapse when navigation item is clicked on mobile
-      document.addEventListener('click', function(e) {
-        const tabBtn = e.target.closest('.js-open-tab');
-        if (tabBtn && sidebar.contains(tabBtn) && window.innerWidth < 1024) {
-          setTimeout(() => {
-            sidebar.dataset.collapsed = 'true';
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-          }, 100);
-        }
-      });
+    // Toggle button click
+    toggleBtn.addEventListener('click', toggleSidebar);
 
-      // Escape key to collapse
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar.dataset.collapsed === 'false') {
+    // Overlay backdrop click - collapse sidebar
+    overlay.addEventListener('click', function() {
+      sidebar.dataset.collapsed = 'true';
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+
+    // Auto-collapse when navigation item is clicked on mobile
+    document.addEventListener('click', function(e) {
+      const tabBtn = e.target.closest('.js-open-tab');
+      if (tabBtn && sidebar.contains(tabBtn) && window.innerWidth < 1024) {
+        setTimeout(() => {
           sidebar.dataset.collapsed = 'true';
           overlay.classList.add('hidden');
           document.body.style.overflow = '';
-        }
-      });
-    })();
-  </script>
+        }, 100);
+      }
+    });
+
+    // Escape key to collapse
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sidebar.dataset.collapsed === 'false') {
+        sidebar.dataset.collapsed = 'true';
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+</script>
 {% endblock content %}

@@ -1,20 +1,21 @@
 {# Main Content Area - Workspace with multi-tab support #}
-<main class="flex-1 min-w-0 flex flex-col ml-20 lg:ml-0"
+<main class="flex-1 min-w-0 flex flex-col ml-20 lg:ml-0 overflow-hidden"
       id="patient-workspace">
-  {# Mobile Patient Header - Fixed above tabs #}
-  {% include 'provider/partials/patient_details_mobile_header.html' %}
-  {# Tab bar - horizontal scrollable tabs #}
-  <div class="flex items-center border-b border-gray-200 bg-base-100 p-2 overflow-x-auto thin-scrollbar">
+  {# Mobile Patient Header - Sticky at top #}
+  <div class="sticky top-0 z-10 bg-white">{% include 'provider/partials/patient_details_mobile_header.html' %}</div>
+  {# Tab bar - Sticky below header #}
+  <div class="sticky top-0 lg:top-0 z-10 flex items-center border-b border-gray-200 bg-base-100 p-2 overflow-x-auto thin-scrollbar">
     <div id="workspace-tab-bar"
          class="flex items-center bg-neutral-100 rounded-lg p-1 gap-1">
       {# Tabs rendered dynamically by JavaScript #}
     </div>
   </div>
-  {# Tab content panels - multiple cached panels, only active one visible #}
-  <div id="workspace-panels" class="flex-1 relative">
+  {# Tab content panels - Scrollable content area #}
+  <div id="workspace-panels" class="flex-1 overflow-y-auto">
     {# Empty state - shown when no tabs are open #}
     <div id="workspace-empty-state"
-         class="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 py-20">
+         class="h-full flex-col items-center justify-center text-gray-400 py-20"
+         data-state="hidden">
       {% load lucide %}
 
       {% lucide "layout-grid" class="size-16 mb-4 opacity-50" %}
