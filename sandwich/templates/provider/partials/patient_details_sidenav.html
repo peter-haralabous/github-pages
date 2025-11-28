@@ -12,8 +12,9 @@
        data-collapsed="true">
   {# Toggle button - only visible on mobile #}
   <div class="hidden show-when-collapsed mb-3">
-    <button class="flex w-12 h-12 rounded-lg hover:bg-gray-100 show-when-collapsed items-center justify-start text-gray-600 mx-auto"
+    <button class="tooltip tooltip-right flex w-12 h-12 rounded-lg hover:bg-gray-100 show-when-collapsed items-center justify-start text-gray-600 mx-auto"
             id="mobile-sidebar-toggle"
+            data-tip="Expand sidebar"
             title="Toggle sidebar">
       <span class="show-when-collapsed mx-auto">{% lucide "chevrons-right" class="size-5 shrink-0" %}</span>
       <span class="hide-when-collapsed">{% lucide "chevrons-left" class="size-5" %}</span>

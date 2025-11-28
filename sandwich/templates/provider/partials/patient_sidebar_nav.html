@@ -5,7 +5,8 @@
     <ul class="flex flex-col gap-1">
       {# Overview - opens as a tab #}
       <li>
-        <button class="js-open-tab w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="tooltip tooltip-right js-open-tab w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tip="Overview"
                 data-tab-type="overview"
                 data-tab-id="overview"
                 data-tab-label="Overview">
@@ -19,7 +20,8 @@
       </li>
       {# Encounters folder - expands to show list #}
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="tooltip tooltip-right w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tip="Encounters"
                 hx-get="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
@@ -33,7 +35,8 @@
       </li>
       {# Forms folder - expands to show list #}
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="tooltip tooltip-right w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tip="Forms"
                 hx-get="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
@@ -47,7 +50,8 @@
       </li>
       {# Summaries folder - expands to show list #}
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="tooltip tooltip-right w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tip="Summaries"
                 hx-get="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"
@@ -61,7 +65,8 @@
       </li>
       {# Documents folder - expands to show list #}
       <li>
-        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+        <button class="tooltip tooltip-right w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tip="Documents"
                 hx-get="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
                 hx-target="#patient-sidebar"
                 hx-swap="innerHTML"

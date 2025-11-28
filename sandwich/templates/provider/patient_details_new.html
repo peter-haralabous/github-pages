@@ -46,6 +46,21 @@
       #patient-sidebar-container[data-collapsed="false"] {
         width: 320px !important;
       }
+
+      /* Hide tooltips when sidebar is expanded (labels are visible) */
+      #patient-sidebar-container[data-collapsed="false"] .tooltip::before,
+      #patient-sidebar-container[data-collapsed="false"] .tooltip::after {
+        display: none !important;
+      }
+    }
+
+    /* Desktop - always hide tooltips since sidebar is always expanded */
+    @media (min-width: 1024px) {
+
+      #patient-sidebar .tooltip::before,
+      #patient-sidebar .tooltip::after {
+        display: none !important;
+      }
     }
   </style>
 {% endblock extra_head %}

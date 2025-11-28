@@ -2,7 +2,8 @@
 
 <div class="bg-base-100">
   {# Header with back button #}
-  <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+  <button class="tooltip tooltip-right w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+          data-tip="Back"
           hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
           hx-target="#patient-sidebar"
           hx-swap="innerHTML">
@@ -13,7 +14,8 @@
   {# Forms list - clicking opens a new tab (forms navigate to task page) #}
   <ul class="flex flex-col gap-1">
     {% for task in forms %}
-      <li class="js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+      <li class="tooltip tooltip-right js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tip="{{ task.name }}"
           data-tab-type="form"
           data-tab-id="{{ task.id }}"
           data-tab-label="{{ task.name }}">

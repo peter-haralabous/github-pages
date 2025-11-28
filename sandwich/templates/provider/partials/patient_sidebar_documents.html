@@ -2,7 +2,8 @@
 
 <div class="bg-base-100">
   {# Header with back button #}
-  <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+  <button class="tooltip tooltip-right w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+          data-tip="Back"
           hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
           hx-target="#patient-sidebar"
           hx-swap="innerHTML">
@@ -15,12 +16,13 @@
   {# Documents list #}
   <ul class="flex flex-col gap-1">
     {% for document in documents %}
-      <li class="js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+      <li class="tooltip tooltip-right js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tip="{{ document.original_filename }}"
           data-tab-type="document"
           data-tab-id="{{ document.id }}"
           data-tab-label="{{ document.original_filename }}">
         {% lucide "file-text" class="size-5 text-gray-900 shrink-0" %}
-        <p class="truncate text-gray-900">{{ document.original_filename }}</p>
+        <p class="truncate text-gray-900 hide-when-collapsed">{{ document.original_filename }}</p>
       </li>
     {% empty %}
       <li class="flex h-12 items-center gap-4 hide-when-collapsed px-3">

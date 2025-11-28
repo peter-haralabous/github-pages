@@ -2,7 +2,8 @@
 
 <div class="group bg-base-100 flex flex-col gap-1">
   {# Header with back button #}
-  <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+  <button class="tooltip tooltip-right w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+          data-tip="Back"
           hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
           hx-target="#patient-sidebar"
           hx-swap="innerHTML">
@@ -15,7 +16,8 @@
   {# Encounters list #}
   <ul class="flex flex-col items-start gap-1">
     {% for encounter in encounters %}
-      <li class="js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+      <li class="tooltip tooltip-right js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tip="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}"
           data-tab-type="encounter"
           data-tab-id="{{ encounter.id }}"
           data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
