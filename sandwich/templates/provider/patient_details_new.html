@@ -469,14 +469,15 @@
           });
 
           // Highlight based on active tab type using data attributes
+          // IMPORTANT: Only highlight items in the sidebar, not in the main content area
           if (type === 'overview') {
-            const overviewBtn = document.querySelector('[data-tab-type="overview"]');
+            const overviewBtn = document.querySelector('#patient-sidebar [data-tab-type="overview"]');
             if (overviewBtn) {
               overviewBtn.classList.add('bg-blue-100');
               overviewBtn.classList.remove('hover:bg-gray-100');
             }
           } else {
-            const item = document.querySelector(`[data-tab-id="${id}"]`);
+            const item = document.querySelector(`#patient-sidebar [data-tab-id="${id}"]`);
             if (item) {
               item.classList.add('bg-blue-100');
               item.classList.remove('hover:bg-gray-100');
