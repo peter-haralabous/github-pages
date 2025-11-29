@@ -44,6 +44,9 @@
               data-save-draft-url="{{ save_draft_url }}"
               data-address-url="{{ address_autocomplete_url }}"
               data-medications-url="{{ medications_autocomplete_url }}"
+              data-file-upload-url="{% url 'core:attachment_upload' %}"
+              data-file-delete-url="{% url 'core:attachment_delete' %}"
+              data-file-fetch-url="{% url 'core:attachment_by_name' %}"
               {% if read_only %}readonly{% endif %}
             />
             {# djlint:on #}

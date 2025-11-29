@@ -1,3 +1,5 @@
+import logging
+
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseForbidden
@@ -8,9 +10,9 @@ from django.views.decorators.http import require_POST
 from django_jsonform.views import login_required
 
 from sandwich.core.models.attachment import Attachment
-from sandwich.core.service.permissions_service import ObjPerm
-from sandwich.core.service.permissions_service import authorize_objects
 from sandwich.core.util.http import AuthenticatedHttpRequest
+
+logger = logging.getLogger(__name__)
 
 
 @require_POST
@@ -46,8 +48,13 @@ def attachment_upload(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 @require_http_methods(["DELETE"])
 @login_required
-@authorize_objects([ObjPerm(Attachment, "attachment_id", ["delete_attachment"])])
-def attachment_delete(request: AuthenticatedHttpRequest, attachment: Attachment) -> HttpResponse:
+def attachment_delete(request: AuthenticatedHttpRequest) -> HttpResponse:
+    attachment_name = request.GET.get("name")
+    if not attachment_name:
+        return HttpResponseBadRequest("Missing 'name' query parameter.")
+
+    attachment = Attachment.objects.get(original_filename=attachment_name, uploaded_by=request.user)
+
     if request.user.id == attachment.uploaded_by.id and attachment.uploaded_by.has_perm(
         "delete_attachment", attachment
     ):
@@ -59,6 +66,16 @@ def attachment_delete(request: AuthenticatedHttpRequest, attachment: Attachment)
 
 @require_GET
 @login_required
-@authorize_objects([ObjPerm(Attachment, "attachment_id", ["view_attachment"])])
-def attachment_by_id(request: AuthenticatedHttpRequest, attachment: Attachment) -> HttpResponse:
-    return JsonResponse({"url": attachment.file.url})
+def attachment_by_name(request: AuthenticatedHttpRequest) -> HttpResponse:
+    attachment_name = request.GET.get("name")
+    if not attachment_name:
+        return HttpResponseBadRequest("Missing 'name' query parameter.")
+
+    attachment = Attachment.objects.get(original_filename=attachment_name, uploaded_by=request.user)
+
+    if attachment.uploaded_by.has_perm("view_attachment", attachment):
+        response = HttpResponse(attachment.file.read(), content_type=attachment.content_type)
+        response["Content-Disposition"] = f'inline; filename="{attachment.original_filename}"'
+        return response
+
+    return HttpResponseForbidden()

@@ -67,7 +67,7 @@ def test_attachment_delete(user: User):
         file=SimpleUploadedFile("to_delete.txt", b"delete me"),
     )
 
-    url = reverse("core:attachment_delete", kwargs={"attachment_id": attachment.id})
+    url = reverse("core:attachment_delete", query={"name": attachment.original_filename})
     client = Client()
     client.force_login(user)
 
@@ -85,11 +85,11 @@ def test_attachment_get_by_id(user: User) -> None:
         file=SimpleUploadedFile("fetch_me.txt", b"fetch me"),
     )
 
-    url = reverse("core:attachment_by_id", kwargs={"attachment_id": attachment.id})
+    url = reverse("core:attachment_by_name", query={"name": attachment.original_filename})
     client = Client()
     client.force_login(user)
     response = client.get(url)
 
-    data = json.loads(response.content)
-    assert "url" in data
-    assert data["url"] == attachment.file.url
+    assert response.status_code == 200
+    assert response.content == b"fetch me"
+    assert response["Content-Disposition"] == 'inline; filename="fetch_me.txt"'

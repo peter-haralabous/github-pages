@@ -14,6 +14,9 @@ export class SurveyForm extends LitElement {
   private _saveDraftUrl: string | null = null; // URL to save draft data to
   private _addressAutocompleteUrl: string | null = null; // URL for address autocomplete
   private _medicationsAutocompleteUrl: string | null = null; // URL for medications autocomplete
+  private _fileUploadUrl: string | null = null; // URL for handling file input uploads
+  private _fileDeleteUrl: string | null = null; // URL for handling deleting file uploaded with the file input
+  private _fileFetchUrl: string | null = null; // URL for handling fetching the file uploaded for the file input. used to power the preview
   private _csrfToken: string | null = null; // CSRF token for secure submissions
   model: Model | null = null;
 
@@ -70,6 +73,9 @@ export class SurveyForm extends LitElement {
     this._medicationsAutocompleteUrl = this.getAttribute(
       'data-medications-url',
     );
+    this._fileUploadUrl = this.getAttribute('data-file-upload-url');
+    this._fileDeleteUrl = this.getAttribute('data-file-delete-url');
+    this._fileFetchUrl = this.getAttribute('data-file-fetch-url');
 
     this.updateComplete.then(() => void this._initFromSchemaId());
   }
@@ -165,6 +171,106 @@ export class SurveyForm extends LitElement {
     // Set up API fetch and handling for autocomplete questions
     setupAddressAutocomplete(this.model, this._addressAutocompleteUrl);
     setupMedicationsAutocomplete(this.model, this._medicationsAutocompleteUrl);
+
+    // File upload event listeners
+    this.model.onUploadFiles.add((_, options) => {
+      const formData = new FormData();
+      options.files.forEach((file) => {
+        formData.append('file-upload', file);
+      });
+
+      if (!this._fileUploadUrl) {
+        return;
+      }
+
+      this.fetchJson(this._fileUploadUrl, {
+        method: 'POST',
+        body: formData,
+        // Override headers to exclude 'Content-Type' so
+        // the browser sets the multipart boundary
+        headers: {
+          'X-CSRFToken': this._csrfToken || '',
+        },
+      })
+        .then((data) => {
+          options.callback(
+            options.files.map((file) => {
+              const resp = data.find(
+                (d: { original_filename: string }) =>
+                  d.original_filename === file.name,
+              );
+              return {
+                file: file,
+                content: resp.url,
+                id: resp.id,
+              };
+            }),
+          );
+        })
+        .catch((error) => {
+          console.error('Error: ', error);
+          options.callback([], ['An error occurred during file upload.']);
+        });
+    });
+
+    const deleteFile = (url: string) => {
+      return fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRFToken': this._csrfToken || '',
+        },
+      }).then((resp) => {
+        if (resp.ok) {
+          return 'success';
+        }
+      });
+    };
+
+    this.model.onClearFiles.add(async (_, options) => {
+      if (!options.value || options.value.length === 0) {
+        return options.callback('success');
+      }
+      const filesToDelete = options.fileName
+        ? options.value.filter((item: File) => item.name === options.fileName)
+        : options.value;
+      if (filesToDelete.length === 0) {
+        console.error(`File with name ${options.fileName} is not found`);
+        return options.callback('error');
+      }
+      const results = await Promise.all(
+        filesToDelete.map((file: File) => {
+          const url = this._fileDeleteUrl + `?name=${file.name}`;
+          return deleteFile(url);
+        }),
+      );
+      if (results.every((res) => res === 'success')) {
+        options.callback('success');
+      } else {
+        options.callback('error');
+      }
+    });
+
+    this.model.onDownloadFile.add(async (_, options) => {
+      try {
+        const resp = await fetch(
+          this._fileFetchUrl + `?name=${options.fileValue.name}`,
+        );
+        const blob = await resp.blob();
+        const file = new File([blob], options.fileValue.name, {
+          type: options.fileValue.type,
+        });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e?.target) {
+            options.callback('success', e.target.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error: ', error);
+        options.callback('error');
+      }
+    });
 
     this.model.onAfterRenderSurvey.add(() => {
       targetEl.setAttribute('data-survey-rendered', '1');
