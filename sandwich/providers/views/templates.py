@@ -208,6 +208,7 @@ def form_template_preview(
             "form": form,
             "form_schema": form_schema,
             "address_autocomplete_url": reverse("core:address_search"),
+            "medications_autocomplete_url": reverse("core:medication_search"),
         },
     )
 
@@ -276,6 +277,7 @@ def form_edit(request: AuthenticatedHttpRequest, organization: Organization, for
             "form": form,
             "form_save_url": url,
             "address_autocomplete_url": reverse("core:address_search"),
+            "medications_autocomplete_url": reverse("core:medication_search"),
         },
     )
 

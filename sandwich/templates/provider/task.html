@@ -18,6 +18,6 @@
     {{ form_schema | json_script:"form_schema" }}
     <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data"
     {% if read_only %}readonly{% endif %}
-    data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}" data-address-url="{{ address_autocomplete_url }}" />
+    data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}" data-address-url="{{ address_autocomplete_url }}" data-medications-url="{{ medications_autocomplete_url }}" />
   </div>
 {% endblock content %}

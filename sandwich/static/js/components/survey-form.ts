@@ -3,6 +3,7 @@ import { Model } from 'survey-core';
 import CustomSandwichTheme from '../lib/survey-form-theme';
 import { registerCustomComponents } from './forms/custom-components';
 import { setupAddressAutocomplete } from '../lib/address-autocomplete';
+import { setupMedicationsAutocomplete } from '../lib/medications-autocomplete';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
@@ -12,6 +13,7 @@ export class SurveyForm extends LitElement {
   private _submitUrl: string | null = null; // URL to submit form data to
   private _saveDraftUrl: string | null = null; // URL to save draft data to
   private _addressAutocompleteUrl: string | null = null; // URL for address autocomplete
+  private _medicationsAutocompleteUrl: string | null = null; // URL for medications autocomplete
   private _csrfToken: string | null = null; // CSRF token for secure submissions
   model: Model | null = null;
 
@@ -65,6 +67,9 @@ export class SurveyForm extends LitElement {
     this._saveDraftUrl = this.getAttribute('data-save-draft-url');
     this._csrfToken = this.getAttribute('data-csrf-token');
     this._addressAutocompleteUrl = this.getAttribute('data-address-url');
+    this._medicationsAutocompleteUrl = this.getAttribute(
+      'data-medications-url',
+    );
 
     this.updateComplete.then(() => void this._initFromSchemaId());
   }
@@ -157,8 +162,9 @@ export class SurveyForm extends LitElement {
     // SurveyJson to `any` for the library boundary.
     this.model = new Model(json as any);
 
-    // Set up address autocomplete for the 'suggested_addresses' dropdown
+    // Set up API fetch and handling for autocomplete questions
     setupAddressAutocomplete(this.model, this._addressAutocompleteUrl);
+    setupMedicationsAutocomplete(this.model, this._medicationsAutocompleteUrl);
 
     this.model.onAfterRenderSurvey.add(() => {
       targetEl.setAttribute('data-survey-rendered', '1');

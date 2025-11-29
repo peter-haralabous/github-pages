@@ -70,5 +70,6 @@ def task(request: AuthenticatedHttpRequest, organization: Organization, patient:
             "submit_url": submit_url,
             "save_draft_url": save_draft_url,
             "address_autocomplete_url": reverse("core:address_search"),
+            "medications_autocomplete_url": reverse("core:medication_search"),
         },
     )
