@@ -4,7 +4,7 @@
         class="btn btn-ghost btn-sm rounded-full cursor-pointer"
         aria-label="Encounter actions menu">{% lucide "ellipsis-vertical" class="size-6" %}</button>
 <ul tabindex="0"
-    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+    class="dropdown-content menu flex flex-col gap-2 p-2 shadow bg-base-100 rounded-box w-52 mt-2">
   <li>
     <a href="{% url "providers:patient" organization_id=organization.id patient_id=patient.id %}"
        class="flex items-center gap-2">{% lucide "user" class="size-4" %} View Patient</a>
@@ -16,7 +16,8 @@
   </li>
   <li>
     <form action="{% url "providers:encounter_archive" organization_id=organization.id encounter_id=encounter.id %}"
-          method="post">
+          method="post"
+          class="m-0 px-0">
       {% csrf_token %}
       {% if encounter.status == "completed" %}
         <button type="submit"

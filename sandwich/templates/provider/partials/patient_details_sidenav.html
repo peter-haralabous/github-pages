@@ -7,22 +7,38 @@
 {# Unified Sidebar - Responsive with collapsed/expanded states #}
 {# Mobile: Fixed, collapsible (80px collapsed, 320px expanded) #}
 {# Desktop: Sticky, always expanded (320px) #}
-<aside class="fixed lg:sticky left-0 top-16 lg:top-0 bottom-0 z-40 lg:z-auto bg-base-100 border-r border-gray-200 transition-all duration-300 ease-in-out overflow-y-auto w-20 lg:w-80 lg:min-w-80 lg:self-start h-[calc(100vh-4rem)] p-4"
+<aside class="group fixed lg:sticky left-0 top-16 lg:top-0 bottom-0 z-40 lg:z-auto bg-base-100 border-r border-gray-200 transition-all duration-300 ease-in-out overflow-y-auto w-20 lg:w-80 lg:min-w-80 lg:self-start h-[calc(100vh-4rem)] p-4"
        id="patient-sidebar-container"
        data-collapsed="true">
-  {# Toggle button - only visible on mobile #}
-  <div class="hidden show-when-collapsed mb-3">
-    <button class="flex w-12 h-12 rounded-lg hover:bg-gray-100 show-when-collapsed items-center justify-start text-gray-600 mx-auto"
-            id="mobile-sidebar-toggle"
-            title="Toggle sidebar">
-      <span class="show-when-collapsed mx-auto">{% lucide "chevrons-right" class="size-5 shrink-0" %}</span>
-      <span class="hide-when-collapsed">{% lucide "chevrons-left" class="size-5" %}</span>
-    </button>
+  {# Collapsed view: Patient initials avatar + quick info icons #}
+  <div class="hidden flex-col show-when-collapsed group-hover:!hidden space-y-3 mb-3 p-2 border rounded-md border-neutral-200 bg-neutral-50">
+    {# Patient initials avatar #}
+    <div class="flex justify-center">
+      <div class="avatar placeholder">
+        <div class="flex items-center justify-center bg-info text-info-content rounded-full size-8">
+          <span class="text-sm font-semibold">{{ patient.first_name.0 }}{{ patient.last_name.0 }}</span>
+        </div>
+      </div>
+    </div>
+    {# Quick info icons #}
+    <div class="flex flex-col items-center gap-2">
+      <button class="btn btn-ghost btn-sm btn-circle"
+              title="DOB: {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }}">
+        {% lucide "calendar" class="size-4 text-gray-600 shrink-0" %}
+      </button>
+      <button class="btn btn-ghost btn-sm btn-circle"
+              title="PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}">
+        {% lucide "id-card" class="size-4 text-gray-600 shrink-0" %}
+      </button>
+      <button class="btn btn-ghost btn-sm btn-circle"
+              title="Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}">
+        {% lucide "mail" class="size-4 text-gray-600 shrink-0" %}
+      </button>
+    </div>
   </div>
   <div class="space-y-3">
     {# Patient header card - hidden when collapsed on mobile #}
     <div class="hide-when-collapsed">{% include 'provider/partials/patient_sidebar_header.html' %}</div>
-    <div class="divider hidden show-when-collapsed hide-when-expanded px-2"></div>
     {# Sidebar navigation #}
     <div id="patient-sidebar">
       {% if show_current_encounter %}
