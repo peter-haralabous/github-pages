@@ -24,9 +24,11 @@
       <form action="{% url "providers:patient_add_encounter" organization_id=organization.id patient_id=patient.id %}"
             method="post">
         {% csrf_token %}
-        <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
-           class="btn">No, view patient</a>
-        <button type="submit" class="btn btn-primary" autofocus>Yes, create encounter</button>
+        <div class="flex gap-2 w-full">
+          <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
+             class="btn flex-1">No, view patient</a>
+          <button type="submit" class="btn btn-primary flex-1" autofocus>Yes, create encounter</button>
+        </div>
       </form>
     </div>
   </div>
