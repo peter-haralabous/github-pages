@@ -35,10 +35,18 @@
     const backdrop = document.getElementById(`encounter-details-backdrop-${encounterId}`);
     if (slideout) {
       slideout.classList.add('translate-x-full');
+      // Remove from DOM after transition completes
+      setTimeout(() => {
+        slideout.remove();
+      }, 300); // Match transition duration
     }
     if (backdrop) {
       backdrop.classList.add('opacity-0', 'pointer-events-none');
       backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+      // Remove from DOM after transition completes
+      setTimeout(() => {
+        backdrop.remove();
+      }, 300); // Match transition duration
     }
   }
 
