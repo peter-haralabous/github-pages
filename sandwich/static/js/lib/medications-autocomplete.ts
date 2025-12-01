@@ -11,7 +11,7 @@ interface ItemOptions {
   value: string;
 }
 
-export async function fetchMedicationsSuggestions(
+async function fetchMedicationsSuggestions(
   url: string,
 ): Promise<MedicationResult[]> {
   try {
