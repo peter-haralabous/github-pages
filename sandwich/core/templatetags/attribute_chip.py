@@ -28,15 +28,6 @@ def attribute_chip(attribute_name, label):
                     label,
                 )
 
-        return format_html(
-            """<div style="background-color: #{};" class="w-fit rounded m-1">
-                <div style="color: #{}; mix-blend-mode: plus-lighter;" class="m-2 text-center min-w-12">{}</div>
-            </div>""",
-            color_tag,
-            color_tag,
-            label,
-        )
-
     return format_html(
         """<div class="w-fit rounded m-1">
             <div class="m-2 text-center min-w-12">{}</div>
