@@ -5,6 +5,7 @@ import { registerCustomComponents } from './forms/custom-components';
 import { setupAddressAutocomplete } from '../lib/forms/address-autocomplete';
 import { setupMedicationsAutocomplete } from '../lib/forms/medications-autocomplete';
 import { fetchJson } from '../lib/fetchJson';
+import { setupFileUploadInput } from '../lib/forms/file-upload';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
@@ -176,104 +177,11 @@ export class SurveyForm extends LitElement {
     setupMedicationsAutocomplete(this.model, this._medicationsAutocompleteUrl);
 
     // File upload event listeners
-    this.model.onUploadFiles.add((_, options) => {
-      const formData = new FormData();
-      options.files.forEach((file) => {
-        formData.append('file-upload', file);
-      });
-
-      if (!this._fileUploadUrl) {
-        return;
-      }
-
-      fetchJson(this._fileUploadUrl, {
-        method: 'POST',
-        body: formData,
-        // Override headers to exclude 'Content-Type' so
-        // the browser sets the multipart boundary
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': this._csrfToken || '',
-        },
-      })
-        .then((data) => {
-          options.callback(
-            options.files.map((file) => {
-              const resp = data.find(
-                (d: { original_filename: string }) =>
-                  d.original_filename === file.name,
-              );
-              return {
-                file: file,
-                content: resp.url,
-                id: resp.id,
-              };
-            }),
-          );
-        })
-        .catch((error) => {
-          console.error('Error: ', error);
-          options.callback([], ['An error occurred during file upload.']);
-        });
-    });
-
-    const deleteFile = (url: string) => {
-      return fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRFToken': this._csrfToken || '',
-        },
-      }).then((resp) => {
-        if (resp.ok) {
-          return 'success';
-        }
-      });
-    };
-
-    this.model.onClearFiles.add(async (_, options) => {
-      if (!options.value || options.value.length === 0) {
-        return options.callback('success');
-      }
-      const filesToDelete = options.fileName
-        ? options.value.filter((item: File) => item.name === options.fileName)
-        : options.value;
-      if (filesToDelete.length === 0) {
-        console.error(`File with name ${options.fileName} is not found`);
-        return options.callback('error');
-      }
-      const results = await Promise.all(
-        filesToDelete.map((file: File) => {
-          const url = this._fileDeleteUrl + `?name=${file.name}`;
-          return deleteFile(url);
-        }),
-      );
-      if (results.every((res) => res === 'success')) {
-        options.callback('success');
-      } else {
-        options.callback('error');
-      }
-    });
-
-    this.model.onDownloadFile.add(async (_, options) => {
-      try {
-        const resp = await fetch(
-          this._fileFetchUrl + `?name=${options.fileValue.name}`,
-        );
-        const blob = await resp.blob();
-        const file = new File([blob], options.fileValue.name, {
-          type: options.fileValue.type,
-        });
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e?.target) {
-            options.callback('success', e.target.result);
-          }
-        };
-        reader.readAsDataURL(file);
-      } catch (error) {
-        console.error('Error: ', error);
-        options.callback('error');
-      }
+    setupFileUploadInput(this.model, {
+      uploadUrl: this._fileUploadUrl,
+      deleteUrl: this._fileDeleteUrl,
+      fetchUrl: this._fileFetchUrl,
+      csrfToken: this._csrfToken,
     });
 
     this.model.onAfterRenderSurvey.add(() => {
