@@ -4,6 +4,7 @@ import CustomSandwichTheme from '../lib/forms/survey-form-theme';
 import { registerCustomComponents } from './forms/custom-components';
 import { setupAddressAutocomplete } from '../lib/forms/address-autocomplete';
 import { setupMedicationsAutocomplete } from '../lib/forms/medications-autocomplete';
+import { fetchJson } from '../lib/fetchJson';
 
 type SurveyJson = Record<string, unknown> | Array<unknown>;
 
@@ -185,12 +186,13 @@ export class SurveyForm extends LitElement {
         return;
       }
 
-      this.fetchJson(this._fileUploadUrl, {
+      fetchJson(this._fileUploadUrl, {
         method: 'POST',
         body: formData,
         // Override headers to exclude 'Content-Type' so
         // the browser sets the multipart boundary
         headers: {
+          'Content-Type': 'application/json',
           'X-CSRFToken': this._csrfToken || '',
         },
       })
@@ -302,8 +304,12 @@ export class SurveyForm extends LitElement {
           if (!this._submitUrl) return;
           isCompleting = true; // Mark as completing to avoid re-entrance
           try {
-            await this.fetchJson(this._submitUrl, {
+            await fetchJson(this._submitUrl, {
               body: JSON.stringify(sender.data),
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': this._csrfToken || '',
+              },
             });
             isCompleting = true; // Mark as completing to avoid re-entrance
             sender.doComplete();
@@ -325,8 +331,12 @@ export class SurveyForm extends LitElement {
         (async () => {
           if (!this._saveDraftUrl) return;
           try {
-            await this.fetchJson(this._saveDraftUrl, {
+            await fetchJson(this._saveDraftUrl, {
               body: JSON.stringify(sender.data),
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': this._csrfToken || '',
+              },
             });
             // Successfully saved draft
             sender.notify('Draft saved.', 'info');
@@ -345,38 +355,6 @@ export class SurveyForm extends LitElement {
     this.model.render(targetEl);
 
     return this.model;
-  }
-
-  /* Fetch JSON helper with error handling and defaults. */
-  private async fetchJson(
-    input: RequestInfo,
-    init?: RequestInit,
-  ): Promise<any> {
-    const defaults: RequestInit = {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': this._csrfToken || '',
-      },
-    };
-
-    const initWithDefaults: RequestInit = { ...defaults, ...(init || {}) };
-
-    const res = await fetch(input, initWithDefaults);
-
-    try {
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(
-          `HTTP error ${res.status}: ${res.statusText} - ${errorText}`,
-        );
-      }
-      return res.json();
-    } catch (e) {
-      console.error('[survey-form] fetchJson error:', e);
-      throw e;
-    }
   }
 
   /**
