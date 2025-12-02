@@ -22,8 +22,7 @@ def attribute_chip(attribute_name, label):
                     """
                     <div class="tooltip" data-tip="{}">
                         <div style="background-color: #{};" class="badge w-fit">
-                            <div style="mix-blend-mode: color-burn;"
-                                class="m-2 text-sm text-center min-w-10 max-w-18 truncate">{}
+                            <div class="mix-blend-color-burn m-2 text-sm text-center min-w-10 max-w-18 truncate">{}
                             </div>
                         </div>
                     </div>""",
