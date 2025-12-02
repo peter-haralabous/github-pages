@@ -71,11 +71,10 @@ def test_create_custom_select_attribute(user: User, organization: Organization) 
         "enums-TOTAL_FORMS": 1,
         "enums-INITIAL_FORMS": 0,
         "enums-0-label": "select label",
-        "enums-0-value": "test-value",
     }
     res = client.post(url, data)
 
-    verify_creation(res, organization, "test select field", "test-value", "select label")
+    verify_creation(res, organization, "test select field", "select-label", "select label")
 
 
 @pytest.mark.django_db
@@ -149,7 +148,6 @@ def test_select_attribute_requires_one_option(user: User, organization: Organiza
         "enums-TOTAL_FORMS": 1,
         "enums-INITIAL_FORMS": 0,
         "enums-0-label": "select label",
-        "enums-0-value": "test-value",
         "enums-0-DELETE": "on",
     }
     res = client.post(url, data)

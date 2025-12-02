@@ -144,10 +144,6 @@ def test_add_custom_enum(live_server, owner_page: Page, organization: Organizati
     name_field.click()
     name_field.type("Low Priority")
 
-    name_field = owner_page.locator("#id_enums-1-value")
-    name_field.click()
-    name_field.type("low")
-
     name_field = owner_page.locator("#id_enums-1-color_code")
     name_field.click()
     name_field.type("00FF00")
@@ -157,6 +153,10 @@ def test_add_custom_enum(live_server, owner_page: Page, organization: Organizati
 
     reamining_enums = CustomAttributeEnum.objects.filter(attribute=attribute.id).count()
     assert reamining_enums == 2
+
+    # Verify the value was auto-generated from the label
+    new_enum = CustomAttributeEnum.objects.get(attribute=attribute.id, label="Low Priority")
+    assert new_enum.value == "low-priority"  # Auto-generated from "Low Priority"
 
 
 @pytest.mark.e2e
@@ -206,10 +206,6 @@ def test_edit_custom_attribute_validation(live_server, owner_page: Page, organiz
     name_field.click()
     name_field.type("Low Priority")
 
-    name_field = owner_page.locator("#id_enums-1-value")
-    name_field.click()
-    name_field.type("low")
-
     name_field = owner_page.locator("#id_enums-1-color_code")
     name_field.click()
     name_field.type("00FF00")
@@ -222,5 +218,5 @@ def test_edit_custom_attribute_validation(live_server, owner_page: Page, organiz
     custom_enum = reamining_enums.first()
     assert custom_enum
     assert str(custom_enum.label) == "Low Priority"
-    assert str(custom_enum.value) == "low"
+    assert str(custom_enum.value) == "low-priority"  # Auto-generated from "Low Priority"
     assert str(custom_enum.color_code) == "00FF00"

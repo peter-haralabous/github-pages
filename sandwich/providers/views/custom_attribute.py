@@ -127,10 +127,9 @@ class CustomAttributeForm(forms.ModelForm[CustomAttribute]):
 class CustomAttributeEnumForm(forms.ModelForm[CustomAttributeEnum]):
     class Meta:
         model = CustomAttributeEnum
-        fields = ("label", "value", "color_code")
+        fields = ("label", "color_code")
         widgets = {
             "label": forms.TextInput(attrs={"class": "form-control", "placeholder": "Label"}),
-            "value": forms.TextInput(attrs={"class": "form-control", "placeholder": "Value (auto-generated)"}),
             "color_code": forms.TextInput(attrs={"class": "form-control", "placeholder": "RRGGBB"}),
         }
 
@@ -141,22 +140,22 @@ class CustomAttributeEnumForm(forms.ModelForm[CustomAttributeEnum]):
         self.helper.form_show_labels = True
 
         self.fields["label"].label = "Label"
-        self.fields["value"].label = "Value"
         self.fields["color_code"].label = "Color code"
 
-        self.fields["value"].required = False
         self.fields["color_code"].required = False
 
-    def clean(self):
-        cleaned_data = super().clean()
-        if cleaned_data is not None:
-            label = cleaned_data.get("label")
+    def save(self, commit=True):  # noqa: FBT002
+        instance = super().save(commit=False)
 
-            # Auto-generate value from label if not provided
-            if label is not None and not cleaned_data.get("value"):
-                cleaned_data["value"] = slugify(label)
+        # Auto-generate value from label if not already set
+        label = self.cleaned_data.get("label")
+        if label and not instance.value:
+            instance.value = slugify(label)
 
-        return cleaned_data
+        if commit:
+            instance.save()
+
+        return instance
 
 
 CustomAttributeEnumFormSet = forms.inlineformset_factory(

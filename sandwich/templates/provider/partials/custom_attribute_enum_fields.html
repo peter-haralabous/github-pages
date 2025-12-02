@@ -8,14 +8,16 @@
       <div class="enum-form-row card bg-base-100 shadow-sm border border-base-300 relative {% if form.cleaned_data.DELETE %}hidden{% endif %}">
         {{ form.id }}
         <button type="button"
-                class="delete-option-btn btn btn-ghost btn-sm btn-circle absolute top-3 right-3 z-10"
+                class="delete-option-btn btn btn-ghost btn-sm btn-circle absolute top-2 right-2 z-10"
                 title="Delete option">{% lucide "x" class="size-5" %}</button>
-        <div class="card-body pt-12 pr-12">
-          {% for field in form.visible_fields %}
-            {% if field.name != 'DELETE' %}
-              {% include 'tailwind/field.html' with field=field form_show_labels=True %}
-            {% endif %}
-          {% endfor %}
+        <div class="card-body pt-3 pr-10 pb-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {% for field in form.visible_fields %}
+              {% if field.name != 'DELETE' %}
+                {% include 'tailwind/field.html' with field=field form_show_labels=True %}
+              {% endif %}
+            {% endfor %}
+          </div>
           <div class="hidden">{{ form.DELETE }}</div>
         </div>
       </div>
