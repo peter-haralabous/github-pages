@@ -20,7 +20,7 @@
       {% for attr in enriched_attributes %}
         <tr class="flex flex-col gap-y-1 [&_td]:!p-0">
           <th class="text-sm text-base-content/60 font-normal text-left p-0">{{ attr.name }}</th>
-          {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-details-"|add:encounter.id|stringformat:"s"|add:"-"|add:attr.id field_name=attr.id display_value=attr.value|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
+          {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-details-"|add:encounter.id|stringformat:"s"|add:"-"|add:attr.id field_name=attr.id display_value=attr.value|default:EMPTY_VALUE_DISPLAY annotation_name=attr.id|stringformat:"s" can_edit=True encounter=encounter organization=organization %}
         </tr>
       {% endfor %}
     </tbody>
