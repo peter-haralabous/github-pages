@@ -149,6 +149,11 @@
     }
   }
 
+  /* Prevent calendar icon overlap in date inputs */
+  inline-edit-field input[type='date'] {
+    padding-right: 1.5rem;
+  }
+
   /* Health summary loading overlay */
   .summary-loading-overlay {
     display: none;
