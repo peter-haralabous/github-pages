@@ -195,14 +195,14 @@
             }
           }
 
-          // Add new tab
+          // Add new tab (prepend to left for left-to-right reading)
           const newTab = {
             id: tabId,
             type,
             label,
             loaded: false
           };
-          this.tabs.push(newTab);
+          this.tabs.unshift(newTab);
           this.switchTab(tabId);
         },
 
