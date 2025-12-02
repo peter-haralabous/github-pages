@@ -57,7 +57,7 @@ logger = logging.getLogger(__name__)
 
 def _get_paginated_summaries(encounter: Encounter, page_num: int, items_per_page: int):
     """Get paginated summaries for an encounter."""
-    summaries_qs = encounter.summary_set.all().select_related("template", "patient")
+    summaries_qs = encounter.summary_set.all().select_related("template", "patient").order_by("-created_at")
     paginator = Paginator(summaries_qs, items_per_page)
     return paginator.get_page(page_num)
 

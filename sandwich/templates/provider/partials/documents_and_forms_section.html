@@ -7,39 +7,56 @@
   </div>
   <div>
     {% if tasks_and_documents %}
-      <div class="space-y-4">
-        {% for item in tasks_and_documents %}
-          {% if item.form_version %}
-            {# This is a Task #}
-            <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=item.id %}"
-               class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
-              <div class="flex-shrink-0">{% lucide "file-pen-line" class="size-5 text-base-content/60" %}</div>
-              <div class="flex-1">
-                <div class="font-medium mb-1">{{ item.name }}</div>
-                <div class="flex items-center gap-2 text-sm">
-                  {% include 'provider/partials/task_status_badge.html' with task=item size='sm' %}
-                  <span class="text-base-content/60">• Created {{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
-                </div>
-              </div>
-              {% lucide "chevron-right" class="size-5 text-base-content/60" %}
-            </a>
-          {% else %}
-            {# This is a Document #}
-            <a href="#"
-               class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer"
-               target="_blank">
-              <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
-              <div class="flex-1">
-                <div class="font-medium mb-1">{{ item.name }}</div>
-                <div class="flex items-center gap-2 text-sm text-base-content/60">
-                  <span>{{ item.get_category_display }}</span>
-                  <span>• {{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
-                </div>
-              </div>
-              {% lucide "chevron-right" class="size-5 text-base-content/60" %}
-            </a>
-          {% endif %}
-        {% endfor %}
+      <div class="overflow-x-auto">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Created Date</th>
+              <th class="w-12"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in tasks_and_documents %}
+              {% if item.form_version %}
+                {# This is a Task #}
+                <tr class="hover">
+                  <td>
+                    <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=item.id %}"
+                       class="flex items-center gap-2">
+                      {% lucide "file-pen-line" class="size-4" %}
+                      {{ item.name }}
+                    </a>
+                  </td>
+                  <td>{% include 'provider/partials/task_status_badge.html' with task=item size='sm' %}</td>
+                  <td>{{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+                  <td class="text-right">
+                    <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=item.id %}"
+                       class="flex items-center gap-2 btn btn-sm">Details</a>
+                  </td>
+                </tr>
+              {% else %}
+                {# This is a Document #}
+                <tr class="hover">
+                  <td>
+                    <a href="#" class="flex items-center gap-2">
+                      {% lucide "file-text" class="size-4" %}
+                      {{ item.name }}
+                    </a>
+                  </td>
+                  <td>
+                    <span class="text-sm">{{ item.get_category_display }}</span>
+                  </td>
+                  <td>{{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+                  <td>
+                    <a href="#" class="flex items-center gap-2 btn btn-sm">Details</a>
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       {% if tasks_and_documents.paginator.num_pages > 1 %}
         <nav aria-label="Forms pagination" class="join mt-4">

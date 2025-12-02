@@ -7,28 +7,44 @@
   </div>
   <div>
     {% if summaries %}
-      <div class="space-y-4">
-        {% for summary in summaries %}
-          <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}{% if is_slideout %}?slideout=1{% endif %}"
-             {% if is_slideout %}hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?slideout=1" hx-target="body" hx-swap="beforeend"{% endif %}
-             class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
-            <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
-            <div class="flex-1">
-              <div class="font-medium mb-1">{{ summary.title }}</div>
-              <div class="flex items-center gap-2 text-sm">
-                {% include 'provider/partials/summary_status_badge.html' with summary=summary size='sm' %}
-                <span class="text-base-content/60">• Generated {{ summary.created_at|date:DJANGO_DATE_FORMAT }}</span>
-              </div>
-            </div>
-            {% lucide "chevron-right" class="size-5 text-base-content/60" %}
-          </a>
-        {% endfor %}
+      <div class="overflow-x-auto">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Template</th>
+              <th>Status</th>
+              <th>Generated Date</th>
+              <th class="w-12"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for summary in summaries %}
+              <tr class="hover">
+                <td>
+                  <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}{% if is_slideout %}?slideout=1{% endif %}"
+                     {% if is_slideout %}hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?slideout=1" hx-target="body" hx-swap="beforeend"{% endif %}
+                     class="flex items-center gap-2">
+                    {% lucide "file-text" class="size-4" %}
+                    {{ summary.title }}
+                  </a>
+                </td>
+                <td>{% include 'provider/partials/summary_status_badge.html' with summary=summary size='sm' %}</td>
+                <td>{{ summary.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+                <td class="text-right">
+                  <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}{% if is_slideout %}?slideout=1{% endif %}"
+                     {% if is_slideout %}hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?slideout=1" hx-target="body" hx-swap="beforeend"{% endif %}
+                     class="flex items-center gap-2 btn btn-sm">Details</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       {% if summaries.paginator.num_pages > 1 %}
         <nav aria-label="Summaries pagination" class="join mt-4">
           {% if summaries.has_previous %}
             <a class="join-item btn"
-               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.previous_page_number }}"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.previous_page_number }}{% if is_slideout %}&slideout=1{% endif %}"
                hx-target="#summaries-section"
                hx-swap="outerHTML"
                aria-label="Previous">
@@ -42,7 +58,7 @@
           <span class="join-item btn">Page {{ summaries.number }} of {{ summaries.paginator.num_pages }}</span>
           {% if summaries.has_next %}
             <a class="join-item btn"
-               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.next_page_number }}"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.next_page_number }}{% if is_slideout %}&slideout=1{% endif %}"
                hx-target="#summaries-section"
                hx-swap="outerHTML"
                aria-label="Next">

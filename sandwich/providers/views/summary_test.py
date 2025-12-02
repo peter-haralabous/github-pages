@@ -438,16 +438,16 @@ def test_summary_workflow_end_to_end(
     summaries_section = provider_page.locator("text=Summaries")
     expect(summaries_section).to_be_visible()
 
-    # 8. Find and click on the summary card
-    summary_card = provider_page.locator(f"text={summary.title}").locator("xpath=ancestor::a").first
-    expect(summary_card).to_be_visible()
+    # 8. Find and click on the summary row
+    summary_row = provider_page.locator("tr", has_text=summary.title).first
+    expect(summary_row).to_be_visible()
 
     # Verify status badge is shown
     status_badge = provider_page.locator(".badge", has_text="Succeeded")
     expect(status_badge).to_be_visible()
 
-    # Click the summary card - from patient details, this navigates to full page (not slideout)
-    summary_card.click()
+    # Click the summary row - from patient details, this navigates to full page (not slideout)
+    summary_row.click()
     provider_page.wait_for_load_state("networkidle")
 
     # 9. Verify we navigated to the full summary detail page (not slideout)
@@ -530,9 +530,9 @@ def test_summary_full_page_navigation_when_opening_multiple_summaries(
     provider_page.wait_for_load_state("networkidle")
 
     # Open first summary - should navigate to full page
-    first_summary_card = provider_page.locator(f"text={summary1.title}").locator("xpath=ancestor::a").first
-    expect(first_summary_card).to_be_visible()
-    first_summary_card.click()
+    first_summary_row = provider_page.locator("tr", has_text=summary1.title).first
+    expect(first_summary_row).to_be_visible()
+    first_summary_row.click()
     provider_page.wait_for_load_state("networkidle")
 
     # Verify we navigated to full page for first summary
@@ -549,9 +549,9 @@ def test_summary_full_page_navigation_when_opening_multiple_summaries(
     provider_page.wait_for_load_state("networkidle")
 
     # Open second summary - should also navigate to full page
-    second_summary_card = provider_page.locator(f"text={summary2.title}").locator("xpath=ancestor::a").first
-    expect(second_summary_card).to_be_visible()
-    second_summary_card.click()
+    second_summary_row = provider_page.locator("tr", has_text=summary2.title).first
+    expect(second_summary_row).to_be_visible()
+    second_summary_row.click()
     provider_page.wait_for_load_state("networkidle")
 
     # Verify we navigated to full page for second summary
