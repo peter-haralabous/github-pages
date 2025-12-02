@@ -25,7 +25,6 @@ from sandwich.core.models.invitation import Invitation
 from sandwich.core.models.invitation import InvitationStatus
 from sandwich.core.models.organization import Organization
 from sandwich.core.service.list_preference_service import save_list_view_preference
-from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.users.models import User
 
 
@@ -123,10 +122,10 @@ def test_encounter_details_includes_custom_attributes(
 
 
 @pytest.mark.django_db
-def test_encounter_details_shows_custom_attributes_with_no_value(
+def test_encounter_details_shows_none_for_custom_attributes_with_no_value(
     provider: User, organization: Organization, encounter: Encounter
 ) -> None:
-    """Test that custom attributes without values show EMPTY_VALUE_DISPLAY in context."""
+    """Test that custom attributes without values return None."""
 
     # Create a custom attribute but don't set a value
     content_type = ContentType.objects.get_for_model(Encounter)
@@ -149,7 +148,7 @@ def test_encounter_details_shows_custom_attributes_with_no_value(
     # Find the Notes attribute
     notes_attr = next((a for a in enriched_attrs if a["name"] == "Notes"), None)
     assert notes_attr is not None
-    assert notes_attr["value"] == EMPTY_VALUE_DISPLAY
+    assert notes_attr["value"] is None
 
 
 @pytest.mark.django_db

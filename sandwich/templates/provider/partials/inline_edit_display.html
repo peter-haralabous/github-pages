@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load lucide %}
 {% load attribute_chip %}
+{% load list_helpers %}
 
 <td id="{{ cell_id }}"
     {% if can_edit %}class="inline-edit-cell group hover:bg-base-200 cursor-pointer transition-colors py-1" hx-get="{% url 'providers:encounter_edit_field' organization_id=organization.id encounter_id=encounter.id field_name=field_name %}" hx-target="this" hx-swap="outerHTML" title="{% trans 'Click to edit' %}" aria-label="{% trans 'Click to edit' %} {{ display_value }}"{% endif %}
@@ -11,9 +12,13 @@
               class="flex flex-row w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
               tabindex="0"
               aria-label="Edit {{ label|default:'value' }}">
-        {% for display in display_value %}
-          {% attribute_chip annotation_name display %}
-        {% endfor %}
+        {% if display_value|is_list %}
+          {% for display in display_value %}
+            {% attribute_chip annotation_name display %}
+          {% endfor %}
+        {% else %}
+          {% attribute_chip annotation_name display_value %}
+        {% endif %}
       </button>
     {% else %}
       <button type="button"

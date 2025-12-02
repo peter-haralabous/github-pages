@@ -16,7 +16,6 @@ from sandwich.core.models import CustomAttributeValue
 from sandwich.core.models.encounter import Encounter
 from sandwich.core.models.encounter import EncounterStatus
 from sandwich.core.models.organization import Organization
-from sandwich.core.types import EMPTY_VALUE_DISPLAY
 from sandwich.providers.views.encounter import _build_edit_form_context
 from sandwich.providers.views.encounter import _get_field_display_value
 from sandwich.users.factories import UserFactory
@@ -665,23 +664,23 @@ class TestInlineEditHelperFunctions:
         assert display == "2024-12-25"
 
     @pytest.mark.django_db
-    def test_get_field_display_value_returns_placeholder_for_missing_custom_attribute(
+    def test_get_field_display_value_returns_none_for_missing_custom_attribute(
         self, encounter: Encounter, organization: Organization
     ) -> None:
-        """Test _get_field_display_value returns placeholder for non-existent custom attribute."""
+        """Test _get_field_display_value returns None for non-existent custom attribute."""
         display = _get_field_display_value(encounter, str(uuid.uuid4()), organization)
 
-        assert display == EMPTY_VALUE_DISPLAY
+        assert display is None
 
     @pytest.mark.django_db
-    def test_get_field_display_value_returns_placeholder_for_unset_custom_attribute(
+    def test_get_field_display_value_returns_none_for_unset_custom_attribute(
         self, encounter: Encounter, organization: Organization, enum_attribute: CustomAttribute
     ) -> None:
-        """Test _get_field_display_value returns placeholder when custom attribute has no value."""
+        """Test _get_field_display_value returns None when custom attribute has no value."""
         # Don't set any value
         display = _get_field_display_value(encounter, str(enum_attribute.id), organization)
 
-        assert display == EMPTY_VALUE_DISPLAY
+        assert display is None
 
     @pytest.mark.django_db
     def test_get_field_display_value_for_multi_valued_enum_attribute(
@@ -698,16 +697,16 @@ class TestInlineEditHelperFunctions:
 
         display = _get_field_display_value(encounter, str(multi_enum_attribute.id), organization)
 
-        assert display == "Review, Urgent"  # Alphabetical order
+        assert display == ["Review", "Urgent"]  # Alphabetical order
 
     @pytest.mark.django_db
-    def test_get_field_display_value_returns_placeholder_for_unset_multi_valued_attribute(
+    def test_get_field_display_value_returns_none_for_unset_multi_valued_attribute(
         self, encounter: Encounter, organization: Organization, multi_enum_attribute: CustomAttribute
     ) -> None:
-        """Test _get_field_display_value returns placeholder when multi-valued attribute has no values."""
+        """Test _get_field_display_value returns None when multi-valued attribute has no values."""
         display = _get_field_display_value(encounter, str(multi_enum_attribute.id), organization)
 
-        assert display == EMPTY_VALUE_DISPLAY
+        assert display is None
 
     @pytest.mark.django_db
     def test_build_edit_form_context_for_status(self, encounter: Encounter, organization: Organization) -> None:

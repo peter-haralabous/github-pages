@@ -63,7 +63,7 @@ def get_attr(obj: Any, attr_name: str) -> Any:
                 # Not a multi-select attribute or attribute not found, use annotated value
                 pass
             else:
-                return [value]
+                return value
     except (AttributeError, TypeError):
         return ""
 
@@ -77,3 +77,11 @@ def custom_attr_name(column_value: str) -> str:
     """
     attr_id = _parse_custom_attribute_id(column_value)
     return _get_annotation_field_name(attr_id) if attr_id else ""
+
+
+@register.filter
+def is_list(column_value: str | list[str]) -> bool:
+    """
+    Determines whether or not column value is a string or a list of strings
+    """
+    return isinstance(column_value, list)
