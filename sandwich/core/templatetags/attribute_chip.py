@@ -19,18 +19,27 @@ def attribute_chip(attribute_name, label):
 
             if color_tag:
                 return format_html(
-                    """<div style="background-color: #{};" class="w-fit rounded m-1">
-                        <div style="mix-blend-mode: color-burn;"
-                            class="m-2 text-center min-w-12">{}
+                    """
+                    <div class="tooltip" data-tip="{}">
+                        <div style="background-color: #{};" class="badge w-fit">
+                            <div style="mix-blend-mode: color-burn;"
+                                class="m-2 text-sm text-center min-w-10 max-w-18 truncate">{}
+                            </div>
                         </div>
                     </div>""",
+                    label,
                     color_tag,
                     label,
                 )
 
     return format_html(
-        """<div class="w-fit rounded m-1">
-            <div class="m-2 text-center min-w-12">{}</div>
-        </div>""",
+        """
+        <div class="tooltip" data-tip="{}">
+            <div class="w-fit">
+                <div class="m-2 text-sm text-center min-w-10 max-w-18 truncate">{}</div>
+            </div>
+        </div>
+        """,
+        label,
         label,
     )
