@@ -10,10 +10,14 @@
     <button>close</button>
   </form>
 </dialog>
-<script>
+<script nonce="{{ request.csp_nonce }}" type="module">
   (() => {
     const modal = document.getElementById("filter-modal");
     modal.showModal();
+
+    modal.addEventListener("close", () => {
+      modal.remove();
+    });
 
     const resetBtn = document.getElementById('field-filter-reset');
     const radios = document.querySelectorAll('input[name="field_id"]');
