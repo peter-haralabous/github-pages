@@ -834,9 +834,7 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(  # noqa: PLR0915
     )
 
     routine = CustomAttributeEnum.objects.create(
-        attribute=enum_attr,
-        label="Routine",
-        value="routine",
+        attribute=enum_attr, label="Routine", value="routine", color_code="F0FF00"
     )
 
     # Set initial value
@@ -903,6 +901,9 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(  # noqa: PLR0915
     # Find the inline edit cell in that container showing "Routine"
     urgency_cell = urgency_container.locator("td.inline-edit-cell")
     expect(urgency_cell).to_contain_text("Routine")
+    chip_style = urgency_cell.locator("div.m-1").get_attribute("style")
+    assert chip_style
+    assert chip_style.__contains__("background-color: #F0FF00")
 
     # Click to enter edit mode
     urgency_cell.click()
