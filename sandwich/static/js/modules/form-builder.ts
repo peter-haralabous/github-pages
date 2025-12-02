@@ -6,6 +6,7 @@ import CustomSandwichTheme from '../lib/survey-form-theme';
 import { registerCustomComponents } from '../components/forms/custom-components';
 import { setupAddressAutocomplete } from '../lib/address-autocomplete';
 import '../components/message-alert';
+import { setupMedicationsAutocomplete } from '../lib/medications-autocomplete';
 
 const ENVIRONMENT = JSON.parse(
   document.getElementById('datadog_vars')?.textContent || '{}',
@@ -88,10 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const _addressAutocompleteUrl = document
     .getElementById('form-builder-container')
     ?.getAttribute('data-address-url');
+  const _medicationsAutocompleteUrl = document
+    .getElementById('form-builder-container')
+    ?.getAttribute('data-medications-url');
 
-  creator.onSurveyInstanceSetupHandlers.add((sender, options) => {
+  creator.onSurveyInstanceSetupHandlers.add((_sender, options) => {
     if (options.area !== 'preview-tab') return;
     setupAddressAutocomplete(options.survey, _addressAutocompleteUrl ?? null);
+    setupMedicationsAutocomplete(
+      options.survey,
+      _medicationsAutocompleteUrl ?? null,
+    );
   });
 
   // Register onNotify handler to show notifications as toasts
