@@ -578,7 +578,7 @@ def test_inline_edit_custom_enum_updates_display(  # noqa: PLR0915
 
     low_priority_chip_style = priority_cell.locator("div.badge").get_attribute("style")
     assert low_priority_chip_style
-    assert low_priority_chip_style.__contains__("background-color: #00FF00")
+    assert "background-color: #00FF00" in low_priority_chip_style
 
     priority_cell.click()
 
@@ -613,7 +613,7 @@ def test_inline_edit_custom_enum_updates_display(  # noqa: PLR0915
 
     high_priority_chip_style = updated_cell.locator("div.badge").get_attribute("style")
     assert high_priority_chip_style
-    assert high_priority_chip_style.__contains__("background-color: #FF0000")
+    assert "background-color: #FF0000" in high_priority_chip_style
 
     encounter.refresh_from_db()
     attr_value = encounter.attributes.get(attribute=priority_attr)
@@ -911,7 +911,7 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(  # noqa: PLR0915
     expect(urgency_cell).to_contain_text("Routine")
     chip_style = urgency_cell.locator("div.badge").get_attribute("style")
     assert chip_style
-    assert chip_style.__contains__("background-color: #F0FF00")
+    assert "background-color: #F0FF00" in chip_style
 
     # Click to enter edit mode
     urgency_cell.click()

@@ -363,7 +363,7 @@ def _get_custom_attribute_value_display(
         )
         if attr_values.exists():
             labels = sorted([av.value_enum.label for av in attr_values if av.value_enum])
-            return labels if labels.__len__() else None
+            return labels if labels else None
         return None
 
     try:
