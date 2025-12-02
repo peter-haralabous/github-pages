@@ -1,6 +1,6 @@
 import { SurveyCreator } from 'survey-creator-js';
 import { getSurveyLicenseKey } from '../lib/forms/survey-license-keys';
-import { slk } from 'survey-core';
+import { Serializer, slk } from 'survey-core';
 import * as SurveyCore from 'survey-core';
 import CustomSandwichTheme from '../lib/forms/survey-form-theme';
 import { registerCustomComponents } from '../components/forms/custom-components';
@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Register custom components before initializing the creator.
   registerCustomComponents();
+
+  // Force file inputs to store data as binary by default.
+  Serializer.findProperty('file', 'storeDataAsText').defaultValue = false;
 
   const creator = new SurveyCreator(creatorOptions);
   creator.theme = CustomSandwichTheme;

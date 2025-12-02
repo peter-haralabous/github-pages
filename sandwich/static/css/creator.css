@@ -4,3 +4,10 @@
   --sjs-special-background: #f5f7fa; /* Background of main work area */
   --sjs-secondary-background-500: #7c95b4; /* outline colour for question cards, icon colour for icons inside the question cards */
 }
+
+/* Hide file widget's checkbox to store files as text in json schema.
+We don't want users to toggle this option. This option is forced to false in form builder and renderer.
+*/
+[data-key='storeDataAsText0'] {
+  display: none;
+}

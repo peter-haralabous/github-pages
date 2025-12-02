@@ -1,5 +1,5 @@
 import { LitElement, html, type TemplateResult } from 'lit';
-import { Model } from 'survey-core';
+import { Model, Serializer } from 'survey-core';
 import CustomSandwichTheme from '../lib/forms/survey-form-theme';
 import { registerCustomComponents } from './forms/custom-components';
 import { setupAddressAutocomplete } from '../lib/forms/address-autocomplete';
@@ -167,6 +167,9 @@ export class SurveyForm extends LitElement {
 
     // Register custom components before initializing the survey.
     registerCustomComponents();
+
+    // Force file inputs to store data as binary by default.
+    Serializer.findProperty('file', 'storeDataAsText').defaultValue = false;
 
     // SurveyJS Model expects a loosely-typed config; cast from our safer
     // SurveyJson to `any` for the library boundary.
