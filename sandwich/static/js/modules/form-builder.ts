@@ -1,12 +1,12 @@
 import { SurveyCreator } from 'survey-creator-js';
-import { getSurveyLicenseKey } from '../lib/survey-license-keys';
+import { getSurveyLicenseKey } from '../lib/forms/survey-license-keys';
 import { slk } from 'survey-core';
 import * as SurveyCore from 'survey-core';
-import CustomSandwichTheme from '../lib/survey-form-theme';
+import CustomSandwichTheme from '../lib/forms/survey-form-theme';
 import { registerCustomComponents } from '../components/forms/custom-components';
-import { setupAddressAutocomplete } from '../lib/address-autocomplete';
+import { setupAddressAutocomplete } from '../lib/forms/address-autocomplete';
 import '../components/message-alert';
-import { setupMedicationsAutocomplete } from '../lib/medications-autocomplete';
+import { setupMedicationsAutocomplete } from '../lib/forms/medications-autocomplete';
 
 const ENVIRONMENT = JSON.parse(
   document.getElementById('datadog_vars')?.textContent || '{}',
