@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from uuid import UUID
 
+    from sandwich.core.models.abstract import BaseModel
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -53,28 +55,35 @@ from sandwich.providers.views.list_view_state import maybe_redirect_with_saved_f
 logger = logging.getLogger(__name__)
 
 
-@login_required
-@authorize_objects(
-    [
-        ObjPerm(Organization, "organization_id", ["view_organization"]),
-        ObjPerm(Encounter, "encounter_id", ["view_encounter"]),
-    ]
-)
-def encounter_details(
-    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
-) -> HttpResponse:
-    patient = encounter.patient
-    tasks = ordered_tasks_for_encounter(encounter)
-    documents = encounter.document_set.all()
-    other_encounters = patient.encounter_set.exclude(id=encounter.id)
-    pending_invitation = get_unaccepted_invitation(patient)
+def _get_paginated_summaries(encounter: Encounter, page_num: int, items_per_page: int):
+    """Get paginated summaries for an encounter."""
+    summaries_qs = encounter.summary_set.all().select_related("template", "patient")
+    paginator = Paginator(summaries_qs, items_per_page)
+    return paginator.get_page(page_num)
 
-    if not request.user.has_perm("view_invitation", pending_invitation):
-        pending_invitation = None
 
-    summaries = encounter.summary_set.all().select_related("template", "patient")
+def _get_paginated_tasks_documents(encounter: Encounter, page_num: int, items_per_page: int):
+    """Get paginated forms (tasks + documents combined) for an encounter."""
+    tasks_list: list[BaseModel] = list(ordered_tasks_for_encounter(encounter))
+    documents_list: list[BaseModel] = list(encounter.document_set.all())
+    forms_combined = sorted(
+        tasks_list + documents_list,
+        key=lambda item: item.created_at,
+        reverse=True,
+    )
+    paginator = Paginator(forms_combined, items_per_page)
+    return paginator.get_page(page_num)
 
-    # Get custom attributes for encounters in this organization
+
+def _get_paginated_other_encounters(patient: Patient, current_encounter_id, page_num: int, items_per_page: int):
+    """Get paginated other encounters for a patient."""
+    other_encounters_qs = patient.encounter_set.exclude(id=current_encounter_id).order_by("-created_at")
+    paginator = Paginator(other_encounters_qs, items_per_page)
+    return paginator.get_page(page_num)
+
+
+def _get_enriched_attributes(encounter: Encounter, organization: Organization) -> list[dict]:
+    """Get enriched custom attributes with display values for an encounter."""
     content_type = ContentType.objects.get_for_model(Encounter)
     custom_attributes = list(
         CustomAttribute.objects.filter(
@@ -117,17 +126,57 @@ def encounter_details(
             }
         )
 
+    return enriched_attributes
+
+
+@login_required
+@authorize_objects(
+    [
+        ObjPerm(Organization, "organization_id", ["view_organization"]),
+        ObjPerm(Encounter, "encounter_id", ["view_encounter"]),
+    ]
+)
+def encounter_details(
+    request: AuthenticatedHttpRequest, organization: Organization, encounter: Encounter
+) -> HttpResponse:
+    patient = encounter.patient
+    pending_invitation = get_unaccepted_invitation(patient)
+
+    if not request.user.has_perm("view_invitation", pending_invitation):
+        pending_invitation = None
+
+    # Pagination
+    items_per_page = 5
+    summaries = _get_paginated_summaries(encounter, int(request.GET.get("summaries_page", 1)), items_per_page)
+    tasks_and_documents = _get_paginated_tasks_documents(
+        encounter, int(request.GET.get("forms_page", 1)), items_per_page
+    )
+    other_encounters = _get_paginated_other_encounters(
+        patient, encounter.id, int(request.GET.get("encounters_page", 1)), items_per_page
+    )
+
+    enriched_attributes = _get_enriched_attributes(encounter, organization)
+
     context = {
         "patient": patient,
         "organization": organization,
         "encounter": encounter,
         "other_encounters": other_encounters,
-        "tasks": tasks,
-        "documents": documents,
+        "tasks_and_documents": tasks_and_documents,
         "pending_invitation": pending_invitation,
         "enriched_attributes": enriched_attributes,
         "summaries": summaries,
+        "is_slideout": request.GET.get("slideout") is not None,
     }
+
+    # Handle HTMX requests for specific sections
+    section = request.GET.get("section")
+    if section == "summaries":
+        return render(request, "provider/partials/summaries_section.html", context)
+    if section == "forms":
+        return render(request, "provider/partials/documents_and_forms_section.html", context)
+    if section == "encounters":
+        return render(request, "provider/partials/other_encounters_section.html", context)
 
     if request.GET.get("slideout"):
         return render(request, "provider/partials/encounter_details_slideout.html", context)

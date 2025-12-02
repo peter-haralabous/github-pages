@@ -22,6 +22,11 @@ class AddTaskForm(forms.Form):
             initial=initial,
         )
         self.helper = FormHelper()
+        self.helper.attrs["hx-post"] = form_action
+        self.helper.attrs["hx-trigger"] = "submit"
+        self.helper.attrs["hx-swap"] = "outerHTML"
+        self.helper.attrs["hx-target"] = "dialog"
+
         self.helper.add_input(Submit("submit", "Assign task", css_class="btn-primary"))
 
         if form_action:

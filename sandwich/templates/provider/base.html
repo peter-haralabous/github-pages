@@ -4,11 +4,13 @@
   {% include 'provider/partials/topnav.html' %}
 {% endblock topnav %}
 {% block modal %}
+  {# djlint:off #}
   {% if organization %}
     <command-palette search-url="{% url 'providers:search' organization_id=organization.id %}">
-  </command-palette>
-  <div id="modal-container"></div>
-{% endif %}
+    </command-palette>
+    <div id="modal-container"></div>
+  {% endif %}
+  {# djlint:on #}
 {% endblock modal %}
 {% block title %}
   {% if organization %}{{ organization.name }} &middot;{% endif %}

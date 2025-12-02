@@ -1,0 +1,25 @@
+{% load static i18n %}
+{% load render_bundle from webpack_loader %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>
+      {% block title %}
+        Print - HealthConnect
+      {% endblock title %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+      {# Use main project CSS - can create separate print.css later if needed #}
+      {% render_bundle 'project' 'css' %}
+    {% endblock css %}
+  </head>
+  <body>
+    {% block content %}
+    {% endblock content %}
+  </body>
+</html>

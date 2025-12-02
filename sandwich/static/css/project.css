@@ -97,6 +97,13 @@
 }
 
 @layer utility {
+  /* Fix for Safari chat bubble overlap issue with DaisyUI chat component.
+   * This has been reported and will likely be fixed by a future DaisyUI
+   * release: https://github.com/saadeghi/daisyui/issues/3712#issuecomment-3599503502 */
+  .chat {
+    @apply auto-rows-min;
+  }
+
   /* Update DaisyUI prose styling to match desired typography */
   .prose {
     line-height: 1.4;

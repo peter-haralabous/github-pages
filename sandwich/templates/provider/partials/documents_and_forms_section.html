@@ -1,42 +1,77 @@
 {% load lucide %}
 
-<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4">
+<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4"
+     id="forms-section">
   <div class="flex justify-between items-center">
     <h3 class="m-0">Forms</h3>
   </div>
   <div>
-    {% if documents or tasks %}
+    {% if tasks_and_documents %}
       <div class="space-y-4">
-        {% for task in tasks %}
-          <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=task.id %}"
-             class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
-            <div class="flex-shrink-0">{% lucide "file-pen-line" class="size-5 text-base-content/60" %}</div>
-            <div class="flex-1">
-              <div class="font-medium mb-1">{{ task.name }}</div>
-              <div class="flex items-center gap-2 text-sm">
-                {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
-                <span class="text-base-content/60">• Created {{ task.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
+        {% for item in tasks_and_documents %}
+          {% if item.form_version %}
+            {# This is a Task #}
+            <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=item.id %}"
+               class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
+              <div class="flex-shrink-0">{% lucide "file-pen-line" class="size-5 text-base-content/60" %}</div>
+              <div class="flex-1">
+                <div class="font-medium mb-1">{{ item.name }}</div>
+                <div class="flex items-center gap-2 text-sm">
+                  {% include 'provider/partials/task_status_badge.html' with task=item size='sm' %}
+                  <span class="text-base-content/60">• Created {{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
+                </div>
               </div>
-            </div>
-            {% lucide "chevron-right" class="size-5 text-base-content/60" %}
-          </a>
-        {% endfor %}
-        {% for document in documents %}
-          <a href="#"
-             class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer"
-             target="_blank">
-            <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
-            <div class="flex-1">
-              <div class="font-medium mb-1">{{ document.name }}</div>
-              <div class="flex items-center gap-2 text-sm text-base-content/60">
-                <span>{{ document.get_category_display }}</span>
-                <span>• {{ document.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
+              {% lucide "chevron-right" class="size-5 text-base-content/60" %}
+            </a>
+          {% else %}
+            {# This is a Document #}
+            <a href="#"
+               class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer"
+               target="_blank">
+              <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
+              <div class="flex-1">
+                <div class="font-medium mb-1">{{ item.name }}</div>
+                <div class="flex items-center gap-2 text-sm text-base-content/60">
+                  <span>{{ item.get_category_display }}</span>
+                  <span>• {{ item.created_at|date:DJANGO_DATE_TIME_FORMAT }}</span>
+                </div>
               </div>
-            </div>
-            {% lucide "chevron-right" class="size-5 text-base-content/60" %}
-          </a>
+              {% lucide "chevron-right" class="size-5 text-base-content/60" %}
+            </a>
+          {% endif %}
         {% endfor %}
       </div>
+      {% if tasks_and_documents.paginator.num_pages > 1 %}
+        <nav aria-label="Forms pagination" class="join mt-4">
+          {% if tasks_and_documents.has_previous %}
+            <a class="join-item btn"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=forms&forms_page={{ tasks_and_documents.previous_page_number }}"
+               hx-target="#forms-section"
+               hx-swap="outerHTML"
+               aria-label="Previous">
+              <span aria-hidden="true">&laquo; Previous</span>
+            </a>
+          {% else %}
+            <button class="join-item btn" disabled aria-label="Previous">
+              <span aria-hidden="true">&laquo; Previous</span>
+            </button>
+          {% endif %}
+          <span class="join-item btn">Page {{ tasks_and_documents.number }} of {{ tasks_and_documents.paginator.num_pages }}</span>
+          {% if tasks_and_documents.has_next %}
+            <a class="join-item btn"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=forms&forms_page={{ tasks_and_documents.next_page_number }}"
+               hx-target="#forms-section"
+               hx-swap="outerHTML"
+               aria-label="Next">
+              <span aria-hidden="true">Next &raquo;</span>
+            </a>
+          {% else %}
+            <button class="join-item btn" disabled aria-label="Next">
+              <span aria-hidden="true">Next &raquo;</span>
+            </button>
+          {% endif %}
+        </nav>
+      {% endif %}
     {% else %}
       <div class="text-center py-8 text-base-content/60">No forms for this encounter.</div>
     {% endif %}

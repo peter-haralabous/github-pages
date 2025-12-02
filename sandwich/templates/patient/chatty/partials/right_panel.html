@@ -11,14 +11,14 @@
 {% block expand_icon %}{% lucide "panel-right-open" class="size-6" %}{% endblock expand_icon %}
 {# djlint:on #}
 {% block panel_content %}
-  <div class="overflow-y-auto px-4 pt-4 relative" id="feed-items">
-    {% include 'patient/chatty/partials/file_upload_card.html' %}
-  </div>
-  <div class="flex-1 overflow-y-auto px-4 pt-4 relative"
-       id="summary-content">
-    {# Health Summary Card - extracted to separate partial for better organization #}
-    {% include 'patient/chatty/partials/health_summary_card.html' %}
-    {# Future: additional feed items can be added here #}
+  <div class="overflow-y-auto">
+    <div class="overflow-y-auto px-4 pt-4 relative min-h-[102px]"
+         id="feed-items">{% include 'patient/chatty/partials/file_upload_card.html' %}</div>
+    <div class="overflow-y-auto px-4 relative my-4" id="summary-content">
+      {# Health Summary Card - extracted to separate partial for better organization #}
+      {% include 'patient/chatty/partials/health_summary_card.html' %}
+      {# Future: additional feed items can be added here #}
+    </div>
   </div>
 {% endblock panel_content %}
 {% block collapsed_panel_content %}

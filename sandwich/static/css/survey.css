@@ -1,4 +1,0 @@
-/* Address Autocomplete - hide second title */
-[data-name='suggested_addresses'] .sd-question__header {
-  display: none;
-}

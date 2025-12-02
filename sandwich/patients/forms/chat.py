@@ -22,8 +22,7 @@ class ChatForm(forms.Form):
                 "placeholder": "Ask a question or add notes...",
                 # Use soft wrap and CSS to force wrapping across browsers and with Tailwind
                 "wrap": "soft",
-                "class": "whitespace-pre-wrap break-words",
-                "style": "white-space: pre-wrap; overflow-wrap: anywhere;",
+                "class": "whitespace-pre-wrap break-words wrap-anywhere",
             }
         ),
     )

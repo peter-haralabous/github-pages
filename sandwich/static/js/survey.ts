@@ -1,6 +1,5 @@
 import 'survey-core/survey-core.min.css';
 import 'survey-js-ui';
-import '../css/survey.css';
 
 import { SurveyForm } from './components/survey-form';
 

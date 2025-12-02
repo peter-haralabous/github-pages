@@ -1,6 +1,7 @@
 {% load lucide %}
 
-<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4">
+<div class="flex flex-col w-full space-y-4 card card-border bg-base-100 px-6 py-4"
+     id="summaries-section">
   <div class="flex justify-between items-center">
     <h3 class="m-0">Summaries</h3>
   </div>
@@ -8,10 +9,8 @@
     {% if summaries %}
       <div class="space-y-4">
         {% for summary in summaries %}
-          <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}"
-             hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}"
-             hx-target="body"
-             hx-swap="beforeend"
+          <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}{% if is_slideout %}?slideout=1{% endif %}"
+             {% if is_slideout %}hx-get="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}?slideout=1" hx-target="body" hx-swap="beforeend"{% endif %}
              class="flex items-center gap-4 p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
             <div class="flex-shrink-0">{% lucide "file-text" class="size-5 text-base-content/60" %}</div>
             <div class="flex-1">
@@ -25,6 +24,37 @@
           </a>
         {% endfor %}
       </div>
+      {% if summaries.paginator.num_pages > 1 %}
+        <nav aria-label="Summaries pagination" class="join mt-4">
+          {% if summaries.has_previous %}
+            <a class="join-item btn"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.previous_page_number }}"
+               hx-target="#summaries-section"
+               hx-swap="outerHTML"
+               aria-label="Previous">
+              <span aria-hidden="true">&laquo; Previous</span>
+            </a>
+          {% else %}
+            <button class="join-item btn" disabled aria-label="Previous">
+              <span aria-hidden="true">&laquo; Previous</span>
+            </button>
+          {% endif %}
+          <span class="join-item btn">Page {{ summaries.number }} of {{ summaries.paginator.num_pages }}</span>
+          {% if summaries.has_next %}
+            <a class="join-item btn"
+               hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=summaries&summaries_page={{ summaries.next_page_number }}"
+               hx-target="#summaries-section"
+               hx-swap="outerHTML"
+               aria-label="Next">
+              <span aria-hidden="true">Next &raquo;</span>
+            </a>
+          {% else %}
+            <button class="join-item btn" disabled aria-label="Next">
+              <span aria-hidden="true">Next &raquo;</span>
+            </button>
+          {% endif %}
+        </nav>
+      {% endif %}
     {% else %}
       <div class="text-center py-8 text-base-content/60">
         {% if encounter %}

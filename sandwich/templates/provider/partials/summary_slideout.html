@@ -1,0 +1,104 @@
+{% load lucide %}
+
+<div id="summary-details-backdrop-{{ summary.id }}"
+     class="fixed inset-0 bg-black/50 z-[60] opacity-0 transition-opacity duration-300 pointer-events-none slideout-backdrop">
+</div>
+<div id="summary-details-modal-{{ summary.id }}"
+     class="fixed right-0 top-0 h-full w-full max-w-6xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-[70] transition-transform duration-300 translate-x-full slideout-modal">
+  <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
+    <button class="btn btn-sm btn-ghost gap-1"
+            id="back-to-details-{{ summary.id }}">
+      {% lucide "arrow-left" class="size-4" %}
+      Back to details
+    </button>
+    <div class="flex items-center gap-2">
+      <a href="{% url 'providers:summary_detail' organization_id=organization.id summary_id=summary.id %}"
+         class="btn btn-sm btn-primary">Open in full view</a>
+      <button class="btn btn-sm btn-circle btn-ghost text-xl"
+              id="close-all-{{ summary.id }}">{% lucide "x" class="size-5" %}</button>
+    </div>
+  </div>
+  <div class="flex-1 overflow-y-auto px-6 py-4 text-left">
+    {% include 'provider/partials/summary_content.html' with title_tag='h3' badge_size='sm' title_class='font-bold text-lg' %}
+  </div>
+</div>
+<script nonce="{{ request.csp_nonce }}" type="module">
+  function openSummaryDetailsSlideout(summaryId) {
+    const slideout = document.getElementById(`summary-details-modal-${summaryId}`);
+    const backdrop = document.getElementById(`summary-details-backdrop-${summaryId}`);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (slideout) {
+          slideout.classList.remove('translate-x-full');
+          slideout.classList.add('translate-x-0');
+        }
+        if (backdrop) {
+          backdrop.classList.remove('opacity-0', 'pointer-events-none');
+          backdrop.classList.add('opacity-100', 'pointer-events-auto');
+        }
+      });
+    });
+  }
+
+  function closeSummaryDetailsSlideout(summaryId) {
+    const slideout = document.getElementById(`summary-details-modal-${summaryId}`);
+    const backdrop = document.getElementById(`summary-details-backdrop-${summaryId}`);
+    if (slideout) {
+      slideout.classList.add('translate-x-full');
+      setTimeout(() => {
+        slideout.remove();
+      }, 300);
+    }
+    if (backdrop) {
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+      setTimeout(() => {
+        backdrop.remove();
+      }, 300);
+    }
+  }
+
+
+  const backButton = document.getElementById(`back-to-details-{{ summary.id }}`);
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      closeSummaryDetailsSlideout("{{ summary.id }}");
+    });
+  }
+
+  const closeAllButton = document.getElementById(`close-all-{{ summary.id }}`);
+  if (closeAllButton) {
+    closeAllButton.addEventListener('click', () => {
+      // Close all open slideouts
+      document.querySelectorAll('.slideout-modal').forEach(modal => {
+        modal.classList.add('translate-x-full');
+        setTimeout(() => {
+          modal.remove();
+        }, 300);
+      });
+      document.querySelectorAll('.slideout-backdrop').forEach(backdrop => {
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        setTimeout(() => {
+          backdrop.remove();
+        }, 300);
+      });
+    });
+  }
+
+  document.querySelectorAll(`[for="summary-details-modal-{{ summary.id }}"]`).forEach(button => {
+    button.addEventListener('click', () => {
+      closeSummaryDetailsSlideout("{{ summary.id }}");
+    });
+  });
+
+  const backdrop = document.getElementById(`summary-details-backdrop-{{ summary.id }}`);
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      closeSummaryDetailsSlideout("{{ summary.id }}");
+    });
+  }
+
+  openSummaryDetailsSlideout("{{ summary.id }}");
+</script>

@@ -279,6 +279,7 @@ def test_patient_add_task_form_submission(provider: User, organization: Organiza
     client.force_login(provider)
     form_data = {"selected_form": str(form.id)}
 
+    # Non-HTMX request should get a regular redirect
     res = client.post(
         reverse(
             "providers:patient_add_task",
@@ -310,14 +311,15 @@ def test_patient_add_task_redirects_user_to_patient_details(
         ),
         data=form_data,
         headers={
+            "HX-Request": "true",
             "HX-Current-URL": reverse(
                 "providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id}
-            )
+            ),
         },
     )
 
-    assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse(  # type: ignore[attr-defined]
+    assert res.status_code == HTTPStatus.OK
+    assert res.headers["HX-Redirect"] == reverse(
         "providers:patient",
         kwargs={"organization_id": organization.id, "patient_id": patient.id},
     )
@@ -338,14 +340,15 @@ def test_patient_add_task_redirects_user_to_encounter_details(
         ),
         data=form_data,
         headers={
+            "HX-Request": "true",
             "HX-Current-URL": reverse(
                 "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
-            )
+            ),
         },
     )
 
-    assert res.status_code == HTTPStatus.FOUND
-    assert res.url == reverse(  # type: ignore[attr-defined]
+    assert res.status_code == HTTPStatus.OK
+    assert res.headers["HX-Redirect"] == reverse(
         "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
     )
 
@@ -361,6 +364,31 @@ def test_patient_add_task_deny_access(user: User, organization: Organization, pa
     )
 
     assert res.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_patient_add_task_form_validation_error(provider: User, organization: Organization, patient: Patient) -> None:
+    """Test that form validation errors return the modal with error messages."""
+    client = Client()
+    client.force_login(provider)
+    # Submit without selecting a form (validation should fail)
+    form_data = {"selected_form": ""}
+
+    res = client.post(
+        reverse(
+            "providers:patient_add_task",
+            kwargs={"organization_id": organization.id, "patient_id": patient.id},
+        ),
+        data=form_data,
+    )
+
+    # Should return 200 with the modal containing form errors
+    assert res.status_code == HTTPStatus.OK
+    assert "provider/partials/add_task_modal.html" in [t.name for t in res.templates]
+    # Check that the response contains the modal HTML
+    assert b'id="add-task-modal"' in res.content
+    assert b"showModal()" in res.content
+    # No task should have been created
+    assert patient.task_set.count() == 0
 
 
 def test_patient_cancel_task(provider: User, patient, organization) -> None:

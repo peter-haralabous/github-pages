@@ -14,6 +14,8 @@ from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 from sandwich.core.factories.patient import PatientFactory
+from sandwich.core.factories.summary import SummaryFactory
+from sandwich.core.factories.task import TaskFactory
 from sandwich.core.models import ListViewType
 from sandwich.core.models.custom_attribute import CustomAttribute
 from sandwich.core.models.custom_attribute import CustomAttributeEnum
@@ -951,3 +953,192 @@ def test_inline_edit_custom_attribute_in_encounter_slideout(  # noqa: PLR0915
     table_urgency_cell = encounter_row.locator("td.inline-edit-cell").filter(has_text="Urgent")
     expect(table_urgency_cell).to_be_visible(timeout=2000)
     expect(table_urgency_cell).to_contain_text("Urgent")
+
+
+@pytest.mark.django_db
+def test_encounter_details_summaries_pagination(provider: User, organization: Organization, encounter: Encounter):
+    """Test that summaries are paginated correctly."""
+    # Create 15 summaries to trigger pagination (5 per page)
+    for i in range(15):
+        SummaryFactory.create(
+            patient=encounter.patient, organization=organization, encounter=encounter, title=f"Summary {i}"
+        )
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+
+    # Test first page
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.context["summaries"]) == 5
+    assert response.context["summaries"].number == 1
+    assert response.context["summaries"].paginator.num_pages == 3
+
+    # Test second page
+    response = client.get(url + "?summaries_page=2")
+    assert response.status_code == 200
+    assert len(response.context["summaries"]) == 5
+    assert response.context["summaries"].number == 2
+
+    # Test third page
+    response = client.get(url + "?summaries_page=3")
+    assert response.status_code == 200
+    assert len(response.context["summaries"]) == 5
+    assert response.context["summaries"].number == 3
+
+
+@pytest.mark.django_db
+def test_encounter_details_summaries_htmx_pagination(provider: User, organization: Organization, encounter: Encounter):
+    """Test that HTMX requests for summaries return only the section template."""
+    # Create 15 summaries
+    for _i in range(15):
+        SummaryFactory.create(patient=encounter.patient, organization=organization, encounter=encounter)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+
+    # Test HTMX request for summaries section
+    response = client.get(url + "?section=summaries&summaries_page=2", HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    assert "provider/partials/summaries_section.html" in [template.name for template in response.templates]
+    assert response.context["summaries"].number == 2
+
+
+@pytest.mark.django_db
+def test_encounter_details_forms_pagination(provider: User, organization: Organization, encounter: Encounter):
+    """Test that forms (tasks + documents combined) are paginated correctly."""
+    # Create 15 tasks to trigger pagination
+    for _i in range(15):
+        TaskFactory.create(patient=encounter.patient, encounter=encounter)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+
+    # Test first page
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.context["tasks_and_documents"]) == 5
+    assert response.context["tasks_and_documents"].number == 1
+    assert response.context["tasks_and_documents"].paginator.num_pages == 3
+
+    # Test second page
+    response = client.get(url + "?forms_page=2")
+    assert response.status_code == 200
+    assert len(response.context["tasks_and_documents"]) == 5
+    assert response.context["tasks_and_documents"].number == 2
+
+    # Test third page
+    response = client.get(url + "?forms_page=3")
+    assert response.status_code == 200
+    assert len(response.context["tasks_and_documents"]) == 5
+    assert response.context["tasks_and_documents"].number == 3
+
+
+@pytest.mark.django_db
+def test_encounter_details_forms_htmx_pagination(provider: User, organization: Organization, encounter: Encounter):
+    """Test that HTMX requests for forms return only the section template."""
+    # Create 15 tasks
+    for _i in range(15):
+        TaskFactory.create(patient=encounter.patient, encounter=encounter)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+
+    # Test HTMX request for forms section
+    response = client.get(url + "?section=forms&forms_page=2", HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    assert "provider/partials/documents_and_forms_section.html" in [template.name for template in response.templates]
+    assert response.context["tasks_and_documents"].number == 2
+
+
+@pytest.mark.django_db
+def test_encounter_details_other_encounters_pagination(provider: User, organization: Organization, patient):
+    """Test that other encounters are paginated correctly."""
+    # Create 15 encounters for the patient
+    encounters = []
+    for _i in range(15):
+        enc = Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS)
+        encounters.append(enc)
+
+    # Use the first encounter as the current one
+    current_encounter = encounters[0]
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse(
+        "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id}
+    )
+
+    # Test first page - should have 5 other encounters (excluding current one)
+    response = client.get(url)
+    assert response.status_code == 200
+    assert len(response.context["other_encounters"]) == 5
+    assert response.context["other_encounters"].number == 1
+    assert response.context["other_encounters"].paginator.num_pages == 3
+
+    # Test second page
+    response = client.get(url + "?encounters_page=2")
+    assert response.status_code == 200
+    assert len(response.context["other_encounters"]) == 5
+    assert response.context["other_encounters"].number == 2
+
+    # Test third page
+    response = client.get(url + "?encounters_page=3")
+    assert response.status_code == 200
+    assert len(response.context["other_encounters"]) == 4
+    assert response.context["other_encounters"].number == 3
+
+
+@pytest.mark.django_db
+def test_encounter_details_other_encounters_htmx_pagination(provider: User, organization: Organization, patient):
+    """Test that HTMX requests for other encounters return only the section template."""
+    # Create 15 encounters
+    encounters = []
+    for _i in range(15):
+        enc = Encounter.objects.create(patient=patient, organization=organization, status=EncounterStatus.IN_PROGRESS)
+        encounters.append(enc)
+
+    current_encounter = encounters[0]
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse(
+        "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id}
+    )
+
+    # Test HTMX request for other encounters section
+    response = client.get(url + "?section=encounters&encounters_page=2", HTTP_HX_REQUEST="true")
+    assert response.status_code == 200
+    assert "provider/partials/other_encounters_section.html" in [template.name for template in response.templates]
+    assert response.context["other_encounters"].number == 2
+
+
+@pytest.mark.django_db
+def test_encounter_details_multi_section_pagination_independence(
+    provider: User, organization: Organization, encounter: Encounter
+):
+    """Test that pagination parameters for different sections don't interfere with each other."""
+    # Create data for multiple sections
+    for _i in range(15):
+        SummaryFactory.create(patient=encounter.patient, organization=organization, encounter=encounter)
+        TaskFactory.create(patient=encounter.patient, encounter=encounter)
+
+    client = Client()
+    client.force_login(provider)
+    url = reverse("providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id})
+
+    # Test that we can navigate to different pages in different sections simultaneously
+    response = client.get(url + "?summaries_page=2&forms_page=1")
+    assert response.status_code == 200
+    assert response.context["summaries"].number == 2
+    assert response.context["tasks_and_documents"].number == 1
+
+    # Test another combination
+    response = client.get(url + "?summaries_page=1&forms_page=2")
+    assert response.status_code == 200
+    assert response.context["summaries"].number == 1
+    assert response.context["tasks_and_documents"].number == 2

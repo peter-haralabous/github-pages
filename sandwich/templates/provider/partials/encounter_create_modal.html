@@ -5,11 +5,12 @@
   <div class="modal-box">
     {% include "partials/modal_close_button.html" %}
     <div class="space-y-2">
-      <h3 class="font-bold text-lg">Create Encounter</h3>
-      <div class="alert alert-info">
-        <div class="flex items-center gap-2">
+      <h3 class="font-bold text-lg">Create an encounter for this patient?</h3>
+      <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
+         class="block">
+        <div class="alert alert-info flex items-center gap-2 hover:brightness-95 transition-colors">
           {% lucide "user" class="size-5" %}
-          <div>
+          <div class="flex-1">
             <h4 class="font-bold">Selected Patient</h4>
             <h4 class="font-semibold">{{ patient.last_name }}, {{ patient.first_name }}</h4>
             <p class="text-md">
@@ -17,19 +18,17 @@
               {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}
             </p>
           </div>
+          {% lucide "chevron-right" class="size-5" %}
         </div>
-      </div>
+      </a>
       <form action="{% url "providers:patient_add_encounter" organization_id=organization.id patient_id=patient.id %}"
             method="post">
         {% csrf_token %}
-        {% if current_encounter %}
-          <a href="{{ current_encounter.get_absolute_url }}"
-             class="btn btn-primary"
-             autofocus>View Current Encounter</a>
-          <button type="submit" class="btn">Create New Encounter</button>
-        {% else %}
-          <button type="submit" class="btn btn-primary" autofocus>Create New Encounter</button>
-        {% endif %}
+        <div class="flex gap-2 w-full">
+          <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}"
+             class="btn flex-1">No, view patient</a>
+          <button type="submit" class="btn btn-primary flex-1" autofocus>Yes, create encounter</button>
+        </div>
       </form>
     </div>
   </div>

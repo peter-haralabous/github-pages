@@ -3,17 +3,12 @@
 {% load lucide %}
 
 {% block content %}
-  <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
+  <a class="inline-flex items-center gap-2 text-gray-800 mb-6 link"
      href="{{ breadcrumb_url }}">
     {% lucide "chevron-left" class="size-4" %}
-    {{ breadcrumb_text }}
+    <span>{{ breadcrumb_text }}</span>
   </a>
   <div class="mb-6">
-    <div class="card bg-base-100 border border-base-200 shadow-sm mb-6">
-      <div class="card-body">
-        {% include 'provider/partials/summary_content.html' with title_tag='h1' badge_size='md' %}
-      </div>
-    </div>
     {% if summary.status == "processing" or summary.status == "pending" %}
       {# Show loading indicator for summaries being generated #}
       <div class="rounded-box border border-base-200 bg-base-100 p-8">
@@ -42,20 +37,11 @@
           </div>
         </div>
       </div>
-    {% else %}
-      {# Show completed summary #}
-      <div class="flex justify-end mb-6">
-        <button class="btn btn-sm btn-outline btn-primary js-copy-summary"
-                data-copy-text="{{ summary.body }}">
-          {% lucide "copy" class="size-4" %}
-          Copy Summary
-        </button>
-      </div>
-      <div class="card bg-base-100 border border-base-200 shadow-sm">
-        <div class="card-body">
-          <div class="prose max-w-none">{{ summary.body|safe }}</div>
-        </div>
-      </div>
     {% endif %}
+    <div class="card bg-base-100 border border-base-200 shadow-sm">
+      <div class="card-body">
+        {% include 'provider/partials/summary_content.html' with title_tag='h1' badge_size='md' %}
+      </div>
+    </div>
   </div>
 {% endblock content %}

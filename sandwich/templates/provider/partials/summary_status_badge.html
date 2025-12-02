@@ -1,9 +1,11 @@
-{% if summary.status == "succeeded" %}
-  <span class="badge badge-{{ size|default:'sm' }} badge-success">{{ summary.get_status_display }}</span>
-{% elif summary.status == "processing" %}
-  <span class="badge badge-{{ size|default:'sm' }} badge-warning">{{ summary.get_status_display }}</span>
-{% elif summary.status == "failed" %}
-  <span class="badge badge-{{ size|default:'sm' }} badge-error">{{ summary.get_status_display }}</span>
-{% else %}
-  <span class="badge badge-{{ size|default:'sm' }} badge-info">{{ summary.get_status_display }}</span>
-{% endif %}
+<div class="print:hidden">
+  {% if summary.status == "succeeded" %}
+    <span class="badge badge-{{ size|default:'sm' }} badge-success">{{ summary.get_status_display }}</span>
+  {% elif summary.status == "processing" %}
+    <span class="badge badge-{{ size|default:'sm' }} badge-warning">{{ summary.get_status_display }}</span>
+  {% elif summary.status == "failed" %}
+    <span class="badge badge-{{ size|default:'sm' }} badge-error">{{ summary.get_status_display }}</span>
+  {% else %}
+    <span class="badge badge-{{ size|default:'sm' }} badge-info">{{ summary.get_status_display }}</span>
+  {% endif %}
+</div>

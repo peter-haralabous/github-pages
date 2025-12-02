@@ -6,25 +6,27 @@
   <div class="flex items-center">{% include 'partials/logo.html' with size='md' link_url='/' %}</div>
 {% endblock topnav_items_start %}
 {% block topnav_items_center %}
-  <label class="input">
-    {% lucide "search" class="size-5 opacity-50" %}
-    <input class="grow"
-           type="search"
-           id="command-palette-trigger"
-           placeholder="Type a command or search..." />
-    <span class="text-sm text-gray-400"></span>
-  </label>
-  <script nonce="{{request.csp_nonce}}">
-    document.addEventListener('DOMContentLoaded', () => {
-      const trigger = document.getElementById('command-palette-trigger');
-      trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
+  {% if organization %}
+    <label class="input">
+      {% lucide "search" class="size-5 opacity-50" %}
+      <input class="grow"
+             type="search"
+             id="command-palette-trigger"
+             placeholder="Type a command or search..." />
+      <span class="text-sm text-gray-400"></span>
+    </label>
+    <script nonce="{{request.csp_nonce}}">
+      document.addEventListener('DOMContentLoaded', () => {
+        const trigger = document.getElementById('command-palette-trigger');
+        trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
 
-      trigger.addEventListener('focus', (event) => {
-        document.querySelector('command-palette').isOpen = true;
-        event.target.blur();
-      });
-    })
-  </script>
+        trigger.addEventListener('focus', (event) => {
+          document.querySelector('command-palette').isOpen = true;
+          event.target.blur();
+        });
+      })
+    </script>
+  {% endif %}
 {% endblock topnav_items_center %}
 {% block avatar_menu_title %}
   {% if organization %}

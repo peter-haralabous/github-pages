@@ -758,8 +758,8 @@ def test_ai_summary_loading_state_e2e(live_server, page: Page, organization, pro
     page.goto(f"{live_server.url}{summary_url}")
     page.wait_for_load_state("networkidle")
 
-    # Verify processing state is displayed
-    expect(page.get_by_text("Generating summary").first).to_be_visible()
+    # Verify processing state is displayed via the status badge
+    expect(page.get_by_text("Processing").first).to_be_visible()
 
     # Verify status badge shows processing
     expect(page.locator(".badge-warning").first).to_be_visible()
@@ -805,9 +805,8 @@ def test_ai_summary_error_state_e2e(live_server, page: Page, organization, provi
     page.goto(f"{live_server.url}{summary_url}")
     page.wait_for_load_state("networkidle")
 
-    # Verify error message is shown
-    expect(page.get_by_text("Summary Generation Failed")).to_be_visible()
-    expect(page.get_by_text("error occurred")).to_be_visible()
+    # Verify failed status is displayed via the status badge
+    expect(page.get_by_text("Failed").first).to_be_visible()
 
     # Verify status badge shows failed
     expect(page.locator(".badge-error")).to_be_visible()

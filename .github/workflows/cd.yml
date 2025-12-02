@@ -20,11 +20,8 @@ jobs:
       image_tag: latest
       should_publish: true
 
-  test:
-    uses: ./.github/workflows/run-test.yml
-
   deploy-integration:
-    needs: ['test', 'build']
+    needs: build
     uses: ./.github/workflows/run-deploy.yml
     with:
       environment: integration

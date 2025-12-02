@@ -8,8 +8,8 @@ import { setupAddressAutocomplete } from '../lib/address-autocomplete';
 import '../components/message-alert';
 
 const ENVIRONMENT = JSON.parse(
-  document.getElementById('environment')?.textContent || '',
-);
+  document.getElementById('datadog_vars')?.textContent || '{}',
+)['environment'];
 
 /**
  * Save the survey JSON to the given URL via POST.

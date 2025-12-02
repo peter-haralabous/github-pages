@@ -1,5 +1,3 @@
-from django.test import RequestFactory
-
 from sandwich.core.context_processors import patients_context
 from sandwich.core.context_processors import settings_context
 from sandwich.core.factories.patient import PatientFactory
@@ -7,11 +5,17 @@ from sandwich.core.util.testing import UserRequestFactory
 from sandwich.users.models import User
 
 
-def test_settings_context():
-    request = RequestFactory().get("/")
+def test_settings_context(user: User, urf: UserRequestFactory):
+    request = urf.get("/")
     context = settings_context(request)
-    assert "environment" in context
-    assert "app_version" in context
+    assert "datadog_vars" in context
+    assert "environment" in context["datadog_vars"]
+    assert "app_version" in context["datadog_vars"]
+    assert context["datadog_vars"]["user_id"] is None
+
+    user_request = urf(user).get("/")
+    context = settings_context(user_request)
+    assert context["datadog_vars"]["user_id"] == user.id
 
 
 def test_patients_context_anonymous(urf: UserRequestFactory):

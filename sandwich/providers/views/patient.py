@@ -49,6 +49,7 @@ from sandwich.core.service.task_service import cancel_task
 from sandwich.core.service.task_service import ordered_tasks_for_encounter
 from sandwich.core.service.task_service import send_task_added_email
 from sandwich.core.util.http import AuthenticatedHttpRequest
+from sandwich.core.util.http import htmx_redirect
 from sandwich.core.util.http import validate_sort
 from sandwich.core.validators.date_of_birth import valid_date_of_birth
 from sandwich.providers.forms.task import AddTaskForm
@@ -514,21 +515,23 @@ def patient_add_task(request: AuthenticatedHttpRequest, organization: Organizati
 
             messages.add_message(request, messages.SUCCESS, "Task added successfully.")
             current_url = request.headers.get("HX-Current-URL")
-            if current_url == reverse(
+            patient_url = reverse(
                 "providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id}
-            ):
-                return HttpResponseRedirect(
-                    reverse("providers:patient", kwargs={"organization_id": organization.id, "patient_id": patient.id})
-                )
-
-            return HttpResponseRedirect(
-                reverse(
-                    "providers:encounter",
-                    kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id},
-                )
             )
+            if current_url == patient_url:
+                return htmx_redirect(request, patient_url)
 
-    add_task_form = AddTaskForm(request.POST, available_forms=forms, form_action=form_action)
+            encounter_url = reverse(
+                "providers:encounter",
+                kwargs={"organization_id": organization.id, "encounter_id": current_encounter.id},
+            )
+            return htmx_redirect(request, encounter_url)
+
+        # Form validation failed - return modal with errors
+        context = {"form": add_task_form}
+        return render(request, "provider/partials/add_task_modal.html", context)
+
+    add_task_form = AddTaskForm(available_forms=forms, form_action=form_action)
     context = {"form": add_task_form}
     return render(request, "provider/partials/add_task_modal.html", context)
 

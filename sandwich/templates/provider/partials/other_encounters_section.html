@@ -1,0 +1,72 @@
+{% load lucide %}
+
+<div id="other-encounters-section">
+  {% if other_encounters %}
+    <hr />
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="m-0">Other Encounters</h3>
+    </div>
+    <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for encounter_item in other_encounters %}
+            <tr>
+              <td>{{ encounter_item.created_at }}</td>
+              <td>{{ encounter_item.ended_at|default:EMPTY_VALUE_DISPLAY }}</td>
+              <td>
+                {% if encounter_item.active %}
+                  <span class="badge badge-md badge-success">Active</span>
+                {% else %}
+                  <span class="badge badge-md badge-error">Archived</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                <a class="btn btn-sm"
+                   href="{% url "providers:encounter" encounter_id=encounter_item.id organization_id=organization.id %}">Details</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if other_encounters.paginator.num_pages > 1 %}
+      <nav aria-label="Other encounters pagination" class="join mt-4 mb-4">
+        {% if other_encounters.has_previous %}
+          <a class="join-item btn"
+             hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=encounters&encounters_page={{ other_encounters.previous_page_number }}"
+             hx-target="#other-encounters-section"
+             hx-swap="outerHTML"
+             aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </a>
+        {% else %}
+          <button class="join-item btn" disabled aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </button>
+        {% endif %}
+        <span class="join-item btn">Page {{ other_encounters.number }} of {{ other_encounters.paginator.num_pages }}</span>
+        {% if other_encounters.has_next %}
+          <a class="join-item btn"
+             hx-get="{% url 'providers:encounter' organization_id=organization.id encounter_id=encounter.id %}?section=encounters&encounters_page={{ other_encounters.next_page_number }}"
+             hx-target="#other-encounters-section"
+             hx-swap="outerHTML"
+             aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </a>
+        {% else %}
+          <button class="join-item btn" disabled aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </button>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% endif %}
+</div>

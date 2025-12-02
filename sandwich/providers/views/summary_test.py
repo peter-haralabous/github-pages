@@ -172,7 +172,7 @@ def test_summary_detail_summary_with_different_statuses(provider: User, organiza
 
 
 @pytest.mark.django_db
-def test_summary_detail_htmx_request_returns_modal(
+def test_summary_detail_htmx_request_with_slideout_parameter_returns_slideout(
     provider: User, organization: Organization, patient, encounter: Encounter
 ) -> None:
     summary = SummaryFactory.create(
@@ -188,20 +188,20 @@ def test_summary_detail_htmx_request_returns_modal(
     client.force_login(provider)
     url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
 
-    result = client.get(url, HTTP_HX_REQUEST="true")
+    result = client.get(url + "?slideout=1", HTTP_HX_REQUEST="true")
 
     assert result.status_code == 200
-    assert "provider/partials/summary_modal.html" in [template.name for template in result.templates]
-    # Modal doesn't need breadcrumb context
+    assert "provider/partials/summary_slideout.html" in [template.name for template in result.templates]
+    # Slideout doesn't need breadcrumb context
     assert "breadcrumb_url" not in result.context
     assert "breadcrumb_text" not in result.context
 
 
 @pytest.mark.django_db
-def test_summary_detail_modal_includes_cleanup_script(
+def test_summary_detail_slideout_includes_cleanup_script(
     provider: User, organization: Organization, patient, encounter: Encounter
 ) -> None:
-    """Verify that the modal includes JavaScript to remove itself from DOM when closed."""
+    """Verify that the slideout includes JavaScript to remove itself from DOM when closed."""
     summary = SummaryFactory.create(
         patient=patient,
         encounter=encounter,
@@ -215,18 +215,18 @@ def test_summary_detail_modal_includes_cleanup_script(
     client.force_login(provider)
     url = reverse("providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id})
 
-    result = client.get(url, HTTP_HX_REQUEST="true")
+    result = client.get(url + "?slideout=1", HTTP_HX_REQUEST="true")
 
     assert result.status_code == 200
     content = result.content.decode("utf-8")
 
-    # Verify the modal has the correct ID
-    assert 'id="summary-modal"' in content
+    # Verify the slideout has the correct ID
+    assert f'id="summary-details-modal-{summary.id}"' in content
 
     # Verify the cleanup script is present
-    assert 'modal.addEventListener("close"' in content
-    assert "modal.remove()" in content
-    assert "once: true" in content  # Flexible to handle different formatting
+    assert "closeSummaryDetailsSlideout" in content
+    assert "slideout.remove()" in content
+    assert "backdrop.remove()" in content
 
 
 @pytest.mark.django_db
@@ -337,7 +337,7 @@ def test_summary_card_shows_different_statuses(provider: User, organization: Org
 
 @pytest.mark.e2e
 @pytest.mark.django_db
-def test_summary_workflow_end_to_end(  # noqa: PLR0915
+def test_summary_workflow_end_to_end(
     live_server, provider_page: Page, organization: Organization, provider: User, encounter: Encounter
 ) -> None:
     """
@@ -446,85 +446,57 @@ def test_summary_workflow_end_to_end(  # noqa: PLR0915
     status_badge = provider_page.locator(".badge", has_text="Succeeded")
     expect(status_badge).to_be_visible()
 
-    # Click the summary card
+    # Click the summary card - from patient details, this navigates to full page (not slideout)
     summary_card.click()
-    provider_page.wait_for_timeout(500)  # Wait for HTMX to load modal
+    provider_page.wait_for_load_state("networkidle")
 
-    # 9. Verify modal is displayed (not navigated to new page)
-    modal = provider_page.locator("#summary-modal")
-    expect(modal).to_be_visible()
+    # 9. Verify we navigated to the full summary detail page (not slideout)
+    expected_url = reverse(
+        "providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id}
+    )
+    assert expected_url in provider_page.url, f"Expected to navigate to {expected_url} but got {provider_page.url}"
 
-    # Verify modal contains summary title
-    modal_title = modal.locator("h3", has_text="Visit Summary")
-    expect(modal_title).to_be_visible()
+    # Verify summary content is displayed on full page
+    page_title = provider_page.locator("h1", has_text="Patient Visit Summary")
+    expect(page_title).to_be_visible()
 
-    # Verify patient name is in the modal
-    patient_name_in_modal = modal.locator(f"text={patient.first_name} {patient.last_name}")
-    expect(patient_name_in_modal).to_be_visible()
+    # Verify patient name is on the page
+    patient_name_on_page = provider_page.locator(f"text={patient.first_name} {patient.last_name}")
+    expect(patient_name_on_page).to_be_visible()
 
-    # Verify chief complaint is displayed in modal
-    chief_complaint_in_modal = modal.locator("text=Severe headache")
-    expect(chief_complaint_in_modal).to_be_visible()
+    # Verify chief complaint is displayed
+    chief_complaint_on_page = provider_page.locator("text=Severe headache")
+    expect(chief_complaint_on_page).to_be_visible()
 
-    # Verify symptoms are displayed in modal
-    symptoms_in_modal = modal.locator("text=Throbbing pain on left side of head for 2 days")
-    expect(symptoms_in_modal).to_be_visible()
+    # Verify symptoms are displayed
+    symptoms_on_page = provider_page.locator("text=Throbbing pain on left side of head for 2 days")
+    expect(symptoms_on_page).to_be_visible()
 
-    # 10. Test "Open Full Page" button in modal
-    open_full_page_btn = modal.locator("a.btn-primary", has_text="Open Full Page")
-    expect(open_full_page_btn).to_be_visible()
+    # 10. Verify breadcrumb navigation on full page
+    breadcrumb_link = provider_page.locator("a", has_text="Back to encounter")
+    expect(breadcrumb_link).to_be_visible()
 
-    # Open in new context to test full page (simulates opening in new tab)
-    with provider_page.context.new_page() as new_page:
-        detail_path = reverse(
-            "providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary.id}
-        )
-        full_page_url = f"{live_server.url}{detail_path}"
-        new_page.goto(full_page_url)
-        new_page.wait_for_load_state("networkidle")
+    # Click breadcrumb to go back to encounter
+    breadcrumb_link.click()
+    provider_page.wait_for_load_state("networkidle")
 
-        # Verify we're on the summary detail page
-        assert new_page.url == full_page_url
-
-        # Verify full page content is displayed
-        page_title = new_page.locator("h1", has_text="Patient Visit Summary")
-        expect(page_title).to_be_visible()
-
-        # 11. Verify breadcrumb navigation on full page
-        breadcrumb_link = new_page.locator("a", has_text="Back to encounter")
-        expect(breadcrumb_link).to_be_visible()
-
-        # Click breadcrumb to go back to encounter
-        breadcrumb_link.click()
-        new_page.wait_for_load_state("networkidle")
-
-        # Verify we're back on the encounter details page
-        expected_encounter_url = reverse(
-            "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
-        )
-        assert expected_encounter_url in new_page.url, (
-            f"Expected to navigate to encounter page but got: {new_page.url}"
-        )
-
-    # 12. Back on original page, close the modal
-    close_button = modal.locator("button.btn-circle")
-    expect(close_button).to_be_visible()
-    close_button.click()
-
-    # Verify modal is closed/removed
-    provider_page.wait_for_timeout(300)
-    expect(modal).not_to_be_visible()
+    # Verify we're on the encounter details page
+    expected_encounter_url = reverse(
+        "providers:encounter", kwargs={"organization_id": organization.id, "encounter_id": encounter.id}
+    )
+    assert expected_encounter_url in provider_page.url, (
+        f"Expected to navigate to encounter page but got: {provider_page.url}"
+    )
 
 
 @pytest.mark.e2e
 @pytest.mark.django_db
-def test_summary_modal_cleanup_when_opening_multiple_summaries(
+def test_summary_full_page_navigation_when_opening_multiple_summaries(
     live_server, provider_page: Page, organization: Organization, provider: User, encounter: Encounter
 ) -> None:
     """
-    Test that opening multiple summary modals in sequence shows the correct content each time.
-    This prevents regression of a bug where stale modals accumulated in the DOM, causing
-    subsequent summary clicks to show the first summary's content instead of the new one.
+    Test that opening multiple summaries from patient details page navigates to full page each time.
+    This verifies the correct behavior when is_slideout=False (from patient details page).
     """
     patient = encounter.patient
 
@@ -557,56 +529,37 @@ def test_summary_modal_cleanup_when_opening_multiple_summaries(
     provider_page.goto(patient_url)
     provider_page.wait_for_load_state("networkidle")
 
-    # Open first summary modal
+    # Open first summary - should navigate to full page
     first_summary_card = provider_page.locator(f"text={summary1.title}").locator("xpath=ancestor::a").first
     expect(first_summary_card).to_be_visible()
     first_summary_card.click()
-    provider_page.wait_for_timeout(500)
+    provider_page.wait_for_load_state("networkidle")
 
-    # Verify first summary modal is displayed with correct content
-    modal = provider_page.locator("#summary-modal")
-    expect(modal).to_be_visible()
-    expect(modal.locator("text=This is the first summary content")).to_be_visible()
-    expect(modal.locator("text=This is the second summary content")).not_to_be_visible()
-
-    # Verify only one modal exists in the DOM
-    all_modals = provider_page.locator("#summary-modal").all()
-    assert len(all_modals) == 1, f"Expected exactly 1 modal in DOM, found {len(all_modals)}"
-
-    # Close the first modal
-    close_button = modal.locator("button.btn-circle")
-    close_button.click()
-    provider_page.wait_for_timeout(300)
-
-    # Verify modal is removed from DOM (not just hidden)
-    all_modals_after_close = provider_page.locator("#summary-modal").all()
-    assert len(all_modals_after_close) == 0, (
-        f"Expected modal to be removed from DOM after closing, but found {len(all_modals_after_close)} modals"
+    # Verify we navigated to full page for first summary
+    expected_url1 = reverse(
+        "providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary1.id}
     )
+    assert expected_url1 in provider_page.url
 
-    # Open second summary modal
+    # Verify first summary content is displayed
+    expect(provider_page.locator("text=This is the first summary content")).to_be_visible()
+
+    # Go back to patient details page
+    provider_page.goto(patient_url)
+    provider_page.wait_for_load_state("networkidle")
+
+    # Open second summary - should also navigate to full page
     second_summary_card = provider_page.locator(f"text={summary2.title}").locator("xpath=ancestor::a").first
     expect(second_summary_card).to_be_visible()
     second_summary_card.click()
-    provider_page.wait_for_timeout(500)
+    provider_page.wait_for_load_state("networkidle")
 
-    # Verify second summary modal is displayed with correct content
-    modal_after_reopen = provider_page.locator("#summary-modal")
-    expect(modal_after_reopen).to_be_visible()
-    expect(modal_after_reopen.locator("text=This is the second summary content")).to_be_visible()
-    expect(modal_after_reopen.locator("text=This is the first summary content")).not_to_be_visible()
-
-    # Verify still only one modal exists in the DOM
-    all_modals_final = provider_page.locator("#summary-modal").all()
-    assert len(all_modals_final) == 1, f"Expected exactly 1 modal in DOM, found {len(all_modals_final)}"
-
-    # Close the second modal
-    close_button_2 = modal_after_reopen.locator("button.btn-circle")
-    close_button_2.click()
-    provider_page.wait_for_timeout(300)
-
-    # Verify modal is removed from DOM
-    all_modals_end = provider_page.locator("#summary-modal").all()
-    assert len(all_modals_end) == 0, (
-        f"Expected modal to be removed from DOM after closing, but found {len(all_modals_end)} modals"
+    # Verify we navigated to full page for second summary
+    expected_url2 = reverse(
+        "providers:summary_detail", kwargs={"organization_id": organization.id, "summary_id": summary2.id}
     )
+    assert expected_url2 in provider_page.url
+
+    # Verify second summary content is displayed
+    expect(provider_page.locator("text=This is the second summary content")).to_be_visible()
+    expect(provider_page.locator("text=This is the first summary content")).not_to_be_visible()

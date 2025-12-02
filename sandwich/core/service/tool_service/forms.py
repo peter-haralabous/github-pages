@@ -33,7 +33,9 @@ class AppendToPageArgs(BaseModel):
 
 def build_add_new_page_to_schema_tool(target_form_id: uuid.UUID) -> BaseTool:
     @tool(
-        "add_new_page_to_schema", description="Adds a new page to the SurveyJS form schema.", args_schema=NewPageArgs
+        "add_new_page_to_schema",
+        description="Adds a new page to the SurveyJS form schema.",
+        args_schema=NewPageArgs,
     )
     def add_new_page_to_schema(page_name: str, page_title: str, elements: list[dict[str, Any]] | None = None) -> None:
         with transaction.atomic():
@@ -43,9 +45,11 @@ def build_add_new_page_to_schema_tool(target_form_id: uuid.UUID) -> BaseTool:
 
             new_page = {"name": page_name, "title": page_title, "elements": elements if elements else []}
             logger.info(
-                "add_new_page_to_schema tool generating page", extra={"page_name": page_name, "page_title": page_title}
+                "add_new_page_to_schema tool generating page",
+                extra={"page_name": page_name, "page_title": page_title},
             )
             form.schema.setdefault("pages", []).append(new_page)
+            form.full_clean()
             form.save()
 
     return add_new_page_to_schema
@@ -80,6 +84,7 @@ def build_append_elements_to_existing_page_tool(target_form_id: uuid.UUID) -> Ba
             )
             target_page.setdefault("elements", []).extend(elements)
             form.schema = updated_schema
+            form.full_clean()
             form.save()
 
     return append_elements_to_existing_page
