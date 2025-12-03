@@ -29,6 +29,9 @@
        data-form-save-url="{{ form_save_url }}"
        data-address-url="{{ address_autocomplete_url }}"
        data-medications-url="{{ medications_autocomplete_url }}"
+       data-file-upload-url="{% url 'core:attachment_upload' %}"
+       data-file-delete-url="{% url 'core:attachment_delete' %}"
+       data-file-fetch-url="{% url 'core:attachment_get' %}"
        data-form-id="{% if form %}{{ form.id }}{% endif %}"></div>
   <form id="file-upload-form"
         class="hidden"

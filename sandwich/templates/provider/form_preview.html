@@ -21,7 +21,7 @@
            class="w-full lg:w-auto lg:flex-1 flex flex-col h-full bg-base-100 rounded-xl border border-base-300">
         <main id="form-view" class="flex-1 overflow-y-auto h-full p-4">
           {{ form_schema | json_script:"form_schema" }}
-          <survey-form data-schema-id="form_schema" data-address-url="{{ address_autocomplete_url }}" data-medications-url="{{ medications_autocomplete_url }}" />
+          <survey-form data-schema-id="form_schema" data-address-url="{{ address_autocomplete_url }}" data-medications-url="{{ medications_autocomplete_url }}" data-file-upload-url="{% url 'core:attachment_upload' %}" data-file-delete-url="{% url 'core:attachment_delete' %}" data-file-fetch-url="{% url 'core:attachment_get' %}" />
         </main>
       </div>
     </div>

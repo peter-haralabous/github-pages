@@ -7,6 +7,7 @@ import { registerCustomComponents } from '../components/forms/custom-components'
 import { setupAddressAutocomplete } from '../lib/forms/address-autocomplete';
 import '../components/message-alert';
 import { setupMedicationsAutocomplete } from '../lib/forms/medications-autocomplete';
+import { setupFileUploadInput } from '../lib/forms/file-upload';
 
 const ENVIRONMENT = JSON.parse(
   document.getElementById('datadog_vars')?.textContent || '{}',
@@ -95,6 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const _medicationsAutocompleteUrl = document
     .getElementById('form-builder-container')
     ?.getAttribute('data-medications-url');
+  const _fileUploadUrl = document
+    .getElementById('form-builder-container')
+    ?.getAttribute('data-file-upload-url');
+  const _fileDeleteUrl = document
+    .getElementById('form-builder-container')
+    ?.getAttribute('data-file-delete-url');
+  const _fileFetchUrl = document
+    .getElementById('form-builder-container')
+    ?.getAttribute('data-file-fetch-url');
+  const _csrfToken = document
+    .getElementById('form-builder-container')
+    ?.getAttribute('data-csrf-token')
+    ?.toString();
 
   creator.onSurveyInstanceSetupHandlers.add((_sender, options) => {
     if (options.area !== 'preview-tab') return;
@@ -103,6 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
       options.survey,
       _medicationsAutocompleteUrl ?? null,
     );
+    setupFileUploadInput(options.survey, {
+      uploadUrl: _fileUploadUrl ?? null,
+      deleteUrl: _fileDeleteUrl ?? null,
+      fetchUrl: _fileFetchUrl ?? null,
+      csrfToken: _csrfToken ?? null,
+    });
   });
 
   // Register onNotify handler to show notifications as toasts
