@@ -1,29 +1,22 @@
-{# Main Content Area - Workspace with multi-tab support #}
+{# Main Content Area - Workspace with split view tabs #}
 <main class="flex-1 min-w-0 flex flex-col ml-20 lg:ml-0"
       id="patient-workspace">
   {# Mobile Patient Header - Fixed above tabs #}
   {% include 'provider/partials/patient_details_mobile_header.html' %}
-  {# Tab bar - horizontal scrollable tabs #}
-  <div class="flex items-center border-b border-gray-200 bg-base-100 p-2 overflow-x-auto thin-scrollbar">
-    <div id="workspace-tab-bar"
-         class="flex items-center bg-neutral-100 rounded-lg p-1 gap-1">
-      {# Tabs rendered dynamically by JavaScript #}
-    </div>
-  </div>
-  {# Tab content panels - multiple cached panels, only active one visible #}
-  <div id="workspace-panels" class="flex-1 relative">
+  {# Split View Container - tabs open from sidenav and display side-by-side #}
+  <div class="flex flex-1 min-h-0 overflow-x-auto">
     {# Empty state - shown when no tabs are open #}
     <div id="workspace-empty-state"
-         class="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 py-20">
+         class="flex-1 flex flex-col items-center justify-center text-gray-400 py-20">
       {% load lucide %}
 
       {% lucide "layout-grid" class="size-16 mb-4 opacity-50" %}
       <h3 class="text-lg font-medium text-gray-500 mb-2">No file selected</h3>
       <p class="text-sm">Select a file from the sidebar to view details</p>
     </div>
-    {# Panel container - panels are added/cached here #}
-    <div id="panel-container" class="p-4 lg:p-6">
-      {# Initial content based on URL state - will be managed by JS on load #}
+    {# Panel container - panels render side-by-side, each with own header #}
+    <div id="panel-container" class="hidden">
+      {# Panels added dynamically with headers containing title, collapse, and close buttons #}
     </div>
   </div>
 </main>

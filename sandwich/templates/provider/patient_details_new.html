@@ -80,6 +80,84 @@
         gap: 0.75rem !important;
       }
     }
+
+    /* Split view styling */
+    #patient-workspace {
+      height: calc(100vh - 4rem);
+      /* Account for top nav */
+    }
+
+    .workspace-panel {
+      height: 100%;
+      min-width: 33%;
+      flex: 1 1 auto;
+      transition: all 0.3s ease;
+    }
+
+    /* Collapsed tab styling - vertical text bar */
+    .workspace-panel[data-collapsed="true"] {
+      min-width: 48px !important;
+      max-width: 48px !important;
+      flex: 0 0 48px !important;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-header {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 1rem 0.5rem;
+      height: 100%;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-title {
+      transform: rotate(180deg);
+      white-space: nowrap;
+      margin: auto 0;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-controls {
+      flex-direction: column;
+      writing-mode: horizontal-tb;
+      transform: none;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-content {
+      display: none;
+    }
+
+    /* Smooth scrolling for horizontal panel container */
+    #panel-container {
+      scroll-behavior: smooth;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      display: flex !important;
+      /* Always flex when visible */
+    }
+
+    #panel-container.hidden {
+      display: none !important;
+    }
+
+    /* Custom scrollbar for horizontal scrolling */
+    #panel-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #panel-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    #panel-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    #panel-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
   </style>
 {% endblock extra_head %}
 {% block topnav %}
@@ -102,18 +180,18 @@
       // Tab Icons - SVG templates for each tab type
       // ===========================================
       const TAB_ICONS = {
-        overview: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>`,
-        encounter: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
-        form: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
-        summary: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
-        document: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`,
-        'encounters-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
-        'forms-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
-        'summaries-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
-        'documents-list': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`
+        overview: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>`,
+        encounter: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
+        form: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
+        summary: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
+        document: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`,
+        'encounters-list': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>`,
+        'forms-list': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>`,
+        'summaries-list': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="m9 15 2 2 4-4" /></svg>`,
+        'documents-list': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>`
       };
 
-      const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>`;
+      const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>`;
 
       // ===========================================
       // URL Building Helpers
@@ -178,10 +256,17 @@
         // Open a tab (or switch to it if already open)
         openTab: function(type, id, label) {
           const tabId = this.makeTabId(type, id);
+          console.log('Opening tab:', {
+            type,
+            id,
+            label,
+            tabId
+          });
 
           // Check if tab already exists
           const existingTab = this.tabs.find(t => t.id === tabId);
           if (existingTab) {
+            console.log('Tab already exists, switching to it');
             this.switchTab(tabId);
             return;
           }
@@ -203,14 +288,19 @@
             loaded: false
           };
           this.tabs.unshift(newTab);
+          console.log('Added new tab, total tabs:', this.tabs.length);
           this.switchTab(tabId);
         },
 
         // Switch to an existing tab
         switchTab: function(tabId) {
           const tab = this.tabs.find(t => t.id === tabId);
-          if (!tab) return;
+          if (!tab) {
+            console.error('Tab not found:', tabId);
+            return;
+          }
 
+          console.log('Switching to tab:', tabId, 'loaded:', tab.loaded);
           this.activeTabId = tabId;
           this.render();
           this.syncUrl();
@@ -218,10 +308,15 @@
           this.updateSidebarHighlight();
 
           // Load content if not cached
-          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+          const panelId = `panel-${tabId.replace(':', '-')}`;
+          const panel = document.getElementById(panelId);
+          console.log('Panel exists:', !!panel, 'Panel ID:', panelId);
+
           if (!tab.loaded || !panel) {
+            console.log('Loading tab content...');
             this.loadTabContent(tab);
           } else {
+            console.log('Content already loaded, showing panel');
             this.showPanel(tabId);
           }
         },
@@ -283,61 +378,166 @@
           if (!panel) {
             panel = document.createElement('div');
             panel.id = panelId;
-            panel.className = 'workspace-panel hidden';
+            panel.className = 'workspace-panel flex flex-col border-r border-gray-200';
             panel.dataset.tabId = tab.id;
-            document.getElementById('panel-container').appendChild(panel);
+            panel.dataset.collapsed = 'false';
+
+            // Insert at the beginning (left side) for left-to-right reading
+            const container = document.getElementById('panel-container');
+            if (container.firstChild) {
+              container.insertBefore(panel, container.firstChild);
+            } else {
+              container.appendChild(panel);
+            }
+
+            // Create panel structure with header
+            panel.innerHTML = `
+              <div class="tab-header flex items-center justify-between gap-2 px-4 py-3 bg-neutral-50 border-b border-gray-200 shrink-0">
+                <h2 class="tab-title text-base font-semibold text-gray-900 truncate flex-1">${this.escapeHtml(tab.label)}</h2>
+                <div class="tab-controls flex items-center gap-1">
+                  <button class="js-tab-collapse btn btn-ghost btn-sm btn-circle" data-tab-id="${tab.id}" title="Collapse">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                    <i class="icon-panel-right-open"></i>
+                    </button>
+                  <button class="js-tab-close btn btn-ghost btn-sm btn-circle text-error" data-tab-id="${tab.id}" title="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex-col tab-content flex-1 overflow-y-auto">
+                <div class="flex items-center justify-center py-20 h-full">
+                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              </div>
+            `;
           }
 
-          // Show loading state
-          panel.innerHTML = `
-            <div class="flex items-center justify-center py-20">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          `;
-          this.showPanel(tab.id);
+          this.updatePanelVisibility();
 
           // Fetch content
+          const contentDiv = panel.querySelector('.tab-content');
+          console.log('Loading tab content from:', url);
+
           fetch(url, {
               headers: {
                 'HX-Request': 'true',
                 'X-CSRFToken': '{{ csrf_token }}'
               }
             })
-            .then(response => response.text())
+            .then(response => {
+              console.log('Response status:', response.status);
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.text();
+            })
             .then(html => {
-              panel.innerHTML = html;
+              console.log('Content loaded, length:', html.length);
+              contentDiv.innerHTML = `<div class="p-4 lg:p-6">${html}</div>`;
               tab.loaded = true;
               // Process any HTMX in the loaded content
               if (window.htmx) {
-                htmx.process(panel);
+                htmx.process(contentDiv);
               }
               // Extract label from loaded content if available
-              const labelEl = panel.querySelector('[data-tab-label]');
+              const labelEl = contentDiv.querySelector('[data-tab-label]');
               if (labelEl) {
                 tab.label = labelEl.dataset.tabLabel;
-                this.render();
+                const titleEl = panel.querySelector('.tab-title');
+                if (titleEl) {
+                  titleEl.textContent = tab.label;
+                }
               }
             })
             .catch(err => {
-              panel.innerHTML = `
+              console.error('Failed to load tab content:', err);
+              contentDiv.innerHTML = `
               <div class="flex flex-col items-center justify-center py-20 text-red-500">
-                <p>Failed to load content</p>
+                <p>Failed to load content: ${err.message}</p>
                 <button class="js-tab-retry mt-2 text-sm underline" data-tab-id="${tab.id}">Retry</button>
               </div>
             `;
             });
         },
 
-        // Show a specific panel, hide others
+        // Show all panels side-by-side (split view)
         showPanel: function(tabId) {
-          const panels = document.querySelectorAll('#panel-container .workspace-panel');
-          panels.forEach(p => {
-            if (p.dataset.tabId === tabId) {
-              p.classList.remove('hidden');
+          // In split view, we don't hide panels - they're all visible
+          // Just ensure the active tab is highlighted
+          this.updatePanelVisibility();
+        },
+
+        // Update panel visibility and layout for split view
+        updatePanelVisibility: function() {
+          const container = document.getElementById('panel-container');
+          const panels = container.querySelectorAll('.workspace-panel');
+
+          const numTabs = this.tabs.length;
+          if (numTabs === 0) return;
+
+          // Calculate widths considering collapsed state
+          const expandedPanels = [];
+          const collapsedPanels = [];
+
+          panels.forEach(panel => {
+            const tabId = panel.dataset.tabId;
+            const tabExists = this.tabs.find(t => t.id === tabId);
+
+            if (tabExists) {
+              panel.classList.remove('hidden');
+              if (panel.dataset.collapsed === 'true') {
+                collapsedPanels.push(panel);
+              } else {
+                expandedPanels.push(panel);
+              }
             } else {
-              p.classList.add('hidden');
+              panel.classList.add('hidden');
             }
           });
+
+          // Collapsed panels get fixed narrow width
+          collapsedPanels.forEach(panel => {
+            panel.style.minWidth = '48px';
+            panel.style.maxWidth = '48px';
+            panel.style.flex = '0 0 48px';
+          });
+
+          // Expanded panels share remaining space with 33% minimum
+          if (expandedPanels.length > 0) {
+            expandedPanels.forEach(panel => {
+              panel.style.minWidth = '33%';
+              panel.style.maxWidth = 'none';
+              panel.style.flex = '1 1 auto';
+            });
+          }
+
+          // Remove border from last visible panel
+          const visiblePanels = Array.from(panels).filter(p => !p.classList.contains('hidden'));
+          if (visiblePanels.length > 0) {
+            visiblePanels.forEach(p => p.classList.add('border-r', 'border-gray-200'));
+            visiblePanels[visiblePanels.length - 1].classList.remove('border-r');
+          }
+        },
+
+        // Toggle tab collapse state
+        toggleCollapse: function(tabId) {
+          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+          if (!panel) return;
+
+          const isCollapsed = panel.dataset.collapsed === 'true';
+          panel.dataset.collapsed = isCollapsed ? 'false' : 'true';
+
+          const collapseBtn = panel.querySelector('.js-tab-collapse');
+
+          if (isCollapsed) {
+            // Expand - chevron points right
+            collapseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>`;
+          } else {
+            // Collapse - chevron points left
+            collapseBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg>`;
+          }
+
+          this.updatePanelVisibility();
         },
 
         // Update empty state visibility
@@ -345,36 +545,25 @@
           const emptyState = document.getElementById('workspace-empty-state');
           const panelContainer = document.getElementById('panel-container');
 
+          console.log('updateEmptyState - tabs.length:', this.tabs.length);
+
           if (this.tabs.length === 0) {
             emptyState.classList.remove('hidden');
             emptyState.classList.add('flex');
             panelContainer.classList.add('hidden');
+            console.log('Showing empty state, hiding panel container');
           } else {
             emptyState.classList.add('hidden');
             emptyState.classList.remove('flex');
             panelContainer.classList.remove('hidden');
+            console.log('Hiding empty state, showing panel container');
           }
         },
 
-        // Render tab bar
+        // Render (no longer needed - panels have their own headers)
         render: function() {
-          const tabBar = document.getElementById('workspace-tab-bar');
-          if (!tabBar) return;
-
-          tabBar.innerHTML = this.tabs.map(tab => {
-            const isActive = tab.id === this.activeTabId;
-            const icon = TAB_ICONS[tab.type] || TAB_ICONS.document;
-
-            return `
-              <button class="js-tab-switch group flex rounded-md items-center gap-2 pl-4 py-2 pr-3 text-sm font-medium whitespace-nowrap transition-colors ${isActive ? 'text-neutral-content bg-neutral' : 'border-transparent text-gray-600 hover:text-gray-700  hover:bg-neutral-200'}" data-tab-id="${tab.id}" title="${this.escapeHtml(tab.label)}">
-                <span class="tab-icon shrink-0">${icon}</span>
-                <span class="tab-label truncate max-w-48">${this.escapeHtml(tab.label)}</span>
-                <span class="js-tab-close p-0.5 rounded hover:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity" data-tab-id="${tab.id}">
-                  ${CLOSE_ICON}
-                </span>
-              </button>
-            `;
-          }).join('');
+          // Update panel visibility
+          this.updatePanelVisibility();
         },
 
         // Escape HTML for safe rendering
@@ -526,6 +715,16 @@
           return;
         }
 
+        // Handle tab collapse clicks
+        const collapseTabEl = e.target.closest('.js-tab-collapse');
+        if (collapseTabEl) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tabId = collapseTabEl.dataset.tabId;
+          patientTabs.toggleCollapse(tabId);
+          return;
+        }
+
         // Handle tab close clicks (X button on tabs)
         const closeTabEl = e.target.closest('.js-tab-close');
         if (closeTabEl) {
@@ -533,15 +732,6 @@
           e.stopPropagation();
           const tabId = closeTabEl.dataset.tabId;
           patientTabs.closeTab(tabId);
-          return;
-        }
-
-        // Handle tab switch clicks (clicking on tab in tab bar)
-        const switchTabEl = e.target.closest('.js-tab-switch');
-        if (switchTabEl) {
-          e.preventDefault();
-          const tabId = switchTabEl.dataset.tabId;
-          patientTabs.switchTab(tabId);
           return;
         }
 
