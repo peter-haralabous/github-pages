@@ -1,0 +1,46 @@
+{% extends 'partials/topnav.html' %}
+
+{% load static i18n lucide %}
+
+{% block topnav_items_start %}
+  <div class="flex items-center">{% include 'partials/logo.html' with size='md' link_url='/' %}</div>
+{% endblock topnav_items_start %}
+{% block topnav_items_center %}
+  <label class="input">
+    {% lucide "search" class="size-5 opacity-50" %}
+    <input class="grow"
+           type="search"
+           id="command-palette-trigger"
+           placeholder="Type a command or search..." />
+    <span class="text-sm text-gray-400"></span>
+  </label>
+  <script nonce="{{request.csp_nonce}}">
+    document.addEventListener('DOMContentLoaded', () => {
+      const trigger = document.getElementById('command-palette-trigger');
+      trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
+
+      trigger.addEventListener('focus', (event) => {
+        document.querySelector('command-palette').isOpen = true;
+        event.target.blur();
+      });
+    })
+  </script>
+{% endblock topnav_items_center %}
+{% block avatar_menu_title %}
+  {% if organization %}
+    {{ organization.name }}
+  {% else %}
+    Switch context
+  {% endif %}
+{% endblock avatar_menu_title %}
+{% block avatar_nav_items %}
+  {% if organization %}
+    <li>
+      <a href="{% url 'providers:organization_edit' organization_id=organization.id %}"
+         class="flex gap-2">
+        <div>{% lucide "settings" class="size-4" %}</div>
+        <p>Organization Settings</p>
+      </a>
+    </li>
+  {% endif %}
+{% endblock avatar_nav_items %}

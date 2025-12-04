@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="flex h-screen">
+    <div class="flex-shrink-0">
+      {% block sidenav %}
+        {% include 'partials/sidenav.html' %}
+      {% endblock sidenav %}
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      {% block topnav %}
+        {% include 'partials/topnav.html' %}
+      {% endblock topnav %}
+      <div class="{% block main_padding %}p-6{% endblock main_padding %} max-w-7xl mx-auto {% block additional_styles %}p-6{% endblock additional_styles %}">
+        {% block main %}
+          {% block content %}
+          {% endblock content %}
+        {% endblock main %}
+      </div>
+    </div>
+  </div>
+{% endblock body %}

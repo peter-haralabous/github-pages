@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+# TODO-NG: why do we need to re-run this on startup? shouldn't it be a build step?
+python /app/manage.py collectstatic --noinput
+
+python /app/manage.py migrate --noinput
+
+exec ddtrace-run python /app/manage.py procrastinate worker

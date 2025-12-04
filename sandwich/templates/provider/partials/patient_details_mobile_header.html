@@ -1,0 +1,25 @@
+{% load lucide %}
+
+{# Mobile Patient Header - Fixed above tabs (only visible on mobile) #}
+<div class="lg:hidden sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3"
+     id="mobile-patient-header">
+  <div class="flex items-center justify-between">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-lg font-bold text-gray-900 truncate">{{ patient.last_name }}, {{ patient.first_name }}</h1>
+      <div class="flex items-center gap-4 text-xs text-gray-600 mt-1">
+        <span class="flex items-center gap-1">
+          {% lucide "calendar" class="size-3" %}
+          {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }}
+        </span>
+        <span class="flex items-center gap-1">
+          {% lucide "id-card" class="size-3" %}
+          {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}
+        </span>
+      </div>
+    </div>
+    <div class="ml-2">
+      {# Patient action menu #}
+      {% include 'provider/partials/patient_header_actions.html' %}
+    </div>
+  </div>
+</div>

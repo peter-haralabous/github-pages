@@ -1,0 +1,78 @@
+{% load lucide %}
+
+<div class="bg-base-100">
+  <nav>
+    <ul class="flex flex-col gap-1">
+      {# Overview - opens as a tab #}
+      <li>
+        <button class="js-open-tab w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                data-tab-type="overview"
+                data-tab-id="overview"
+                data-tab-label="Overview">
+          {% lucide "layout-grid" class="size-5 shrink-0" %}
+          <span class="text-base font-medium hide-when-collapsed">Overview</span>
+        </button>
+      </li>
+      <li class="divider hidden show-when-collapsed hide-when-expanded px-2 !my-1"></li>
+      <li class="pt-3 hide-when-collapsed">
+        <span class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-3">Directories</span>
+      </li>
+      {# Encounters folder - expands to show list #}
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_encounters' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
+          <span class="flex items-center gap-3">
+            {% lucide "calendar" class="size-5 shrink-0" %}
+            <span class="text-base font-medium hide-when-collapsed">Encounters</span>
+          </span>
+          {% lucide "chevron-right" class="size-5 shrink-0 hide-when-collapsed" %}
+        </button>
+      </li>
+      {# Forms folder - expands to show list #}
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_forms' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
+          <span class="flex items-center gap-3">
+            {% lucide "file-pen-line" class="size-5 shrink-0" %}
+            <span class="text-base font-medium hide-when-collapsed">Forms</span>
+          </span>
+          {% lucide "chevron-right" class="size-5 shrink-0 hide-when-collapsed" %}
+        </button>
+      </li>
+      {# Summaries folder - expands to show list #}
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_summaries' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
+          <span class="flex items-center gap-3">
+            {% lucide "file-check" class="size-5 shrink-0" %}
+            <span class="text-base font-medium hide-when-collapsed">Summaries</span>
+          </span>
+          {% lucide "chevron-right" class="size-5 shrink-0 hide-when-collapsed" %}
+        </button>
+      </li>
+      {# Documents folder - expands to show list #}
+      <li>
+        <button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+                hx-get="{% url 'providers:patient_sidebar_documents' organization_id=organization.id patient_id=patient.id %}"
+                hx-target="#patient-sidebar"
+                hx-swap="innerHTML"
+                hx-push-url="false">
+          <span class="flex items-center gap-3">
+            {% lucide "file-text" class="size-5 shrink-0" %}
+            <span class="text-base font-medium hide-when-collapsed">Documents</span>
+          </span>
+          {% lucide "chevron-right" class="size-5 shrink-0 hide-when-collapsed" %}
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

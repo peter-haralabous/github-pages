@@ -1,0 +1,105 @@
+{% load sortable %}
+{% load i18n %}
+{% load lucide %}
+{% load list_helpers %}
+
+<div class="overflow-visible border border-base-200 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        {% for col in visible_column_meta %}
+          {% if col.value == "patient__first_name" %}
+            <th>{% sortable_column "Name" "patient__first_name" %}</th>
+          {% elif col.value == "patient__email" %}
+            <th>{% sortable_column "Email" "patient__email" %}</th>
+          {% elif col.value == "patient__date_of_birth" %}
+            <th>{% sortable_column "Date of Birth" "patient__date_of_birth" %}</th>
+          {% elif col.value == "status" %}
+            <th>{% sortable_column "Status" "status" %}</th>
+          {% elif col.value == "is_active" %}
+            <th>{% sortable_column "Active" "active" %}</th>
+          {% elif col.value == "created_at" %}
+            <th>{% sortable_column "Created" "created_at" %}</th>
+          {% elif col.value == "updated_at" %}
+            <th>{% sortable_column "Updated" "updated_at" %}</th>
+          {% elif col.is_custom %}
+            <th>{% sortable_column col.label col.value %}</th>
+          {% endif %}
+        {% endfor %}
+        <th class="w-px text-right">
+          <button hx-get="{% url 'providers:list_preference_settings' organization_id=organization.id list_type='encounter_list' %}"
+                  hx-target="#preference-modal-container"
+                  class="btn btn-xs btn-ghost gap-1"
+                  title="{% trans 'Customize list preferences' %}"
+                  aria-label="{% trans 'List Settings' %}"
+                  data-test="list-settings-button"
+                  id="list-settings-button">{% lucide "settings" class="size-4" %}</button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for encounter in encounters %}
+        <tr>
+          {% for col in visible_column_meta %}
+            {% if col.value == "patient__first_name" %}
+              <td>
+                {# checks the related input in sandwich/templates/provider/partials/encounter_details_slideout.html #}
+                <label for="encounter-details-modal-{{ encounter.id }}"
+                       class="link cursor-pointer">
+                  {{ encounter.patient.last_name }}, {{ encounter.patient.first_name }}
+                </label>
+              </td>
+            {% elif col.value == "patient__email" %}
+              <td>{{ encounter.patient.email|default:EMPTY_VALUE_DISPLAY }}</td>
+            {% elif col.value == "patient__date_of_birth" %}
+              <td>{{ encounter.patient.date_of_birth|date:DJANGO_DATE_FORMAT|default:EMPTY_VALUE_DISPLAY }}</td>
+            {% elif col.value == "status" %}
+              {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-status" field_name="status" display_value=encounter.get_status_display|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
+            {% elif col.value == "is_active" %}
+              <td>{{ encounter.is_active|yesno:"Active,Archived" }}</td>
+            {% elif col.value == "created_at" %}
+              <td>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+            {% elif col.value == "updated_at" %}
+              <td>{{ encounter.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+            {% elif col.is_custom %}
+              {% with annotation_name=col.value|custom_attr_name %}
+                {% include "provider/partials/inline_edit_display.html" with cell_id="encounter-"|add:encounter.id|stringformat:"s"|add:"-"|add:col.value field_name=col.value display_value=encounter|get_attr:annotation_name|default:EMPTY_VALUE_DISPLAY can_edit=True encounter=encounter organization=organization %}
+              {% endwith %}
+            {% endif %}
+          {% endfor %}
+          <td class="w-px text-right">{% include "provider/partials/encounter_action_menu.html" with encounter=encounter %}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{{ visible_column_meta|length|add:1 }}" class="text-center">No encounters found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- Pagination controls -->
+<nav aria-label="Encounter pagination" class="join mt-4 mb-4">
+  {% if encounters.has_previous %}
+    <a class="join-item btn"
+       href="{% querystring page=encounters.previous_page_number %}"
+       aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </button>
+  {% endif %}
+  <span class="join-item btn">Page {{ encounters.number }} of {{ encounters.paginator.num_pages }}</span>
+  {% if encounters.has_next %}
+    <a class="join-item btn"
+       href="{% querystring page=encounters.next_page_number %}"
+       aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </button>
+  {% endif %}
+</nav>

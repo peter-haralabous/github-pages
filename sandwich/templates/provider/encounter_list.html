@@ -1,0 +1,67 @@
+{% extends "provider/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <div class="flex justify-between">
+    <h2>Patient Encounters</h2>
+    <div class="pb-2">
+      <button id="new-encounter-btn" class="btn btn-primary">New Encounter</button>
+      <a href="{% url "providers:custom_attribute_list" organization_id=organization.id %}"
+         class="btn btn-secondary">Add or edit fields</a>
+    </div>
+  </div>
+  <form hx-get="{% url "providers:encounter_list" organization_id=organization.id %}"
+        hx-target="#encounter_table_container"
+        hx-push-url="true"
+        hx-trigger="keyup changed delay:300ms from:input[name='search'], filtersChanged from:body">
+    <div class="mb-2 flex gap-2 flex-wrap items-center">
+      <label class="input input-bordered flex items-center gap-2">
+        {% lucide "search" class="size-4 opacity-70" %}
+        <input name="search"
+               type="text"
+               class="grow"
+               placeholder="Search"
+               value="{{ search }}" />
+        {% if search %}
+          <button type="button"
+                  class="btn btn-ghost btn-xs btn-circle"
+                  hx-get="{% url 'providers:encounter_list' organization_id=organization.id %}"
+                  hx-target="#encounter_table_container"
+                  hx-push-url="true">{% lucide "x" class="size-4" %}</button>
+        {% endif %}
+      </label>
+      <input type="hidden" name="sort" value="{{ sort }}" />
+      <button type="submit" class="btn">Search</button>
+      <button type="button"
+              class="btn"
+              hx-get="{% url 'providers:show_filter_modal' organization_id=organization.id list_type='encounter_list' %}{% querystring %}"
+              hx-target="#filter-modal-container"
+              hx-swap="innerHTML"
+              hx-push-url="false">Filter</button>
+    </div>
+  </form>
+  {% if active_filters.custom_attributes or active_filters.model_fields or request.GET.filter_mode == "custom" %}
+    {% include "provider/partials/list_filter_panel.html" %}
+  {% endif %}
+  <div id="encounter_table_container">{% include "provider/partials/encounter_list_table.html" %}</div>
+  <div id="filter-modal-container"></div>
+  <div id="preference-modal-container"></div>
+  <script nonce="{{ request.csp_nonce }}">
+    document.addEventListener('DOMContentLoaded', () => {
+      const newEncounterBtn = document.getElementById('new-encounter-btn');
+      const commandPalette = document.querySelector('command-palette');
+
+      if (newEncounterBtn && commandPalette) {
+        newEncounterBtn.addEventListener('click', () => {
+          // Update to encounter search URL and context
+          commandPalette.searchUrl = "{% url 'providers:encounter_create_search' organization_id=organization.id %}";
+          commandPalette.context = 'encounter_create';
+          commandPalette.title = 'Create New Encounter';
+          commandPalette.placeholder = 'Search for a patient...';
+          commandPalette.isOpen = true;
+        });
+      }
+    });
+  </script>
+{% endblock content %}

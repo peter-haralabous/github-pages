@@ -1,0 +1,89 @@
+from unittest.mock import Mock
+from unittest.mock import patch
+
+import pytest
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+from sandwich.core.factories.organization import OrganizationFactory
+from sandwich.core.models import Organization
+from sandwich.core.models.role import RoleName
+from sandwich.core.service.organization_service import assign_organization_role
+from sandwich.core.util.testing import UserRequestFactory
+from sandwich.providers.views.home import home
+from sandwich.providers.views.home import organization_home
+from sandwich.users.factories import UserFactory
+from sandwich.users.models import User
+
+# mypy: disable-error-code="arg-type, assignment"
+
+
+@pytest.mark.django_db
+@patch("sandwich.providers.views.home.render")
+def test_home_renders_template_with_multiple_organizations(mock_render, urf: UserRequestFactory):
+    """Test that home view renders template when user has multiple organizations."""
+    user = UserFactory.create()
+    request = urf(user).get("/")
+    organizations = OrganizationFactory.create_batch(2)
+    for organization in organizations:
+        assign_organization_role(organization, RoleName.OWNER, user)
+    mock_response = Mock()
+    mock_render.return_value = mock_response
+    response = home(request)
+    mock_render.assert_called_once()
+    args, _ = mock_render.call_args
+    assert args[0] == request
+    assert args[1] == "provider/home.html"
+    assert "organizations" in args[2]
+    assert list(args[2]["organizations"]) == organizations
+    assert response == mock_response
+
+
+@pytest.mark.django_db
+@patch("sandwich.providers.views.home.render")
+def test_home_renders_template_with_no_organizations(mock_render, urf: UserRequestFactory):
+    """Test that home view renders template when user has no organizations."""
+    user = UserFactory.create()
+    request = urf(user).get("/")
+
+    mock_response = Mock()
+    mock_render.return_value = mock_response
+
+    response = home(request)
+
+    mock_render.assert_called_once()
+    args, _ = mock_render.call_args
+    assert args[0] == request
+    assert args[1] == "provider/home.html"
+    assert "organizations" in args[2]
+    assert list(args[2]["organizations"]) == []
+
+    assert response == mock_response
+
+
+@pytest.mark.django_db
+def test_home_redirects_to_organization_when_single_org(urf: UserRequestFactory):
+    """Test that home view redirects to organization page when user has exactly one organization."""
+    user = UserFactory.create()
+    request = urf(user).get("/")
+
+    organization = OrganizationFactory.create()
+    assign_organization_role(organization, RoleName.OWNER, user)
+
+    response = home(request)
+
+    assert isinstance(response, HttpResponseRedirect)
+    assert response.url == reverse("providers:organization", kwargs={"organization_id": organization.id})
+
+
+@pytest.mark.django_db
+def test_organization_home_redirects_to_encounter_list(
+    urf: UserRequestFactory, provider: User, organization: Organization
+):
+    """Test that organization_home redirects to encounter list."""
+    request = urf(provider).get("/")
+
+    response = organization_home(request, organization_id=organization.id)
+
+    assert isinstance(response, HttpResponseRedirect)
+    assert response.url == reverse("providers:encounter_list", kwargs={"organization_id": organization.id})

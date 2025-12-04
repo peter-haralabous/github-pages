@@ -1,0 +1,116 @@
+import logging
+import uuid
+
+from sandwich.core.models import Entity
+from sandwich.core.models import Fact
+from sandwich.core.models import Patient
+from sandwich.core.models import Predicate
+from sandwich.core.models.provenance import Provenance
+from sandwich.core.service.ingest.types import Triple
+
+logger = logging.getLogger(__name__)
+
+
+def stringify_uuids(obj):
+    if isinstance(obj, dict):
+        return {k: stringify_uuids(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [stringify_uuids(v) for v in obj]
+    if isinstance(obj, uuid.UUID):
+        return str(obj)
+    return obj
+
+
+def get_or_create_entity(object_type, object_label, node, patient=None):
+    node_str = stringify_uuids(node)
+
+    # for Patient, deduplicate by patient_id if present
+    if object_type == "Patient":
+        if patient is not None:
+            entity, _ = Entity.objects.update_or_create(
+                type=object_type,
+                patient=patient,
+                defaults={"metadata": node_str},
+            )
+            return entity
+    # for all other types, fall back to name-based lookup
+    entity, _ = Entity.objects.update_or_create(
+        type=object_type,
+        metadata__name=object_label,
+        defaults={"metadata": node_str},
+    )
+    return entity
+
+
+def get_or_create_predicate(predicate_name, predicate_text):
+    predicate, _ = Predicate.objects.get_or_create(
+        name=predicate_name,
+        defaults={"description": predicate_text},
+    )
+    return predicate
+
+
+def _create_patient_if_needed(subj_node, patient=None) -> Patient:
+    # if a patient is provided, use their id
+    if patient and hasattr(patient, "id"):
+        return patient
+    patient_fields = {}
+    patient_fields["first_name"] = subj_node.get("first_name", "")
+    patient_fields["last_name"] = subj_node.get("last_name", "")
+    for key in ["date_of_birth", "email", "province", "phn", "user", "organization"]:
+        if key in subj_node:
+            patient_fields[key] = subj_node[key]
+    if "date_of_birth" not in patient_fields:
+        # FIXME-RG: this is a temporary fix to deal with missing DOBs
+        patient_fields["date_of_birth"] = "1900-01-01"
+    return Patient.objects.create(**patient_fields)
+
+
+def save_triples(
+    triples: list[Triple],
+    provenance: Provenance,
+    patient: Patient | None = None,
+) -> int:
+    """
+    Persists triples into the database.
+    Responsibilities:
+    - Resolve or create subject/object entities.
+    - Create patient if not provided.
+    - Resolve or create predicates.
+    - Create Fact records.
+    """
+    count = 0
+    if not triples:
+        return 0
+    # assume all triples refer to the same patient
+    # this may need to be revisited in the future
+    subj = triples[0].subject
+    patient = _create_patient_if_needed(subj.node, patient=patient)
+    for t in triples:
+        try:
+            subj = t.subject
+            obj = getattr(t, "obj", None) if hasattr(t, "obj") else getattr(t, "object", None)
+            if obj is None:
+                logger.warning("Skipping triple with no object")
+                continue
+            pred = t.normalized_predicate
+            predicate_text = t.predicate
+            subject_entity = get_or_create_entity("Patient", subj.node.get("name", ""), subj.node, patient=patient)
+            object_type = obj.entity_type
+            object_label = obj.node["name"]
+            object_entity = get_or_create_entity(object_type, object_label, obj.node)
+            predicate_name = pred.predicate_type
+            predicate = get_or_create_predicate(predicate_name, predicate_text)
+            fact = Fact.objects.create(
+                patient=patient,  # type: ignore[misc]
+                subject=subject_entity,
+                predicate=predicate,
+                object=object_entity,
+                provenance=provenance,
+            )
+            logger.info("Saved Fact", extra={"fact_id": fact.id})
+            count += 1
+        except Exception:
+            logger.exception("Failed to save triple: %r", t)
+
+    return count

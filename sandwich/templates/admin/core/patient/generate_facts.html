@@ -1,0 +1,16 @@
+{% extends "admin/generic_form.html" %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label="core" %}">Core</a>
+    &rsaquo; <a href="{% url 'admin:core_patient_changelist' %}">Patients</a>
+    &rsaquo; Generate Facts
+  </div>
+{% endblock breadcrumbs %}
+{% block component_title %}
+  <h1>Generate Facts</h1>
+{% endblock component_title %}
+{% block component_preamble %}
+  <p>Use the form below to generate facts for the selected patient.</p>
+{% endblock component_preamble %}

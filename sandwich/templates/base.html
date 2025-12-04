@@ -1,0 +1,85 @@
+{% load static i18n %}
+{% load json %}
+{% load render_bundle from webpack_loader %}
+
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>
+      {% block title %}
+        HealthConnect
+      {% endblock title %}
+    </title>
+    <meta name="htmx-config"
+          content='{"inlineScriptNonce":"{{ request.csp_nonce }}"}' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="bread + htmx" />
+    <meta name="author" content="Thrive Health" />
+    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+    <!-- Open Graph metadata for rich previews -->
+    <meta property="og:title"
+          content="Thrive Health: Unified, AI-Powered Health Platform" />
+    <meta property="og:description"
+          content="Discover Thrive Health’s next-generation platform: AI-powered tools and a unified personal health record for individuals, families, and healthcare professionals. Take control of your health journey—see how easy connected care can be." />
+    <meta property="og:image"
+          content="{% block og_image %}{% static 'images/logo_primary_blue.png' %}{% endblock og_image %}" />
+    <meta property="og:url"
+          content="{{ request.build_absolute_uri|default:'' }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Thrive Health" />
+    {% block css %}
+      {# Your stuff: Third-party CSS libraries go here #}
+      {# This file stores project-specific CSS#}
+      {% render_bundle 'project' 'css' attrs='id="global_styles"' %}
+    {% endblock css %}
+    {# Placed at the top of the document so pages load faster with defer #}
+    {% block javascript %}
+      {# You can find these variables supplied by server.core.context_processors.settings_context #}
+      {% json_script_safe environment "environment" %}
+      {% json_script_safe app_version "app_version" %}
+      {# Vendor dependencies bundled as one file #}
+      {% render_bundle 'vendors' 'js' %}
+      {# place project specific Javascript in this file #}
+      {% render_bundle 'project' 'js' %}
+    {% endblock javascript %}
+    {% block extra_head %}
+    {% endblock extra_head %}
+  </head>
+  <body class="{% block bodyclass %}bg-neutral-100 min-h-screen{% endblock bodyclass %}"
+        hx-ext="sse">
+    <htmx-loading-bar></htmx-loading-bar>
+    {% block body %}
+      <div class="container mx-auto">
+        {% block main %}
+          {% block content %}
+          {% endblock content %}
+        {% endblock main %}
+      </div>
+    {% endblock body %}
+    {% block modal %}
+    {% endblock modal %}
+    {% include "partials/messages.html" %}
+    {% block inline_javascript %}
+      {% comment %}
+    Script tags with only code, no src (defer by default). To run
+    with a "defer" so that you run inline code:
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        /* Run whatever you want */
+      });
+    </script>
+      {% endcomment %}
+    {% endblock inline_javascript %}
+    <script nonce="{{ request.csp_nonce }}">
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        const csrfToken = '{{ csrf_token }}';
+        if (event.detail.method !== 'get' && event.detail.method !== 'head') {
+          event.detail.headers['X-CSRFToken'] = csrfToken;
+        }
+      });
+    </script>
+  </body>
+</html>

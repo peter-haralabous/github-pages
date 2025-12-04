@@ -1,0 +1,7 @@
+.git/
+.github/
+.idea/
+.venv/
+.yarn/
+data/
+node_modules/

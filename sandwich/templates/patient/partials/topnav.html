@@ -1,0 +1,16 @@
+{% extends 'partials/topnav.html' %}
+
+{% block avatar_initials %}
+  {% if patient %}
+    <span class="text-sm">{{ patient.initials }}</span>
+  {% else %}
+    <span class="text-sm">{{ request.user.initials }}</span>
+  {% endif %}
+{% endblock avatar_initials %}
+{% block avatar_menu_title %}
+  {% if patient %}
+    {{ patient.full_name }}
+  {% else %}
+    Switch context
+  {% endif %}
+{% endblock avatar_menu_title %}

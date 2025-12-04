@@ -1,0 +1,912 @@
+{% extends "provider/base.html" %}
+
+{% load crispy_forms_tags %}
+{% load lucide %}
+{% load static i18n %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_head %}
+  {{ block.super }}
+  {% render_bundle 'survey' 'css' %}
+  {% render_bundle 'survey' 'js' %}
+  <style nonce="{{ request.csp_nonce }}">
+    /* Mobile-only sidebar collapsed/expanded behavior */
+    @media (max-width: 1023px) {
+
+      /* Helper classes for sidebar states - only active on mobile */
+      #patient-sidebar-container[data-collapsed="true"] .hide-when-collapsed {
+        display: none !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="false"] .hide-when-expanded {
+        display: none !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="true"] .show-when-collapsed {
+        display: flex !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="false"] .show-when-collapsed {
+        display: none !important;
+      }
+
+      /* Icon centering and gap removal in collapsed state */
+      #patient-sidebar-container[data-collapsed="true"] button,
+      #patient-sidebar-container[data-collapsed="true"] a {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      #patient-sidebar-container[data-collapsed="true"] .flex.gap-3 {
+        gap: 0 !important;
+      }
+
+      /* Sidebar width changes */
+      #patient-sidebar-container[data-collapsed="false"] {
+        width: 320px !important;
+      }
+
+      /* Hover-to-expand: temporarily expand sidebar on hover when collapsed */
+      #patient-sidebar-container[data-collapsed="true"]:hover {
+        width: 320px !important;
+      }
+
+      /* Show labels when hovering over collapsed sidebar */
+      #patient-sidebar-container[data-collapsed="true"]:hover .hide-when-collapsed {
+        display: block !important;
+      }
+
+      /* Keep toggle button's left chevron hidden during hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover #mobile-sidebar-toggle .hide-when-collapsed {
+        display: none !important;
+      }
+
+      /* Hide "Directories" label on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover .hide-when-expanded {
+        display: none !important;
+      }
+
+      /* Restore normal button alignment on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover button,
+      #patient-sidebar-container[data-collapsed="true"]:hover a {
+        justify-content: flex-start !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+
+      /* Restore gap on hover */
+      #patient-sidebar-container[data-collapsed="true"]:hover .flex.gap-3 {
+        gap: 0.75rem !important;
+      }
+    }
+
+    /* Split view styling */
+    #patient-workspace {
+      height: calc(100vh - 4rem);
+      /* Account for top nav */
+    }
+
+    .workspace-panel {
+      height: 100%;
+      min-width: 33%;
+      flex: 1 1 auto;
+      transition: all 0.3s ease;
+    }
+
+    /* Collapsed tab styling - vertical text bar */
+    .workspace-panel[data-collapsed="true"] {
+      min-width: 64px !important;
+      max-width: 64px !important;
+      flex: 0 0 64px !important;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover {
+      background-color: #f9fafb;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-header {
+      align-items: center;
+      padding: .825rem 0 !important;
+      height: 100%;
+      text-orientation: mixed;
+      cursor: pointer;
+      align-items: center;
+      padding: 0;
+      height: 100%;
+      gap: 1rem;
+      writing-mode: sideways-lr;
+      cursor: pointer;
+      width: 100%;
+      flex-direction: row;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-title {
+      transform: rotate(180deg);
+      white-space: nowrap;
+      margin: auto 0;
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-controls {
+      flex-direction: column;
+      writing-mode: horizontal-tb;
+      transform: none;
+      gap: 0.25rem;
+      position: relative;
+    }
+
+    /* Hide collapse button when collapsed */
+    .workspace-panel[data-collapsed="true"] .js-tab-collapse {
+      display: none;
+    }
+
+    /* Artifact type icon styling when collapsed */
+    .workspace-panel[data-collapsed="true"] .artifact-type-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .workspace-panel[data-collapsed="true"] .artifact-type-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover .artifact-type-icon {
+      opacity: 0;
+
+    }
+
+    /* Close button hidden by default when collapsed, shown on hover */
+    .workspace-panel[data-collapsed="true"] .js-tab-close {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover .js-tab-close {
+      opacity: 1;
+    }
+
+    /* Hide artifact icon when expanded */
+    .workspace-panel[data-collapsed="false"] .artifact-type-icon {
+      display: none;
+    }
+
+    .workspace-panel[data-collapsed="true"] .tab-content {
+      display: none;
+    }
+
+    /* Smooth scrolling for horizontal panel container */
+    #panel-container {
+      scroll-behavior: smooth;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      display: flex !important;
+      /* Always flex when visible */
+    }
+
+    #panel-container.hidden {
+      display: none !important;
+    }
+
+    /* Custom scrollbar for horizontal scrolling */
+    #panel-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #panel-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    #panel-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+
+    #panel-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+{% endblock extra_head %}
+{% block topnav %}
+  {% include 'provider/partials/patient_details_topnav.html' %}
+{% endblock topnav %}
+{% block content %}
+  {# Modal container for HTMX-loaded modals #}
+  <div id="add-task-modal"></div>
+  {# Main Layout: Sidebar + Content #}
+  <div class="flex -m-4 md:-m-6 gap-0">
+    {# Unified Sidebar - Responsive (collapsed on mobile, expanded on desktop) #}
+    {% include 'provider/partials/patient_details_sidenav.html' %}
+    {# Main Workspace - includes mobile patient header #}
+    {% include 'provider/partials/patient_details_workspace.html' %}
+  </div>
+  {# Script for tab management and sidebar state #}
+  <script nonce="{{ request.csp_nonce }}">
+    (function() {
+      // ===========================================
+      // Icon Constants - Pre-rendered from Django Lucide template tags
+      // ===========================================
+      const ICON_COLLAPSE_RIGHT = `{% lucide "panel-right-open" size="20" class="shrink-0" %}`;
+      const ICON_COLLAPSE_LEFT = `{% lucide "panel-left-open" size="20" class="shrink-0" %}`;
+      const ICON_CLOSE = `{% lucide "x" size="16" class="text-base-content shrink-0" %}`;
+      const ICON_LOADER = `{% lucide "loader-circle" class="animate-spin shrink-0" %}`;
+
+      // Tab type icons
+      const TAB_ICONS = {
+        overview: `{% lucide "layout-grid" size=20 class="" %}`,
+        encounter: `{% lucide "calendar" size=20 class="" %}`,
+        form: `{% lucide "file-pen-line" size=20 class="" %}`,
+        summary: `{% lucide "file-check" size=20 class="" %}`,
+        document: `{% lucide "file-text" size=20 class="" %}`,
+        'encounters-list': `{% lucide "calendar" size=20 class="" %}`,
+        'forms-list': `{% lucide "file-pen-line" size=20 class="" %}`,
+        'summaries-list': `{% lucide "file-check" size=20 class="" %}`,
+        'documents-list': `{% lucide "file-text" size=20 class="" %}`
+      };
+
+      // ===========================================
+      // URL Building Helpers
+      // ===========================================
+      const BASE_URL = "{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}";
+      // Build URLs with placeholder UUIDs that we'll replace at runtime
+      const ORG_ID = "{{ organization.id }}";
+      const PATIENT_ID = "{{ patient.id }}";
+      const CONTENT_URLS = {
+        overview: "{% url 'providers:patient_overview' organization_id=organization.id patient_id=patient.id %}",
+        encounter: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/encounter/{id}/content`,
+        form: `/providers/organization/${ORG_ID}/patient/${PATIENT_ID}/task/{id}`,
+        summary: "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
+        document: "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}",
+        'encounters-list': "{% url 'providers:patient_encounters_list_content' organization_id=organization.id patient_id=patient.id %}",
+        'forms-list': "{% url 'providers:patient_forms_list_content' organization_id=organization.id patient_id=patient.id %}",
+        'summaries-list': "{% url 'providers:patient_summaries_list_content' organization_id=organization.id patient_id=patient.id %}",
+        'documents-list': "{% url 'providers:patient_documents_list_content' organization_id=organization.id patient_id=patient.id %}"
+      };
+
+      // ===========================================
+      // Tab Manager
+      // ===========================================
+      const patientTabs = {
+        tabs: [], // Array of { id, type, label, loaded }
+        activeTabId: null, // Currently active tab ID
+        maxTabs: 50,
+
+        // Initialize from URL hash or default state
+        init: function() {
+          this.restoreFromUrl();
+          this.render();
+          this.updateEmptyState();
+
+          // Listen for popstate to handle back/forward
+          window.addEventListener('popstate', () => {
+            this.restoreFromUrl();
+            this.render();
+            this.updateEmptyState();
+          });
+        },
+
+        // Generate unique tab ID from type and resource ID
+        makeTabId: function(type, id) {
+          if (type === 'overview') return 'overview';
+          return `${type}:${id}`;
+        },
+
+        // Parse tab ID back to type and resource ID
+        parseTabId: function(tabId) {
+          if (tabId === 'overview') return {
+            type: 'overview',
+            id: 'overview'
+          };
+          const [type, id] = tabId.split(':');
+          return {
+            type,
+            id
+          };
+        },
+
+        // Open a tab (or switch to it if already open)
+        openTab: function(type, id, label) {
+          const tabId = this.makeTabId(type, id);
+          console.log('Opening tab:', {
+            type,
+            id,
+            label,
+            tabId
+          });
+
+          // Check if tab already exists
+          const existingTab = this.tabs.find(t => t.id === tabId);
+          if (existingTab) {
+            console.log('Tab already exists, switching to it');
+            this.switchTab(tabId);
+            return;
+          }
+
+          // Check max tabs
+          if (this.tabs.length >= this.maxTabs) {
+            // Remove oldest non-active tab
+            const oldestIndex = this.tabs.findIndex(t => t.id !== this.activeTabId);
+            if (oldestIndex >= 0) {
+              this.removeTabAt(oldestIndex);
+            }
+          }
+
+          // Add new tab (prepend to left for left-to-right reading)
+          const newTab = {
+            id: tabId,
+            type,
+            label,
+            loaded: false
+          };
+          this.tabs.unshift(newTab);
+          console.log('Added new tab, total tabs:', this.tabs.length);
+          this.switchTab(tabId);
+        },
+
+        // Switch to an existing tab
+        switchTab: function(tabId) {
+          const tab = this.tabs.find(t => t.id === tabId);
+          if (!tab) {
+            console.error('Tab not found:', tabId);
+            return;
+          }
+
+          console.log('Switching to tab:', tabId, 'loaded:', tab.loaded);
+          this.activeTabId = tabId;
+          this.render();
+          this.syncUrl();
+          this.updateEmptyState();
+          this.updateSidebarHighlight();
+
+          // Load content if not cached
+          const panelId = `panel-${tabId.replace(':', '-')}`;
+          const panel = document.getElementById(panelId);
+          console.log('Panel exists:', !!panel, 'Panel ID:', panelId);
+
+          if (!tab.loaded || !panel) {
+            console.log('Loading tab content...');
+            this.loadTabContent(tab);
+          } else {
+            console.log('Content already loaded, showing panel');
+            this.showPanel(tabId);
+          }
+        },
+
+        // Close a tab
+        closeTab: function(tabId) {
+          const index = this.tabs.findIndex(t => t.id === tabId);
+          if (index < 0) return;
+
+          // Remove the panel from DOM
+          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+          if (panel) panel.remove();
+
+          // Remove from tabs array
+          this.tabs.splice(index, 1);
+
+          // If closing active tab, switch to nearest
+          if (this.activeTabId === tabId) {
+            if (this.tabs.length > 0) {
+              // Switch to nearest tab (prefer right, then left)
+              const newIndex = Math.min(index, this.tabs.length - 1);
+              this.activeTabId = this.tabs[newIndex].id;
+              this.showPanel(this.activeTabId);
+            } else {
+              this.activeTabId = null;
+            }
+          }
+
+          this.render();
+          this.syncUrl();
+          this.updateEmptyState();
+          this.updateSidebarHighlight();
+        },
+
+        // Remove tab at index (internal helper)
+        removeTabAt: function(index) {
+          const tab = this.tabs[index];
+          const panel = document.getElementById(`panel-${tab.id.replace(':', '-')}`);
+          if (panel) panel.remove();
+          this.tabs.splice(index, 1);
+        },
+
+        // Load tab content via HTMX/fetch
+        loadTabContent: function(tab) {
+          const {
+            type,
+            id
+          } = this.parseTabId(tab.id);
+          let url = CONTENT_URLS[type];
+
+          if (type === 'encounter' || type === 'form') {
+            url = url.replace('{id}', id) + '?tab=true';
+          }
+
+          // Create or get panel element
+          const panelId = `panel-${tab.id.replace(':', '-')}`;
+          let panel = document.getElementById(panelId);
+
+          if (!panel) {
+            panel = document.createElement('div');
+            panel.id = panelId;
+            panel.className = 'workspace-panel flex flex-col border-r border-gray-200';
+            panel.dataset.tabId = tab.id;
+            panel.dataset.collapsed = 'false';
+
+            // Insert at the beginning (left side) for left-to-right reading
+            const container = document.getElementById('panel-container');
+            if (container.firstChild) {
+              container.insertBefore(panel, container.firstChild);
+            } else {
+              container.appendChild(panel);
+            }
+
+            // Create panel structure with header
+            const typeIcon = TAB_ICONS[tab.type] || TAB_ICONS['document'];
+            panel.innerHTML = `
+              <div class="tab-header flex items-center justify-between gap-2 px-4 py-3 bg-base-100 border-b border-gray-200 shrink-0" data-tab-id="${tab.id}">
+                <h2 class="tab-title text-base font-semibold text-gray-900 truncate flex-1">${this.escapeHtml(tab.label)}</h2>
+                <div class="tab-controls flex items-center gap-1 text-base-content" data-type-icon='${typeIcon}'>
+                  <button class="js-tab-collapse btn btn-ghost btn-circle" data-tab-id="${tab.id}" title="Collapse">
+                    ${ICON_COLLAPSE_RIGHT}
+                  </button>
+                  <button class="js-tab-close btn btn-ghost btn-circle text-error" data-tab-id="${tab.id}" title="Close">
+                    ${ICON_CLOSE}
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex-col tab-content flex-1 overflow-y-auto">
+                <div class="flex items-center justify-center py-20 h-full">
+                  ${ICON_LOADER}
+                </div>
+              </div>
+            `;
+          }
+
+          this.updatePanelVisibility();
+
+          // Fetch content
+          const contentDiv = panel.querySelector('.tab-content');
+          console.log('Loading tab content from:', url);
+
+          fetch(url, {
+              headers: {
+                'HX-Request': 'true',
+                'X-CSRFToken': '{{ csrf_token }}'
+              }
+            })
+            .then(response => {
+              console.log('Response status:', response.status);
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.text();
+            })
+            .then(html => {
+              console.log('Content loaded, length:', html.length);
+              contentDiv.innerHTML = `<div class="p-4 lg:p-6">${html}</div>`;
+              tab.loaded = true;
+              // Process any HTMX in the loaded content
+              if (window.htmx) {
+                htmx.process(contentDiv);
+              }
+              // Extract label from loaded content if available
+              const labelEl = contentDiv.querySelector('[data-tab-label]');
+              if (labelEl) {
+                tab.label = labelEl.dataset.tabLabel;
+                const titleEl = panel.querySelector('.tab-title');
+                if (titleEl) {
+                  titleEl.textContent = tab.label;
+                }
+              }
+            })
+            .catch(err => {
+              console.error('Failed to load tab content:', err);
+              contentDiv.innerHTML = `
+              <div class="flex flex-col items-center justify-center py-20 text-red-500">
+                <p>Failed to load content: ${err.message}</p>
+                <button class="js-tab-retry mt-2 text-sm underline" data-tab-id="${tab.id}">Retry</button>
+              </div>
+            `;
+            });
+        },
+
+        // Show all panels side-by-side (split view)
+        showPanel: function(tabId) {
+          // In split view, we don't hide panels - they're all visible
+          // Just ensure the active tab is highlighted
+          this.updatePanelVisibility();
+        },
+
+        // Update panel visibility and layout for split view
+        updatePanelVisibility: function() {
+          const container = document.getElementById('panel-container');
+          const panels = container.querySelectorAll('.workspace-panel');
+
+          const numTabs = this.tabs.length;
+          if (numTabs === 0) return;
+
+          // Calculate widths considering collapsed state
+          const expandedPanels = [];
+          const collapsedPanels = [];
+
+          panels.forEach(panel => {
+            const tabId = panel.dataset.tabId;
+            const tabExists = this.tabs.find(t => t.id === tabId);
+
+            if (tabExists) {
+              panel.classList.remove('hidden');
+              if (panel.dataset.collapsed === 'true') {
+                collapsedPanels.push(panel);
+              } else {
+                expandedPanels.push(panel);
+              }
+            } else {
+              panel.classList.add('hidden');
+            }
+          });
+
+          // Collapsed panels get fixed narrow width
+          collapsedPanels.forEach(panel => {
+            panel.style.minWidth = '64px';
+            panel.style.maxWidth = '64px';
+            panel.style.flex = '0 0 64px';
+          });
+
+          // Expanded panels share remaining space with 33% minimum
+          if (expandedPanels.length > 0) {
+            expandedPanels.forEach(panel => {
+              panel.style.minWidth = '33%';
+              panel.style.maxWidth = 'none';
+              panel.style.flex = '1 1 auto';
+            });
+          }
+
+          // Remove border from last visible panel
+          const visiblePanels = Array.from(panels).filter(p => !p.classList.contains('hidden'));
+          if (visiblePanels.length > 0) {
+            visiblePanels.forEach(p => p.classList.add('border-r', 'border-gray-200'));
+            visiblePanels[visiblePanels.length - 1].classList.remove('border-r');
+          }
+        },
+
+        // Toggle tab collapse state
+        toggleCollapse: function(tabId) {
+          const panel = document.getElementById(`panel-${tabId.replace(':', '-')}`);
+          if (!panel) return;
+
+          const isCollapsed = panel.dataset.collapsed === 'true';
+          panel.dataset.collapsed = isCollapsed ? 'false' : 'true';
+
+          const collapseBtn = panel.querySelector('.js-tab-collapse');
+
+          if (isCollapsed) {
+            // Expand - chevron points right
+            collapseBtn.innerHTML = ICON_COLLAPSE_RIGHT;
+            // Remove artifact icon when expanding
+            const controls = panel.querySelector('.tab-controls');
+            const iconEl = controls.querySelector('.artifact-type-icon');
+            if (iconEl) iconEl.remove();
+          } else {
+            // Collapse - chevron points left
+            collapseBtn.innerHTML = ICON_COLLAPSE_LEFT;
+            // Add artifact icon when collapsing
+            const controls = panel.querySelector('.tab-controls');
+            const typeIcon = controls.dataset.typeIcon;
+            if (typeIcon && !controls.querySelector('.artifact-type-icon')) {
+              const iconWrapper = document.createElement('div');
+              iconWrapper.className = 'artifact-type-icon';
+              iconWrapper.innerHTML = typeIcon;
+              controls.insertBefore(iconWrapper, controls.firstChild);
+            }
+          }
+
+          this.updatePanelVisibility();
+        },
+
+        // Update empty state visibility
+        updateEmptyState: function() {
+          const emptyState = document.getElementById('workspace-empty-state');
+          const panelContainer = document.getElementById('panel-container');
+
+          console.log('updateEmptyState - tabs.length:', this.tabs.length);
+
+          if (this.tabs.length === 0) {
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            panelContainer.classList.add('hidden');
+            console.log('Showing empty state, hiding panel container');
+          } else {
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            panelContainer.classList.remove('hidden');
+            console.log('Hiding empty state, showing panel container');
+          }
+        },
+
+        // Render (no longer needed - panels have their own headers)
+        render: function() {
+          // Update panel visibility
+          this.updatePanelVisibility();
+        },
+
+        // Escape HTML for safe rendering
+        escapeHtml: function(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        },
+
+        // Sync state to URL hash
+        syncUrl: function() {
+          const tabsParam = this.tabs.map(t => t.id).join(',');
+          const hash = `tabs=${encodeURIComponent(tabsParam)}&active=${encodeURIComponent(this.activeTabId || '')}`;
+
+          // Update URL without triggering popstate
+          const newUrl = `${window.location.pathname}#${hash}`;
+          history.replaceState({
+            tabs: this.tabs,
+            active: this.activeTabId
+          }, '', newUrl);
+        },
+
+        // Restore state from URL hash
+        restoreFromUrl: function() {
+          const hash = window.location.hash.slice(1);
+          if (!hash) {
+            // No hash - check for legacy query params or start fresh
+            const urlParams = new URLSearchParams(window.location.search);
+            const encounterId = urlParams.get('encounter_id');
+
+            if (encounterId) {
+              // Legacy URL with encounter_id - open that encounter
+              this.tabs = [];
+              this.activeTabId = null;
+              // We'll need to fetch the encounter label, for now use date placeholder
+              this.openTab('encounter', encounterId, 'Encounter');
+            }
+            return;
+          }
+
+          const params = new URLSearchParams(hash);
+          const tabsStr = params.get('tabs');
+          const activeId = params.get('active');
+
+          if (tabsStr) {
+            const tabIds = tabsStr.split(',').filter(Boolean);
+            this.tabs = tabIds.map(id => {
+              const {
+                type
+              } = this.parseTabId(id);
+              // Restore with placeholder label - will be updated when content loads
+              return {
+                id,
+                type,
+                label: this.getDefaultLabel(type, id),
+                loaded: false
+              };
+            });
+          }
+
+          if (activeId && this.tabs.find(t => t.id === activeId)) {
+            this.activeTabId = activeId;
+          } else if (this.tabs.length > 0) {
+            this.activeTabId = this.tabs[0].id;
+          }
+
+          // Load active tab content
+          if (this.activeTabId) {
+            const activeTab = this.tabs.find(t => t.id === this.activeTabId);
+            if (activeTab) {
+              this.loadTabContent(activeTab);
+            }
+          }
+        },
+
+        // Get default label for a tab type
+        getDefaultLabel: function(type, tabId) {
+          if (type === 'overview') return 'Overview';
+          if (type === 'encounter') return 'Encounter';
+          if (type === 'form') return 'Form';
+          if (type === 'summary') return 'Summary';
+          if (type === 'document') return 'Document';
+          if (type === 'encounters-list') return 'All Encounters';
+          if (type === 'forms-list') return 'All Forms';
+          if (type === 'summaries-list') return 'All Summaries';
+          if (type === 'documents-list') return 'All Documents';
+          return 'Tab';
+        },
+
+        // Update sidebar highlighting based on active tab
+        updateSidebarHighlight: function() {
+          if (!this.activeTabId) return;
+
+          const {
+            type,
+            id
+          } = this.parseTabId(this.activeTabId);
+
+          // Clear all highlights first
+          document.querySelectorAll('#patient-sidebar .bg-blue-100').forEach(el => {
+            el.classList.remove('bg-blue-100');
+            el.classList.add('hover:bg-gray-100');
+          });
+          document.querySelectorAll('#patient-sidebar .font-semibold').forEach(el => {
+            if (!el.classList.contains('text-base')) { // Don't remove from headers
+              el.classList.remove('font-semibold', 'text-gray-900');
+              el.classList.add('text-gray-700');
+            }
+          });
+
+          // Highlight based on active tab type using data attributes
+          // IMPORTANT: Only highlight items in the sidebar, not in the main content area
+          if (type === 'overview') {
+            const overviewBtn = document.querySelector('#patient-sidebar [data-tab-type="overview"]');
+            if (overviewBtn) {
+              overviewBtn.classList.add('bg-blue-100');
+              overviewBtn.classList.remove('hover:bg-gray-100');
+            }
+          } else {
+            const item = document.querySelector(`#patient-sidebar [data-tab-id="${id}"]`);
+            if (item) {
+              item.classList.add('bg-blue-100');
+              item.classList.remove('hover:bg-gray-100');
+              const textEl = item.querySelector('p');
+              if (textEl) {
+                textEl.classList.add('font-semibold', 'text-gray-900');
+                textEl.classList.remove('text-gray-700');
+              }
+            }
+          }
+        }
+      };
+
+      // Expose to global scope
+      window.patientTabs = patientTabs;
+
+      // ===========================================
+      // Event Delegation - handle all tab-related clicks
+      // ===========================================
+      document.addEventListener('click', function(e) {
+        // Handle tab open clicks (from sidebar items)
+        const openTabEl = e.target.closest('.js-open-tab');
+        if (openTabEl) {
+          e.preventDefault();
+          const type = openTabEl.dataset.tabType;
+          const id = openTabEl.dataset.tabId;
+          const label = openTabEl.dataset.tabLabel;
+          patientTabs.openTab(type, id, label);
+          return;
+        }
+
+        // Handle clicking on collapsed tab header to expand
+        const tabHeader = e.target.closest('.tab-header');
+        if (tabHeader) {
+          const panel = tabHeader.closest('.workspace-panel');
+          if (panel && panel.dataset.collapsed === 'true') {
+            // Only handle click if panel is collapsed and click is not on close button
+            if (!e.target.closest('.js-tab-close')) {
+              e.preventDefault();
+              const tabId = tabHeader.dataset.tabId;
+              patientTabs.toggleCollapse(tabId);
+              return;
+            }
+          }
+        }
+
+        // Handle tab collapse clicks
+        const collapseTabEl = e.target.closest('.js-tab-collapse');
+        if (collapseTabEl) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tabId = collapseTabEl.dataset.tabId;
+          patientTabs.toggleCollapse(tabId);
+          return;
+        }
+
+        // Handle tab close clicks (X button on tabs)
+        const closeTabEl = e.target.closest('.js-tab-close');
+        if (closeTabEl) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tabId = closeTabEl.dataset.tabId;
+          patientTabs.closeTab(tabId);
+          return;
+        }
+
+        // Handle tab retry clicks (retry loading failed content)
+        const retryEl = e.target.closest('.js-tab-retry');
+        if (retryEl) {
+          e.preventDefault();
+          const tabId = retryEl.dataset.tabId;
+          const tab = patientTabs.tabs.find(t => t.id === tabId);
+          if (tab) {
+            patientTabs.loadTabContent(tab);
+          }
+          return;
+        }
+      });
+
+      // Initialize on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => patientTabs.init());
+      } else {
+        patientTabs.init();
+      }
+    })();
+
+    // ===========================================
+    // Mobile Sidebar Toggle Management
+    // ===========================================
+    (function() {
+      const sidebar = document.getElementById('patient-sidebar-container');
+      const overlay = document.getElementById('mobile-sidebar-overlay');
+      const toggleBtn = document.getElementById('mobile-sidebar-toggle');
+
+      if (!sidebar || !overlay || !toggleBtn) return;
+
+      // Toggle sidebar expanded/collapsed state
+      function toggleSidebar() {
+        const isCollapsed = sidebar.dataset.collapsed === 'true';
+
+        if (isCollapsed) {
+          // Expand
+          sidebar.dataset.collapsed = 'false';
+          overlay.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        } else {
+          // Collapse
+          sidebar.dataset.collapsed = 'true';
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      }
+
+      // Toggle button click
+      toggleBtn.addEventListener('click', toggleSidebar);
+
+      // Overlay backdrop click - collapse sidebar
+      overlay.addEventListener('click', function() {
+        sidebar.dataset.collapsed = 'true';
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      });
+
+      // Auto-collapse when navigation item is clicked on mobile
+      document.addEventListener('click', function(e) {
+        const tabBtn = e.target.closest('.js-open-tab');
+        if (tabBtn && sidebar.contains(tabBtn) && window.innerWidth < 1024) {
+          setTimeout(() => {
+            sidebar.dataset.collapsed = 'true';
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+          }, 100);
+        }
+      });
+
+      // Escape key to collapse
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.dataset.collapsed === 'false') {
+          sidebar.dataset.collapsed = 'true';
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    })();
+  </script>
+{% endblock content %}

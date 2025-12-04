@@ -1,0 +1,34 @@
+{% load lucide %}
+
+<div class="flex justify-between items-center mb-4">
+  <h3 class="m-0">Forms</h3>
+</div>
+<div class="rounded-box border border-base-200 bg-base-100 p-6">
+  <div class="mb-8">
+    <h4 class="text-md font-semibold mb-4 text-left">Documents</h4>
+    {# TODO: replace with dynamic document data when available #}
+    <div class="text-center py-8 text-base-content/60">No documents for this encounter.</div>
+  </div>
+  <div>
+    <h4 class="text-md font-semibold mb-4 text-left">Forms</h4>
+    {% if tasks %}
+      <div class="space-y-4">
+        {% for task in tasks %}
+          <a href="{% url 'providers:task' organization_id=organization.id patient_id=encounter.patient.id task_id=task.id %}"
+             class="flex items-center justify-between p-4 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
+            <div>
+              <div class="font-medium mb-1">{{ task.name }}</div>
+              <div class="flex items-center gap-2 text-sm">
+                {% include 'provider/partials/task_status_badge.html' with task=task size='sm' %}
+                <span class="text-base-content/60">• Created {{ task.created_at|date:DJANGO_DATE_FORMAT }}</span>
+              </div>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-base-content/60" %}
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-8 text-base-content/60">No forms for this encounter.</div>
+    {% endif %}
+  </div>
+</div>

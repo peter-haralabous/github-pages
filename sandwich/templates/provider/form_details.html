@@ -1,0 +1,45 @@
+{% extends "users/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <div class="flex items-center mb-5">
+    <a href="{% url 'providers:form_templates_list' organization_id=organization.id %}"
+       class="btn btn-ghost btn-circle mr-2">{% lucide "arrow-left" class="w-5 h-5" %}</a>
+    <h1 class="mr-2">Version History</h1>
+  </div>
+  <h3>{{ form.name|capfirst }}</h3>
+  <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Created</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {# TODO: form version actions #}
+        {% for form_version in forms %}
+          <tr>
+            <td data-form-version-id="{{ form_version.pgh_id }}">
+              v{{ forloop.revcounter }}
+              {% if forloop.first %}<span class="badge badge-success badge-xs ml-2">Latest</span>{% endif %}
+            </td>
+            <td>{{ form_version.pgh_created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+            <td>
+              {# TODO: swap to kebab menu of actions #}
+              <a class="btn btn-sm"
+                 href="{% url 'providers:form_template_preview' organization_id=organization.id form_id=form.id form_version_id=form_version.pgh_id %}">View</a>
+              <a class="btn btn-sm" href="#" {% if forloop.first %}disabled{% endif %}>Restore</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3" class="text-center">No version history.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

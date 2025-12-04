@@ -1,0 +1,44 @@
+{% load lucide %}
+
+<div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+  {# Header with back button #}
+  <div class="p-2">
+    <button class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 w-full"
+            :class="!mobileSidebarExpanded && 'justify-center'"
+            :title="mobileSidebarExpanded ? '' : 'Back'"
+            hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}?mobile=true"
+            hx-target="#mobile-patient-sidebar"
+            hx-swap="innerHTML">
+      {% lucide "arrow-left" class="size-5 text-gray-600 shrink-0" %}
+      <span class="text-gray-900 text-base font-medium"
+            x-show="mobileSidebarExpanded"
+            x-transition>Back</span>
+    </button>
+  </div>
+  {# Section header - only visible when expanded #}
+  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-4 mb-2"
+      x-show="mobileSidebarExpanded"
+      x-transition>Documents</h3>
+  {# Documents list #}
+  <ul class="flex flex-col gap-1 p-2">
+    {% for document in documents %}
+      <li class="js-open-tab flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100"
+          :class="!mobileSidebarExpanded && 'justify-center'"
+          :title="mobileSidebarExpanded ? '' : '{{ document.original_filename }}'"
+          data-tab-type="document"
+          data-tab-id="{{ document.id }}"
+          data-tab-label="{{ document.original_filename }}">
+        {% lucide "file-text" class="size-5 text-gray-400 shrink-0" %}
+        <p class="text-sm truncate text-gray-700"
+           x-show="mobileSidebarExpanded"
+           x-transition>{{ document.original_filename }}</p>
+      </li>
+    {% empty %}
+      <li class="flex items-center justify-center p-2 text-gray-500"
+          :title="mobileSidebarExpanded ? '' : 'No documents'">
+        {% lucide "file-text" class="size-5 text-gray-400" %}
+        <p class="text-sm ml-3" x-show="mobileSidebarExpanded" x-transition>No documents found.</p>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

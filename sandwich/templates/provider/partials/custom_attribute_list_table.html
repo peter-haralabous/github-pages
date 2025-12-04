@@ -1,0 +1,69 @@
+{% load sortable %}
+{% load lucide %}
+
+<div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% sortable_column "Name" "name" %}</th>
+        <th>Type</th>
+        <th>Multi values</th>
+        <th>{% sortable_column "Created" "created_at" %}</th>
+        <th>{% sortable_column "Updated" "updated_at" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attribute in attributes %}
+        <tr>
+          <td>{{ attribute.name }}</td>
+          <td>{{ attribute.data_type.label }}</td>
+          <td>{{ attribute.is_multi|yesno:"Yes,No" }}</td>
+          <td>{{ attribute.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          <td>{{ attribute.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          <td class="text-right">
+            <button class="btn btn-ghost btn-sm"
+                    type="button"
+                    hx-get="{% url 'providers:custom_attribute_archive' organization_id=organization.id attribute_id=attribute.id %}"
+                    hx-target="body"
+                    hx-swap="beforeend"
+                    hx-push-url="true"
+                    aria-label="Delete {{ attribute.name }}">
+              {% lucide "trash-2" class="h-4 w-4 text-red-500" %}
+            </button>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No fields found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- Pagination controls -->
+<nav aria-label="Custom field pagination" class="join mt-2">
+  {% if attributes.has_previous %}
+    <a class="join-item btn"
+       href="{% querystring page=attributes.previous_page_number %}"
+       aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Previous">
+      <span aria-hidden="true">&laquo; Previous</span>
+    </button>
+  {% endif %}
+  <span class="join-item btn">Page {{ attributes.number }} of {{ attributes.paginator.num_pages }}</span>
+  {% if attributes.has_next %}
+    <a class="join-item btn"
+       href="{% querystring page=attributes.next_page_number %}"
+       aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </a>
+  {% else %}
+    <button class="join-item btn" disabled aria-label="Next">
+      <span aria-hidden="true">Next &raquo;</span>
+    </button>
+  {% endif %}
+</nav>

@@ -1,0 +1,93 @@
+exclude: '^devcontainer.json|.ambr$|__snapshots__'
+default_stages: [pre-commit]
+minimum_pre_commit_version: '3.2.0'
+
+default_language_version:
+  python: python3.13
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      #- id: check-json # tsconfig.json is not valid json, but that's ok
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: detect-private-key
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        args: ['--tab-width', '2', '--single-quote']
+        exclude: 'sandwich/templates/'
+        types_or: [css, javascript, json, ts, tsx, yaml]
+
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: '1.28.0'
+    hooks:
+      - id: django-upgrade
+
+  # Run the Ruff linter (using the locally installed version)
+  # copied from https://github.com/astral-sh/ruff-pre-commit/blob/main/.pre-commit-hooks.yaml
+  - repo: local
+    hooks:
+      # Linter
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --force-exclude --fix --exit-non-zero-on-fix
+        language: system
+        types_or: [python, pyi, jupyter]
+        require_serial: true
+      # Formatter
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]
+        require_serial: true
+
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.36.4
+    hooks:
+      - id: djlint-reformat-django
+      - id: djlint-django
+
+  - repo: local
+    hooks:
+      - id: django-makemigrations
+        name: 'makemigrations --check'
+        entry: uv run manage.py makemigrations --check
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: mypy
+        name: 'mypy'
+        entry: uv run mypy .
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: tsc
+        name: 'tsc'
+        entry: sh -c 'yarn && yarn tsc'
+        language: system
+        types_or: [ts, tsx]
+        pass_filenames: false
+      - id: yarn-dedupe
+        name: 'yarn dedupe'
+        entry: yarn dedupe
+        language: system
+        files: yarn.lock
+        pass_filenames: false
+
+# sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
+ci:
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

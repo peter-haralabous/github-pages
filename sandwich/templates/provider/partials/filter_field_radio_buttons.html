@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div class="filter flex-wrap gap-2 items-center"
+     id="field-filter-button-group">
+  <button type="button"
+          class="btn btn-square btn-sm filter-reset"
+          aria-label="{% trans 'Reset field selection' %}"
+          id="field-filter-reset">×</button>
+  {% for value, label in choices %}
+    <input class="btn btn-sm field-radio-item"
+           type="radio"
+           name="field_id"
+           value="{{ value }}"
+           aria-label="{{ label }}"
+           data-label="{{ label }}"
+           data-value="{{ value }}"
+           required />
+  {% endfor %}
+</div>

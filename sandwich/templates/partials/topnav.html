@@ -1,0 +1,83 @@
+{% load static i18n lucide %}
+
+<nav class="navbar bg-base-100 border-b border-base-200 px-6 z-1 print:hidden">
+  <div class="flex grow justify-between items-center">
+    <div>
+      {% block topnav_items_start %}
+      {% endblock topnav_items_start %}
+    </div>
+    {# Not wrapped in a div so these items can control their size #}
+    {% block topnav_items_center %}
+    {% endblock topnav_items_center %}
+    <div class="gap-2 items-center">
+      {% block nav_items %}
+      {% endblock nav_items %}
+      {% if request.user.is_authenticated %}
+        <div class="dropdown dropdown-end">
+          <div tabindex="0"
+               role="button"
+               class="btn btn-ghost btn-circle border-none avatar avatar-placeholder">
+            <div class="bg-neutral text-neutral-content w-10 rounded-full">
+              {% block avatar_initials %}
+                <span class="text-sm">{{ request.user.initials }}</span>
+              {% endblock avatar_initials %}
+            </div>
+          </div>
+          <ul tabindex="0"
+              class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 min-w-52 p-2 shadow">
+            <li>
+              <a href="{% url "core:switcher" %}">
+                <div class="flex-col">
+                  {% block avatar_menu_title %}
+                    {% if active_organization %}
+                      {{ active_organization.name }}
+                    {% else %}
+                      Switch context
+                    {% endif %}
+                  {% endblock avatar_menu_title %}
+                  <div class="text-xs text-secondary">{{ user.email }}</div>
+                </div>
+                {% lucide "arrow-right-left" class="size-4" %}
+              </a>
+            </li>
+            <hr class="!my-1" />
+            <li>
+              <a href="{% url 'account_email' %}" class="flex gap-2">
+                <div>{% lucide "user" class="size-4" %}</div>
+                <p>{% translate "Account Settings" %}</p>
+              </a>
+            </li>
+            {% block avatar_nav_items %}
+              {% if active_organization %}
+                {% comment %} Note: will need to swap this out for org perms {% endcomment %}
+                <li>
+                  <a href="{% url 'providers:organization_edit' organization_id=active_organization.id %}"
+                     class="flex gap-2">
+                    <div>{% lucide "settings" class="size-4" %}</div>
+                    <p>Organization Settings</p>
+                  </a>
+                </li>
+              {% endif %}
+            {% endblock avatar_nav_items %}
+            <hr class="!my-1" />
+            <li>
+              <form action="{% url 'account_logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Sign Out</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      {% else %}
+        {% if ACCOUNT_ALLOW_REGISTRATION %}
+          <a id="sign-up-link"
+             class="btn btn-ghost"
+             href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+        {% endif %}
+        <a id="log-in-link"
+           class="btn btn-ghost"
+           href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,71 @@
+{% extends "patient/chatty/partials/sidebar.html" %}
+
+{% load lucide %}
+
+{# djlint:off #}
+{% block panel_id %}left-panel{% endblock panel_id %}
+{% block header_icon %}{% endblock header_icon %}
+{% block header_title %}Health Center{% endblock header_title %}
+{% block collapse_icon %}{% lucide "panel-left-close" class="size-6" %}{% endblock collapse_icon %}
+{% block expand_icon %}{% lucide "panel-left-open" class="size-6" %}{% endblock expand_icon %}
+{# djlint:on #}
+{% block panel_content %}
+  <nav class="p-4 grid grid-cols-2 gap-4">
+    <a href="{% url 'patients:patient_records' patient_id=patient.id %}"
+       hx-get="{% url 'patients:patient_records' patient_id=patient.id %}"
+       hx-target="#left-panel"
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="aspect-square p-4 rounded-3xl lg:rounded-2xl text-left relative overflow-hidden group w-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-lg bg-emerald-100 text-emerald-800">
+      {% if records_count %}
+        <div class="absolute top-3 right-3 h-8 px-3 rounded-full bg-black/5 group-hover:bg-black/10 flex items-center justify-center transition-colors font-semibold text-sm">
+          {{ records_count }}
+        </div>
+      {% endif %}
+      {% lucide "heart-pulse" class="size-5" %}
+      <h3 class="font-medium">Records</h3>
+    </a>
+    <a href="{% url 'patients:patient_repository' patient_id=patient.id %}"
+       hx-get="{% url 'patients:patient_repository' patient_id=patient.id %}"
+       hx-target="#left-panel"
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="aspect-square p-4 rounded-3xl lg:rounded-2xl text-left relative overflow-hidden group w-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-lg bg-yellow-100 text-yellow-800">
+      {% if repository_count %}
+        <div class="absolute top-3 right-3 h-8 px-3 rounded-full bg-black/5 group-hover:bg-black/10 flex items-center justify-center transition-colors font-semibold text-sm">
+          {{ repository_count }}
+        </div>
+      {% endif %}
+      {% lucide "folder" class="size-5" %}
+      <h3 class="font-medium">Repository</h3>
+    </a>
+    <a href="{% url 'patients:patient_tasks' patient_id=patient.id %}"
+       hx-get="{% url 'patients:patient_tasks' patient_id=patient.id %}"
+       hx-target="#left-panel"
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="aspect-square p-4 rounded-3xl lg:rounded-2xl text-left relative overflow-hidden group w-full flex flex-col justify-between transition-all hover:scale-[1.02] hover:shadow-lg bg-cyan-100 text-cyan-800">
+      {% if tasks_count %}
+        <div class="absolute top-3 right-3 h-8 px-3 rounded-full bg-black/5 group-hover:bg-black/10 flex items-center justify-center transition-colors font-semibold text-sm">
+          {{ tasks_count }}
+        </div>
+      {% endif %}
+      {% lucide "list-checks" class="size-5" %}
+      <h3 class="font-medium">To Do</h3>
+    </a>
+  </nav>
+{% endblock panel_content %}
+{% block collapsed_panel_content %}
+  <nav class="menu flex-1 space-y-1">
+    <li>
+      <a class="tooltip tooltip-right"
+         data-tip="Records"
+         href="{% url "patients:patient_records" patient_id=patient.id %}">{% lucide "heart-pulse" class="size-5 bg-studio-video-bg" %}</a>
+    </li>
+    <li>
+      <a class="tooltip tooltip-right"
+         data-tip="Repository"
+         href="{% url "patients:patient_repository" patient_id=patient.id %}">{% lucide "folder" class="size-5" %}</a>
+    </li>
+  </nav>
+{% endblock collapsed_panel_content %}

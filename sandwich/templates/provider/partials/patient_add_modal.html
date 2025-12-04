@@ -1,0 +1,24 @@
+{% load crispy_forms_tags %}
+{% load lucide %}
+
+<dialog id="patient-add-modal" class="modal">
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3 class="font-bold text-lg">Create Patient</h3>
+      <form method="post"
+            hx-post="{% url 'providers:patient_add_modal' organization_id=organization.id %}"
+            hx-target="#modal-container"
+            hx-swap="innerHTML">
+        {% csrf_token %}
+        {% crispy form %}
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+<script>
+  document.getElementById("patient-add-modal").showModal();
+</script>

@@ -1,0 +1,21 @@
+{% load lucide %}
+
+{# Patient-level action menu (Edit Patient, New Encounter) #}
+<div class="dropdown dropdown-end">
+  <label tabindex="0" class="btn btn-sm btn-ghost">{% lucide "ellipsis-vertical" class="size-5" %}</label>
+  <ul tabindex="0"
+      class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
+    <li>
+      <a href="{% url 'providers:patient_edit' organization_id=organization.id patient_id=patient.id %}">
+        {% lucide "pencil" class="size-4" %}
+        Edit Patient
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'providers:encounter_create' organization_id=organization.id %}?patient_id={{ patient.id }}">
+        {% lucide "plus" class="size-4" %}
+        New Encounter
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,27 @@
+{% load lucide %}
+
+<div class="relative">
+  <input type="checkbox"
+         id="encounter-details-modal-{{ encounter.id }}"
+         class="peer hidden" />
+  <label for="encounter-details-modal-{{ encounter.id }}"
+         class="fixed inset-0 bg-black/50 z-40 hidden peer-checked:block"></label>
+  <div class="fixed right-0 top-0 h-full w-full max-w-4xl bg-base-100 border-l border-base-200 flex flex-col pointer-events-auto z-50 transition-transform duration-300 translate-x-full peer-checked:translate-x-0">
+    <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-base-200 flex-shrink-0">
+      <div class="flex items-center gap-2 text-base-content/70">
+        {% lucide "clipboard-list" class="size-5" %}
+        <span class="font-medium">Encounter Details</span>
+      </div>
+      <label for="encounter-details-modal-{{ encounter.id }}"
+             class="btn btn-sm btn-circle btn-ghost text-xl">{% lucide "x" class="size-5" %}</label>
+    </div>
+    <div class="flex-1 overflow-y-auto p-6 text-left"
+         hx-get="{% url 'providers:patient_encounter_content' organization_id=organization.id patient_id=encounter.patient.id encounter_id=encounter.id %}?slideout=true"
+         hx-trigger="load"
+         hx-swap="innerHTML">
+      <div class="flex items-center justify-center h-full">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+    </div>
+  </div>
+</div>

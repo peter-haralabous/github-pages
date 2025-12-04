@@ -1,0 +1,186 @@
+{% load lucide %}
+
+<div class="space-y-6" data-tab-label="Overview">
+  {# Pending Invitation Section #}
+  {% if pending_invitation %}
+    <div class="flex items-start justify-between gap-4 bg-warning/20 border border-warning/30 rounded-lg p-4">
+      <div>
+        <h3 class="font-semibold text-warning-800 mb-2">Pending Invitation</h3>
+        <p class="text-sm text-warning-800">
+          <strong>Status:</strong> {{ pending_invitation.get_status_display }}, last sent at {{ pending_invitation.last_invited_at|date:DJANGO_DATE_TIME_FORMAT }}
+        </p>
+      </div>
+      <form action="{% url "providers:patient_resend_invite" organization_id=organization.id patient_id=patient.id %}"
+            class="inline m-0 shrink-0"
+            method="post">
+        {% csrf_token %}
+        <button type="submit"
+                class="btn btn-md btn-outline hover:bg-neutral hover:text-neutral-content shrink-0">
+          Resend Invitation
+        </button>
+      </form>
+    </div>
+  {% endif %}
+  {# Recent Encounters Section #}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-amber-100 text-amber-700 p-3 rounded-lg">{% lucide "calendar-days" class="size-6" %}</div>
+        <div class="flex flex-col items-start">
+          <h3 class="text-lg font-semibold">Encounters</h3>
+          <p class="text-sm text-gray-500">Recent updates</p>
+        </div>
+      </div>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      {% for encounter in encounters|slice:":3" %}
+        <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+            data-tab-type="encounter"
+            data-tab-id="{{ encounter.id }}"
+            data-tab-label="Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900">Encounter · {{ encounter.created_at|date:DJANGO_DATE_FORMAT }}</p>
+              <p class="text-sm text-gray-600">
+                Status: {{ encounter.get_status_display }}
+                {% if encounter.ended_at %}• Ended: {{ encounter.ended_at|date:DJANGO_DATE_FORMAT }}{% endif %}
+              </p>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-gray-400" %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="p-4 text-center text-gray-500">No encounters yet.</li>
+      {% endfor %}
+      <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+          data-tab-type="encounters-list"
+          data-tab-id="encounters-list"
+          data-tab-label="All Encounters">
+        <div class="flex justify-center items-center gap-2">
+          <span class="text-sm text-primary hover:text-primary/80 font-medium">View all</span>
+          {% lucide "arrow-right" class="size-4 text-primary" %}
+        </div>
+      </li>
+    </ul>
+  </div>
+  {# Recent Forms Section #}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-blue-100 text-blue-700 p-3 rounded-lg">{% lucide "file-pen-line" class="size-6" %}</div>
+        <div class="flex flex-col items-start">
+          <h3 class="text-lg font-semibold">Forms</h3>
+          <p class="text-sm text-gray-500">Recent updates</p>
+        </div>
+      </div>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      {% for task in forms|slice:":3" %}
+        <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+            data-tab-type="form"
+            data-tab-id="{{ task.id }}"
+            data-tab-label="{{ task.name }}">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900">{{ task.name }}</p>
+              <p class="text-sm text-gray-600">
+                Status: {{ task.get_status_display }}
+                • {{ task.created_at|date:DJANGO_DATE_FORMAT }}
+              </p>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-gray-400" %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="p-4 text-center text-gray-500">No forms yet.</li>
+      {% endfor %}
+      <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+          data-tab-type="forms-list"
+          data-tab-id="forms-list"
+          data-tab-label="All Forms">
+        <div class="flex justify-center items-center gap-2">
+          <span class="text-sm text-primary hover:text-primary/80 font-medium">View all</span>
+          {% lucide "arrow-right" class="size-4 text-primary" %}
+        </div>
+      </li>
+    </ul>
+  </div>
+  {# Recent Summaries Section #}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-purple-100 text-purple-700 p-3 rounded-lg">{% lucide "file-check" class="size-6" %}</div>
+        <div class="flex flex-col items-start">
+          <h3 class="text-lg font-semibold">Summaries</h3>
+          <p class="text-sm text-gray-500">Recent updates</p>
+        </div>
+      </div>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      {% for summary in summaries|slice:":3" %}
+        <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+            data-tab-type="summary"
+            data-tab-id="{{ summary.id }}"
+            data-tab-label="{{ summary.title }}">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900">{{ summary.title }}</p>
+              <p class="text-sm text-gray-600">{{ summary.created_at|date:DJANGO_DATE_FORMAT }}</p>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-gray-400" %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="p-4 text-center text-gray-500">No summaries yet.</li>
+      {% endfor %}
+      <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+          data-tab-type="summaries-list"
+          data-tab-id="summaries-list"
+          data-tab-label="All Summaries">
+        <div class="flex justify-center items-center gap-2">
+          <span class="text-sm text-primary hover:text-primary/80 font-medium">View all</span>
+          {% lucide "arrow-right" class="size-4 text-primary" %}
+        </div>
+      </li>
+    </ul>
+  </div>
+  {# Recent Documents Section #}
+  <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center gap-4">
+        <div class="bg-green-100 text-green-700 p-3 rounded-lg">{% lucide "file-text" class="size-6" %}</div>
+        <div class="flex flex-col items-start">
+          <h3 class="text-lg font-semibold">Documents</h3>
+          <p class="text-sm text-gray-500">Recent updates</p>
+        </div>
+      </div>
+    </div>
+    <ul class="divide-y divide-gray-200">
+      {% for document in documents|slice:":3" %}
+        <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+            data-tab-type="document"
+            data-tab-id="{{ document.id }}"
+            data-tab-label="{{ document.original_filename }}">
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900">{{ document.original_filename }}</p>
+              <p class="text-sm text-gray-600">{{ document.created_at|date:DJANGO_DATE_FORMAT }}</p>
+            </div>
+            {% lucide "chevron-right" class="size-5 text-gray-400" %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="p-4 text-center text-gray-500">No documents yet.</li>
+      {% endfor %}
+      <li class="js-open-tab p-4 hover:bg-gray-50 cursor-pointer"
+          data-tab-type="documents-list"
+          data-tab-id="documents-list"
+          data-tab-label="All Documents">
+        <div class="flex justify-center items-center gap-2">
+          <span class="text-sm text-primary hover:text-primary/80 font-medium">View all</span>
+          {% lucide "arrow-right" class="size-4 text-primary" %}
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

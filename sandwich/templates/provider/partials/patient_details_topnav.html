@@ -1,0 +1,87 @@
+{% load lucide %}
+{% load static i18n %}
+
+<nav class="navbar bg-base-100 border-b border-base-200 px-6 print:hidden">
+  <div class="flex grow justify-between items-center">
+    <div>
+      <a href="{% url 'providers:encounter_list' organization_id=organization.id %}"
+         class="flex items-center gap-2 text-gray-800 hover:text-gray-600 transition-colors">
+        {% lucide "arrow-left" class="size-5" %}
+        <span class="text-base font-semibold">Encounters List</span>
+      </a>
+    </div>
+    {# Search bar #}
+    <label class="input">
+      {% lucide "search" class="size-5 opacity-50" %}
+      <input class="grow"
+             type="search"
+             id="command-palette-trigger"
+             placeholder="Type a command or search..." />
+      <span class="text-sm text-gray-400"></span>
+    </label>
+    <script nonce="{{request.csp_nonce}}">
+      document.addEventListener('DOMContentLoaded', () => {
+        const trigger = document.getElementById('command-palette-trigger');
+        trigger.nextElementSibling.textContent = /mac/i.test(navigator.platform) ? '⌘ + K' : 'Ctrl + K';
+
+        trigger.addEventListener('focus', (event) => {
+          document.querySelector('command-palette').isOpen = true;
+          event.target.blur();
+        });
+      })
+    </script>
+    {# Avatar menu #}
+    <div class="gap-2 items-center">
+      {% if request.user.is_authenticated %}
+        <div class="dropdown dropdown-end">
+          <div tabindex="0"
+               role="button"
+               class="btn btn-ghost btn-circle border-none avatar avatar-placeholder">
+            <div class="bg-neutral text-neutral-content w-10 rounded-full">
+              <span class="text-sm">{{ request.user.initials }}</span>
+            </div>
+          </div>
+          <ul tabindex="0"
+              class="menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 min-w-52 p-2 shadow">
+            <li>
+              <a href="{% url "core:switcher" %}">
+                <div class="flex-col">
+                  {% if organization %}
+                    {{ organization.name }}
+                  {% else %}
+                    Switch context
+                  {% endif %}
+                  <div class="text-xs text-secondary">{{ user.email }}</div>
+                </div>
+                {% lucide "arrow-right-left" class="size-4" %}
+              </a>
+            </li>
+            <hr class="!my-1" />
+            <li>
+              <a href="{% url 'account_email' %}" class="flex gap-2">
+                <div>{% lucide "user" class="size-4" %}</div>
+                <p>{% translate "Account Settings" %}</p>
+              </a>
+            </li>
+            {% if organization %}
+              <li>
+                <a href="{% url 'providers:organization_edit' organization_id=organization.id %}"
+                   class="flex gap-2">
+                  <div>{% lucide "settings" class="size-4" %}</div>
+                  <p>Organization Settings</p>
+                </a>
+              </li>
+            {% endif %}
+            <hr class="!my-1" />
+            <li>
+              <form action="{% url 'account_logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Sign Out</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>

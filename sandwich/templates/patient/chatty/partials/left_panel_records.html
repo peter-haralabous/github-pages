@@ -1,0 +1,34 @@
+{% extends "patient/chatty/partials/left_panel.html" %}
+
+{% load lucide %}
+
+{# djlint:off #}
+{% block header_icon %}<a href="{{ left_panel_back_link }}" hx-get="{{ left_panel_back_link }}" hx-target="#left-panel" hx-swap="outerHTML" hx-push-url="true" class="btn btn-circle btn-ghost">{% lucide "arrow-left" class="size-6" %}</a>{% endblock header_icon %}
+{% block header_title %}{{ left_panel_title }}{% endblock header_title %}
+{# djlint:on #}
+{% block panel_content %}
+  <ul class="p-2">
+    {% for item in left_panel_items %}
+      <li>
+        {% if item.type == "nav-group" %}
+          <h3 class="p-2 text-sm font-semibold text-base-content/70">{{ item.label }}</h3>
+        {% else %}
+          <a href="{{ item.link }}"
+             {% if item.target == "left_panel" %}hx-get="{{ item.link }}" hx-target="#left-panel" hx-swap="outerHTML" hx-push-url="true" {% endif %}
+             {% if item.target == "modal" %}hx-get="{{ item.link }}" hx-target="body" hx-swap="beforeend"{% endif %}
+             class="flex items-center p-3 rounded-lg hover:bg-base-300/50 gap-4">
+            {% if item.icon %}
+              {% lucide item.icon class="size-5" %}
+            {% endif %}
+            <span class="flex-1">{{ item.label }}</span>
+            {% if item.count is not None %}<span class="text-secondary">{{ item.count }}</span>{% endif %}
+          </a>
+        </li>
+      {% endif %}
+    {% empty %}
+      <li>
+        <p class="p-2 text-center text-base-content/60">Nothing here</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock panel_content %}

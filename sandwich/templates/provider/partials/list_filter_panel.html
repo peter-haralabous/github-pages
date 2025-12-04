@@ -1,0 +1,63 @@
+{% load i18n lucide %}
+
+{% if active_filters.custom_attributes or active_filters.model_fields or request.GET.filter_mode == "custom" %}
+  {% with query=request.GET.urlencode %}
+    <div class="card bg-base-200 mb-4" id="filter-panel">
+      <div class="card-body py-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            {% if active_filters.custom_attributes or active_filters.model_fields %}
+              <span class="font-semibold text-sm">{% trans "Active Filters:" %}</span>
+            {% else %}
+              <span class="font-semibold text-sm">{% trans "No Filters Applied" %}</span>
+            {% endif %}
+            {% if has_unsaved_filters %}
+              <span class="badge badge-warning badge-sm">{% trans "unsaved" %}</span>
+            {% endif %}
+            {% for field_name, filter_value in active_filters.model_fields.items %}
+              {% for col in available_columns %}
+                {% if col.value == field_name and not col.is_custom %}
+                  {% include "provider/partials/filter_badge.html" with label=col.label filter_config=filter_value field_id=field_name %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {% for attr_id, filter_config in active_filters.custom_attributes.items %}
+              {% for attr in available_columns %}
+                {% if attr.value == attr_id and attr.is_custom %}
+                  {% include "provider/partials/filter_badge.html" with label=attr.label filter_config=filter_config field_id=attr_id %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+          <div class="flex gap-2">
+            {% if has_unsaved_filters %}
+              <form method="post"
+                    hx-post="{% url 'providers:save_current_filters' organization_id=organization.id list_type=preference.list_type %}{% if query %}?{{ query }}{% endif %}"
+                    hx-target="#filter-panel"
+                    hx-swap="outerHTML"
+                    class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline">
+                  {% lucide "save" class="h-4 w-4" %}
+                  {% trans "Save Filters" %}
+                </button>
+              </form>
+            {% endif %}
+            {% if request.GET.filter_mode == "custom" and preference.saved_filters %}
+              {% if preference.list_type == "encounter_list" %}
+                {% url 'providers:encounter_list' organization_id=organization.id as list_url %}
+              {% elif preference.list_type == "patient_list" %}
+                {% url 'providers:patient_list' organization_id=organization.id as list_url %}
+              {% endif %}
+              <a href="{{ list_url }}{% if request.GET.search %}?search={{ request.GET.search }}{% endif %}{% if request.GET.sort %}{% if request.GET.search %}&{% else %}?{% endif %}sort={{ request.GET.sort }}{% endif %}"
+                 class="btn btn-sm btn-ghost">
+                {% lucide "refresh-cw" class="h-4 w-4" %}
+                {% trans "Revert to Defaults" %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endwith %}
+{% endif %}

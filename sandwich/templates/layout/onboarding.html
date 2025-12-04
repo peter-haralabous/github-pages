@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="min-h-screen grid grid-rows-[1fr_min-content] items-center justify-center px-4 md:px-0 py-10">
+    <div class="{% block component_max_width %}max-w-xl{% endblock component_max_width %} w-full p-6 md:p-8 bg-white rounded-none md:rounded-lg shadow-none sm:shadow-lg border border-neutral-200">
+      <div class="prose flex flex-col items-center text-center mb-6">
+        {% block component_icon %}
+        {% endblock component_icon %}
+        {% block component_title %}
+        {% endblock component_title %}
+        {% block component_sub_title %}
+        {% endblock component_sub_title %}
+      </div>
+      {% block component_content %}
+      {% endblock component_content %}
+    </div>
+    <div class="w-full text-center mt-10 self-end">
+      <a class="link"
+         target="_blank"
+         href="{% url 'core:policy_detail' slug='privacy-notice' %}">Privacy Policy</a>
+    </div>
+  </div>
+{% endblock main %}

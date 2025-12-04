@@ -1,0 +1,58 @@
+<div id="add-task-modal"></div>
+<div class="flex justify-between items-center mb-4">
+  <h2>Tasks</h2>
+  <button class="btn btn-primary"
+          id="assign-task-btn"
+          hx-target="#add-task-modal"
+          hx-get="{% url "providers:patient_add_task" organization_id=organization.id patient_id=patient.id %}">
+    Assign task
+  </button>
+</div>
+<div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Started</th>
+        <th>Ended</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+        <tr>
+          <td>
+            {% if task.form_version.name %}
+              {{ task.form_version.name }}
+              <div class="badge badge-neutral badge-outline">{{ task.form_version.pgh_id }}</div>
+            {% else %}
+              {{ task }}
+            {% endif %}
+          </td>
+          <td>{{ task.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          <td>{{ task.ended_at|date:DJANGO_DATE_TIME_FORMAT|default:EMPTY_VALUE_DISPLAY }}</td>
+          <td>{{ task.get_status_display }}</td>
+          <td>
+            <a class="btn btn-outline-secondary btn-sm"
+               href="{% url "providers:task" organization_id=organization.id patient_id=patient.id task_id=task.id %}">View</a>
+            {% if task.active %}
+              <form action="{% url "providers:patient_cancel_task" organization_id=organization.id patient_id=patient.id task_id=task.id %}"
+                    class="inline"
+                    method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+              </form>
+            {% else %}
+              <button type="button" class="btn btn-outline-secondary btn-sm disabled">Re-request</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center">No tasks found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

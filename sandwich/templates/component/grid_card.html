@@ -1,0 +1,8 @@
+{% extends "component/card.html" %}
+
+{% block card_body_content %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-1 sm:gap-y-4 gap-x-2 -m-1">
+    {% block grid_card_grid %}
+    {% endblock grid_card_grid %}
+  </div>
+{% endblock card_body_content %}

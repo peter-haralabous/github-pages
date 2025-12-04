@@ -1,0 +1,62 @@
+import enum
+
+from django.db import models
+from django_enum import EnumField
+
+from sandwich.core.models.abstract import BaseModel
+from sandwich.core.models.patient import Patient
+
+
+class EntityType(enum.Enum):
+    PATIENT = "Patient"
+    # https://hl7.org/fhir/condition.html
+    CONDITION = "Condition"
+    # https://hl7.org/fhir/medication.html
+    MEDICATION = "Medication"
+    # https://hl7.org/fhir/observation.html
+    OBSERVATION = "Observation"
+    # https://hl7.org/fhir/allergyintolerance.html
+    ALLERGY_INTOLERANCE = "AllergyIntolerance"
+    # https://hl7.org/fhir/immunization.html
+    IMMUNIZATION = "Immunization"
+    # https://hl7.org/fhir/procedure.html
+    PROCEDURE = "Procedure"
+    FAMILY_MEMBER = "FamilyMember"
+
+
+class Entity(BaseModel):
+    """
+    A node in the knowledge graph (e.g. patient, symptom, drug, place, etc.)
+    """
+
+    type: models.Field[EntityType, EntityType] = EnumField(
+        EntityType, null=True, blank=True, help_text="Type of the entity in the knowledge graph."
+    )
+
+    patient = models.ForeignKey(
+        Patient,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text="Only populated when `Entity.type` == PATIENT",
+    )
+
+    metadata = models.JSONField(blank=True, null=True, help_text="e.g., FHIR codes, LOINC, etc.")
+
+    class Meta:
+        verbose_name = "Entity"
+        verbose_name_plural = "Entities"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["patient"],
+                name="unique_patient_fk",
+                condition=(models.Q(patient__isnull=False) & models.Q(type=EntityType.PATIENT.value)),
+            ),
+        ]
+
+    def __str__(self) -> str:
+        if self.metadata and "label" in self.metadata:
+            return str(self.metadata["label"])
+        if self.metadata and "name" in self.metadata:
+            return str(self.metadata["name"])
+        return str(self.pk)

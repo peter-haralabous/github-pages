@@ -1,0 +1,11 @@
+{% load crispy_forms_tags lucide %}
+
+<div id="chat-form" class="w-full max-w-4xl" hx-swap-oob="outerHTML">
+  <div class="relative">{% crispy chat_form %}</div>
+  <div class="flex justify-between items-center mt-2 gap-2">
+    <button id="chat-attach" class="btn btn-ghost btn-sm btn-circle">{% lucide "paperclip" class="size-5" %}</button>
+    <p class="text-xs text-base-content/50">
+      HealthConnect can make mistakes. Double check with a health professional you trust.
+    </p>
+  </div>
+</div>

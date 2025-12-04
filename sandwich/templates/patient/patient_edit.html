@@ -1,0 +1,13 @@
+{% extends "users/base.html" %}
+
+{% comment %}
+NOTE: This is extending the *USERS* base template, since it's assumed that you'll land on this view
+      under the guise of "editing settings" but that doesn't always need to be the case, we can add
+      additional entrances to this form as needed.
+{% endcomment %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h1 class="mb-4">Edit Patient</h1>
+  {% crispy form %}
+{% endblock content %}
