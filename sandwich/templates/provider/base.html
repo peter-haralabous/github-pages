@@ -1,0 +1,18 @@
+{% extends "base_top_nav.html" %}
+
+{% block topnav %}
+  {% include 'provider/partials/topnav.html' %}
+{% endblock topnav %}
+{% block modal %}
+  {% if organization %}
+    <command-palette search-url="{% url 'providers:search' organization_id=organization.id %}">
+  </command-palette>
+  <div id="modal-container"></div>
+{% endif %}
+{% endblock modal %}
+{% block title %}
+  {% if organization %}{{ organization.name }} &middot;{% endif %}
+  HealthConnect
+{% endblock title %}
+{% block content %}
+{% endblock content %}

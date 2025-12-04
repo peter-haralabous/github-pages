@@ -1,0 +1,51 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: ['main']
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    uses: ./.github/workflows/run-build.yml
+    with:
+      # Note: must match image_tag set in deploy step
+      image_tag: latest
+      should_publish: true
+
+  test:
+    uses: ./.github/workflows/run-test.yml
+
+  deploy-integration:
+    needs: ['test', 'build']
+    uses: ./.github/workflows/run-deploy.yml
+    with:
+      environment: integration
+      # Note: must match image_tag set in build step
+      image_tag: latest
+
+  smoketest-integration:
+    needs: deploy-integration
+    uses: ./.github/workflows/run-smoke-test.yml
+    with:
+      environment: integration
+
+  deploy-production:
+    needs: smoketest-integration
+    uses: ./.github/workflows/run-deploy.yml
+    with:
+      environment: production
+      image_tag: integration
+
+  smoketest-production:
+    needs: deploy-production
+    uses: ./.github/workflows/run-smoke-test.yml
+    with:
+      environment: production

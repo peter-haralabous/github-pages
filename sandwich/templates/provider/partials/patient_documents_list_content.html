@@ -1,0 +1,28 @@
+{% load lucide %}
+
+<div class="bg-white border border-gray-200 rounded-lg"
+     data-tab-label="All Documents">
+  {# Header #}
+  <div class="p-4 border-b border-gray-200">
+    <h2 class="text-xl font-bold text-gray-900">All Documents</h2>
+  </div>
+  {# Content #}
+  <ul class="divide-y divide-gray-200">
+    {% for document in documents %}
+      <li class="js-open-tab p-4 sm:p-6 hover:bg-gray-50 cursor-pointer"
+          data-tab-type="document"
+          data-tab-id="{{ document.id }}"
+          data-tab-label="{{ document.original_filename }}">
+        <div class="flex justify-between items-center">
+          <div class="flex-1">
+            <p class="font-semibold text-gray-900">{{ document.original_filename }}</p>
+            <p class="text-sm text-gray-600">{{ document.created_at|date:DJANGO_DATE_FORMAT }}</p>
+          </div>
+          {% lucide "chevron-right" class="size-5 text-gray-400" %}
+        </div>
+      </li>
+    {% empty %}
+      <li class="p-4 sm:p-6 text-center text-gray-500">No documents yet.</li>
+    {% endfor %}
+  </ul>
+</div>

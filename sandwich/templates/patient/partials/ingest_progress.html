@@ -1,0 +1,16 @@
+{% load lucide %}
+
+{# TODO: append & remove any previous messages for *this document*, not all messages #}
+<div id="messages" hx-swap-oob="innerHTML">
+  {% if done %}
+    <message-alert tags="info" closeable>
+    {% lucide "check" class="size-5" slot="icon" %}
+    {{ text }}
+    </message-alert>
+  {% else %}
+    <message-alert tags="info">
+    <span class="loading loading-spinner loading-xs" slot="icon"></span>
+    {{ text }}
+    </message-alert>
+  {% endif %}
+</div>

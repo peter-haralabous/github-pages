@@ -1,0 +1,75 @@
+{% extends "provider/base.html" %}
+
+{% load crispy_forms_tags %}
+{% load lucide %}
+
+{% block content %}
+  <div id="add-task-modal"></div>
+  <a class="space-x-2 flex items-center text-gray-800 mb-6 link"
+     href="{% url "providers:encounter_list" organization_id=organization.id %}">
+    {% lucide "chevron-left" class="size-4" %}
+    Encounters list
+  </a>
+  <div class="flex justify-between mb-4">
+    <div>
+      <h1>{{ patient.last_name }}, {{ patient.first_name }}</h1>
+      <p class="text-sm tracking-wide flex gap-6 mt-2 items-center">
+        <span class="flex items-center gap-1">{% lucide "calendar" class="size-4" %} DOB: {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }} </span>
+        <span class="flex items-center gap-1">{% lucide "id-card" class="size-4" %} PHN: {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
+        <span class="flex items-center gap-1">{% lucide "info" class="size-4" %} Contact: {{ patient.email|default:EMPTY_VALUE_DISPLAY }}</span>
+      </p>
+    </div>
+    <div>{% include 'provider/partials/patient_details_action_menu.html' %}</div>
+  </div>
+  {% if pending_invitation %}
+    <div class="mb-4 space-y-2">
+      <h2>Invitation</h2>
+      <p>
+        <strong>Status:</strong> {{ pending_invitation.get_status_display }}, last sent at {{ pending_invitation.last_invited_at }}
+      </p>
+      <form action="{% url "providers:patient_resend_invite" organization_id=organization.id patient_id=patient.id %}"
+            class="inline"
+            method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary">Resend Invitation</button>
+      </form>
+    </div>
+  {% endif %}
+  {% if encounters %}
+    <hr />
+    <h3>Encounters</h3>
+    <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for encounter in encounters %}
+            <tr>
+              <td>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+              <td>{{ encounter.ended_at|date:DJANGO_DATE_TIME_FORMAT|default:EMPTY_VALUE_DISPLAY }}</td>
+              {# TODO: Add encounter status badge partial with color-coded pills for visual distinction (e.g., badge-success for active, badge-neutral for archived) #}
+              <td>{{ encounter.get_status_display }}</td>
+              <td>
+                <a class="btn btn-sm"
+                   href="{% url "providers:encounter" encounter_id=encounter.id organization_id=organization.id %}">Details</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">No encounters.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+  {% if current_encounter %}
+    <hr />
+    {% include 'provider/partials/forms_section.html' %}
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% load lucide %}
+{% load crispy_forms_tags %}
+
+<dialog id="generate-form-modal" class="modal">
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3>Build Form with AI</h3>
+      {% crispy form %}
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+  <script nonce="{{ request.csp_nonce }}">
+    document.getElementById("generate-form-modal")?.showModal()
+    // Close new form modal if it's open
+    document.getElementById("new-form-modal")?.requestClose()
+  </script>
+</dialog>

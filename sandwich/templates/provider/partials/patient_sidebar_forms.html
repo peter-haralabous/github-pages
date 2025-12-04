@@ -1,0 +1,29 @@
+{% load lucide %}
+
+<div class="bg-base-100">
+  {# Header with back button #}
+  <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700"
+          hx-get="{% url 'providers:patient_sidebar_main' organization_id=organization.id patient_id=patient.id %}"
+          hx-target="#patient-sidebar"
+          hx-swap="innerHTML">
+    {% lucide "arrow-left" class="size-5 text-gray-900 shrink-0" %}
+    <span class="text-gray-900 text-base font-medium hide-when-collapsed">Back</span>
+  </button>
+  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider pt-3 pb-1 px-3 hide-when-collapsed">Forms</h3>
+  {# Forms list - clicking opens a new tab (forms navigate to task page) #}
+  <ul class="flex flex-col gap-1">
+    {% for task in forms %}
+      <li class="js-open-tab flex w-full h-12 justify-start items-center gap-3 rounded-lg px-3 cursor-pointer hover:bg-gray-100"
+          data-tab-type="form"
+          data-tab-id="{{ task.id }}"
+          data-tab-label="{{ task.name }}">
+        {% lucide "file-pen-line" class="size-5 text-gray-900 shrink-0" %}
+        <p class="truncate text-gray-900 hide-when-collapsed">{{ task.name }}</p>
+      </li>
+    {% empty %}
+      <li class="flex h-12 items-center gap-4 hide-when-collapsed px-3">
+        <p class="text-gray-500">No forms found.</p>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

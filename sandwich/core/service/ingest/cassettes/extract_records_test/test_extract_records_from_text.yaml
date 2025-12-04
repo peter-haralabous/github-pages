@@ -1,0 +1,68 @@
+interactions:
+  - request:
+      body:
+        '{"messages": [{"role": "user", "content": [{"document": {"name": "document",
+        "source": {"bytes": "UGF0aWVudCByZWNlaXZlZCBhIHBvbGlvIGltbXVuaXphdGlvbiBvbiAyMDAwLTAxLTAxLg=="},
+        "format": "txt"}}, {"text": "Extract medical records from the above clinical
+        document."}]}], "system": [{"text": "You are a helpful assistant that extracts
+        medical records from clinical documents."}], "inferenceConfig": {"temperature":
+        0.0}, "toolConfig": {"tools": [{"toolSpec": {"name": "RecordsResponse", "description":
+        "RecordsResponse", "inputSchema": {"json": {"properties": {"document_category":
+        {"anyOf": [{"enum": ["lab_results", "health_visits", "hospital_visits", "immunizations",
+        "prescriptions", "my_notes", "family_history", "other"], "title": "DocumentCategory",
+        "type": "string"}, {"type": "null"}]}, "document_date": {"anyOf": [{"format":
+        "date", "type": "string"}, {"type": "null"}]}, "conditions": {"items": {"properties":
+        {"name": {"type": "string"}, "status": {"anyOf": [{"description": "https://hl7.org/fhir/R5/valueset-condition-clinical.html",
+        "enum": ["active", "recurrence", "relapse", "inactive", "remission", "resolved",
+        "unknown"], "title": "ConditionStatus", "type": "string"}, {"type": "null"}]},
+        "onset": {"anyOf": [{"format": "date", "type": "string"}, {"type": "null"}]},
+        "abatement": {"anyOf": [{"format": "date", "type": "string"}, {"type": "null"}]}},
+        "required": ["name", "status", "onset", "abatement"], "type": "object"}, "type":
+        "array"}, "immunizations": {"items": {"properties": {"name": {"type": "string"},
+        "date": {"format": "date", "type": "string"}}, "required": ["name", "date"],
+        "type": "object"}, "type": "array"}, "practitioners": {"items": {"properties":
+        {"name": {"type": "string"}}, "required": ["name"], "type": "object"}, "type":
+        "array"}}, "required": ["document_category", "document_date", "conditions",
+        "immunizations", "practitioners"], "type": "object"}}}}], "toolChoice": {"tool":
+        {"name": "RecordsResponse"}}}}'
+      headers:
+        Content-Length:
+          - '1947'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9iLEQs
+            WiBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTExMDdUMjE0NzA2Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            ZmZlMGIxYWMtZWYzZS00MDc4LThkZmItOThiZGU2NjVlNTBm
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1%3A0/converse
+    response:
+      body:
+        string: '{"metrics":{"latencyMs":4019},"output":{"message":{"content":[{"toolUse":{"input":{"document_category":"immunizations","document_date":"2000-01-01","conditions":[],"immunizations":[{"name":"polio","date":"2000-01-01"}],"practitioners":[]},"name":"RecordsResponse","toolUseId":"tooluse_as9oX97DT6m_SCXiEHckdw","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"cacheReadInputTokenCount":0,"cacheReadInputTokens":0,"cacheWriteInputTokenCount":0,"cacheWriteInputTokens":0,"inputTokens":1141,"outputTokens":131,"serverToolUsage":{},"totalTokens":1272}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '573'
+        Content-Type:
+          - application/json
+        Date:
+          - Fri, 07 Nov 2025 21:47:10 GMT
+        x-amzn-RequestId:
+          - ab214e24-8939-466e-ad51-fcad285d617d
+      status:
+        code: 200
+        message: OK
+version: 1

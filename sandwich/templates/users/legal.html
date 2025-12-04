@@ -1,0 +1,50 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+  <h1 class="mb-4">Legal terms</h1>
+  <ul class="list bg-base-100 rounded-box shadow-md">
+    {% if consents %}
+      {% for consent in consents %}
+        {% if consent.decision %}
+          {% if consent.policy == ConsentPolicy.THRIVE_PRIVACY_POLICY %}
+            <li>
+              <a href="{% url 'core:policy_detail' slug='privacy-notice' %}"
+                 target="_blank"
+                 rel="noopener"
+                 class="list-row no-underline">
+                <div class="list-col-grow">
+                  <div class="font-medium">Privacy Policy</div>
+                  <div class="text-xs uppercase font-semibold opacity-60">
+                    Learn how we collect, use, and protect your personal information.
+                  </div>
+                  <div class="text-xs opacity-60">Agreed on: {{ consent.date|date:DJANGO_DATE_FORMAT }}</div>
+                </div>
+                <span class="text-primary">View Privacy Policy →</span>
+              </a>
+            </li>
+          {% elif consent.policy == ConsentPolicy.THRIVE_TERMS_OF_USE %}
+            <li>
+              <a href="{% url 'core:policy_detail' slug='terms-of-use' %}"
+                 target="_blank"
+                 rel="noopener"
+                 class="list-row no-underline">
+                <div class="list-col-grow">
+                  <div class="font-medium">Terms of Use</div>
+                  <div class="text-xs uppercase font-semibold opacity-60">
+                    Understand the rules and guidelines for using our service.
+                  </div>
+                  <div class="text-xs opacity-60">Agreed on: {{ consent.date|date:DJANGO_DATE_FORMAT }}</div>
+                </div>
+                <span class="text-primary">View Terms of Use →</span>
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% empty %}
+        <li class="p-4 text-sm opacity-70">No policies found!</li>
+      {% endfor %}
+    {% else %}
+      <li class="p-4 text-sm opacity-70">No policies found!</li>
+    {% endif %}
+  </ul>
+{% endblock content %}

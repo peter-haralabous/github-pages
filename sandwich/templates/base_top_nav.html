@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <div class="h-screen">
+    <div class="overflow-y-auto flex flex-col h-full">
+      {% block topnav %}
+        {% include 'partials/topnav.html' %}
+      {% endblock topnav %}
+      {% block main %}
+        <div class="p-4 md:p-6 flex-1">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      {% endblock main %}
+    </div>
+  </div>
+{% endblock body %}

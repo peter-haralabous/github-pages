@@ -1,0 +1,36 @@
+{% extends "provider/base.html" %}
+
+{% block content %}
+  <div class="flex justify-between items-center mb-4">
+    <h1>Organizations</h1>
+    <a href="{% url "providers:organization_add" %}"
+       class="btn btn-primary mt-2">Add an Organization</a>
+  </div>
+  <div class="overflow-x-auto rounded-box border border-base-200 bg-base-100">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Created</th>
+          <th>Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for organization in organizations %}
+          <tr>
+            <td>
+              <a class="link"
+                 href="{% url "providers:organization" organization_id=organization.id %}">{{ organization.name }}</a>
+            </td>
+            <td>{{ organization.created_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+            <td>{{ organization.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3" class="text-center">No organizations found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

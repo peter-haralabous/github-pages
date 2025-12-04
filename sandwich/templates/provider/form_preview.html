@@ -1,0 +1,25 @@
+{% extends "users/base.html" %}
+
+{% load render_bundle from webpack_loader %}
+{% load lucide %}
+
+{% block extra_head %}
+  {{ block.super }}
+  {% render_bundle 'survey' 'css' %}
+  {% render_bundle 'survey' 'js' %}
+{% endblock extra_head %}
+{% block main_padding %}
+  {# Override default padding to allow full-width form #}
+  p-0
+{% endblock main_padding %}
+{% block content %}
+  <div class="flex items-center mb-5 pt-6 pl-6">
+    <a href="{% url 'providers:form_template' organization_id=organization.id form_id=form.id %}"
+       class="btn btn-ghost btn-circle mr-2">{% lucide "arrow-left" class="w-5 h-5" %}</a>
+    <h1 class="mr-2">Back</h1>
+  </div>
+  <div class="container mx-auto py-5 space-y-5">
+    {{ form_schema | json_script:"form_schema" }}
+    <survey-form data-schema-id="form_schema" readonly />
+  </div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends "users/base.html" %}
+
+{% load lucide %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h1>Form Templates</h1>
+    <button id="new-form-button" class="btn btn-primary">
+      {% lucide "plus" class="w-5 h-5" %}
+      New form
+    </button>
+  </div>
+  <div id="form_table_container">{% include "provider/partials/form_list_table.html" %}</div>
+  {% include "provider/partials/new_form_modal.html" %}
+{% endblock content %}
+{% block inline_javascript %}
+  <script nonce="{{ request.csp_nonce }}">
+    window.addEventListener('DOMContentLoaded', () => {
+      const newFormButton = document.getElementById('new-form-button');
+      if (newFormButton) {
+        newFormButton.addEventListener('click', function() {
+          document.getElementById('new-form-modal').showModal();
+        });
+      }
+    });
+  </script>
+{% endblock inline_javascript %}

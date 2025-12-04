@@ -1,0 +1,17 @@
+{% load lucide %}
+{% load crispy_forms_tags %}
+
+<div class="dropdown dropdown-end">
+  <button tabindex="0"
+          class="btn btn-ghost btn-sm rounded-full cursor-pointer"
+          aria-label="Encounter actions menu">{% lucide "ellipsis-vertical" class="size-4" %}</button>
+  <ul tabindex="0"
+      class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+    <li>
+      <a href="{% url 'providers:patient' organization_id=organization.id patient_id=encounter.patient.id %}?encounter_id={{ encounter.id }}">
+        {% lucide "user" class="size-4" %} View Patient
+      </a>
+    </li>
+  </ul>
+</div>
+{% include 'provider/partials/encounter_details_slideout.html' %}

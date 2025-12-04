@@ -1,0 +1,11 @@
+{% comment %}
+this is the *global* messages partial, included in the our base.html template.
+don't include it in targeted htmx responses; use the messages_oob.html partial instead.
+{% endcomment %}
+<div class="toast toast-end" id="messages">
+  {% if messages %}
+    {% for message in messages %}
+      {% include 'partials/message_item.html' %}
+    {% endfor %}
+  {% endif %}
+</div>

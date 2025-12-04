@@ -1,0 +1,30 @@
+<div class="rounded-box border border-base-200 bg-base-100 overflow-hidden">
+  {# Card header with title and status badge #}
+  <div class="flex items-center justify-between px-6 py-4 border-b border-base-200 bg-base-50">
+    <h3 class="text-lg font-semibold m-0">Encounter Details</h3>
+    {% if encounter.active %}
+      <span class="badge badge-success">Active</span>
+    {% else %}
+      <span class="badge badge-error">Archived</span>
+    {% endif %}
+  </div>
+  {# Card content #}
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+      <div>
+        <div class="text-sm text-base-content/60 mb-1">Created</div>
+        <div>{{ encounter.created_at|date:DJANGO_DATE_TIME_FORMAT }}</div>
+      </div>
+      <div>
+        <div class="text-sm text-base-content/60 mb-1">Updated</div>
+        <div>{{ encounter.updated_at|date:DJANGO_DATE_TIME_FORMAT }}</div>
+      </div>
+      {% for attr in formatted_attributes %}
+        <div>
+          <div class="text-sm text-base-content/60 mb-1">{{ attr.name }}</div>
+          <div>{{ attr.value|default:EMPTY_VALUE_DISPLAY }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

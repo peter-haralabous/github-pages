@@ -1,0 +1,39 @@
+{% extends "layout/onboarding.html" %}
+
+{% load crispy_forms_tags %}
+
+{# djlint:off #}
+{% block component_max_width %}max-w-2xl{% endblock component_max_width %}
+{# djlint:on #}
+{% block component_title %}
+  <div class="text-center mb-3">{% include 'partials/logo.html' with size='lg' %}</div>
+  <hr />
+{% endblock component_title %}
+{% block component_content %}
+  <div class="prose">
+    <div class="text-center">
+      <h2>Your Consent Matters</h2>
+      <p>Please review how we use your data to provide our services.</p>
+    </div>
+    <h3>Your Health Data</h3>
+    <p>
+      To provide you with personalized insights, summaries, and recommendations, HealthConnect processes the health information you provide. This data is stored securely and is only used to power the features within your account.
+    </p>
+    <h3>Use of AI</h3>
+    <p>
+      We use advanced AI models to analyze your health records, generate summaries, and identify potential health recommendations. Your data is not used to train these models, and your personal information remains private.
+    </p>
+    <h3>Privacy and Security</h3>
+    <p>
+      We are committed to protecting your privacy. All your data is encrypted and stored following industry-best security practices. You are always in control of your information and can manage or delete it at any time.
+    </p>
+    <a class="btn btn-outline mr-3"
+       href="{% url 'core:policy_detail' slug='privacy-notice' %}"
+       target="_blank">Legal Privacy Policy</a>
+    <a class="btn btn-outline"
+       href="{% url 'core:policy_detail' slug='terms-of-use' %}"
+       target="_blank">Legal Terms of Use</a>
+    <hr />
+  </div>
+  {% crispy form %}
+{% endblock component_content %}

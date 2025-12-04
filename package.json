@@ -1,0 +1,70 @@
+{
+  "name": "thrive-prototypes",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@datadog/browser-rum": "^6.21.1",
+    "choices.js": "^11.1.0",
+    "htmx-ext-sse": "^2.2.4",
+    "htmx.org": "^2.0.7",
+    "lucide": "^0.548.0",
+    "sortablejs": "^1.15.6",
+    "survey-core": "2.3.12",
+    "survey-creator-core": "2.3.12",
+    "survey-creator-js": "2.3.12",
+    "survey-js-ui": "^2.3.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@popperjs/core": "^2.10.2",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@tailwindcss/typography": "^0.5.16",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jsdom": "^27",
+    "@types/sortablejs": "^1.15.8",
+    "@vitest/ui": "^4.0.4",
+    "babel-loader": "^10.0.0",
+    "concurrently": "^9.0.0",
+    "css-loader": "^7.1.2",
+    "daisyui": "^5.1.10",
+    "happy-dom": "^20.0.10",
+    "lit": "^3.3.1",
+    "mini-css-extract-plugin": "^2.4.5",
+    "node-sass-tilde-importer": "^1.0.2",
+    "postcss": "^8.3.11",
+    "postcss-loader": "^8.0.0",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.4",
+    "webpack": "^5.82.0",
+    "webpack-bundle-tracker": "^3.0.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.0.2",
+    "webpack-merge": "^6.0.1"
+  },
+  "engines": {
+    "node": "24.10"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "scripts": {
+    "dev": "concurrently 'yarn:dev:*'",
+    "build": "webpack --config webpack/prod.config.cjs",
+    "test:unit": "vitest run",
+    "dev:webpack": "webpack serve --config webpack/dev.config.cjs",
+    "dev:django": "uv run manage.py runserver",
+    "dev:worker": "uv run manage.py procrastinate worker"
+  },
+  "packageManager": "yarn@4.10.3+sha512.c38cafb5c7bb273f3926d04e55e1d8c9dfa7d9c3ea1f36a4868fa028b9e5f72298f0b7f401ad5eb921749eb012eb1c3bb74bf7503df3ee43fd600d14a018266f"
+}

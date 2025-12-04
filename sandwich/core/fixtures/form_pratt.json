@@ -1,0 +1,516 @@
+[
+  {
+    "model": "core.form",
+    "fields": {
+      "created_at": "2025-10-24T22:21:25.323Z",
+      "updated_at": "2025-10-25T00:14:36.346Z",
+      "name": "Pratt Form",
+      "schema": {
+        "title": "PRATT",
+        "showProgressBar": true,
+        "progressBarLocation": "top",
+        "pages": [
+          {
+            "title": "Identifying Data:",
+            "elements": [
+              {
+                "type": "radiogroup",
+                "name": "comfortableEnglish",
+                "title": "Do you feel okay talking about your healthcare in English?",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ]
+              },
+              {
+                "type": "radiogroup",
+                "name": "needInterpreter",
+                "title": "Do you need an interpreter during your hospital visit?",
+                "visibleIf": "{comfortableEnglish} = 'no'",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "<a href=\"http://www.phsa.ca/health-professionals/professional-resources/language-services/interpreting\" target=\"_blank\">Link to interpreter services</a>."
+              },
+              {
+                "type": "dropdown",
+                "name": "preferredLanguage",
+                "title": "What language would be best for you?",
+                "visibleIf": "{comfortableEnglish} = 'no'",
+                "choicesByUrl": {
+                  "url": "https://surveyjs.io/api/choices/languages"
+                }
+              },
+              {
+                "type": "text",
+                "name": "surgeonName",
+                "title": "Who is your Surgeon? (if you don't know, write Unknown)",
+                "autocomplete": "off"
+              },
+              {
+                "type": "text",
+                "name": "surgeryDescription",
+                "title": "What type of surgery are you having? (In your own words. If you don't know, write Unknown)"
+              },
+              {
+                "type": "text",
+                "name": "primaryCareProvider",
+                "title": "Primary Care Provider. Write your family doctor\u2019s or nurse practitioner\u2019s name and their clinic. If you don\u2019t have a family doctor, where do you usually go for health care?",
+                "description": "We might need to contact your primary care provider to get more information about your medical history."
+              },
+              {
+                "type": "text",
+                "inputType": "text",
+                "name": "legalName",
+                "title": "Legal Name (last name, first name)"
+              },
+              {
+                "type": "text",
+                "name": "preferredName",
+                "title": "Preferred Name (Name you use)"
+              },
+              {
+                "type": "text",
+                "inputType": "date",
+                "name": "dateOfBirth",
+                "title": "Date of Birth",
+                "defaultValue": "1980-01-01"
+              },
+              {
+                "type": "panel",
+                "name": "height",
+                "title": "Height",
+                "description": "Enter your height in feet and inches, or choose centimeters. Default is feet/inches.",
+                "elements": [
+                  {
+                    "type": "dropdown",
+                    "name": "heightUnit",
+                    "title": "Choose units",
+                    "choices": [
+                      { "value": "ftin", "text": "Feet/Inches" },
+                      { "value": "cm", "text": "Centimeters" }
+                    ],
+                    "defaultValue": "ftin"
+                  },
+                  {
+                    "type": "multipletext",
+                    "name": "heightFtIn",
+                    "visibleIf": "{heightUnit} = 'ftin'",
+                    "title": "Feet and Inches",
+                    "items": [
+                      {
+                        "name": "feet",
+                        "title": "Feet",
+                        "inputType": "number"
+                      },
+                      {
+                        "name": "inches",
+                        "title": "Inches",
+                        "inputType": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "text",
+                    "name": "heightCm",
+                    "inputType": "number",
+                    "visibleIf": "{heightUnit} = 'cm'",
+                    "title": "Centimeters"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "weight",
+                "title": "Weight",
+                "description": "We want to make sure you get the right amount of medicine for your surgery and recovery. Knowing your weight helps us figure out the correct dosage. Our team believes everyone should be treated with respect and fairness, no matter their body size or weight. We\u2019re here to give you personalized care and help you feel comfortable.",
+                "elements": [
+                  {
+                    "type": "dropdown",
+                    "name": "weightUnit",
+                    "title": "Choose units",
+                    "choices": [
+                      { "value": "lbs", "text": "Pounds" },
+                      { "value": "kg", "text": "Kilograms" }
+                    ],
+                    "defaultValue": "lbs"
+                  },
+                  {
+                    "type": "text",
+                    "name": "weightLbs",
+                    "inputType": "number",
+                    "visibleIf": "{weightUnit} = 'lbs'",
+                    "title": "Pounds"
+                  },
+                  {
+                    "type": "text",
+                    "name": "weightKg",
+                    "inputType": "number",
+                    "visibleIf": "{weightUnit} = 'kg'",
+                    "title": "Kilograms"
+                  }
+                ]
+              },
+              {
+                "type": "radiogroup",
+                "name": "sexAtIntake",
+                "title": "Sex",
+                "choices": [
+                  { "value": "male", "text": "Male" },
+                  { "value": "female", "text": "Female" },
+                  { "value": "nonBinary", "text": "Non-Binary" }
+                ],
+                "description": "We ask for your sex assigned at birth to help us understand specific health risks and give you the right care. This information helps us plan your treatment and provide the best care while respecting who you are."
+              },
+              {
+                "type": "radiogroup",
+                "name": "sexAssignedAtBirth",
+                "title": "What sex were you assigned at birth?",
+                "choices": [
+                  { "value": "male", "text": "Male" },
+                  { "value": "female", "text": "Female" }
+                ],
+                "visibleIf": "{sexAtIntake} = 'nonBinary'"
+              },
+              {
+                "type": "dropdown",
+                "name": "patientPronouns",
+                "title": "Patient Pronouns",
+                "choices": [
+                  { "value": "sheher", "text": "She/her" },
+                  { "value": "hehim", "text": "He/him" },
+                  { "value": "theythem", "text": "They/them" }
+                ]
+              },
+              {
+                "type": "radiogroup",
+                "name": "indigenousIdentity",
+                "title": "Do you identify as Indigenous (First Nations, Inuit, or Metis)?",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "We ask if you identify as Indigenous so we can connect you with resources and support that might be helpful during your surgery and recovery. This helps us provide care that fits your cultural needs."
+              },
+              {
+                "type": "text",
+                "name": "indigenousCommunity",
+                "title": "What community or nation do you belong to?",
+                "autocomplete": "off",
+                "visibleIf": "{indigenousIdentity} = 'yes'"
+              },
+              {
+                "type": "text",
+                "name": "preferredPhoneNumber",
+                "title": "Preferred Phone Number",
+                "description": "Your contact information will be kept confidential and you will only be contacted if there is important information about your upcoming surgery."
+              },
+              {
+                "type": "panel",
+                "name": "preferredEmail",
+                "title": "Preferred Email Address",
+                "description": "Your contact information will be kept confidential and you will only be contacted if there is important information about your upcoming surgery.",
+                "elements": [
+                  {
+                    "type": "text",
+                    "name": "emailAddress",
+                    "title": "Email Address"
+                  },
+                  {
+                    "type": "text",
+                    "name": "emailAddressConfirm",
+                    "title": "Please confirm your email address"
+                  }
+                ]
+              },
+              {
+                "type": "radiogroup",
+                "name": "agreeEmailCommunication",
+                "title": "Do you agree to receive emails about your care?",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "Your contact information will be kept confidential and you will only be contacted if there is important information about your upcoming surgery."
+              },
+              {
+                "type": "text",
+                "name": "homeAddress",
+                "title": "Home Address",
+                "description": "We ask this so we know how far you need to travel to get to the hospital."
+              }
+            ]
+          },
+          {
+            "title": "Medications ",
+            "elements": [
+              {
+                "type": "radiogroup",
+                "name": "takesAspirin",
+                "title": "Do you take daily aspirin? (This is also called baby aspirin or ASA)",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "If you take aspirin, you may need to stop it before surgery. We\u2019ll let you know if this applies to you based on the type of surgery and why you take aspirin.",
+                "tooltip": "Why do we ask: If Yes: Why do you take aspirin? (For example: prevention, previous heart attack or stents, after a stroke or TIA)"
+              },
+              {
+                "type": "text",
+                "name": "aspirinReason",
+                "title": "Why do you take aspirin? (For example: prevention, previous heart attack or stents, after a stroke or TIA)",
+                "visibleIf": "{takesAspirin} = 'yes'",
+                "tooltip": "Why do we ask: If Yes: Why do you take aspirin? (For example: prevention, previous heart attack or stents, after a stroke or TIA)"
+              },
+              {
+                "type": "radiogroup",
+                "name": "tookSteroidPastYear",
+                "title": "In the past year, have you taken any prescribed steroid pills? (For example: prednisone, prednisolone, dexamethasone, methylprednisolone, fludrocortisone, other)",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "Some people who take steroid medications may need an extra dose around surgery. We\u2019ll let you know if this is needed for you.",
+                "tooltip": "Why do we ask: If Yes: \n1. What medication did you take? Select all that apply.  prednisone, prednisolone, dexamethasone, methylprednisolone, fludrocortisone, other\n1a. What dose? text box\n1b. How long did you take it? text box\n1c. When was your last dose? text box"
+              },
+              {
+                "type": "checkbox",
+                "name": "steroidMedications",
+                "title": "What medication did you take? (Select all that apply)",
+                "choices": [
+                  { "value": "prednisone", "text": "Prednisone" },
+                  { "value": "prednisolone", "text": "Prednisolone" },
+                  { "value": "dexamethasone", "text": "Dexamethasone" },
+                  {
+                    "value": "methylprednisolone",
+                    "text": "Methylprednisolone"
+                  },
+                  { "value": "fludrocortisone", "text": "Fludrocortisone" },
+                  { "value": "other", "text": "Other" }
+                ],
+                "visibleIf": "{tookSteroidPastYear} = 'yes'",
+                "showOtherItem": true
+              },
+              {
+                "type": "text",
+                "name": "steroidDose",
+                "title": "What dose?",
+                "visibleIf": "{tookSteroidPastYear} = 'yes'"
+              },
+              {
+                "type": "text",
+                "name": "steroidDuration",
+                "title": "How long did you take it?",
+                "visibleIf": "{tookSteroidPastYear} = 'yes'"
+              },
+              {
+                "type": "text",
+                "name": "steroidLastDose",
+                "title": "When was your last dose?",
+                "visibleIf": "{tookSteroidPastYear} = 'yes'"
+              },
+              {
+                "type": "matrixdynamic",
+                "name": "prescribedMedications",
+                "title": "Please list all of your prescribed medications (including pills, injections, puffers), the dose you take and how often you take it.",
+                "description": "It\u2019s very important for us to know all the medications you take because some may need to be stopped before your surgery. This depends on the medication, why you\u2019re taking it, and the type of surgery. We\u2019ll let you know which medications to keep taking and which ones to stop.<br/><br/>Provide an infographic showing how to input medication name, dose and frequency based on how it may appear on the bottle/pill package",
+                "columns": [
+                  {
+                    "name": "medicationName",
+                    "title": "Medication Name",
+                    "cellType": "text"
+                  },
+                  { "name": "dose", "title": "Dose", "cellType": "text" },
+                  {
+                    "name": "frequency",
+                    "title": "Frequency",
+                    "cellType": "text"
+                  }
+                ],
+                "addRowText": "Add Medication",
+                "allowAddRows": true,
+                "allowRemoveRows": true,
+                "choices": [],
+                "rowCount": 1,
+                "minRowCount": 0
+              },
+              {
+                "type": "checkbox",
+                "name": "prescribedMedicationsNone",
+                "title": "None",
+                "choices": [
+                  {
+                    "value": "none",
+                    "text": "I do not take any prescribed medications"
+                  }
+                ]
+              },
+              {
+                "type": "matrixdynamic",
+                "name": "otcMedications",
+                "title": "Please list all over the counter (non-prescription) medications you take. (For example: tylenol, allergy pills)",
+                "description": "Medications can affect your body during surgery. Some can thin your blood or interact with anesthesia. We\u2019ll let you know if you need to stop any of these before surgery.",
+                "columns": [
+                  {
+                    "name": "medicationName",
+                    "title": "Medication Name",
+                    "cellType": "text"
+                  }
+                ],
+                "addRowText": "Add Medication",
+                "allowAddRows": true,
+                "allowRemoveRows": true,
+                "choices": [],
+                "rowCount": 1,
+                "minRowCount": 0
+              },
+              {
+                "type": "checkbox",
+                "name": "otcMedicationsNone",
+                "title": "None",
+                "choices": [
+                  {
+                    "value": "none",
+                    "text": "I do not take any over the counter medications"
+                  }
+                ]
+              },
+              {
+                "type": "matrixdynamic",
+                "name": "supplements",
+                "title": "Please list all of the vitamins, herbal supplements and other supplements that you take.",
+                "description": "Supplements, vitamins, and herbals can affect your body during surgery. Some can thin your blood or interact with anesthesia. We\u2019ll let you know if you need to stop any of these before surgery.",
+                "columns": [
+                  {
+                    "name": "supplementName",
+                    "title": "Supplement Name",
+                    "cellType": "text"
+                  }
+                ],
+                "addRowText": "Add Supplement",
+                "allowAddRows": true,
+                "allowRemoveRows": true,
+                "choices": [],
+                "rowCount": 1,
+                "minRowCount": 0
+              },
+              {
+                "type": "checkbox",
+                "name": "supplementsNone",
+                "title": "None",
+                "choices": [
+                  { "value": "none", "text": "I do not take any supplements" }
+                ]
+              },
+              {
+                "type": "radiogroup",
+                "name": "medicationsBlisterPacked",
+                "title": "Are your medications blister packed by your pharmacy?",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "If your medications are blister-packed, we may need to talk to your pharmacist to remove any that need to be stopped before surgery.",
+                "tooltip": "Why do we ask: If Yes: What pharmacy do you use? Include the name and location."
+              },
+              {
+                "type": "text",
+                "name": "blisterPackedPharmacyInfo",
+                "title": "What pharmacy do you use? Include the name and location.",
+                "visibleIf": "{medicationsBlisterPacked} = 'yes'",
+                "tooltip": "Why do we ask: If Yes: What pharmacy do you use? Include the name and location."
+              }
+            ]
+          },
+          {
+            "title": "Allergies and Reactions",
+            "elements": [
+              {
+                "type": "radiogroup",
+                "name": "anyMedAllergy",
+                "title": "Are you allergic to any medications?",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "It\u2019s important for your healthcare team to know about your allergies and reactions so they can plan the safest care for you.",
+                "showTooltip": true,
+                "tooltip": "If Yes:\n1. Are you allergic to any of the following? Choose all that apply. \n- Ancef or cefazolin\n- Propofol\n- Succinylcholine\n- Volatile anesthetics\n- Rocuronium\n- Other (text box)\n\n2. Describe your reaction. (For example: rash, difficulty breathing, nausea/vomitting or unknown)\ntext box"
+              },
+              {
+                "type": "checkbox",
+                "name": "medAllergyTypes",
+                "title": "Which of the following medication(s) are you allergic to?",
+                "choices": [
+                  { "value": "ancef", "text": "Ancef or cefazolin" },
+                  { "value": "propofol", "text": "Propofol" },
+                  { "value": "succinylcholine", "text": "Succinylcholine" },
+                  {
+                    "value": "volatileAnesthetics",
+                    "text": "Volatile anesthetics"
+                  },
+                  { "value": "rocuronium", "text": "Rocuronium" },
+                  { "value": "other", "text": "Other" }
+                ],
+                "hasOther": true,
+                "otherPlaceholder": "Please specify",
+                "visibleIf": "{anyMedAllergy} = 'yes'"
+              },
+              {
+                "type": "text",
+                "name": "medAllergyReaction",
+                "title": "Describe your reaction (For example: rash, difficulty breathing, nausea/vomiting or unknown)",
+                "visibleIf": "{anyMedAllergy} = 'yes'"
+              },
+              {
+                "type": "radiogroup",
+                "name": "latexAllergy",
+                "title": "Are you allergic to latex?\n(Examples: dental dams, gloves, or condoms)",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ],
+                "description": "Some people react to latex with a skin rash, while others can\u2019t be near latex products like balloons without having a severe reaction. Your healthcare team needs to know the type of reaction you have to latex so they can keep you safe."
+              },
+              {
+                "type": "text",
+                "name": "latexAllergyReaction",
+                "title": "What type of reaction do you have to latex? (For example: rash, difficulty breathing, nausea or vomiting, unknown)",
+                "visibleIf": "{latexAllergy} = 'yes'"
+              },
+              {
+                "type": "radiogroup",
+                "name": "otherAllergy",
+                "title": "Do you have allergies to any other products?\n(Examples: metals, contrast dyes, chlorhexidine, foods, or environmental substances like seasonal allergies)",
+                "choices": [
+                  { "value": "yes", "text": "Yes" },
+                  { "value": "no", "text": "No" }
+                ]
+              },
+              {
+                "type": "checkbox",
+                "name": "otherAllergyTypes",
+                "title": "Are you allergic to any of the following products?",
+                "choices": [
+                  { "value": "chlorhexidine", "text": "Chlorhexidine" },
+                  { "value": "other", "text": "Other" }
+                ],
+                "hasOther": true,
+                "otherPlaceholder": "Please specify",
+                "visibleIf": "{otherAllergy} = 'yes'"
+              },
+              {
+                "type": "text",
+                "name": "otherAllergyReaction",
+                "title": "Describe your reaction (For example: rash, difficulty breathing, nausea/vomiting or unknown)",
+                "visibleIf": "{otherAllergy} = 'yes'"
+              }
+            ]
+          }
+        ]
+      },
+      "organization": ["ardella-medical"]
+    }
+  }
+]

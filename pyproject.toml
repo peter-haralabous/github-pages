@@ -1,0 +1,234 @@
+# ==== pytest ====
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--ds=config.settings.test --reuse-db --import-mode=importlib"
+python_files = [
+    "*_test.py",
+]
+markers = [
+  "e2e: marks tests as end-to-end tests that use playwright",
+  "smoke_test: tests that are run against the integration environment",
+]
+
+# ==== Coverage ====
+[tool.coverage.run]
+include = ["sandwich/**"]
+omit = [
+  "*/tests/*",
+  ".venv/*",            # Exclude the virtual environment
+  "*/__init__.py",      # Exclude all __init__.py files
+  "*_test.py",          # Exclude all test files
+  "conftest.py",        # Exclude pytest configuration
+  "manage.py",          # Exclude the manage.py script
+  "config/*",           # Exclude the project settings/config directory
+  "*/migrations/*",     # Exclude all database migration files
+]
+plugins = ["django_coverage_plugin"]
+
+# ==== mypy ====
+[tool.mypy]
+python_version = "3.13"
+check_untyped_defs = true
+follow_untyped_imports = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = [
+    "mypy_django_plugin.main",
+]
+
+[[tool.mypy.overrides]]
+# Django migrations should not produce any errors:
+module = "*.migrations.*"
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+# ==== djLint ====
+[tool.djlint]
+blank_line_after_tag = "load,extends"
+close_void_tags = true
+format_css = true
+format_js = true
+# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
+ignore = "EM101,H006,H017,H023,H030,H031,T002,"
+include = "H017,H035"
+indent = 2
+max_line_length = 119
+profile = "django"
+
+[tool.djlint.css]
+indent_size = 2
+
+[tool.djlint.js]
+indent_size = 2
+
+[tool.ruff]
+target-version = "py312"
+# Exclude a variety of commonly ignored directories.
+extend-exclude = [
+    "staticfiles/*",
+]
+line-length = 119
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "B",
+    "A",
+    "COM818", # the other COM rules conflict with `ruff format`
+    "C4",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EM",
+    "EXE",
+    "FA",
+    'ISC',
+    "ICN",
+    "G",
+    'INP',
+    'PIE',
+    "T20",
+    'PYI',
+    'PT',
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "SIM",
+    "TID",
+    "TC",
+    "INT",
+    # "ARG", # Unused function argument
+    "PTH",
+    "PD",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    # "NPY",
+    # "AIR",
+    "PERF",
+    # "FURB",
+    # "LOG",
+    "RUF",
+]
+ignore = [
+    "EM101", # Checks for the use of string literals in exception constructors.
+    "EM102", # Checks for the use of f-strings in exception constructors.
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+    "SIM102", # sometimes it's better to nest
+    "TRY003",  # Checks for long exception messages that are not defined in the exception class itself.
+]
+# The fixes in extend-unsafe-fixes will require
+# provide the `--unsafe-fixes` flag when fixing.
+extend-unsafe-fixes = [
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore `PLR2004` (Magic value used in comparison) in test files
+"*_test.py" = ["PLR2004"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.uv]
+required-version = ">=0.8.4"
+
+[dependency-groups]
+dev = [
+    "coverage==7.10.7",
+    "django-coverage-plugin==3.2.0",
+    "django-debug-toolbar==6.0.0",
+    "django-extensions==4.1",
+    "django-stubs[compatible-mypy]==5.2.7",
+    "djlint==1.36.4",
+    "ipdb==0.13.13",
+    "mypy==1.18.2",
+    "pre-commit==4.3.0",
+    "playwright==1.55.0",
+    "pytest==8.4.2",
+    "pytest-django==4.11.1",
+    "pytest-sugar==1.1.1",
+    "pytest-playwright==0.7.1",
+    "requests==2.32.5",
+    "ruff==0.14.0",
+    "syrupy>=4.9.1",
+    "types-requests==2.32.4.20250913",
+    "werkzeug[watchdog]==3.1.3",
+    "vcrpy>=5.1.0",
+    "pytest-recording>=0.13.4",
+]
+
+[project]
+name = "thrive-prototypes"
+version = "0.1.0"
+description = "Thrive Health prototypes and experimental features"
+readme = "README.md"
+
+requires-python = "==3.13.*"
+dependencies = [
+    "argon2-cffi==25.1.0",
+    "boto3>=1.40.26",
+    "crispy-tailwind>=1.0.3",
+    "daphne>=4.2.1",
+    "ddtrace>=3.16.2",
+    "django==5.2.8",
+    "django-allauth[mfa,socialaccount]==65.12.0",
+    "django-anymail[amazon-ses]==13.1",
+    "django-crispy-forms==2.4",
+    "django-csp>=4.0",
+    "django-datadog-logger>=0.7.3",
+    "django-enum>=2.2.3",
+    "django-environ==0.12.0",
+    "django-eventstream>=5.3.3",
+    "django-guardian>=3.2.0",
+    "django-jsonform>=2.23.2",
+    "django-model-utils==5.0.0",
+    "django-modeltranslation==0.19.17",
+    "django-ninja>=1.4.3",
+    "django-pghistory>=3.8.3",
+    "django-private-storage>=3.1.3",
+    "django-pydantic-field>=0.3.13",
+    "django-storages[s3]==1.14.6",
+    "django-stubs-ext>=5.2.2",
+    "django-webpack-loader==3.2.1",
+    "factory-boy==3.3.3",
+    "freezegun>=1.5.5",
+    "granian>=2.5.5",
+    "gunicorn==23.0.0",
+    "lucide[django]>=1.1.3",
+    "langchain[aws,google-genai]==1.0.3",
+    "langgraph-checkpoint-postgres==3.0.0",
+    "markdown==3.9",
+    "markdown-it-py==4.0.0",
+    "pdf2image>=1.17.0",
+    "pillow==11.3.0",
+    "procrastinate>=3.5.2",
+    "psycopg[binary,pool]>=3.2.10",
+    "prompt_toolkit==3.0.52",
+    "pytest-xdist[psutil]>=3.8.0",
+    "python-slugify==8.0.4",
+    "redis[hiredis]>=7.0.0",
+    "tablib==3.9.0",
+    "tablib[cli]==3.9.0",
+    "tzlocal>=5.3.1",
+    "whitenoise==6.11.0",
+]

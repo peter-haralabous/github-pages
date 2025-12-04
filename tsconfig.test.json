@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "types": ["vitest/globals", "node"],
+    "lib": ["ES2022", "DOM"],
+    "noEmit": true
+  },
+  "include": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "tests/**/*.ts",
+    "sandwich/static/js/**/*.test.ts",
+    "sandwich/static/js/**/*.spec.ts"
+  ],
+  "exclude": ["node_modules", "dist", "build"]
+}

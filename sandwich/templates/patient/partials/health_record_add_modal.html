@@ -1,0 +1,16 @@
+<dialog class="modal" id="add-record-modal">
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    {% include "patient/partials/health_record_add.html" %}
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+<script nonce="{{ request.csp_nonce }}" type="module">
+  const modal = document.getElementById('add-record-modal');
+  modal.showModal();
+  modal.addEventListener('close', () => {
+    modal.remove();
+  });
+</script>

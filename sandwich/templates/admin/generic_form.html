@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+
+{% load render_bundle from webpack_loader %}
+{% load crispy_forms_tags %}
+
+{% block extrastyle %}
+  {% render_bundle 'project' 'css' %}
+{% endblock extrastyle %}
+{% block content %}
+  {% block component_title %}
+  {% endblock component_title %}
+  {% block component_preamble %}
+  {% endblock component_preamble %}
+  {% crispy form %}
+  {% block component_postscript %}
+  {% endblock component_postscript %}
+{% endblock content %}

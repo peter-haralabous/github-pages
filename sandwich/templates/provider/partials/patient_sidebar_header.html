@@ -1,0 +1,56 @@
+{% load lucide %}
+
+<div class="p-4 border rounded-md border-neutral-200 bg-neutral-50">
+  {# Patient name with action menu #}
+  <div class="flex justify-between items-start mb-3">
+    <h2 class="text-xl font-bold text-gray-900">{{ patient.last_name }}, {{ patient.first_name }}</h2>
+    <div class="dropdown dropdown-end">
+      <button tabindex="0"
+              class="btn btn-ghost btn-sm btn-circle flex items-center justify-center text-center"
+              aria-label="Patient menu">{% lucide "ellipsis" class="size-4 shrink-0" %}</button>
+      <ul tabindex="0"
+          class="dropdown-content flex-col gap-1 menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 z-60">
+        <li>
+          <a href="{% url "providers:patient_edit" organization_id=organization.id patient_id=patient.id %}"
+             class="flex items-center gap-2">{% lucide "user" class="size-4" %} Edit patient</a>
+        </li>
+        <li>
+          <button type="button"
+                  class="w-full text-left flex items-center gap-2 cursor-pointer">
+            {% lucide "send" class="size-4" %} Send form
+          </button>
+        </li>
+        <li>
+          <form action="{% url "providers:encounter_create" organization_id=organization.id %}"
+                method="post"
+                class="m-0 px-0">
+            {% csrf_token %}
+            <input type="hidden" name="patient" value="{{ patient.id }}" />
+            <button type="submit"
+                    class="w-full text-left flex items-center gap-2 cursor-pointer">
+              {% lucide "plus" class="size-4" %} New encounter
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+  {# Patient details #}
+  <div class="space-y-2 text-sm">
+    <div class="flex items-center gap-2 text-gray-600">
+      {% lucide "calendar" class="size-4 shrink-0" %}
+      <span><span class="font-medium">DOB:</span> {{ patient.date_of_birth|date:DJANGO_DATE_FORMAT }}</span>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      {% lucide "id-card" class="size-4 shrink-0" %}
+      <span><span class="font-medium">PHN:</span> {{ patient.phn|default:EMPTY_VALUE_DISPLAY }}</span>
+    </div>
+    <div class="flex items-start gap-2 text-gray-600">
+      {% lucide "mail" class="size-4 shrink-0 mt-0.5" %}
+      <div>
+        <span class="font-medium">Contact:</span>
+        <div class="truncate break-all">{{ patient.email|default:EMPTY_VALUE_DISPLAY }}</div>
+      </div>
+    </div>
+  </div>
+</div>

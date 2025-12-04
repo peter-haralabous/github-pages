@@ -1,0 +1,111 @@
+FROM docker.io/node:24.10-bookworm-slim AS client-builder
+
+ARG APP_HOME=/app
+WORKDIR ${APP_HOME}
+
+RUN corepack enable
+
+COPY package.json yarn.lock .yarnrc.yml ${APP_HOME}
+RUN --mount=type=cache,target=/root/.yarn/berry/cache YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install && yarn cache clean
+
+COPY . ${APP_HOME}
+RUN yarn run build
+
+# define an alias for the specific python version used in this file.
+FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim AS python-build-stage
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=0
+
+ARG APP_HOME=/app
+
+WORKDIR ${APP_HOME}
+
+# Install apt packages
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  # dependencies for building Python packages
+  build-essential
+
+
+# Requirements are installed here to ensure they will be cached.
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project --no-dev
+COPY --from=client-builder ${APP_HOME} ${APP_HOME}
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-dev
+
+# Python 'run' stage
+FROM python:3.13-slim-bookworm AS python-run-stage
+
+ARG APP_HOME=/app
+
+WORKDIR ${APP_HOME}
+
+RUN addgroup --system django \
+  && adduser --system --ingroup django django
+
+
+# Install required system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  # psycopg dependencies
+  # libpq-dev \
+  # Translations dependencies
+  gettext \
+  # PDF2Image/Poppler for PDF processing
+  poppler-utils \
+  # cleaning up unused files
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+
+
+COPY --chown=django:django ./docker/entrypoint /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
+COPY --chown=django:django ./docker/start /start
+RUN sed -i 's/\r$//g' /start
+RUN chmod +x /start
+
+COPY --chown=django:django ./docker/start_worker /start_worker
+RUN sed -i 's/\r$//g' /start_worker
+RUN chmod +x /start_worker
+
+# Copy the application from the builder
+COPY --from=python-build-stage --chown=django:django ${APP_HOME} ${APP_HOME}
+
+# explicitly create the media folder before changing ownership below
+RUN mkdir -p ${APP_HOME}/sandwich/media
+
+# make django owner of the WORKDIR directory as well.
+RUN chown django:django ${APP_HOME}
+
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
+
+ARG APP_VERSION=latest
+ENV APP_VERSION=${APP_VERSION}
+
+# Datadog:
+ENV DD_VERSION="${APP_VERSION}"
+ARG DD_GIT_REPOSITORY_URL
+ARG DD_GIT_COMMIT_SHA
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL}
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
+
+LABEL com.newhippo.app_version="${APP_VERSION}"
+LABEL com.datadoghq.tags.version="${APP_VERSION}"
+
+USER django
+
+RUN DATABASE_URL="" \
+  DJANGO_SETTINGS_MODULE="config.settings.test" \
+  python manage.py compilemessages
+
+EXPOSE 3000
+
+ENTRYPOINT ["/entrypoint"]
+CMD ["/start"]

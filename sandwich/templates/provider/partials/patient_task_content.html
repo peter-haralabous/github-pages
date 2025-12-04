@@ -1,0 +1,18 @@
+{% load render_bundle from webpack_loader %}
+
+{# Tab context - simplified layout for workspace #}
+<div class="space-y-6" data-tab-label="{{ task.name }}">
+  {# Include bundle resources - needed for survey-form component #}
+  {% render_bundle 'survey' 'css' %}
+  {% render_bundle 'survey' 'js' %}
+  {# Embed JSON data - unique IDs to avoid conflicts with other open tabs #}
+  {% if initial_data %}{{ initial_data | json_script:data_id }}{% endif %}
+  {{ form_schema | json_script:schema_id }}
+  {# Survey form container #}
+  <div id="survey-form-container-{{ schema_id }}">
+    <survey-form data-schema-id="{{ schema_id }}"
+    {% if initial_data %}data-initial-data-id="{{ data_id }}"{% endif %}
+    {% if read_only %}readonly{% endif %}
+    data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{{ complete_url }}" data-save-draft-url="{{ save_draft_url }}" />
+  </div>
+</div>

@@ -1,0 +1,23 @@
+{% extends "provider/base.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block extra_head %}
+  {{ block.super }}
+  {% render_bundle 'survey' 'css' %}
+  {% render_bundle 'survey' 'js' %}
+{% endblock extra_head %}
+{% block content %}
+  <div class="mb-2">
+    <a class="link"
+       href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}">&larr; Back to {{ patient.full_name }}</a>
+    viewing {{ task.status }} task {{ task.name }}
+  </div>
+  <div class="container mx-auto">
+    {% if initial_data %}{{ initial_data | json_script:"initial_data" }}{% endif %}
+    {{ form_schema | json_script:"form_schema" }}
+    <survey-form data-schema-id="form_schema" data-initial-data-id="initial_data"
+    {% if read_only %}readonly{% endif %}
+    data-submit-url="{{ submit_url }}" data-csrf-token="{{ csrf_token }}" data-complete-url="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}" data-save-draft-url="{{ save_draft_url }}" />
+  </div>
+{% endblock content %}

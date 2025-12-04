@@ -1,0 +1,57 @@
+interactions:
+  - request:
+      body:
+        '{"anthropic_version": "bedrock-2023-05-31", "messages": [{"role": "user",
+        "content": "what is 1 + 1"}], "max_tokens": 16384}'
+      headers:
+        Accept:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        Content-Length:
+          - '124'
+        Content-Type:
+          - !!binary |
+            YXBwbGljYXRpb24vanNvbg==
+        User-Agent:
+          - !!binary |
+            Qm90bzMvMS40MC4yNiBtZC9Cb3RvY29yZSMxLjQwLjI2IHVhLzIuMSBvcy9tYWNvcyMyNC42LjAg
+            bWQvYXJjaCNhcm02NCBsYW5nL3B5dGhvbiMzLjEzLjIgbWQvcHlpbXBsI0NQeXRob24gbS9aLGIs
+            RCBjZmcvcmV0cnktbW9kZSNsZWdhY3kgQm90b2NvcmUvMS40MC4yNiB4LWNsaWVudC1mcmFtZXdv
+            cms6bGFuZ2NoYWluLWF3cw==
+        X-Amz-Date:
+          - !!binary |
+            MjAyNTEwMTBUMjIyMDE2Wg==
+        amz-sdk-invocation-id:
+          - !!binary |
+            NzcyNmJhNTItMzljMi00NjZiLThhNDMtNWFkNjEzYzhjZjc4
+        amz-sdk-request:
+          - !!binary |
+            YXR0ZW1wdD0x
+      method: POST
+      uri: https://bedrock-runtime.ca-central-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1%3A0/invoke
+    response:
+      body:
+        string:
+          '{"id":"msg_bdrk_011UsAmLHn8rnn9LvRaBQJHS","type":"message","role":"assistant","model":"claude-3-sonnet-20240229","content":[{"type":"text","text":"1
+          + 1 = 2"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":15,"output_tokens":13}}'
+      headers:
+        Connection:
+          - keep-alive
+        Content-Length:
+          - '253'
+        Content-Type:
+          - application/json
+        Date:
+          - Fri, 10 Oct 2025 22:20:16 GMT
+        X-Amzn-Bedrock-Input-Token-Count:
+          - '15'
+        X-Amzn-Bedrock-Invocation-Latency:
+          - '356'
+        X-Amzn-Bedrock-Output-Token-Count:
+          - '13'
+        x-amzn-RequestId:
+          - 0e06720d-29b6-41e2-8724-837bf142e07a
+      status:
+        code: 200
+        message: OK
+version: 1

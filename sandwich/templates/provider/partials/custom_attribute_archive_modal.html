@@ -1,0 +1,29 @@
+{% load crispy_forms_tags %}
+
+<dialog id="delete-custom-attribute-{{ attribute.id }}" class="modal">
+  <div class="modal-box">
+    {% include "partials/modal_close_button.html" %}
+    <div class="space-y-2">
+      <h3 class="text-lg font-bold">
+        Are you sure you want to delete the <span class="text-red-700">{{ attribute.name }}</span> field?
+      </h3>
+      <p class="text-base">
+        This action is irreversible and will delete all existing data associated with this custom field as seen on the worklist and encounter details.
+      </p>
+      <p>
+        Type <strong class="text-red-700">DELETE</strong> to confirm.
+      </p>
+      {% crispy form %}
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+<script nonce="{{ request.csp_nonce }}" type="module">
+  const modal = document.getElementById('delete-custom-attribute-{{ attribute.id }}');
+  modal.showModal();
+  modal.addEventListener('close', () => {
+    window.location.replace("{% url 'providers:custom_attribute_list' organization_id=organization.id %}");
+  });
+</script>

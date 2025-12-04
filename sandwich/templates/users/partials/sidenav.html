@@ -1,0 +1,88 @@
+{% extends 'partials/sidenav.html' %}
+
+{% load lucide %}
+{% load i18n %}
+
+{% block sidenav-items %}
+  {% if user_patients %}
+    <li>
+      <h2 class="menu-title">Patient Profiles</h2>
+      <ul class="space-y-2">
+        {% for patient in user_patients %}
+          <li>
+            <a href="{% url "patients:patient_edit" patient_id=patient.id %}"
+               class="{% if patient.id == request.resolver_match.kwargs.patient_id %}menu-active{% endif %}">
+              {% lucide "circle-user" class="size-6" %}
+              <span>{{ patient.full_name }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+  {% if user_organizations %}
+    <li>
+      <h2 class="menu-title">Organizations</h2>
+      <ul class="space-y-2">
+        {% for organization in user_organizations %}
+          <li>
+            <a href="{% url "providers:organization_edit" organization_id=organization.id %}"
+               class="{% if organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">
+              {% lucide "building-2" class="size-6" %}
+              <span>{{ organization.name }}</span>
+            </a>
+            <ul class="menu menu-sm">
+              <li>
+                <a href="{% url 'providers:custom_attribute_list' organization_id=organization.id %}"
+                   class="{% if 'custom_attribute_' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Custom Fields</a>
+              </li>
+              <li>
+                <a href="{% url 'providers:organization_list_preferences' organization_id=organization.id %}"
+                   class="{% if 'organization_list_preferences' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id or 'organization_preference_settings' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">{% trans "List Preferences" %}</a>
+              </li>
+              <li>
+                <a href="{% url "providers:form_templates_list" organization_id=organization.id %}"
+                   class="{% if 'template' in request.resolver_match.url_name and organization.id == request.resolver_match.kwargs.organization_id %}menu-active{% endif %}">Form Templates</a>
+              </li>
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+  <li>
+    <a href="{% url 'account_email' %}"
+       class="{% if request.resolver_match.url_name == 'account_email' %}menu-active{% endif %}">
+      {% lucide "mail" class="size-6" %}
+      <span>Email addresses</span>
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'core:account_notifications' %}"
+       class="{% if request.resolver_match.url_name == 'account_notifications' %}menu-active{% endif %}">
+      {% lucide "bell-ring" class="size-6" %}
+      <span>Notifications</span>
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'mfa_index' %}"
+       class="{% if request.resolver_match.url_name == 'mfa_index' %}menu-active{% endif %}">
+      {% lucide "shield-check" class="size-6" %}
+      <span>Multi-Factor Auth</span>
+    </a>
+  </li>
+  <li>
+    <a href="{% url "core:legal" %}"
+       class="{% if request.resolver_match.url_name == 'legal' %}menu-active{% endif %}">
+      {% lucide "archive" class="size-6" %}
+      <span>Legal</span>
+    </a>
+  </li>
+  <li>
+    <a href="{% url 'core:account_delete' %}"
+       class="{% if request.resolver_match.url_name == 'account_delete' %}menu-active{% endif %}">
+      {% lucide "user" class="size-6" %}
+      <span>Delete Account</span>
+    </a>
+  </li>
+{% endblock sidenav-items %}

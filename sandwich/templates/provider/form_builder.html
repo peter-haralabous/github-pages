@@ -1,0 +1,47 @@
+{% extends "users/base.html" %}
+
+{% load lucide %}
+{% load render_bundle from webpack_loader %}
+
+{% block main_padding %}
+{% endblock main_padding %}
+{% block additional_styles %}
+  flex flex-col max-w-[unset] h-[calc(100%_-_64px)]
+{% endblock additional_styles %}
+{% block extra_head %}
+  {{ block.super }}
+  {% comment %}
+    Survey Creator also requires SurveyJS Form Library resources,
+    and a script with predefined theme configurations (if you are going to use Theme Editor).
+    Link them before the Survey Creator resources.
+    TODO: wire up Theme Editor and themes later
+    https://surveyjs.io/survey-creator/documentation/theme-editor
+  {% endcomment %}
+  {% render_bundle 'survey' 'css' %}
+  {% render_bundle 'survey' 'js' %}
+  {% render_bundle 'creator' 'js' %}
+  {% render_bundle 'creator' 'css' %}
+{% endblock extra_head %}
+{% block content %}
+  <div class="flex items-center justify-between pt-2 pl-2 bg-white">
+    <a href="{% url 'providers:form_templates_list' organization_id=organization.id %}"
+       class="btn btn-ghost mr-2">{% lucide "arrow-left" class="w-5 h-5" %}
+      <h3>Back to form templates</h3>
+    </a>
+  </div>
+  {{ form.schema | json_script:"form_schema" }}
+  <div id="form-builder-container"
+       data-csrf-token="{{ csrf_token }}"
+       data-form-save-url="{{ form_save_url }}"
+       data-success-url="{{ success_url }}"
+       data-form-id="{% if form %}{{ form.id }}{% endif %}"></div>
+  <form id="file-upload-form"
+        class="hidden"
+        hx-post="{% url 'providers:form_file_upload' organization_id=organization.id %}"
+        hx-encoding="multipart/form-data"
+        hx-target="#form_schema"
+        hx-swap="innerHTML">
+    {% csrf_token %}
+    <input type="file" name="file" accept="application/pdf, text/csv" />
+  </form>
+{% endblock content %}

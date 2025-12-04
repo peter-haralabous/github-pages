@@ -1,0 +1,79 @@
+[
+  {
+    "model": "core.form",
+    "fields": {
+      "created_at": "2025-10-24T22:21:25.323Z",
+      "updated_at": "2025-10-25T00:14:36.346Z",
+      "name": "Intake Form",
+      "schema": {
+        "pages": [
+          {
+            "name": "patient-info",
+            "title": "Information",
+            "elements": [
+              {
+                "name": "full-name",
+                "type": "panel",
+                "title": "Full name",
+                "elements": [
+                  {
+                    "name": "first-name",
+                    "type": "text",
+                    "title": "First name",
+                    "maxLength": 25,
+                    "isRequired": true
+                  },
+                  {
+                    "name": "last-name",
+                    "type": "text",
+                    "title": "Last name",
+                    "maxLength": 25,
+                    "isRequired": true,
+                    "startWithNewLine": false
+                  }
+                ]
+              },
+              {
+                "name": "personal-info",
+                "type": "panel",
+                "elements": [
+                  {
+                    "name": "ssn",
+                    "type": "text",
+                    "title": "Health card number",
+                    "maxLength": 9,
+                    "isRequired": false,
+                    "validators": [
+                      {
+                        "text": "Your PHN must be a 9-digit number.",
+                        "type": "regex",
+                        "regex": "^\\d{9}$"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "birthdate",
+                    "type": "text",
+                    "title": "Date of Birth",
+                    "inputType": "date",
+                    "isRequired": false,
+                    "startWithNewLine": false
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "title": "Intake Form",
+        "width": "1000px",
+        "widthMode": "static",
+        "description": "All fields with an asterisk (*) are required fields and must be filled out in order to process the information in strict confidentiality.",
+        "previewMode": "answeredQuestions",
+        "completeText": "Submit",
+        "questionErrorLocation": "bottom",
+        "showPreviewBeforeComplete": false
+      },
+      "organization": ["ardella-medical"]
+    }
+  }
+]

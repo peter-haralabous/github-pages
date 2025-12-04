@@ -1,0 +1,29 @@
+const { merge } = require('webpack-merge');
+const commonConfig = require('./common.config');
+
+module.exports = merge(commonConfig, {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  devServer: {
+    port: 3000,
+    proxy: [
+      {
+        context: ['/'],
+        target: 'http://0.0.0.0:8000',
+        onProxyReq: (proxyReq, req, res) => {
+          res.on('close', () => proxyReq.destroy());
+        },
+      },
+    ],
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: true,
+      },
+    },
+    // We need hot=false (Disable HMR) to set liveReload=true
+    hot: false,
+    liveReload: true,
+  },
+});

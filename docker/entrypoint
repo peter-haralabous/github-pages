@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+
+# nothing, for now
+# cookiecutter-django waits for the database to become ready here
+# https://github.com/cookiecutter/cookiecutter-django/blob/main/%7B%7Bcookiecutter.project_slug%7D%7D/compose/production/django/entrypoint
+
+exec "$@"

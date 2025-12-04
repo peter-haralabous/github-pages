@@ -1,0 +1,46 @@
+{% load lucide %}
+
+{# Encounter-level action menu (Send Form, Archive, View Patient) #}
+{% if in_slideout %}
+  {# View Patient button - visible on larger screens, hidden on mobile #}
+  <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}?encounter_id={{ encounter.id }}"
+     class="hidden sm:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+    {% lucide "user" class="size-4" %}
+    View Patient
+  </a>
+{% endif %}
+<div class="dropdown dropdown-end">
+  <label tabindex="0" class="btn btn-sm btn-ghost">{% lucide "ellipsis-vertical" class="size-5" %}</label>
+  <ul tabindex="0"
+      class="dropdown-content menu p-2 shadow-md border border-base-200 bg-base-100 rounded-box w-52 z-10">
+    {% if in_slideout %}
+      {# View Patient in dropdown - only visible on mobile screens #}
+      <li class="sm:hidden">
+        <a href="{% url 'providers:patient' organization_id=organization.id patient_id=patient.id %}?encounter_id={{ encounter.id }}">
+          {% lucide "user" class="size-4" %}
+          View Patient
+        </a>
+      </li>
+    {% endif %}
+    <li>
+      <button hx-get="{% url 'providers:patient_add_task' organization_id=organization.id patient_id=patient.id %}"
+              hx-target="#add-task-modal"
+              class="flex items-center gap-4 w-full text-left"
+              hx-swap="innerHTML">
+        {% lucide "send" class="size-4" %}
+        Send Form
+      </button>
+    </li>
+    <li>
+      <form method="post"
+            class="flex"
+            action="{% url 'providers:encounter_archive' organization_id=organization.id encounter_id=encounter.id %}">
+        {% csrf_token %}
+        <button type="submit" class="flex items-center gap-4 w-full text-left">
+          {% lucide "archive" class="size-4" %}
+          Archive
+        </button>
+      </form>
+    </li>
+  </ul>
+</div>

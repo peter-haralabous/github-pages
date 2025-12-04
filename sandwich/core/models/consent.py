@@ -1,0 +1,46 @@
+from django.db import models
+from django.utils import timezone
+
+from sandwich.core.models.abstract import BaseModel
+from sandwich.users.models import User
+
+
+# This enum class captures versioned policies identifiers for consents.
+# Enum values should be unique strings and can contain __version suffix.
+# Further details about the policy must be defined in PolicyService.registry
+# for each of these policy identifiers.
+class ConsentPolicy(models.TextChoices):
+    THRIVE_TERMS_OF_USE = "THRIVE_TERMS_OF_USE__2020-06-26"
+    THRIVE_PRIVACY_POLICY = "THRIVE_PRIVACY_POLICY__2021-11-09"
+    # THRIVE_AI_POLICY = "THRIVE_AI_POLICY"  # Add version if/when used
+    THRIVE_MARKETING_POLICY = "THRIVE_MARKETING_POLICY__2025-10-16"
+
+
+class ConsentManager(models.Manager["Consent"]):
+    def for_user(self, user: User):
+        """
+        Fetch Consent records for the given user. Only the latest record for each policy is relevant.
+        """
+        return self.filter(user=user).order_by("policy", "-date").distinct("policy")
+
+
+class Consent(BaseModel):
+    """
+    Consent tracks a User's consent to a specified policy.
+
+    _Required_ consent is configured and enforced in core.middleware.consent.ConsentMiddleware.
+
+    Do not update Consent records once they have been created; instead, create a new record with the updated decision.
+
+    We're currently only modelling Users consenting to Thrive policies, but this should be extensible to support
+    management of Organization-provided policies and perhaps Patient-level consent as well.
+
+    See https://www.hl7.org/fhir/consent.html
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    policy = models.CharField(max_length=255, choices=ConsentPolicy)
+    decision = models.BooleanField()  # in FHIR this is "deny"/"permit" as a string code
+    date = models.DateTimeField(default=timezone.now)
+
+    objects = ConsentManager()

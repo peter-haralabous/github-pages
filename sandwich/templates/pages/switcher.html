@@ -1,0 +1,32 @@
+{% extends "base_top_nav.html" %}
+
+{% load lucide %}
+
+{% block topnav %}
+  {% include 'partials/topnav.html' %}
+{% endblock topnav %}
+{% block content %}
+  <div class="card bg-base-100 mx-auto max-w-xs shadow">
+    <div class="card-body">
+      <h1 class="card-title">Select context</h1>
+      <ul class="menu w-full">
+        {% for patient in user_patients %}
+          <li>
+            <a href="{% url 'patients:patient_details' patient_id=patient.id %}">
+              {% lucide "circle-user" class="size-6" %}
+              {{ patient.full_name }}
+            </a>
+          </li>
+        {% endfor %}
+        {% for org in user_organizations %}
+          <li>
+            <a href="{% url 'providers:organization' organization_id=org.id %}">
+              {% lucide "building-2" class="size-6" %}
+              {{ org.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock content %}
