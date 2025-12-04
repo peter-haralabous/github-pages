@@ -152,7 +152,6 @@
       justify-content: center;
       width: 36px;
       height: 36px;
-      opacity: 0.6;
       transition: opacity 0.2s ease;
       pointer-events: none;
     }
@@ -160,10 +159,6 @@
     .workspace-panel[data-collapsed="true"] .artifact-type-icon svg {
       width: 24px;
       height: 24px;
-    }
-
-    .workspace-panel[data-collapsed="true"]:hover .artifact-type-icon {
-      opacity: 0.3;
     }
 
     .workspace-panel[data-collapsed="true"]:hover .artifact-type-icon {
@@ -466,7 +461,7 @@
             panel.innerHTML = `
               <div class="tab-header flex items-center justify-between gap-2 px-4 py-3 bg-base-100 border-b border-gray-200 shrink-0" data-tab-id="${tab.id}">
                 <h2 class="tab-title text-base font-semibold text-gray-900 truncate flex-1">${this.escapeHtml(tab.label)}</h2>
-                <div class="tab-controls flex items-center gap-1" data-type-icon='${typeIcon}'>
+                <div class="tab-controls flex items-center gap-1 text-base-content" data-type-icon='${typeIcon}'>
                   <button class="js-tab-collapse btn btn-ghost btn-circle" data-tab-id="${tab.id}" title="Collapse">
                     ${ICON_COLLAPSE_RIGHT}
                   </button>
