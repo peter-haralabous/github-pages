@@ -96,31 +96,98 @@
 
     /* Collapsed tab styling - vertical text bar */
     .workspace-panel[data-collapsed="true"] {
-      min-width: 48px !important;
-      max-width: 48px !important;
-      flex: 0 0 48px !important;
+      min-width: 64px !important;
+      max-width: 64px !important;
+      flex: 0 0 64px !important;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover {
+      background-color: #f9fafb;
     }
 
     .workspace-panel[data-collapsed="true"] .tab-header {
-      flex-direction: column;
-      justify-content: flex-start;
       align-items: center;
-      padding: 1rem 0.5rem;
+      padding: .825rem 0 !important;
       height: 100%;
-      writing-mode: vertical-rl;
       text-orientation: mixed;
+      cursor: pointer;
+      align-items: center;
+      padding: 0;
+      height: 100%;
+      gap: 1rem;
+      writing-mode: sideways-lr;
+      cursor: pointer;
+      width: 100%;
+      flex-direction: row;
     }
 
     .workspace-panel[data-collapsed="true"] .tab-title {
       transform: rotate(180deg);
       white-space: nowrap;
       margin: auto 0;
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+
     }
 
     .workspace-panel[data-collapsed="true"] .tab-controls {
       flex-direction: column;
       writing-mode: horizontal-tb;
       transform: none;
+      gap: 0.25rem;
+      position: relative;
+    }
+
+    /* Hide collapse button when collapsed */
+    .workspace-panel[data-collapsed="true"] .js-tab-collapse {
+      display: none;
+    }
+
+    /* Artifact type icon styling when collapsed */
+    .workspace-panel[data-collapsed="true"] .artifact-type-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .workspace-panel[data-collapsed="true"] .artifact-type-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover .artifact-type-icon {
+      opacity: 0.3;
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover .artifact-type-icon {
+      opacity: 0;
+
+    }
+
+    /* Close button hidden by default when collapsed, shown on hover */
+    .workspace-panel[data-collapsed="true"] .js-tab-close {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .workspace-panel[data-collapsed="true"]:hover .js-tab-close {
+      opacity: 1;
+    }
+
+    /* Hide artifact icon when expanded */
+    .workspace-panel[data-collapsed="false"] .artifact-type-icon {
+      display: none;
     }
 
     .workspace-panel[data-collapsed="true"] .tab-content {
@@ -395,10 +462,11 @@
             }
 
             // Create panel structure with header
+            const typeIcon = TAB_ICONS[tab.type] || TAB_ICONS['document'];
             panel.innerHTML = `
-              <div class="tab-header flex items-center justify-between gap-2 px-4 py-3 bg-neutral-50 border-b border-gray-200 shrink-0">
+              <div class="tab-header flex items-center justify-between gap-2 px-4 py-3 bg-neutral-50 border-b border-gray-200 shrink-0" data-tab-id="${tab.id}">
                 <h2 class="tab-title text-base font-semibold text-gray-900 truncate flex-1">${this.escapeHtml(tab.label)}</h2>
-                <div class="tab-controls flex items-center gap-1">
+                <div class="tab-controls flex items-center gap-1" data-type-icon='${typeIcon}'>
                   <button class="js-tab-collapse btn btn-ghost btn-sm btn-circle" data-tab-id="${tab.id}" title="Collapse">
                     ${ICON_COLLAPSE_RIGHT}
                   </button>
@@ -500,9 +568,9 @@
 
           // Collapsed panels get fixed narrow width
           collapsedPanels.forEach(panel => {
-            panel.style.minWidth = '48px';
-            panel.style.maxWidth = '48px';
-            panel.style.flex = '0 0 48px';
+            panel.style.minWidth = '64px';
+            panel.style.maxWidth = '64px';
+            panel.style.flex = '0 0 64px';
           });
 
           // Expanded panels share remaining space with 33% minimum
@@ -535,9 +603,22 @@
           if (isCollapsed) {
             // Expand - chevron points right
             collapseBtn.innerHTML = ICON_COLLAPSE_RIGHT;
+            // Remove artifact icon when expanding
+            const controls = panel.querySelector('.tab-controls');
+            const iconEl = controls.querySelector('.artifact-type-icon');
+            if (iconEl) iconEl.remove();
           } else {
             // Collapse - chevron points left
             collapseBtn.innerHTML = ICON_COLLAPSE_LEFT;
+            // Add artifact icon when collapsing
+            const controls = panel.querySelector('.tab-controls');
+            const typeIcon = controls.dataset.typeIcon;
+            if (typeIcon && !controls.querySelector('.artifact-type-icon')) {
+              const iconWrapper = document.createElement('div');
+              iconWrapper.className = 'artifact-type-icon';
+              iconWrapper.innerHTML = typeIcon;
+              controls.insertBefore(iconWrapper, controls.firstChild);
+            }
           }
 
           this.updatePanelVisibility();
@@ -716,6 +797,21 @@
           const label = openTabEl.dataset.tabLabel;
           patientTabs.openTab(type, id, label);
           return;
+        }
+
+        // Handle clicking on collapsed tab header to expand
+        const tabHeader = e.target.closest('.tab-header');
+        if (tabHeader) {
+          const panel = tabHeader.closest('.workspace-panel');
+          if (panel && panel.dataset.collapsed === 'true') {
+            // Only handle click if panel is collapsed and click is not on close button
+            if (!e.target.closest('.js-tab-close')) {
+              e.preventDefault();
+              const tabId = tabHeader.dataset.tabId;
+              patientTabs.toggleCollapse(tabId);
+              return;
+            }
+          }
         }
 
         // Handle tab collapse clicks
