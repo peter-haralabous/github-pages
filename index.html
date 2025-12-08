@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <base href="/github-pages/" />
     <title>Prototypes Hub</title>
-    <link rel="stylesheet" href="./shared/styles.css" />
+    <link rel="stylesheet" href="/shared/styles.css" />
   </head>
   <body>
     <header id="site-header"></header>
@@ -17,14 +18,14 @@
       </p>
 
       <nav class="hub-links">
-        <a href="./patient-details/">Patient Details</a>
-        <a href="./scheduling/">Scheduling</a>
-        <a href="./dashboard/">Dashboard</a>
+        <a href="/patient-details/">Patient Details</a>
+        <a href="/scheduling/">Scheduling</a>
+        <a href="/dashboard/">Dashboard</a>
       </nav>
     </main>
 
     <script type="module">
-      import { initNav } from './shared/navigation.js';
+      import { initNav } from '/shared/navigation.js';
       initNav(document.getElementById('site-header'));
     </script>
   </body>
