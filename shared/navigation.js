@@ -4,17 +4,17 @@ export function initNav(root = null) {
   if (!mount) return;
   mount.className = 'global-header';
   mount.innerHTML = `
-    <div class="global-header__inner">
-      <div class="brand">
-        <div class="logo">HC</div>
-        <div class="brand-name">HealthConnect</div>
-      </div>
-      <div class="search" aria-hidden="true">
+    <div class="global-header__inner flex w-full justify-between items-center">
+      <a href="/" class="brand no-underline">
+        <span class="logo">HC</span>
+        <span class="brand-name">HealthConnect</span>
+      </a>
+      <div class="search" aria-hidden="true" class="mx-auto">
         <input type="search" placeholder="Type a command or search..." aria-label="Search" />
       </div>
       <div class="actions" style="display:flex;align-items:center;gap:12px">
         <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
-          <span class="material-symbols-outlined">segment</span>
+          <span class="material-symbols-outlined">  </span>
         </button>
         <div class="user" title="JD">JD</div>
       </div>

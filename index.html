@@ -1,28 +1,412 @@
 <!doctype html>
-<html lang="en">
+<html class="light" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <base href="/github-pages/" />
-    <title>Prototypes Hub</title>
-    <link rel="stylesheet" href="/shared/styles.css" />
+    <title>Patient Encounters</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <link href="/shared/styles.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+
+      body {
+        background: #f6f6f8;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+      }
+
+      .page-container {
+        padding: 24px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0b1220;
+        margin: 0;
+      }
+
+      .btn-primary {
+        background: #1d7aec;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .search-filter-bar {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(11, 18, 32, 0.04);
+      }
+
+      .search-input-wrapper {
+        flex: 1;
+        max-width: 400px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 10px 12px 10px 40px;
+        border: 1px solid rgba(11, 18, 32, 0.12);
+        border-radius: 8px;
+        font-size: 14px;
+        color: #6c757d;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 20px;
+      }
+
+      .btn-secondary {
+        background: #e9ecef;
+        color: #0b1220;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .active-filters {
+        background: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(11, 18, 32, 0.04);
+      }
+
+      .filter-label {
+        font-weight: 600;
+        color: #0b1220;
+        font-size: 14px;
+      }
+
+      .filter-tag {
+        background: #e6f0ff;
+        color: #0b1220;
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .filter-tag button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        color: #0b1220;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .table-container {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(11, 18, 32, 0.04);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: #f6f6f8;
+        border-bottom: 1px solid rgba(11, 18, 32, 0.06);
+      }
+
+      th {
+        padding: 14px 16px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 13px;
+        color: #495057;
+        white-space: nowrap;
+      }
+
+      th.sortable {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      th.sortable::after {
+        content: ' ▼';
+        font-size: 10px;
+        opacity: 0.3;
+      }
+
+      td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(11, 18, 32, 0.04);
+        color: #0b1220;
+        font-size: 14px;
+      }
+
+      tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      .patient-name {
+        color: #1d7aec;
+        text-decoration: underline;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .status-active {
+        background: #d1f4e0;
+        color: #0f5132;
+      }
+
+      .status-in-progress {
+        background: #fff3cd;
+        color: #664d03;
+      }
+
+      .row-actions {
+        text-align: right;
+      }
+
+      .action-menu-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: #6c757d;
+        font-size: 20px;
+      }
+
+      .pagination {
+        background: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 2px 8px rgba(11, 18, 32, 0.04);
+      }
+
+      .pagination button {
+        background: #e9ecef;
+        color: #6c757d;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .pagination button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .pagination-info {
+        font-weight: 600;
+        color: #0b1220;
+      }
+
+      .settings-icon {
+        color: #6c757d;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <header id="site-header"></header>
 
-    <main>
-      <h1>Prototypes Hub</h1>
-      <p>
-        Quick navigation to individual prototypes — built with plain ES modules so you can edit and
-        deploy immediately.
-      </p>
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">Patient Encounters</h1>
+        <button class="btn-primary">New Encounter</button>
+      </div>
 
-      <nav class="hub-links">
-        <a href="/patient-details/">Patient Details</a>
-        <a href="/scheduling/">Scheduling</a>
-        <a href="/dashboard/">Dashboard</a>
-      </nav>
-    </main>
+      <div class="search-filter-bar">
+        <div class="search-input-wrapper">
+          <span class="material-symbols-outlined search-icon">search</span>
+          <input type="text" class="search-input" placeholder="Search" />
+        </div>
+        <button class="btn-secondary">Search</button>
+        <button class="btn-secondary">Filter</button>
+      </div>
+
+      <div class="table-container border">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date of Birth</th>
+              <th>Active</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th class="sortable">Updated</th>
+              <th><span class="material-symbols-outlined settings-icon">settings</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="/patient-details/index.html" class="patient-name">H, Peter</a></td>
+              <td>peter.haralabous@thrive.health</td>
+              <td>2000-01-01</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-21 09:36</td>
+              <td>2025-11-21 09:36</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="/patient-details/index.html" class="patient-name">Smith, Ely</a></td>
+              <td>ely@email.com</td>
+              <td>1999-01-01</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-19 14:40</td>
+              <td>2025-11-19 14:40</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="/patient-details/index.html" class="patient-name">Johnson, Maria</a></td>
+              <td>maria.johnson@email.com</td>
+              <td>1985-06-15</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-18 11:22</td>
+              <td>2025-11-18 11:22</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="/patient-details/index.html" class="patient-name">Williams, Robert</a>
+              </td>
+              <td>robert.williams@email.com</td>
+              <td>1978-03-22</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-17 08:15</td>
+              <td>2025-11-17 08:15</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="/patient-details/index.html" class="patient-name">Davis, Jennifer</a>
+              </td>
+              <td>jennifer.davis@email.com</td>
+              <td>1992-11-08</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-15 16:30</td>
+              <td>2025-11-15 16:30</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="/patient-details/index.html" class="patient-name">Brown, Michael</a></td>
+              <td>michael.brown@email.com</td>
+              <td>1970-09-30</td>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td><span class="status-badge status-in-progress">In Progress</span></td>
+              <td>2025-11-14 12:11</td>
+              <td>2025-11-14 12:11</td>
+              <td class="row-actions">
+                <button class="action-menu-btn">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button disabled>« Previous</button>
+        <span class="pagination-info">Page 1 of 1</span>
+        <button disabled>Next »</button>
+      </div>
+    </div>
 
     <script type="module">
       import { initNav } from '/shared/navigation.js';

@@ -131,6 +131,7 @@
       .vertical-tab.collapsed .collapsed-only {
         display: flex;
         height: 100%;
+        padding-top: 64px;
       }
 
       /* Collapsed tab hover behavior - swap icon with close button */
@@ -171,13 +172,16 @@
         flex-direction: column;
         flex: 1;
         overflow-y: auto;
+        background-color: white;
       }
 
       .tab-content.visible {
         opacity: 1;
         display: flex;
       }
-
+      .tab-content .sticky > div {
+        background-color: white;
+      }
       /* Chevron rotation for submenus */
       .chevron-icon {
         transition: transform 0.3s ease;
@@ -192,12 +196,11 @@
         border-left: 4px solid #333;
         border-right: 4px solid #333;
       }
-
-      .vertical-tab.active-tab.expanded .sticky {
-        background: linear-gradient(to right, rgba(19, 91, 236, 0.05), transparent);
+      .vertical-tab.active-tab.expanded {
+        position: relative;
       }
-      .vertical-tab.active-tab.expanded .sticky > div {
-        background-color: white;
+      .vertical-tab.active-tab.expanded .sticky {
+        background: linear-gradient(to right, rgba(19, 91, 236, 0.05), white);
       }
 
       .vertical-tab.active-tab.collapsed {
@@ -210,11 +213,11 @@
   >
     <header id="site-header"></header>
 
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden pt-16">
       <!-- Side Menu -->
       <aside
         id="sidebar"
-        class="w-64 bg-card-light dark:bg-card-dark border-r border-gray-200 dark:border-gray-700 flex-shrink-0 fixed left-0 top-0 h-screen z-30 transition-all duration-300 flex flex-col"
+        class="w-64 bg-white dark:bg-card-dark border-r border-gray-200 dark:border-gray-700 flex-shrink-0 fixed left-0 top-16 h-screen z-30 transition-all duration-300 flex flex-col"
       >
         <!-- Patient Header -->
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 sidebar-header">
@@ -715,7 +718,7 @@
         </div>
       </aside>
       <!-- Vertical Tabs Container -->
-      <div id="tabs-container" class="flex flex-1">
+      <div id="tabs-container" class="flex flex-1 pt-16">
         <!-- Overview Tab -->
         <div
           id="tab-overview"
@@ -745,7 +748,7 @@
             </span>
           </button>
           <div class="tab-content">
-            <div class="sticky top-0 bg-card-light dark:bg-card-dark z-20 flex-shrink-0 h-16">
+            <div class="sticky top-16 bg-card-light dark:bg-card-dark z-20 flex-shrink-0 h-16">
               <div
                 class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
               >
@@ -789,7 +792,7 @@
                 </div>
               </div>
             </div>
-            <div class="p-4 space-y-4">
+            <div class="p-4 pt-20 space-y-4">
               <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                 <div class="flex items-center gap-3 mb-3">
                   <span class="material-symbols-outlined text-primary">person</span>
@@ -1026,7 +1029,7 @@
             </span>
           </button>
           <div class="tab-content">
-            <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+            <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
               <div
                 class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
               >
@@ -1277,7 +1280,7 @@
             </span>
           </button>
           <div class="tab-content">
-            <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+            <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
               <div
                 class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
               >
@@ -1582,7 +1585,7 @@
               </span>
             </button>
             <div class="tab-content">
-              <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+              <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                 <div
                   class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                 >
@@ -1625,7 +1628,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-red-500">warning</span>
@@ -1931,7 +1934,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -1977,7 +1980,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -2140,7 +2143,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2186,7 +2189,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -2254,7 +2257,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2300,7 +2303,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -2371,7 +2374,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2417,7 +2420,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -2489,7 +2492,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2535,7 +2538,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -2605,7 +2608,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2651,7 +2654,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">person</span>
@@ -2763,7 +2766,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2809,7 +2812,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">person</span>
@@ -2924,7 +2927,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -2970,7 +2973,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">person</span>
@@ -3090,7 +3093,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -3136,7 +3139,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>
@@ -3207,7 +3210,7 @@
                 </span>
               </button>
               <div class="tab-content">
-                <div class="sticky top-0 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
                   <div
                     class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
                   >
@@ -3253,7 +3256,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="p-4 space-y-4">
+                <div class="p-4 pt-20 space-y-4">
                   <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
                     <div class="flex items-center gap-3 mb-3">
                       <span class="material-symbols-outlined text-blue-500">info</span>

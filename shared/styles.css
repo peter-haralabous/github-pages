@@ -73,7 +73,6 @@ main {
   box-shadow: 0 2px 8px rgba(11, 18, 32, 0.04);
 }
 .global-header__inner {
-  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -86,6 +85,7 @@ main {
   gap: 12px;
   font-weight: 700;
   color: #0b1220;
+  text-decoration: none;
 }
 .global-header .brand .logo {
   width: 36px;
@@ -97,11 +97,12 @@ main {
   background: linear-gradient(90deg, #e6f0ff, #ffffff);
   color: #135bec;
   font-weight: 700;
+  text-decoration: none;
 }
 .global-header .search {
   flex: 1;
   max-width: 520px;
-  margin: 0 20px;
+  margin: 0 auto;
 }
 .global-header .search input {
   width: 100%;
@@ -119,6 +120,9 @@ main {
   align-items: center;
   justify-content: center;
   font-weight: 700;
+}
+.global-header a {
+  text-decoration: none;
 }
 
 /* Add top padding to pages that include the global header so content isn't hidden */
