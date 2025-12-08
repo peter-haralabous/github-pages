@@ -20,8 +20,9 @@ jobs:
           node-version: '18'
 
       - name: Install html-validate
-        run: npm install --no-audit --no-fund html-validate@8
+        # pin to the v10 CLI and use the modern formatter option
+        run: npm install --no-audit --no-fund html-validate@^10
 
       - name: Run html-validate
         # run html-validate on all HTML files; fail on warnings
-        run: npx html-validate --reporter compact --max-warnings 0 "**/*.html"
+        run: npx html-validate --formatter compact --max-warnings 0 "**/*.html"
