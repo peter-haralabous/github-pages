@@ -24,4 +24,4 @@ jobs:
 
       - name: Run html-validate
         # run html-validate on all HTML files; fail on warnings
-        run: npx html-validate --format compact --max-warnings 0 "**/*.html"
+        run: npx html-validate --reporter compact --max-warnings 0 "**/*.html"
