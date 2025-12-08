@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Patient Details — Prototype</title>
+    <link rel="stylesheet" href="/shared/styles.css">
+  </head>
+  <body>
+    <header id="site-header"></header>
+    <main>
+      <h2>Patient Details Prototype</h2>
+      <section class="container">
+        <p>This is a simple prototype page for patient details. Edit `patient-details/index.html` and `shared` modules to iterate quickly.</p>
+        <div id="app"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initNav } from '/shared/navigation.js';
+      import { formatDateISO } from '/shared/utils.js';
+
+      initNav(document.getElementById('site-header'));
+
+      const app = document.getElementById('app');
+      app.innerHTML = `<p>Loaded at: ${formatDateISO()}</p>`;
+    </script>
+  </body>
+</html>
