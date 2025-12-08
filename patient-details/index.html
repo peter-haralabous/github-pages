@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <base href="/github-pages/" />
     <title>Patient Details — Prototype</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -13,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
     />
-    <link href="/shared/styles.css" rel="stylesheet" />
+    <link href="../shared/styles.css" rel="stylesheet" />
 
     <script>
       tailwind.config = {
@@ -213,7 +212,23 @@
   <body
     class="font-display bg-neutral-bg dark:bg-background-dark text-text-dark-gray dark:text-neutral-bg"
   >
-    <header id="site-header"></header>
+    <header class="global-header">
+      <div class="global-header__inner">
+        <a href="../index.html" class="brand">
+          <span class="logo">HC</span>
+          <span class="brand-name">HealthConnect</span>
+        </a>
+        <div class="search">
+          <input type="search" placeholder="Type a command or search..." aria-label="Search" />
+        </div>
+        <div class="actions" style="display: flex; align-items: center; gap: 12px">
+          <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
+            <span class="material-symbols-outlined"></span>
+          </button>
+          <div class="user" title="JD">JD</div>
+        </div>
+      </div>
+    </header>
 
     <main class="flex h-screen overflow-hidden pt-16">
       <!-- Side Menu -->
@@ -3612,11 +3627,6 @@
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('collapsed');
       }
-    </script>
-
-    <script type="module">
-      import { initNav } from '/shared/navigation.js';
-      initNav(document.getElementById('site-header'));
     </script>
   </body>
 </html>
