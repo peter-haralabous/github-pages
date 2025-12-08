@@ -3426,9 +3426,17 @@
       const tabStates = {}; // 'expanded', 'collapsed', or 'closed'
       let activeTabId = null; // Track the currently active/focused tab
 
-      // Open Overview tab by default
+      // Open Overview tab by default, or a specific tab from URL params
       window.addEventListener('DOMContentLoaded', () => {
-        openTab('overview');
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+
+        // If a tab is specified in the URL, open that tab, otherwise open overview
+        if (tabParam) {
+          openTab(tabParam);
+        } else {
+          openTab('overview');
+        }
       });
 
       function showDirectory(directoryId) {
