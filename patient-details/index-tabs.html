@@ -107,9 +107,9 @@
       }
 
       .tab-item.active {
-        color: #0f172a;
-        background: #f8f9fa;
-        border-bottom: 2px solid #0f172a;
+        color: #ffffff;
+        background: #1f2937;
+        border-bottom: 2px solid #1f2937;
       }
 
       .tab-item .material-symbols-outlined {
@@ -1791,6 +1791,154 @@
       }
 
       function generateFormContent(name) {
+        if (name === 'Intake Form') {
+          return `
+            <div class="space-y-6">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <h2 class="text-xl font-bold text-text-dark-gray dark:text-white">${name} Submission</h2>
+                  <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">Completed</span>
+                </div>
+                <button class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">edit</span>
+                  Edit
+                </button>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">Patient Information</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Full name</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">John Smith</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Date of birth</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">July 3, 1956</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Email address</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">john.smith@email.com</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Phone number</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">(555) 123-4567</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">Medical History</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Primary concern</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Experiencing persistent lower back pain for the past 3 weeks. Pain is worse when sitting for long periods and improves with movement. Rating 6/10 on pain scale.</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Current medications</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Lisinopril 10mg daily, Metformin 500mg twice daily, Aspirin 81mg daily</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Known allergies</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Penicillin (rash), Latex (contact dermatitis)</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Past surgeries or hospitalizations</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Appendectomy (2015), Cholecystectomy (2019)</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">Lifestyle</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Do you smoke?</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Never</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Exercise frequency</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Rarely (less than once per week)</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Alcohol consumption</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">1-2 drinks per week</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <p class="text-xs text-text-light-gray">Submitted on November 21, 2025 at 2:30 PM</p>
+              </div>
+            </div>
+          `;
+        } else if (name === 'Follow-up Form') {
+          return `
+            <div class="space-y-6">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <h2 class="text-xl font-bold text-text-dark-gray dark:text-white">${name} Submission</h2>
+                  <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">Completed</span>
+                </div>
+                <button class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">edit</span>
+                  Edit
+                </button>
+              </div>
+
+              <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <p class="text-sm text-text-dark-gray dark:text-white"><span class="font-semibold">Last visit:</span> November 14, 2025</p>
+                <p class="text-sm text-text-dark-gray dark:text-white mt-1"><span class="font-semibold">Provider:</span> Dr. Smith</p>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">General Well-being</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">How are you feeling since your last visit?</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Feeling much better overall. The lower back pain has decreased significantly. I've been following the physical therapy exercises and they seem to be helping.</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Overall health rating</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Good</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">Symptoms</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Any new symptoms?</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">No new symptoms to report.</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Pain level (0-10)</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">2/10 (improved from 6/10)</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-4">Treatment Adherence</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Are you taking medications as prescribed?</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Yes</p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-text-light-gray mb-1">Physical therapy sessions completed</label>
+                    <p class="text-sm text-text-dark-gray dark:text-white">6 out of 8 sessions</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <p class="text-xs text-text-light-gray">Submitted on November 28, 2025 at 10:15 AM</p>
+              </div>
+            </div>
+          `;
+        }
         return `
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
