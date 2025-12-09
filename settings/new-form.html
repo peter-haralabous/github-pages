@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Form Template - HealthConnect</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SurveyJS Form Library resources -->
+    <link
+      href="https://unpkg.com/survey-core/survey-core.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+    <script src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script>
+
+    <!-- (Optional) Predefined theme configurations -->
+    <script src="https://unpkg.com/survey-core/themes/index.min.js"></script>
+
+    <!-- Survey Creator resources -->
+    <link
+      href="https://unpkg.com/survey-creator-core/survey-creator-core.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/survey-creator-core/survey-creator-core.min.js"></script>
+    <script src="https://unpkg.com/survey-creator-js/survey-creator-js.min.js"></script>
+
+    <style>
+      main {
+        margin-left: 256px;
+        padding-top: 0px;
+        min-height: 100vh;
+        background: #f8f9fa;
+      }
+
+      .content-area {
+        max-width: 100%;
+        padding: 32px;
+        height: calc(100vh - 64px);
+      }
+
+      .page-title-section {
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-title-section h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0b1220;
+      }
+
+      .btn-secondary {
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid #d1d5db;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+      }
+
+      .btn-secondary:hover {
+        background: #f9fafb;
+      }
+
+      .btn-primary {
+        background: #0f172a;
+        color: #ffffff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        margin-left: 8px;
+      }
+
+      .btn-primary:hover {
+        background: #1e293b;
+      }
+
+      .actions-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      #surveyCreator {
+        height: calc(100vh - 180px);
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="has-global-header">
+    <header class="global-header">
+      <div class="global-header__inner">
+        <a href="../index.html" class="brand">
+          <span class="logo">HC</span>
+          <span class="brand-name">HealthConnect</span>
+        </a>
+        <div class="search">
+          <input
+            type="search"
+            placeholder="Search form templates"
+            aria-label="Search form templates"
+          />
+        </div>
+        <div class="actions" style="display: flex; align-items: center; gap: 12px">
+          <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
+            <span class="material-symbols-outlined"></span>
+          </button>
+          <div class="user-avatar-wrapper">
+            <div class="user-avatar" id="userAvatarBtn" onclick="toggleDropdown()">
+              <span class="material-symbols-outlined user-avatar-icon">account_circle</span>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+              <div class="dropdown-header">
+                <div class="dropdown-avatar">
+                  <span class="material-symbols-outlined dropdown-avatar-icon">account_circle</span>
+                </div>
+                <div class="dropdown-user-info">
+                  <h3 class="dropdown-user-name">Dr. Smith</h3>
+                  <p class="dropdown-user-email">drsmith@email.com</p>
+                </div>
+              </div>
+
+              <a href="./account-settings.html" class="dropdown-menu-item">
+                <span class="material-symbols-outlined">person</span>
+                <span>Account Settings</span>
+                <span class="material-symbols-outlined chevron">chevron_right</span>
+              </a>
+
+              <h4 class="dropdown-section-title">Organization</h4>
+
+              <button class="dropdown-org-item">
+                <span class="material-symbols-outlined dropdown-org-icon">apartment</span>
+                <span class="dropdown-org-name">Dr. Smith's Clinic</span>
+                <div class="dropdown-org-toggle">
+                  <span class="material-symbols-outlined">unfold_more</span>
+                </div>
+              </button>
+
+              <a href="./organization-settings.html" class="dropdown-menu-item">
+                <span class="material-symbols-outlined">settings</span>
+                <span>Organization Settings</span>
+                <span class="material-symbols-outlined chevron">chevron_right</span>
+              </a>
+
+              <button class="dropdown-menu-item dropdown-logout">
+                <span class="material-symbols-outlined">logout</span>
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fixed Left Sidebar -->
+    <aside
+      class="w-64 bg-white border-r border-gray-200 flex-shrink-0 fixed left-0 top-16 h-screen z-30 flex flex-col overflow-y-auto"
+    >
+      <div class="p-4">
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          Organization
+        </h2>
+        <nav class="space-y-1">
+          <a
+            href="./organization-settings.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">apartment</span>
+            Organization Profile
+          </a>
+          <a
+            href="./worklist-preferences.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">list</span>
+            Worklist Preferences
+          </a>
+          <a
+            href="./custom-fields.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">tune</span>
+            Custom Fields
+          </a>
+          <a
+            href="./form-templates.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg">description</span>
+            Form Templates
+          </a>
+          <a
+            href="./summary-templates.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">summarize</span>
+            Summary Templates
+          </a>
+          <a
+            href="./automations.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">automation</span>
+            Automations
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div class="content-area">
+        <div class="page-title-section">
+          <h1>New Form Template</h1>
+          <div class="actions-group">
+            <a href="./form-templates.html" class="btn-secondary">
+              <span class="material-symbols-outlined" style="font-size: 18px">close</span>
+              Cancel
+            </a>
+            <button class="btn-primary" onclick="saveForm()">
+              <span class="material-symbols-outlined" style="font-size: 18px">save</span>
+              Save Form
+            </button>
+          </div>
+        </div>
+
+        <div id="surveyCreator"></div>
+      </div>
+    </main>
+
+    <script>
+      function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+      }
+
+      document.addEventListener('click', function (event) {
+        const dropdown = document.getElementById('userDropdown');
+        const avatarBtn = document.getElementById('userAvatarBtn');
+
+        if (!dropdown.contains(event.target) && !avatarBtn.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // Initialize SurveyJS Creator
+      const creatorOptions = {
+        showLogicTab: true,
+        showTranslationTab: true,
+        isAutoSave: true,
+      };
+
+      const creator = new SurveyCreator.SurveyCreator(creatorOptions);
+
+      // Default patient intake form template
+      const defaultFormJSON = {
+        title: 'Patient Intake Form',
+        description: 'Please complete this form before your appointment',
+        pages: [
+          {
+            name: 'demographics',
+            title: 'Patient Information',
+            elements: [
+              {
+                type: 'text',
+                name: 'fullName',
+                title: 'Full Name',
+                isRequired: true,
+              },
+              {
+                type: 'text',
+                name: 'dateOfBirth',
+                title: 'Date of Birth',
+                inputType: 'date',
+                isRequired: true,
+              },
+              {
+                type: 'radiogroup',
+                name: 'gender',
+                title: 'Gender',
+                isRequired: true,
+                choices: ['Male', 'Female', 'Other', 'Prefer not to say'],
+              },
+              {
+                type: 'text',
+                name: 'email',
+                title: 'Email Address',
+                inputType: 'email',
+                isRequired: true,
+                validators: [
+                  {
+                    type: 'email',
+                  },
+                ],
+              },
+              {
+                type: 'text',
+                name: 'phone',
+                title: 'Phone Number',
+                inputType: 'tel',
+                isRequired: true,
+              },
+              {
+                type: 'text',
+                name: 'address',
+                title: 'Street Address',
+                isRequired: true,
+              },
+              {
+                type: 'text',
+                name: 'city',
+                title: 'City',
+                isRequired: true,
+              },
+              {
+                type: 'text',
+                name: 'state',
+                title: 'State',
+                isRequired: true,
+              },
+              {
+                type: 'text',
+                name: 'zipCode',
+                title: 'Zip Code',
+                isRequired: true,
+              },
+            ],
+          },
+          {
+            name: 'medical-history',
+            title: 'Medical History',
+            elements: [
+              {
+                type: 'checkbox',
+                name: 'medicalConditions',
+                title: 'Please select any medical conditions you have or have had:',
+                choices: [
+                  'Diabetes',
+                  'Hypertension',
+                  'Heart Disease',
+                  'Asthma',
+                  'Cancer',
+                  'Arthritis',
+                  'Depression/Anxiety',
+                  'Other',
+                ],
+              },
+              {
+                type: 'comment',
+                name: 'medications',
+                title: 'List any medications you are currently taking (include dosage):',
+                rows: 4,
+              },
+              {
+                type: 'checkbox',
+                name: 'allergies',
+                title: 'Do you have any allergies?',
+                choices: [
+                  'Penicillin',
+                  'Sulfa drugs',
+                  'Latex',
+                  'Food allergies',
+                  'Environmental allergies',
+                  'No known allergies',
+                ],
+              },
+              {
+                type: 'comment',
+                name: 'allergiesDetails',
+                title: 'Please provide details about your allergies:',
+                visibleIf: "{allergies} notempty and {allergies} notcontains 'No known allergies'",
+                rows: 3,
+              },
+            ],
+          },
+          {
+            name: 'reason-for-visit',
+            title: 'Reason for Visit',
+            elements: [
+              {
+                type: 'comment',
+                name: 'reasonForVisit',
+                title: 'What is the primary reason for your visit today?',
+                isRequired: true,
+                rows: 4,
+              },
+              {
+                type: 'rating',
+                name: 'painLevel',
+                title: 'If experiencing pain, rate your pain level (1-10):',
+                rateMin: 1,
+                rateMax: 10,
+                minRateDescription: 'No pain',
+                maxRateDescription: 'Worst pain',
+              },
+            ],
+          },
+        ],
+      };
+
+      // Always load the default form (for prototype purposes)
+      creator.text = JSON.stringify(defaultFormJSON);
+
+      creator.saveSurveyFunc = (saveNo, callback) => {
+        window.localStorage.setItem('survey-json', creator.text);
+        callback(saveNo, true);
+        console.log('Form saved!');
+      };
+
+      creator.render('surveyCreator');
+
+      function saveForm() {
+        // Save the form JSON to localStorage
+        window.localStorage.setItem('survey-json', creator.text);
+        // Redirect back to form templates page
+        window.location.href = './form-templates.html';
+      }
+    </script>
+  </body>
+</html>
