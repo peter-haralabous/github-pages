@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Automations - HealthConnect</title>
+    <title>Workflow Automation - HealthConnect</title>
     <link rel="stylesheet" href="../shared/styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700"
@@ -23,167 +23,162 @@
         padding: 32px;
       }
 
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #1d7aec;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 24px;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
       .page-title-section {
         margin-bottom: 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
       }
 
       .page-title-section h1 {
         font-size: 28px;
         font-weight: 700;
         color: #0b1220;
-        margin: 0;
+        margin: 0 0 8px 0;
       }
 
       .page-title-section p {
         font-size: 15px;
         color: #6b7280;
+        margin: 0;
       }
 
-      .form-section {
+      .automation-templates {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .template-card {
         background: #ffffff;
+        border: 2px solid transparent;
         border-radius: 12px;
-        padding: 32px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 24px;
+        padding: 24px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-decoration: none;
       }
 
-      .form-section h2 {
-        font-size: 18px;
+      .template-card:hover {
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .template-card.blue {
+        background: #eff6ff;
+        border-color: #dbeafe;
+      }
+
+      .template-card.green {
+        background: #f0fdf4;
+        border-color: #dcfce7;
+      }
+
+      .template-card.purple {
+        background: #faf5ff;
+        border-color: #f3e8ff;
+      }
+
+      .template-card.gray {
+        background: #f9fafb;
+        border-color: #f3f4f6;
+      }
+
+      .template-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+
+      .template-icon.blue {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .template-icon.green {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+
+      .template-icon.purple {
+        background: #f3e8ff;
+        color: #9333ea;
+      }
+
+      .template-icon.gray {
+        background: #e5e7eb;
+        color: #6b7280;
+      }
+
+      .template-icon .material-symbols-outlined {
+        font-size: 28px;
+      }
+
+      .template-content {
+        flex: 1;
+      }
+
+      .template-title {
+        font-size: 16px;
         font-weight: 600;
         color: #0b1220;
-        margin-bottom: 8px;
+        margin: 0 0 4px 0;
       }
 
-      .subtitle {
+      .template-card.blue .template-title {
+        color: #1e40af;
+      }
+
+      .template-card.green .template-title {
+        color: #15803d;
+      }
+
+      .template-card.purple .template-title {
+        color: #7e22ce;
+      }
+
+      .template-card.gray .template-title {
+        color: #374151;
+      }
+
+      .template-description {
         font-size: 14px;
         color: #6b7280;
-        margin-bottom: 24px;
+        margin: 0;
       }
 
-      .empty-state {
-        text-align: center;
-        padding: 64px 32px;
+      .template-card.blue .template-description {
+        color: #1e40af;
+        opacity: 0.8;
       }
 
-      .empty-state-icon {
-        font-size: 64px;
-        color: #d1d5db;
-        margin-bottom: 16px;
+      .template-card.green .template-description {
+        color: #15803d;
+        opacity: 0.8;
       }
 
-      .empty-state h3 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #0b1220;
-        margin-bottom: 8px;
-      }
-
-      .empty-state p {
-        font-size: 14px;
-        color: #6b7280;
-        margin-bottom: 24px;
-      }
-
-      .btn-primary {
-        background: #0f172a;
-        color: #ffffff;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-      }
-
-      .btn-primary:hover {
-        background: #1e293b;
-      }
-
-      .table-container {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .table-container.border {
-        border: 1px solid rgba(11, 18, 32, 0.06);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      th {
-        padding: 14px 16px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 13px;
-        color: #495057;
-        white-space: nowrap;
-        background: #ffffff;
-      }
-
-      td {
-        padding: 16px;
-        border-bottom: 1px solid rgba(11, 18, 32, 0.04);
-        color: #0b1220;
-        font-size: 14px;
-      }
-
-      tbody tr:hover {
-        background: #f8f9fa;
-      }
-
-      .automation-name {
-        color: #1d7aec;
-        text-decoration: underline;
-        font-weight: 500;
-        cursor: pointer;
-      }
-
-      .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 500;
-        white-space: nowrap;
-      }
-
-      .status-active {
-        background: #d1f4e0;
-        color: #0f5132;
-      }
-
-      .status-neutral {
-        background: #e9ecef;
-        color: #495057;
-      }
-
-      .row-actions {
-        text-align: right;
-      }
-
-      .action-menu-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        color: #6c757d;
-        font-size: 20px;
-      }
-
-      .action-menu-btn:hover {
-        color: #0b1220;
-      }
-
-      .settings-icon {
-        color: #6c757d;
-        font-size: 20px;
+      .template-card.purple .template-description {
+        color: #7e22ce;
+        opacity: 0.8;
       }
     </style>
   </head>
@@ -306,107 +301,56 @@
     <!-- Main Content -->
     <main>
       <div class="content-area">
+        <a href="./automations.html" class="back-link">
+          <span class="material-symbols-outlined" style="font-size: 18px">arrow_back</span>
+          Back to automations
+        </a>
+
         <div class="page-title-section">
-          <h1>Automations</h1>
-          <a href="./new-automation.html" class="btn-primary" style="text-decoration: none">
-            New Automation
-          </a>
+          <h1>Workflow Automation</h1>
+          <p>Choose a template to get started or build your own from scratch</p>
         </div>
 
-        <div class="table-container border">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Trigger</th>
-                <th>Action</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Updated</th>
-                <th><span class="material-symbols-outlined settings-icon">settings</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><a href="#" class="automation-name">Send reminder</a></td>
-                <td>Form submitted</td>
-                <td>Send email</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td>2025-11-20 10:30</td>
-                <td>2025-12-05 14:22</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="#" class="automation-name">Update List status</a></td>
-                <td>Encounter created</td>
-                <td>Update status field</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td>2025-11-18 09:15</td>
-                <td>2025-12-02 11:45</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="#" class="automation-name">Notify clinicians</a></td>
-                <td>Patient enrolled</td>
-                <td>Send notification</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td>2025-11-15 16:00</td>
-                <td>2025-11-28 08:30</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="#" class="automation-name">Schedule follow-up</a></td>
-                <td>7 days after encounter</td>
-                <td>Create task</td>
-                <td><span class="status-badge status-neutral">Disabled</span></td>
-                <td>2025-11-10 13:20</td>
-                <td>2025-11-25 15:10</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="#" class="automation-name">Send appointment confirmation</a></td>
-                <td>Appointment booked</td>
-                <td>Send SMS</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td>2025-11-05 11:45</td>
-                <td>2025-12-01 09:20</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="#" class="automation-name">Archive old records</a></td>
-                <td>90 days after completion</td>
-                <td>Move to archive</td>
-                <td><span class="status-badge status-active">Active</span></td>
-                <td>2025-10-28 14:00</td>
-                <td>2025-11-22 10:15</td>
-                <td class="row-actions">
-                  <button class="action-menu-btn">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="automation-templates">
+          <a href="#" class="template-card blue">
+            <div class="template-icon blue">
+              <span class="material-symbols-outlined">bolt</span>
+            </div>
+            <div class="template-content">
+              <h3 class="template-title">Update worklist status or alert</h3>
+              <p class="template-description">Automatically flag important patient information</p>
+            </div>
+          </a>
+
+          <a href="#" class="template-card green">
+            <div class="template-icon green">
+              <span class="material-symbols-outlined">send</span>
+            </div>
+            <div class="template-content">
+              <h3 class="template-title">Send form automatically</h3>
+              <p class="template-description">Send intake forms when appointments are booked</p>
+            </div>
+          </a>
+
+          <a href="#" class="template-card purple">
+            <div class="template-icon purple">
+              <span class="material-symbols-outlined">notifications</span>
+            </div>
+            <div class="template-content">
+              <h3 class="template-title">Send reminders</h3>
+              <p class="template-description">Remind patients to complete required tasks</p>
+            </div>
+          </a>
+
+          <a href="#" class="template-card gray">
+            <div class="template-icon gray">
+              <span class="material-symbols-outlined">settings</span>
+            </div>
+            <div class="template-content">
+              <h3 class="template-title">Custom</h3>
+              <p class="template-description">Start from scratch and build your own</p>
+            </div>
+          </a>
         </div>
       </div>
     </main>
