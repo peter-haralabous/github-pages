@@ -1,33 +1,26 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Account Settings</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Templates - HealthConnect</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
-    />
-    <link href="../shared/styles.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      body {
-        background: #f6f8fa;
-      }
-
       main {
         margin-left: 256px;
         padding-top: 64px;
         min-height: 100vh;
+        background: #f8f9fa;
       }
 
       .content-area {
+        max-width: 1400px;
         padding: 32px;
-        max-width: 1200px;
       }
 
       .page-title-section {
@@ -38,64 +31,57 @@
         font-size: 28px;
         font-weight: 700;
         color: #0b1220;
-        margin: 0 0 8px 0;
+        margin-bottom: 8px;
       }
 
       .page-title-section p {
-        color: #6c757d;
-        margin: 0;
+        font-size: 15px;
+        color: #6b7280;
       }
 
-      .card {
+      .form-section {
         background: #ffffff;
-        border: 1px solid rgba(11, 18, 32, 0.06);
         border-radius: 12px;
-        padding: 24px;
+        padding: 32px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         margin-bottom: 24px;
       }
 
-      .card h3 {
-        margin: 0 0 16px 0;
+      .form-section h2 {
         font-size: 18px;
         font-weight: 600;
+        color: #0b1220;
+        margin-bottom: 8px;
       }
 
-      .card p.description {
-        margin: 0 0 20px 0;
-        color: #6c757d;
+      .subtitle {
         font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 24px;
       }
 
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
+      .empty-state {
+        text-align: center;
+        padding: 64px 32px;
       }
 
-      label {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+      .empty-state-icon {
+        font-size: 64px;
+        color: #d1d5db;
+        margin-bottom: 16px;
+      }
+
+      .empty-state h3 {
+        font-size: 18px;
         font-weight: 600;
         color: #0b1220;
-        font-size: 14px;
+        margin-bottom: 8px;
       }
 
-      input,
-      select,
-      textarea {
-        border-radius: 8px;
-        border: 1px solid rgba(11, 18, 32, 0.1);
-        padding: 10px 12px;
+      .empty-state p {
         font-size: 14px;
-        background: #ffffff;
-      }
-
-      .card-actions {
-        margin-top: 20px;
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
+        color: #6b7280;
+        margin-bottom: 24px;
       }
 
       .btn-primary {
@@ -108,35 +94,6 @@
         cursor: pointer;
         font-size: 14px;
       }
-
-      .btn-secondary {
-        background: transparent;
-        color: #0b1220;
-        border: 1px solid rgba(11, 18, 32, 0.1);
-        padding: 10px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 14px;
-      }
-
-      .divider {
-        height: 1px;
-        background: rgba(11, 18, 32, 0.06);
-        margin: 16px 0;
-      }
-
-      .toggle-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 0;
-      }
-
-      .toggle-row span {
-        color: #6c757d;
-        font-size: 14px;
-      }
     </style>
   </head>
   <body class="has-global-header">
@@ -147,7 +104,11 @@
           <span class="brand-name">HealthConnect</span>
         </a>
         <div class="search">
-          <input type="search" placeholder="Search settings" aria-label="Search settings" />
+          <input
+            type="search"
+            placeholder="Search form templates"
+            aria-label="Search form templates"
+          />
         </div>
         <div class="actions" style="display: flex; align-items: center; gap: 12px">
           <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
@@ -214,9 +175,9 @@
         <nav class="space-y-1">
           <a
             href="./account-settings.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-medium text-sm"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg">person</span>
+            <span class="material-symbols-outlined text-lg text-gray-600">person</span>
             Account Settings
           </a>
           <a
@@ -228,9 +189,9 @@
           </a>
           <a
             href="./form-templates.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg text-gray-600">description</span>
+            <span class="material-symbols-outlined text-lg">description</span>
             Form Templates
           </a>
           <a
@@ -255,91 +216,24 @@
     <main>
       <div class="content-area">
         <div class="page-title-section">
-          <h1>Account Settings</h1>
-          <p>Manage your profile, login, and notification preferences for HealthConnect.</p>
+          <h1>Form Templates</h1>
+          <p>Create and manage reusable form templates for patient intake and documentation.</p>
         </div>
 
-        <div class="card" id="profile">
-          <h3>Profile</h3>
-          <p class="description">Update your basic details so teammates can recognize you.</p>
-          <div class="form-grid">
-            <label>
-              Full Name
-              <input type="text" value="Dr. Smith" />
-            </label>
-            <label>
-              Email
-              <input type="email" value="drsmith@email.com" />
-            </label>
-            <label>
-              Role
-              <input type="text" value="Clinician" />
-            </label>
-            <label>
-              Clinic
-              <input type="text" value="Dr. Smith's Clinic" />
-            </label>
-          </div>
-          <div class="card-actions">
-            <button class="btn-secondary">Cancel</button>
-            <button class="btn-primary">Save changes</button>
-          </div>
-        </div>
-
-        <div class="card" id="security">
-          <h3>Security</h3>
-          <p class="description">Keep your account protected with a strong password.</p>
-          <div class="form-grid">
-            <label>
-              Current Password
-              <input type="password" placeholder="••••••••" />
-            </label>
-            <label>
-              New Password
-              <input type="password" placeholder="Choose a strong password" />
-            </label>
-            <label>
-              Confirm Password
-              <input type="password" placeholder="Re-enter new password" />
-            </label>
-          </div>
-          <div class="card-actions">
-            <button class="btn-secondary">Cancel</button>
-            <button class="btn-primary">Update password</button>
-          </div>
-        </div>
-
-        <div class="card" id="notifications">
-          <h3>Notifications</h3>
-          <p class="description">
-            Choose how you want to stay informed about encounters and tasks.
-          </p>
-          <div class="toggle-row">
-            <div>
-              <strong>Email alerts</strong>
-              <span>Encounter summaries and weekly digests</span>
-            </div>
-            <input type="checkbox" checked />
-          </div>
-          <div class="divider"></div>
-          <div class="toggle-row">
-            <div>
-              <strong>Mobile push</strong>
-              <span>Real-time notifications about urgent updates</span>
-            </div>
-            <input type="checkbox" checked />
-          </div>
-          <div class="divider"></div>
-          <div class="toggle-row">
-            <div>
-              <strong>SMS</strong>
-              <span>Backup channel for critical alerts</span>
-            </div>
-            <input type="checkbox" />
-          </div>
-          <div class="card-actions">
-            <button class="btn-secondary">Reset</button>
-            <button class="btn-primary">Save preferences</button>
+        <div class="form-section">
+          <div class="empty-state">
+            <span class="material-symbols-outlined empty-state-icon">description</span>
+            <h3>No form templates yet</h3>
+            <p>Create your first form template to streamline patient intake and documentation.</p>
+            <button class="btn-primary">
+              <span
+                class="material-symbols-outlined"
+                style="vertical-align: middle; font-size: 18px"
+              >
+                add
+              </span>
+              Create Form Template
+            </button>
           </div>
         </div>
       </div>
