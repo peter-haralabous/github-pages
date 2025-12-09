@@ -1060,12 +1060,23 @@
               <ul class="space-y-1">
                 <li>
                   <button
-                    onclick="toggleTab('health-summary')"
+                    onclick="toggleTab('summary-intake')"
                     class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
                   >
                     <div class="flex items-center gap-3">
                       <span class="material-symbols-outlined text-xl">summarize</span>
                       <span class="sidebar-title">Summary: Intake Form</span>
+                    </div>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onclick="toggleTab('summary-visit')"
+                    class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
+                  >
+                    <div class="flex items-center gap-3">
+                      <span class="material-symbols-outlined text-xl">summarize</span>
+                      <span class="sidebar-title">Summary: Follow up form</span>
                     </div>
                   </button>
                 </li>
@@ -2189,13 +2200,13 @@
               </div>
             </div>
           </div>
-          <!-- Health Summary Tab -->
+          <!-- Summary: Intake Form Tab -->
           <div
-            id="tab-health-summary"
+            id="tab-summary-intake"
             class="vertical-tab collapsed bg-card-light dark:bg-card-dark border-r border-gray-200 dark:border-gray-700 hidden flex flex-col"
           >
             <button
-              onclick="toggleTab('health-summary')"
+              onclick="toggleTab('summary-intake')"
               class="w-full h-full flex flex-col items-center justify-start p-3 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors collapsed-only"
             >
               <span
@@ -2206,7 +2217,7 @@
               <span
                 onclick="
                   event.stopPropagation();
-                  closeTab('health-summary');
+                  closeTab('summary-intake');
                 "
                 class="material-symbols-outlined text-xl text-text-light-gray mb-3 close-on-hover cursor-pointer"
                 title="Close tab"
@@ -2216,7 +2227,7 @@
               <span
                 class="tab-label text-sm font-semibold text-text-dark-gray dark:text-neutral-bg"
               >
-                Health Summary
+                Intake Summary
               </span>
             </button>
             <div class="tab-content">
@@ -2230,7 +2241,7 @@
                     </h1>
                     <div class="flex items-center gap-1 flex-shrink-0">
                       <button
-                        onclick="collapseTab('health-summary')"
+                        onclick="collapseTab('summary-intake')"
                         class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                         title="Collapse tab"
                       >
@@ -2252,7 +2263,7 @@
                         </svg>
                       </button>
                       <button
-                        onclick="closeTab('health-summary')"
+                        onclick="closeTab('summary-intake')"
                         class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                         title="Close tab"
                       >
@@ -2265,254 +2276,165 @@
                 </div>
               </div>
               <div class="tab-overflow p-6 pt-20 space-y-6">
-                <!-- Patient Info Header -->
                 <div
-                  class="grid grid-cols-2 gap-6 pb-6 border-b border-gray-200 dark:border-gray-700"
+                  class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700"
                 >
-                  <div>
-                    <p class="text-xs text-text-light-gray uppercase tracking-wide mb-1">Patient</p>
-                    <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      John Smith
-                    </p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-text-light-gray uppercase tracking-wide mb-1">DOB</p>
-                    <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      Jul 3, 1956 (68 yrs)
-                    </p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-text-light-gray uppercase tracking-wide mb-1">
-                      Province
-                    </p>
-                    <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      Ontario, Canada
-                    </p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-text-light-gray uppercase tracking-wide mb-1">
-                      Last Updated
-                    </p>
-                    <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      Dec 6, 2024
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Active Problems -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-4">
-                    Active Problems
+                  <h2 class="text-xl font-bold text-text-dark-gray dark:text-white mb-4">
+                    Summary: Intake Form
                   </h2>
-                  <div class="space-y-3">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <div class="flex items-center gap-2 mb-1">
-                          <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                            Hypertension
-                          </h3>
-                          <span
-                            class="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded"
-                          >
-                            Chronic
-                          </span>
-                        </div>
-                        <p class="text-sm text-text-light-gray">
-                          Onset: Jun 2001 • Managed with lifestyle modifications
-                        </p>
-                      </div>
-                    </div>
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <div class="flex items-center gap-2 mb-1">
-                          <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                            Low back pain
-                          </h3>
-                          <span
-                            class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded"
-                          >
-                            Active
-                          </span>
-                        </div>
-                        <p class="text-sm text-text-light-gray">Taking Ibuprofen PRN</p>
-                      </div>
-                    </div>
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <div class="flex items-center gap-2 mb-1">
-                          <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                            Fibrocystic breast disease
-                          </h3>
-                          <span
-                            class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded"
-                          >
-                            Active
-                          </span>
-                        </div>
-                        <p class="text-sm text-text-light-gray">Routine monitoring</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Current Medications -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-4">
-                    Current Medications
-                  </h2>
-
-                  <!-- High-Risk Section -->
-                  <div class="mb-4">
-                    <p class="text-xs text-text-light-gray italic mb-2">High-Risk</p>
-                    <div class="border-l-4 border-red-500 pl-3 mb-2">
-                      <p class="text-sm text-text-dark-gray dark:text-white">
-                        <span class="font-semibold">Warfarin 5mg</span>
-                        once daily (Anticoagulant) • Dr. Williams, Cardiology
+                  <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Chief Complaint</h3>
+                      <p>
+                        Patient reports experiencing persistent lower back pain for the past 3
+                        weeks, rating 6/10 on pain scale. Pain worsens with prolonged sitting and
+                        improves with movement.
                       </p>
-                      <span
-                        class="inline-block mt-1 px-2 py-0.5 text-xs font-bold bg-red-100 text-red-800 rounded"
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Medical History</h3>
+                      <ul class="list-disc list-inside space-y-1">
+                        <li>Hypertension (controlled with medication)</li>
+                        <li>Type 2 Diabetes (diagnosed 2018)</li>
+                        <li>No known drug allergies</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Current Medications</h3>
+                      <ul class="list-disc list-inside space-y-1">
+                        <li>Lisinopril 10mg daily</li>
+                        <li>Metformin 500mg twice daily</li>
+                        <li>Aspirin 81mg daily</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Lifestyle</h3>
+                      <p>
+                        Non-smoker. Occasional alcohol use (1-2 drinks per week). Sedentary
+                        lifestyle due to desk job. No regular exercise routine.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Summary: Follow up form Tab -->
+          <div
+            id="tab-summary-visit"
+            class="vertical-tab collapsed bg-card-light dark:bg-card-dark border-r border-gray-200 dark:border-gray-700 hidden flex flex-col"
+          >
+            <button
+              onclick="toggleTab('summary-visit')"
+              class="w-full h-full flex flex-col items-center justify-start p-3 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors collapsed-only"
+            >
+              <span
+                class="material-symbols-outlined text-xl text-text-dark-gray dark:text-neutral-bg mb-3 tab-icon"
+              >
+                summarize
+              </span>
+              <span
+                onclick="
+                  event.stopPropagation();
+                  closeTab('summary-visit');
+                "
+                class="material-symbols-outlined text-xl text-text-light-gray mb-3 close-on-hover cursor-pointer"
+                title="Close tab"
+              >
+                close
+              </span>
+              <span
+                class="tab-label text-sm font-semibold text-text-dark-gray dark:text-neutral-bg"
+              >
+                Follow up
+              </span>
+            </button>
+            <div class="tab-content">
+              <div class="sticky top-16 bg-card-light dark:bg-card-dark z-10 flex-shrink-0 h-16">
+                <div
+                  class="border-b border-gray-200 dark:border-gray-700 px-4 h-full flex items-center"
+                >
+                  <div class="flex items-center justify-between w-full">
+                    <h1 class="text-xl font-bold text-text-dark-gray dark:text-neutral-bg truncate">
+                      Summary: Follow up form
+                    </h1>
+                    <div class="flex items-center gap-1 flex-shrink-0">
+                      <button
+                        onclick="collapseTab('summary-visit')"
+                        class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                        title="Collapse tab"
                       >
-                        HIGH-RISK
-                      </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="text-text-light-gray"
+                        >
+                          <rect width="18" height="18" x="3" y="3" rx="2" />
+                          <path d="M9 3v18" />
+                          <path d="m16 15-3-3 3-3" />
+                        </svg>
+                      </button>
+                      <button
+                        onclick="closeTab('summary-visit')"
+                        class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                        title="Close tab"
+                      >
+                        <span class="material-symbols-outlined text-xl text-text-light-gray">
+                          close
+                        </span>
+                      </button>
                     </div>
                   </div>
-
-                  <!-- Diabetes Management -->
-                  <div class="mb-4">
-                    <p class="text-xs text-text-light-gray italic mb-2">Diabetes Management</p>
-                    <p class="text-sm text-text-dark-gray dark:text-white mb-2">
-                      <span class="font-semibold">Metformin 500mg</span>
-                      twice daily • Dr. Johnson
-                    </p>
-                  </div>
-
-                  <!-- Heart Health -->
-                  <div>
-                    <p class="text-xs text-text-light-gray italic mb-2">Heart Health</p>
-                    <p class="text-sm text-text-dark-gray dark:text-white mb-2">
-                      <span class="font-semibold">Lisinopril 10mg</span>
-                      once daily • Dr. Johnson
-                    </p>
-                    <p class="text-sm text-text-dark-gray dark:text-white">
-                      <span class="font-semibold">Atorvastatin 20mg</span>
-                      once daily at bedtime • Dr. Johnson • Started Nov 2024
-                    </p>
-                  </div>
                 </div>
-
-                <!-- Recently Stopped -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-3">
-                    Recently Stopped
+              </div>
+              <div class="tab-overflow p-6 pt-20 space-y-6">
+                <div
+                  class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h2 class="text-xl font-bold text-text-dark-gray dark:text-white mb-4">
+                    Summary: Follow up form
                   </h2>
-                  <p class="text-sm text-text-dark-gray dark:text-white">
-                    <span class="font-semibold">Ibuprofen 400mg</span>
-                    <span class="text-text-light-gray">(Oct 2024)</span>
-                    - Switched to different pain management approach
-                  </p>
-                </div>
-
-                <!-- Allergies -->
-                <div>
-                  <div class="flex items-center gap-2 mb-3">
-                    <span class="material-symbols-outlined text-red-500 text-xl">warning</span>
-                    <h2 class="text-base font-bold text-text-dark-gray dark:text-white">
-                      Allergies
-                    </h2>
-                  </div>
-                  <div class="space-y-3">
-                    <div class="border-l-4 border-red-500 pl-3">
-                      <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                        Penicillin
-                      </p>
-                      <p class="text-sm text-text-light-gray">
-                        Reaction: Rash • Severity: Moderate
-                      </p>
-                    </div>
-                    <div class="border-l-4 border-red-500 pl-3">
-                      <p class="text-sm font-semibold text-text-dark-gray dark:text-white">Latex</p>
-                      <p class="text-sm text-text-light-gray">
-                        Reaction: Contact dermatitis • Severity: Mild
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Recent Lab Results -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-3">
-                    Recent Lab Results
-                  </h2>
-                  <p class="text-sm text-text-light-gray mb-3">Metabolic Panel - Oct 15, 2024</p>
-                  <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                      <span class="text-sm text-text-dark-gray dark:text-white">Glucose</span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          95 mg/dL
-                        </span>
-                        <span class="text-xs text-green-600 dark:text-green-400 ml-2">Normal</span>
-                      </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="text-sm text-text-dark-gray dark:text-white">Creatinine</span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          1.0 mg/dL
-                        </span>
-                        <span class="text-xs text-green-600 dark:text-green-400 ml-2">Normal</span>
-                      </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="text-sm text-text-dark-gray dark:text-white">Sodium</span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          140 mmol/L
-                        </span>
-                        <span class="text-xs text-green-600 dark:text-green-400 ml-2">Normal</span>
-                      </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="text-sm text-text-dark-gray dark:text-white">Potassium</span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          4.2 mmol/L
-                        </span>
-                        <span class="text-xs text-green-600 dark:text-green-400 ml-2">Normal</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Recent Immunizations -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-3">
-                    Recent Immunizations
-                  </h2>
-                  <div class="space-y-3">
+                  <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
                     <div>
-                      <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                        COVID-19 Vaccine (Moderna)
+                      <h3 class="font-semibold text-base mb-2">Follow-up Assessment</h3>
+                      <p>
+                        Patient returns for 2-week follow-up. Reports significant improvement in
+                        lower back pain, now rating 2/10. Physical therapy exercises have been
+                        helpful.
                       </p>
-                      <p class="text-sm text-text-light-gray">Sep 22, 2024 • 2024-2025 booster</p>
                     </div>
                     <div>
-                      <p class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                        Influenza Vaccine
+                      <h3 class="font-semibold text-base mb-2">Treatment Progress</h3>
+                      <ul class="list-disc list-inside space-y-1">
+                        <li>Completed 6 physical therapy sessions</li>
+                        <li>Improved range of motion</li>
+                        <li>Reduced inflammation noted on examination</li>
+                        <li>Patient demonstrates proper lifting techniques</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Recommendations</h3>
+                      <p>
+                        Continue physical therapy for 4 more weeks. Patient advised to maintain
+                        daily stretching routine and avoid prolonged sitting. Consider ergonomic
+                        assessment of workstation.
                       </p>
-                      <p class="text-sm text-text-light-gray">Oct 5, 2024 • Seasonal flu shot</p>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-base mb-2">Next Steps</h3>
+                      <p>
+                        Schedule follow-up in 4 weeks. Patient to monitor pain levels and report any
+                        increase in symptoms. Continue current medication regimen.
+                      </p>
                     </div>
                   </div>
-                </div>
-
-                <!-- Past Medical History -->
-                <div>
-                  <h2 class="text-base font-bold text-text-dark-gray dark:text-white mb-3">
-                    Past Medical History
-                  </h2>
-                  <p class="text-sm text-text-light-gray">
-                    Uterine fibroids (resolved 1994) • Peptic ulcer disease (resolved 1990)
-                  </p>
                 </div>
               </div>
             </div>
@@ -2923,123 +2845,221 @@
                 </div>
               </div>
               <div class="tab-overflow p-4 pt-20 space-y-4">
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <div class="flex items-center gap-3 mb-3">
-                    <span class="material-symbols-outlined text-blue-500">info</span>
-                    <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      Encounter details
+                <!-- Encounter Details -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-semibold text-text-dark-gray dark:text-white">
+                      Encounter Details
                     </h3>
+                    <span
+                      class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full"
+                    >
+                      In Progress
+                    </span>
                   </div>
-                  <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Date:</span>
-                      <span class="text-text-dark-gray dark:text-white">November 21, 2025</span>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span class="text-text-light-gray block mb-1">Created</span>
+                      <span class="text-text-dark-gray dark:text-white font-medium">
+                        2025-11-21 12:11
+                      </span>
                     </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Type:</span>
-                      <span class="text-text-dark-gray dark:text-white">Follow-up Visit</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Provider:</span>
-                      <span class="text-text-dark-gray dark:text-white">Dr. Emily Carter</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Location:</span>
-                      <span class="text-text-dark-gray dark:text-white">Main Clinic - Room 3B</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Duration:</span>
-                      <span class="text-text-dark-gray dark:text-white">30 minutes</span>
+                    <div>
+                      <span class="text-text-light-gray block mb-1">Updated</span>
+                      <span class="text-text-dark-gray dark:text-white font-medium">
+                        2025-11-21 12:11
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Chief complaint
+
+                <!-- Summaries -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Summaries
                   </h3>
-                  <p class="text-sm text-text-dark-gray dark:text-white">
-                    Follow-up for type 2 diabetes management and blood pressure monitoring. Patient
-                    reports improved energy levels since last visit.
-                  </p>
-                </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Vitals
-                  </h3>
-                  <div class="grid grid-cols-2 gap-3">
-                    <div>
-                      <p class="text-xs text-text-light-gray">Blood pressure</p>
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">
-                        126/80 mmHg
-                      </p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-text-light-gray">Heart rate</p>
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">74 bpm</p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-text-light-gray">Temperature</p>
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">98.4°F</p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-text-light-gray">Weight</p>
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">163 lbs</p>
-                    </div>
+                  <div
+                    class="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-card-dark"
+                  >
+                    <table class="w-full text-sm">
+                      <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Summary Name
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Type
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Created
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('summary-intake')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-purple-600 text-lg">
+                                summarize
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Summary: Intake Form
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3 text-text-dark-gray dark:text-white">
+                            Form Summary
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-21</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Assessment
+
+                <!-- Forms -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Forms
                   </h3>
-                  <ul class="space-y-2 text-sm">
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Type 2 diabetes - well controlled, HbA1c at target
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Hypertension - stable on current medication
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Patient showing good adherence to treatment plan
-                      </span>
-                    </li>
-                  </ul>
+                  <div
+                    class="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-card-dark"
+                  >
+                    <table class="w-full text-sm">
+                      <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Form Name
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Status
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Created
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('intake-form')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-blue-600 text-lg">
+                                description
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Form "Intake Form"
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3">
+                            <span
+                              class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded"
+                            >
+                              Completed
+                            </span>
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-21</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Plan
+
+                <!-- Activity -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Activity
                   </h3>
-                  <ul class="space-y-2 text-sm">
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Continue current medication regimen
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Order HbA1c and lipid panel for next visit
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">Follow up in 3 months</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Continue exercise program and dietary modifications
-                      </span>
-                    </li>
-                  </ul>
+                  <div class="space-y-3">
+                    <div
+                      class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                    >
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm"
+                        >
+                          check_circle
+                        </span>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Form completed
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">
+                          Intake Form submitted by patient
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-21 14:30</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                    >
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-sm"
+                        >
+                          send
+                        </span>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Form sent
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">
+                          Intake Form sent to patient by Dr. Smith
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-21 09:15</p>
+                      </div>
+                    </div>
+                    <div class="flex gap-3">
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-green-600 dark:text-green-400 text-sm"
+                        >
+                          add_circle
+                        </span>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Encounter created
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">Created by Dr. Smith</p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-21 09:00</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4160,138 +4180,263 @@
                 </div>
               </div>
               <div class="tab-overflow p-4 pt-20 space-y-4">
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <div class="flex items-center gap-3 mb-3">
-                    <span class="material-symbols-outlined text-blue-500">info</span>
-                    <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                      Encounter details
+                <!-- Encounter Details -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-semibold text-text-dark-gray dark:text-white">
+                      Encounter Details
                     </h3>
+                    <span
+                      class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full"
+                    >
+                      In Progress
+                    </span>
                   </div>
-                  <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Date:</span>
-                      <span class="text-text-dark-gray dark:text-white">November 14, 2025</span>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span class="text-text-light-gray block mb-1">Created</span>
+                      <span class="text-text-dark-gray dark:text-white font-medium">
+                        2025-11-14 12:11
+                      </span>
                     </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Type:</span>
-                      <span class="text-text-dark-gray dark:text-white">Lab Review</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Provider:</span>
-                      <span class="text-text-dark-gray dark:text-white">Dr. Emily Carter</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Location:</span>
-                      <span class="text-text-dark-gray dark:text-white">Telehealth</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span class="text-text-light-gray">Duration:</span>
-                      <span class="text-text-dark-gray dark:text-white">15 minutes</span>
+                    <div>
+                      <span class="text-text-light-gray block mb-1">Updated</span>
+                      <span class="text-text-dark-gray dark:text-white font-medium">
+                        2025-11-14 12:11
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Chief complaint
+
+                <!-- Summaries -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Summaries
                   </h3>
-                  <p class="text-sm text-text-dark-gray dark:text-white">
-                    Telehealth visit to review recent lab results and discuss any medication
-                    adjustments.
-                  </p>
+                  <div
+                    class="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-card-dark"
+                  >
+                    <table class="w-full text-sm">
+                      <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Summary Name
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Type
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Created
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('summary-intake')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-purple-600 text-lg">
+                                summarize
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Summary: Intake Form
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3 text-text-dark-gray dark:text-white">
+                            Form Summary
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-14</td>
+                        </tr>
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('summary-visit')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-purple-600 text-lg">
+                                summarize
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Summary: Follow up form
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3 text-text-dark-gray dark:text-white">
+                            Visit Summary
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-14</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Lab results reviewed
+
+                <!-- Forms -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Forms
                   </h3>
-                  <div class="space-y-2">
+                  <div
+                    class="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-card-dark"
+                  >
+                    <table class="w-full text-sm">
+                      <thead class="bg-gray-100 dark:bg-gray-800">
+                        <tr>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Form Name
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Status
+                          </th>
+                          <th
+                            class="text-left px-4 py-2 font-semibold text-text-dark-gray dark:text-white"
+                          >
+                            Created
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('intake-form')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-blue-600 text-lg">
+                                description
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Form "Intake Form"
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3">
+                            <span
+                              class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded"
+                            >
+                              Completed
+                            </span>
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-21</td>
+                        </tr>
+                        <tr
+                          class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          onclick="toggleTab('intake-form')"
+                        >
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <span class="material-symbols-outlined text-blue-600 text-lg">
+                                description
+                              </span>
+                              <span class="text-blue-600 hover:underline font-medium">
+                                Form "Intake Form"
+                              </span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3">
+                            <span
+                              class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded"
+                            >
+                              Completed
+                            </span>
+                          </td>
+                          <td class="px-4 py-3 text-text-light-gray">2025-11-28</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Activity -->
+                <div
+                  class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg border border-gray-300 dark:border-gray-700"
+                >
+                  <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">
+                    Activity
+                  </h3>
+                  <div class="space-y-3">
                     <div
-                      class="flex justify-between items-center p-2 bg-card-light dark:bg-card-dark rounded"
+                      class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0"
                     >
-                      <span class="text-sm text-text-dark-gray dark:text-white">HbA1c</span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          6.8%
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm"
+                        >
+                          check_circle
                         </span>
-                        <p class="text-xs text-green-600 dark:text-green-400">Improved from 7.2%</p>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Form completed
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">
+                          Intake Form submitted by patient
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-14 14:30</p>
                       </div>
                     </div>
                     <div
-                      class="flex justify-between items-center p-2 bg-card-light dark:bg-card-dark rounded"
+                      class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0"
                     >
-                      <span class="text-sm text-text-dark-gray dark:text-white">
-                        Total cholesterol
-                      </span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          185 mg/dL
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-sm"
+                        >
+                          send
                         </span>
-                        <p class="text-xs text-green-600 dark:text-green-400">Optimal</p>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Form sent
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">
+                          Intake Form sent to patient by Dr. Smith
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-14 09:15</p>
                       </div>
                     </div>
-                    <div
-                      class="flex justify-between items-center p-2 bg-card-light dark:bg-card-dark rounded"
-                    >
-                      <span class="text-sm text-text-dark-gray dark:text-white">
-                        Kidney function
-                      </span>
-                      <div class="text-right">
-                        <span class="text-sm font-semibold text-text-dark-gray dark:text-white">
-                          eGFR 88
+                    <div class="flex gap-3">
+                      <div
+                        class="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-green-600 dark:text-green-400 text-sm"
+                        >
+                          add_circle
                         </span>
-                        <p class="text-xs text-green-600 dark:text-green-400">Normal</p>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-text-dark-gray dark:text-white">
+                          Encounter created
+                        </p>
+                        <p class="text-xs text-text-light-gray mt-1">Created by Dr. Smith</p>
+                        <p class="text-xs text-text-light-gray mt-1">2025-11-14 09:00</p>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Assessment
-                  </h3>
-                  <ul class="space-y-2 text-sm">
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Significant improvement in HbA1c since last quarter
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Lipid panel shows good response to statin therapy
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        No signs of diabetic nephropathy
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-                <div class="p-4 bg-neutral-bg dark:bg-background-dark rounded-lg">
-                  <h3 class="text-sm font-semibold text-text-dark-gray dark:text-white mb-3">
-                    Plan
-                  </h3>
-                  <ul class="space-y-2 text-sm">
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        No medication changes needed at this time
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Patient praised for excellent lifestyle modifications
-                      </span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-text-light-gray mt-0.5">•</span>
-                      <span class="text-text-dark-gray dark:text-white">
-                        Schedule follow-up visit in December
-                      </span>
-                    </li>
-                  </ul>
                 </div>
               </div>
             </div>
