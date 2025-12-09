@@ -13,7 +13,7 @@ export function initNav(root = null) {
         <span class="brand-name">HealthConnect</span>
       </a>
       <div class="search" aria-hidden="true" class="mx-auto">
-        <input type="search" placeholder="Type a command or search..." aria-label="Search" />
+        <input type="search" placeholder="Search for a patient..." aria-label="Search" />
       </div>
       <div class="actions" style="display:flex;align-items:center;gap:12px">
         <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">

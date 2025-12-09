@@ -98,12 +98,17 @@ nav.site-nav a {
   max-width: 520px;
   margin: 0 auto;
 }
-.global-header .search input {
+input,
+select,
+textarea {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(11, 18, 32, 0.06);
+  padding: 8px 12px !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #d1d5db !important;
 }
+
 .global-header .user {
   width: 40px;
   height: 40px;
