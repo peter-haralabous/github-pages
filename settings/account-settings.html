@@ -21,7 +21,7 @@
 
       main {
         margin-left: 256px;
-        padding-top: 64px;
+        padding-top: 0px;
         min-height: 100vh;
       }
 
@@ -174,22 +174,17 @@
                 <span class="material-symbols-outlined chevron">chevron_right</span>
               </a>
 
-              <h4 class="dropdown-section-title">Organizations</h4>
+              <h4 class="dropdown-section-title">Organization</h4>
 
-              <button class="dropdown-org-item" onclick="toggleOrgMenu()">
+              <button class="dropdown-org-item">
                 <span class="material-symbols-outlined dropdown-org-icon">apartment</span>
                 <span class="dropdown-org-name">Dr. Smith's Clinic</span>
                 <div class="dropdown-org-toggle">
-                  <span class="material-symbols-outlined">expand_more</span>
+                  <span class="material-symbols-outlined">unfold_more</span>
                 </div>
               </button>
 
-              <a
-                href="./organization-settings.html"
-                class="dropdown-menu-item"
-                style="display: none"
-                id="orgSettingsLink"
-              >
+              <a href="./organization-settings.html" class="dropdown-menu-item">
                 <span class="material-symbols-outlined">settings</span>
                 <span>Organization Settings</span>
                 <span class="material-symbols-outlined chevron">chevron_right</span>
@@ -210,42 +205,28 @@
       class="w-64 bg-white border-r border-gray-200 flex-shrink-0 fixed left-0 top-16 h-screen z-30 flex flex-col overflow-y-auto"
     >
       <div class="p-4">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Settings</h2>
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Account</h2>
         <nav class="space-y-1">
           <a
             href="./account-settings.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-medium text-sm"
           >
             <span class="material-symbols-outlined text-lg">person</span>
-            Account Settings
+            Profile
           </a>
           <a
-            href="./organization-settings.html"
+            href="./account-security.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg text-gray-600">apartment</span>
-            Organization Settings
+            <span class="material-symbols-outlined text-lg text-gray-600">lock</span>
+            Security
           </a>
           <a
-            href="./form-templates.html"
+            href="./account-notifications.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg text-gray-600">description</span>
-            Form Templates
-          </a>
-          <a
-            href="./automations.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
-          >
-            <span class="material-symbols-outlined text-lg text-gray-600">automation</span>
-            Automations
-          </a>
-          <a
-            href="./summary-templates.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
-          >
-            <span class="material-symbols-outlined text-lg text-gray-600">summarize</span>
-            Summary Templates
+            <span class="material-symbols-outlined text-lg text-gray-600">notifications</span>
+            Notifications
           </a>
         </nav>
       </div>
@@ -255,13 +236,13 @@
     <main>
       <div class="content-area">
         <div class="page-title-section">
-          <h1>Account Settings</h1>
-          <p>Manage your profile, login, and notification preferences for HealthConnect.</p>
+          <h1>Profile</h1>
+          <p>Update your basic details so teammates can recognize you.</p>
         </div>
 
         <div class="card" id="profile">
-          <h3>Profile</h3>
-          <p class="description">Update your basic details so teammates can recognize you.</p>
+          <h3>Personal Information</h3>
+          <p class="description">Keep your profile information up to date.</p>
           <div class="form-grid">
             <label>
               Full Name
@@ -285,63 +266,6 @@
             <button class="btn-primary">Save changes</button>
           </div>
         </div>
-
-        <div class="card" id="security">
-          <h3>Security</h3>
-          <p class="description">Keep your account protected with a strong password.</p>
-          <div class="form-grid">
-            <label>
-              Current Password
-              <input type="password" placeholder="••••••••" />
-            </label>
-            <label>
-              New Password
-              <input type="password" placeholder="Choose a strong password" />
-            </label>
-            <label>
-              Confirm Password
-              <input type="password" placeholder="Re-enter new password" />
-            </label>
-          </div>
-          <div class="card-actions">
-            <button class="btn-secondary">Cancel</button>
-            <button class="btn-primary">Update password</button>
-          </div>
-        </div>
-
-        <div class="card" id="notifications">
-          <h3>Notifications</h3>
-          <p class="description">
-            Choose how you want to stay informed about encounters and tasks.
-          </p>
-          <div class="toggle-row">
-            <div>
-              <strong>Email alerts</strong>
-              <span>Encounter summaries and weekly digests</span>
-            </div>
-            <input type="checkbox" checked />
-          </div>
-          <div class="divider"></div>
-          <div class="toggle-row">
-            <div>
-              <strong>Mobile push</strong>
-              <span>Real-time notifications about urgent updates</span>
-            </div>
-            <input type="checkbox" checked />
-          </div>
-          <div class="divider"></div>
-          <div class="toggle-row">
-            <div>
-              <strong>SMS</strong>
-              <span>Backup channel for critical alerts</span>
-            </div>
-            <input type="checkbox" />
-          </div>
-          <div class="card-actions">
-            <button class="btn-secondary">Reset</button>
-            <button class="btn-primary">Save preferences</button>
-          </div>
-        </div>
       </div>
     </main>
 
@@ -349,21 +273,6 @@
       function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
-      }
-
-      function toggleOrgMenu() {
-        const orgSettings = document.getElementById('orgSettingsLink');
-        const toggleIcon = document.querySelector(
-          '.dropdown-org-toggle .material-symbols-outlined'
-        );
-
-        if (orgSettings.style.display === 'none' || orgSettings.style.display === '') {
-          orgSettings.style.display = 'flex';
-          toggleIcon.textContent = 'expand_less';
-        } else {
-          orgSettings.style.display = 'none';
-          toggleIcon.textContent = 'expand_more';
-        }
       }
 
       document.addEventListener('click', function (event) {

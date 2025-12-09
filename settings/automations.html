@@ -13,7 +13,7 @@
     <style>
       main {
         margin-left: 256px;
-        padding-top: 64px;
+        padding-top: 0px;
         min-height: 100vh;
         background: #f8f9fa;
       }
@@ -131,22 +131,17 @@
                 <span class="material-symbols-outlined chevron">chevron_right</span>
               </a>
 
-              <h4 class="dropdown-section-title">Organizations</h4>
+              <h4 class="dropdown-section-title">Organization</h4>
 
-              <button class="dropdown-org-item" onclick="toggleOrgMenu()">
+              <button class="dropdown-org-item">
                 <span class="material-symbols-outlined dropdown-org-icon">apartment</span>
                 <span class="dropdown-org-name">Dr. Smith's Clinic</span>
                 <div class="dropdown-org-toggle">
-                  <span class="material-symbols-outlined">expand_more</span>
+                  <span class="material-symbols-outlined">unfold_more</span>
                 </div>
               </button>
 
-              <a
-                href="./organization-settings.html"
-                class="dropdown-menu-item"
-                style="display: none"
-                id="orgSettingsLink"
-              >
+              <a href="./organization-settings.html" class="dropdown-menu-item">
                 <span class="material-symbols-outlined">settings</span>
                 <span>Organization Settings</span>
                 <span class="material-symbols-outlined chevron">chevron_right</span>
@@ -167,21 +162,16 @@
       class="w-64 bg-white border-r border-gray-200 flex-shrink-0 fixed left-0 top-16 h-screen z-30 flex flex-col overflow-y-auto"
     >
       <div class="p-4">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Settings</h2>
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          Organization
+        </h2>
         <nav class="space-y-1">
-          <a
-            href="./account-settings.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
-          >
-            <span class="material-symbols-outlined text-lg text-gray-600">person</span>
-            Account Settings
-          </a>
           <a
             href="./organization-settings.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
             <span class="material-symbols-outlined text-lg text-gray-600">apartment</span>
-            Organization Settings
+            Organization Profile
           </a>
           <a
             href="./form-templates.html"
@@ -189,6 +179,13 @@
           >
             <span class="material-symbols-outlined text-lg text-gray-600">description</span>
             Form Templates
+          </a>
+          <a
+            href="./custom-fields.html"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
+          >
+            <span class="material-symbols-outlined text-lg text-gray-600">tune</span>
+            Custom Fields
           </a>
           <a
             href="./automations.html"
@@ -239,21 +236,6 @@
       function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
-      }
-
-      function toggleOrgMenu() {
-        const orgSettings = document.getElementById('orgSettingsLink');
-        const toggleIcon = document.querySelector(
-          '.dropdown-org-toggle .material-symbols-outlined'
-        );
-
-        if (orgSettings.style.display === 'none' || orgSettings.style.display === '') {
-          orgSettings.style.display = 'flex';
-          toggleIcon.textContent = 'expand_less';
-        } else {
-          orgSettings.style.display = 'none';
-          toggleIcon.textContent = 'expand_more';
-        }
       }
 
       document.addEventListener('click', function (event) {

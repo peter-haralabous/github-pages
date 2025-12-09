@@ -1,26 +1,33 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Summary Templates - HealthConnect</title>
-    <link rel="stylesheet" href="../shared/styles.css" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Notifications - HealthConnect</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <link href="../shared/styles.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <style>
+      body {
+        background: #f6f8fa;
+      }
+
       main {
         margin-left: 256px;
         padding-top: 0px;
         min-height: 100vh;
-        background: #f8f9fa;
       }
 
       .content-area {
-        max-width: 1400px;
         padding: 32px;
+        max-width: 1200px;
       }
 
       .page-title-section {
@@ -31,57 +38,39 @@
         font-size: 28px;
         font-weight: 700;
         color: #0b1220;
-        margin-bottom: 8px;
+        margin: 0 0 8px 0;
       }
 
       .page-title-section p {
-        font-size: 15px;
-        color: #6b7280;
+        color: #6c757d;
+        margin: 0;
       }
 
-      .form-section {
+      .card {
         background: #ffffff;
+        border: 1px solid rgba(11, 18, 32, 0.06);
         border-radius: 12px;
-        padding: 32px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 24px;
         margin-bottom: 24px;
       }
 
-      .form-section h2 {
+      .card h3 {
+        margin: 0 0 16px 0;
         font-size: 18px;
         font-weight: 600;
-        color: #0b1220;
-        margin-bottom: 8px;
       }
 
-      .subtitle {
+      .card p.description {
+        margin: 0 0 20px 0;
+        color: #6c757d;
         font-size: 14px;
-        color: #6b7280;
-        margin-bottom: 24px;
       }
 
-      .empty-state {
-        text-align: center;
-        padding: 64px 32px;
-      }
-
-      .empty-state-icon {
-        font-size: 64px;
-        color: #d1d5db;
-        margin-bottom: 16px;
-      }
-
-      .empty-state h3 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #0b1220;
-        margin-bottom: 8px;
-      }
-
-      .empty-state p {
-        font-size: 14px;
-        color: #6b7280;
-        margin-bottom: 24px;
+      .card-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
       }
 
       .btn-primary {
@@ -94,6 +83,35 @@
         cursor: pointer;
         font-size: 14px;
       }
+
+      .btn-secondary {
+        background: transparent;
+        color: #0b1220;
+        border: 1px solid rgba(11, 18, 32, 0.1);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .divider {
+        height: 1px;
+        background: rgba(11, 18, 32, 0.06);
+        margin: 16px 0;
+      }
+
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+      }
+
+      .toggle-row span {
+        color: #6c757d;
+        font-size: 14px;
+      }
     </style>
   </head>
   <body class="has-global-header">
@@ -104,11 +122,7 @@
           <span class="brand-name">HealthConnect</span>
         </a>
         <div class="search">
-          <input
-            type="search"
-            placeholder="Search summary templates"
-            aria-label="Search summary templates"
-          />
+          <input type="search" placeholder="Search settings" aria-label="Search settings" />
         </div>
         <div class="actions" style="display: flex; align-items: center; gap: 12px">
           <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
@@ -166,44 +180,28 @@
       class="w-64 bg-white border-r border-gray-200 flex-shrink-0 fixed left-0 top-16 h-screen z-30 flex flex-col overflow-y-auto"
     >
       <div class="p-4">
-        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Organization
-        </h2>
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Account</h2>
         <nav class="space-y-1">
           <a
-            href="./organization-settings.html"
+            href="./account-settings.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg text-gray-600">apartment</span>
-            Organization Profile
+            <span class="material-symbols-outlined text-lg text-gray-600">person</span>
+            Profile
           </a>
           <a
-            href="./form-templates.html"
+            href="./account-security.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg text-gray-600">description</span>
-            Form Templates
+            <span class="material-symbols-outlined text-lg text-gray-600">lock</span>
+            Security
           </a>
           <a
-            href="./custom-fields.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
-          >
-            <span class="material-symbols-outlined text-lg text-gray-600">tune</span>
-            Custom Fields
-          </a>
-          <a
-            href="./automations.html"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 font-medium text-sm"
-          >
-            <span class="material-symbols-outlined text-lg text-gray-600">automation</span>
-            Automations
-          </a>
-          <a
-            href="./summary-templates.html"
+            href="./account-notifications.html"
             class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-medium text-sm"
           >
-            <span class="material-symbols-outlined text-lg">summarize</span>
-            Summary Templates
+            <span class="material-symbols-outlined text-lg">notifications</span>
+            Notifications
           </a>
         </nav>
       </div>
@@ -213,24 +211,39 @@
     <main>
       <div class="content-area">
         <div class="page-title-section">
-          <h1>Summary Templates</h1>
-          <p>Create reusable templates for clinical summaries and visit notes.</p>
+          <h1>Notifications</h1>
+          <p>Choose how you want to stay informed about encounters and tasks.</p>
         </div>
 
-        <div class="form-section">
-          <div class="empty-state">
-            <span class="material-symbols-outlined empty-state-icon">summarize</span>
-            <h3>No summary templates yet</h3>
-            <p>Build templates to standardize clinical documentation and speed up note-taking.</p>
-            <button class="btn-primary">
-              <span
-                class="material-symbols-outlined"
-                style="vertical-align: middle; font-size: 18px"
-              >
-                add
-              </span>
-              Create Summary Template
-            </button>
+        <div class="card" id="notifications">
+          <h3>Notification Preferences</h3>
+          <p class="description">Manage your notification channels and preferences.</p>
+          <div class="toggle-row">
+            <div>
+              <strong>Email alerts</strong>
+              <span>Encounter summaries and weekly digests</span>
+            </div>
+            <input type="checkbox" checked />
+          </div>
+          <div class="divider"></div>
+          <div class="toggle-row">
+            <div>
+              <strong>Mobile push</strong>
+              <span>Real-time notifications about urgent updates</span>
+            </div>
+            <input type="checkbox" checked />
+          </div>
+          <div class="divider"></div>
+          <div class="toggle-row">
+            <div>
+              <strong>SMS</strong>
+              <span>Backup channel for critical alerts</span>
+            </div>
+            <input type="checkbox" />
+          </div>
+          <div class="card-actions">
+            <button class="btn-secondary">Reset</button>
+            <button class="btn-primary">Save preferences</button>
           </div>
         </div>
       </div>

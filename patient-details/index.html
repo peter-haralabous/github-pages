@@ -248,20 +248,15 @@
 
               <h4 class="dropdown-section-title">Organization</h4>
 
-              <button class="dropdown-org-item" onclick="toggleOrgMenu()">
+              <button class="dropdown-org-item">
                 <span class="material-symbols-outlined dropdown-org-icon">apartment</span>
                 <span class="dropdown-org-name">Dr. Smith's Clinic</span>
                 <div class="dropdown-org-toggle">
-                  <span class="material-symbols-outlined">expand_more</span>
+                  <span class="material-symbols-outlined">unfold_more</span>
                 </div>
               </button>
 
-              <a
-                href="../settings/organization-settings.html"
-                class="dropdown-menu-item"
-                style="display: none"
-                id="orgSettingsLink"
-              >
+              <a href="../settings/organization-settings.html" class="dropdown-menu-item">
                 <span class="material-symbols-outlined">settings</span>
                 <span>Organization Settings</span>
                 <span class="material-symbols-outlined chevron">chevron_right</span>
@@ -3686,21 +3681,6 @@
       function toggleDropdown() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
-      }
-
-      function toggleOrgMenu() {
-        const orgSettings = document.getElementById('orgSettingsLink');
-        const toggleIcon = document.querySelector(
-          '.dropdown-org-toggle .material-symbols-outlined'
-        );
-
-        if (orgSettings.style.display === 'none' || orgSettings.style.display === '') {
-          orgSettings.style.display = 'flex';
-          toggleIcon.textContent = 'expand_less';
-        } else {
-          orgSettings.style.display = 'none';
-          toggleIcon.textContent = 'expand_more';
-        }
       }
 
       document.addEventListener('click', function (event) {
