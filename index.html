@@ -14,6 +14,7 @@
     />
     <link href="./shared/styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script type="module" src="./shared/global-header.js"></script>
 
     <style>
       th {
@@ -229,66 +230,8 @@
       }
     </style>
   </head>
-  <body class="has-global-header">
-    <header class="global-header">
-      <div class="global-header__inner">
-        <a href="./index.html" class="brand">
-          <span class="logo">HC</span>
-          <span class="brand-name">HealthConnect</span>
-        </a>
-        <div class="search">
-          <input type="search" placeholder="Search for a patient..." aria-label="Search" />
-        </div>
-        <div class="actions" style="display: flex; align-items: center; gap: 12px">
-          <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
-            <span class="material-symbols-outlined"></span>
-          </button>
-          <div class="user-avatar-wrapper">
-            <div class="user-avatar" id="userAvatarBtn" onclick="toggleDropdown()">
-              <span class="material-symbols-outlined user-avatar-icon">account_circle</span>
-            </div>
-            <div class="dropdown-menu" id="userDropdown">
-              <div class="dropdown-header">
-                <div class="dropdown-avatar">
-                  <span class="material-symbols-outlined dropdown-avatar-icon">account_circle</span>
-                </div>
-                <div class="dropdown-user-info">
-                  <h3 class="dropdown-user-name">Dr. Smith</h3>
-                  <p class="dropdown-user-email">drsmith@email.com</p>
-                </div>
-              </div>
-
-              <a href="./settings/account-settings.html" class="dropdown-menu-item">
-                <span class="material-symbols-outlined">person</span>
-                <span>Account Settings</span>
-                <span class="material-symbols-outlined chevron">chevron_right</span>
-              </a>
-
-              <h4 class="dropdown-section-title">Organization</h4>
-
-              <button class="dropdown-org-item">
-                <span class="material-symbols-outlined dropdown-org-icon">apartment</span>
-                <span class="dropdown-org-name">Dr. Smith's Clinic</span>
-                <div class="dropdown-org-toggle">
-                  <span class="material-symbols-outlined">unfold_more</span>
-                </div>
-              </button>
-
-              <a href="./settings/organization-settings.html" class="dropdown-menu-item">
-                <span class="material-symbols-outlined">settings</span>
-                <span>Organization Settings</span>
-                <span class="material-symbols-outlined chevron">chevron_right</span>
-              </a>
-
-              <button class="dropdown-menu-item dropdown-logout">
-                <span class="material-symbols-outlined">logout</span>
-                <span>Log Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+  <body>
+    <global-header home-url="./index.html"></global-header>
 
     <main class="page-container">
       <div class="page-header">
@@ -436,22 +379,5 @@
         <button disabled>Next »</button>
       </div>
     </main>
-
-    <script>
-      function toggleDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('show');
-      }
-
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function (event) {
-        const dropdown = document.getElementById('userDropdown');
-        const avatarBtn = document.getElementById('userAvatarBtn');
-
-        if (!dropdown.contains(event.target) && !avatarBtn.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-    </script>
   </body>
 </html>
