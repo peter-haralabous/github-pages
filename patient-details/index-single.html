@@ -1634,6 +1634,11 @@
         const isEncounter1 = date === '2025-11-14';
         return `
           <div class="space-y-4">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-2 text-sm mb-2">
+              <a href="#" onclick="toggleTab('overview'); return false;" class="text-blue-600 hover:text-blue-800 hover:underline">Overview</a>
+              <span class="text-text-light-gray">/</span>
+            </nav>
             <!-- Encounter Details -->
              <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white">Encounter · ${date}</h1>
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -1917,6 +1922,11 @@
         if (name === 'Intake Form') {
           return `
             <div class="space-y-6">
+              <!-- Breadcrumb -->
+              <nav class="flex items-center gap-2 text-sm mb-2">
+                <a href="#" onclick="toggleTab('overview'); return false;" class="text-blue-600 hover:text-blue-800 hover:underline">Overview</a>
+                <span class="text-text-light-gray">/</span>
+              </nav>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
                   <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white">${name} Submission</h1>
@@ -1924,7 +1934,7 @@
                 </div>
                 <button class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center gap-2">
                   <span class="material-symbols-outlined text-lg">edit</span>
-                  Edit
+                  Edit form
                 </button>
               </div>
 
@@ -1998,6 +2008,11 @@
         } else if (name === 'Follow-up Form') {
           return `
             <div class="space-y-6">
+              <!-- Breadcrumb -->
+              <nav class="flex items-center gap-2 text-sm mb-2">
+                <a href="#" onclick="toggleTab('overview'); return false;" class="text-blue-600 hover:text-blue-800 hover:underline">Overview</a>
+                <span class="text-text-light-gray">/</span>
+              </nav>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
                   <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white">${name} Submission</h1>
@@ -2005,7 +2020,7 @@
                 </div>
                 <button class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center gap-2">
                   <span class="material-symbols-outlined text-lg">edit</span>
-                  Edit
+                  Edit form
                 </button>
               </div>
 
@@ -2081,6 +2096,11 @@
         if (name === 'Intake Form') {
           return `
             <div class="space-y-4">
+              <!-- Breadcrumb -->
+              <nav class="flex items-center gap-2 text-sm mb-2">
+                <a href="#" onclick="toggleTab('overview'); return false;" class="text-blue-600 hover:text-blue-800 hover:underline">Overview</a>
+                <span class="text-text-light-gray">/</span>
+              </nav>
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h1>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
 
@@ -2116,6 +2136,11 @@
         } else if (name === 'Follow up form') {
           return `
             <div class="space-y-4">
+              <!-- Breadcrumb -->
+              <nav class="flex items-center gap-2 text-sm mb-2">
+                <a href="#" onclick="toggleTab('overview'); return false;" class="text-blue-600 hover:text-blue-800 hover:underline">Overview</a>
+                <span class="text-text-light-gray">/</span>
+              </nav>
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h1>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
 
