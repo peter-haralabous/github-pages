@@ -333,6 +333,28 @@
               >
                 <button
                   onclick="
+                    handleAddEncounter();
+                    toggleAddDropdown();
+                  "
+                  class="w-full flex items-start gap-3 px-4 py-3 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors text-left"
+                >
+                  <div
+                    class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">
+                      calendar_month
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
+                      New Encounter
+                    </div>
+                    <div class="text-xs text-text-light-gray">Create a new patient encounter</div>
+                  </div>
+                </button>
+
+                <button
+                  onclick="
                     handleAddHealthRecord();
                     toggleAddDropdown();
                   "
@@ -1429,7 +1451,7 @@
               <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
                   <span class="text-text-light-gray">Name:</span>
-                  <span class="text-text-dark-gray dark:text-white">H, Peter</span>
+                  <span class="text-text-dark-gray dark:text-white">H, Jane</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-text-light-gray">DOB:</span>
@@ -1516,6 +1538,7 @@
         const isEncounter1 = date === '2025-11-14';
         return `
           <div class="space-y-4">
+            <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Encounter · ${date}</h1>
             <!-- Encounter Details -->
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div class="flex items-center justify-between mb-4">
@@ -1959,8 +1982,9 @@
         if (name === 'Intake Form') {
           return `
             <div class="space-y-4">
+              <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h1>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
-                <h2 class="text-xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h2>
+
                 <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
                   <div>
                     <h3 class="font-semibold text-base mb-2">Chief Complaint</h3>
@@ -1993,8 +2017,9 @@
         } else if (name === 'Follow up form') {
           return `
             <div class="space-y-4">
+              <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h1>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
-                <h2 class="text-xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h2>
+
                 <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
                   <div>
                     <h3 class="font-semibold text-base mb-2">Follow-up Assessment</h3>
@@ -2085,6 +2110,10 @@
 
       function handleAddDocument() {
         alert('Document upload coming soon!');
+      }
+
+      function handleAddEncounter() {
+        alert('New Encounter creation coming soon!');
       }
 
       // Close dropdowns when clicking outside

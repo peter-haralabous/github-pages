@@ -285,7 +285,7 @@
         <!-- Patient Header -->
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 sidebar-header">
           <div class="flex items-start justify-between mb-3">
-            <h2 class="text-2xl font-bold text-text-dark-gray dark:text-neutral-bg">H, Peter</h2>
+            <h2 class="text-2xl font-bold text-text-dark-gray dark:text-neutral-bg">H, Jane</h2>
             <button class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
               <span
                 class="material-symbols-outlined text-xl text-text-dark-gray dark:text-neutral-bg"
@@ -334,6 +334,28 @@
                 id="add-dropdown"
                 class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
               >
+                <button
+                  onclick="
+                    handleAddEncounter();
+                    toggleAddDropdown();
+                  "
+                  class="w-full flex items-start gap-3 px-4 py-3 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors text-left"
+                >
+                  <div
+                    class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">
+                      calendar_month
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
+                      New Encounter
+                    </div>
+                    <div class="text-xs text-text-light-gray">Create a new patient encounter</div>
+                  </div>
+                </button>
+
                 <button
                   onclick="
                     handleAddHealthRecord();
@@ -1201,7 +1223,7 @@
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
                     <span class="text-text-light-gray">Name:</span>
-                    <span class="text-text-dark-gray dark:text-white">Peter H</span>
+                    <span class="text-text-dark-gray dark:text-white">Jane H</span>
                   </div>
                   <div class="flex justify-between">
                     <span class="text-text-light-gray">DOB:</span>
@@ -1758,7 +1780,7 @@
                     <label class="block text-xs font-medium text-text-light-gray mb-1">
                       Full name
                     </label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Peter H</p>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Jane H</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">
@@ -1964,7 +1986,7 @@
                     <label class="block text-xs font-medium text-text-light-gray mb-1">
                       Full name
                     </label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Peter H</p>
+                    <p class="text-sm text-text-dark-gray dark:text-white">Jane H</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">
@@ -4554,6 +4576,12 @@
         console.log('Add Document clicked');
         // TODO: Implement document upload flow
         alert('Document upload coming soon!');
+      }
+
+      function handleAddEncounter() {
+        console.log('Add Encounter clicked');
+        // TODO: Implement encounter creation flow
+        alert('New Encounter creation coming soon!');
       }
 
       document.addEventListener('click', function (event) {

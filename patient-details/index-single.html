@@ -351,6 +351,28 @@
               >
                 <button
                   onclick="
+                    handleAddEncounter();
+                    toggleAddDropdown();
+                  "
+                  class="w-full flex items-start gap-3 px-4 py-3 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors text-left"
+                >
+                  <div
+                    class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center"
+                  >
+                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">
+                      calendar_month
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
+                      New Encounter
+                    </div>
+                    <div class="text-xs text-text-light-gray">Create a new patient encounter</div>
+                  </div>
+                </button>
+
+                <button
+                  onclick="
                     handleAddHealthRecord();
                     toggleAddDropdown();
                   "
@@ -1527,7 +1549,7 @@
               <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
                   <span class="text-text-light-gray">Name:</span>
-                  <span class="text-text-dark-gray dark:text-white">H, Peter</span>
+                  <span class="text-text-dark-gray dark:text-white">H, Jane</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-text-light-gray">DOB:</span>
@@ -2239,6 +2261,10 @@
 
       function handleAddDocument() {
         alert('Document upload coming soon!');
+      }
+
+      function handleAddEncounter() {
+        alert('New Encounter creation coming soon!');
       }
 
       // Close dropdowns when clicking outside
