@@ -103,7 +103,27 @@ class GlobalHeader extends HTMLElement {
         .actions {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 16px;
+        }
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 2px;
+        }
+
+        .user-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: #0b1220;
+          margin: 0;
+        }
+
+        .user-org {
+          font-size: 12px;
+          color: #6b7280;
+          margin: 0;
         }
 
         .icon-btn {
@@ -582,6 +602,10 @@ class GlobalHeader extends HTMLElement {
             <button class="icon-btn" aria-label="Open quick actions" title="Open quick actions">
               <span class="material-symbols-outlined"></span>
             </button>
+            <div class="user-info">
+              <p class="user-name">Dr. Smith</p>
+              <p class="user-org" id="headerOrgName">Dr. Smith's Clinic</p>
+            </div>
             <div class="user-avatar-wrapper">
               <div class="user-avatar" id="userAvatarBtn">
                 <div class="icon icon-md">${icons.accountCircle}</div>
@@ -704,6 +728,7 @@ class GlobalHeader extends HTMLElement {
     const orgOptions = this.shadowRoot.getElementById('orgOptions');
     const orgToggleIcon = this.shadowRoot.getElementById('orgToggleIcon');
     const currentOrgName = this.shadowRoot.getElementById('currentOrgName');
+    const headerOrgName = this.shadowRoot.getElementById('headerOrgName');
     const orgCard = this.shadowRoot.getElementById('orgCard');
     const profileOptionBtns = this.shadowRoot.querySelectorAll('.dropdown-profile-option');
     const orgOptionBtns = this.shadowRoot.querySelectorAll('.dropdown-org-option');
@@ -780,8 +805,9 @@ class GlobalHeader extends HTMLElement {
         orgOptionBtns.forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // Update org name
+        // Update org name in dropdown and header
         currentOrgName.textContent = orgName;
+        headerOrgName.textContent = orgName;
 
         // Close selector
         orgOptions.classList.remove('show');
