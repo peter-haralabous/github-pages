@@ -227,13 +227,56 @@
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 sidebar-header">
           <div class="flex items-start justify-between mb-3">
             <h2 class="text-2xl font-bold text-text-dark-gray dark:text-neutral-bg">Smith, Ely</h2>
-            <button class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              <span
-                class="material-symbols-outlined text-xl text-text-dark-gray dark:text-neutral-bg"
+            <div class="relative">
+              <button
+                id="patient-menu-btn"
+                onclick="togglePatientMenu()"
+                class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
               >
-                more_horiz
-              </span>
-            </button>
+                <span
+                  class="material-symbols-outlined text-xl text-text-dark-gray dark:text-neutral-bg"
+                >
+                  more_horiz
+                </span>
+              </button>
+
+              <!-- Patient Actions Dropdown -->
+              <div
+                id="patient-menu-dropdown"
+                class="hidden absolute top-full right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+              >
+                <button
+                  onclick="
+                    handleSendForm();
+                    togglePatientMenu();
+                  "
+                  class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors text-left text-sm text-text-dark-gray dark:text-neutral-bg"
+                >
+                  <span class="material-symbols-outlined text-lg">send</span>
+                  <span>Send Form</span>
+                </button>
+                <button
+                  onclick="
+                    handleEditPatient();
+                    togglePatientMenu();
+                  "
+                  class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-bg dark:hover:bg-background-dark transition-colors text-left text-sm text-text-dark-gray dark:text-neutral-bg"
+                >
+                  <span class="material-symbols-outlined text-lg">edit</span>
+                  <span>Edit patient</span>
+                </button>
+                <button
+                  onclick="
+                    handleRemovePatient();
+                    togglePatientMenu();
+                  "
+                  class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left text-sm text-red-600 dark:text-red-400 border-t border-gray-200 dark:border-gray-700"
+                >
+                  <span class="material-symbols-outlined text-lg">person_remove</span>
+                  <span>Remove patient</span>
+                </button>
+              </div>
+            </div>
           </div>
           <div class="space-y-2 text-sm">
             <div class="flex items-center gap-2 text-text-light-gray">
@@ -1494,19 +1537,19 @@
               </div>
               <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span class="text-text-light-gray block mb-1">Created</span>
+                  <span class="text-text-light-gray block mb-2">Created</span>
                   <span class="text-text-dark-gray dark:text-white font-medium">${date} 12:11</span>
                 </div>
                 <div>
-                  <span class="text-text-light-gray block mb-1">Updated</span>
+                  <span class="text-text-light-gray block mb-2">Updated</span>
                   <span class="text-text-dark-gray dark:text-white font-medium">${date} 12:11</span>
                 </div>
                 <div>
-                  <span class="text-text-light-gray block mb-1">Concept</span>
+                  <span class="text-text-light-gray block mb-2">Prototype Concept</span>
                   <status-chip variant="tab-view" value="Tab View"></status-chip>
                 </div>
                 <div>
-                  <span class="text-text-light-gray block mb-1">Status</span>
+                  <span class="text-text-light-gray block mb-2">Status</span>
                   <status-chip variant="in-progress" value="In Progress" editable="true"></status-chip>
                 </div>
               </div>
@@ -2107,6 +2150,28 @@
         dropdown.classList.toggle('hidden');
       }
 
+      function togglePatientMenu() {
+        const dropdown = document.getElementById('patient-menu-dropdown');
+        dropdown.classList.toggle('hidden');
+      }
+
+      function handleSendForm() {
+        console.log('Send Form clicked');
+        alert('Send Form coming soon!');
+      }
+
+      function handleEditPatient() {
+        console.log('Edit Patient clicked');
+        alert('Edit Patient coming soon!');
+      }
+
+      function handleRemovePatient() {
+        console.log('Remove Patient clicked');
+        if (confirm('Are you sure you want to remove this patient?')) {
+          alert('Remove Patient functionality coming soon!');
+        }
+      }
+
       function handleAddHealthRecord() {
         alert('Health Record creation coming soon!');
       }
@@ -2142,6 +2207,13 @@
 
         if (addDropdown && !addDropdown.contains(event.target) && !addButton) {
           addDropdown.classList.add('hidden');
+        }
+
+        const patientMenuDropdown = document.getElementById('patient-menu-dropdown');
+        const patientMenuBtn = event.target.closest('button[onclick*="togglePatientMenu"]');
+
+        if (patientMenuDropdown && !patientMenuDropdown.contains(event.target) && !patientMenuBtn) {
+          patientMenuDropdown.classList.add('hidden');
         }
       });
     </script>
