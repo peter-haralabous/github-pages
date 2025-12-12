@@ -371,6 +371,7 @@ class EncounterSlideout extends HTMLElement {
         .detail-label {
           font-size: 13px;
           color: #6c757d;
+          margin-bottom: .25rem;
         }
 
         .detail-value {
@@ -813,7 +814,7 @@ class EncounterSlideout extends HTMLElement {
             data.concept
               ? `
             <div class="detail-item">
-              <span class="detail-label">Concept</span>
+              <span class="detail-label">Prototype Concept</span>
               <status-chip variant="${this.getConceptVariant(data.concept)}" value="${data.concept}"></status-chip>
             </div>
           `
