@@ -172,18 +172,19 @@ class GlobalHeader extends HTMLElement {
           top: calc(100% + 8px);
           right: 0;
           background: white;
+          border: 1px solid #e5e7eb;
           border-radius: 16px;
           box-shadow: 0 8px 24px rgba(11, 18, 32, 0.16);
-          width: 384px;
+          width: 420px;
           opacity: 0;
           visibility: hidden;
           transform: translateY(-8px);
           transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
           z-index: 1000;
-          padding: 24px;
+          padding: 16px;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 8px;
         }
 
         .dropdown-menu.show {
@@ -196,14 +197,14 @@ class GlobalHeader extends HTMLElement {
           background: white;
           border: 1px solid #e5e7eb;
           border-radius: 12px;
-          overflow: hidden;
+          overflow: visible;
         }
 
         .dropdown-user-section {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 16px;
+          gap: 12px;
+          padding: 12px;
           cursor: pointer;
           transition: background 0.2s;
           text-decoration: none;
@@ -213,6 +214,7 @@ class GlobalHeader extends HTMLElement {
           background: none;
           font-family: 'Inter', sans-serif;
           text-align: left;
+          border-radius: 12px;
         }
 
         .dropdown-user-section:hover {
@@ -220,8 +222,8 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-avatar {
-          width: 56px;
-          height: 56px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
           background: #d1d5db;
           color: #6b7280;
@@ -266,8 +268,8 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-manage-btn {
-          margin: 0 16px 16px;
-          padding: .5rem 1rem;
+          margin: 0 12px 12px;
+          padding: 10px 16px;
           border: 1px solid #2563eb;
           border-radius: 12px;
           background: white;
@@ -291,14 +293,14 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-profile-selector {
-          padding: 16px;
+          padding: 12px;
         }
 
         .dropdown-profile-btn {
           width: 100%;
-          padding: 12px 16px;
+          padding: 10px 12px;
           border: 1px solid #e5e7eb;
-          border-radius: 12px;
+          border-radius: 8px;
           background: white;
           display: flex;
           align-items: center;
@@ -329,8 +331,8 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-toggle-icon {
-          width: 32px;
-          height: 32px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
           background: #f3f4f6;
           display: flex;
@@ -344,8 +346,10 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-profile-options {
-          border-top: 1px solid #e5e7eb;
           display: none;
+          margin-top: 8px;
+          padding: 12px;
+          padding-top: 0;
         }
 
         .dropdown-profile-options.show {
@@ -354,7 +358,7 @@ class GlobalHeader extends HTMLElement {
 
         .dropdown-profile-option {
           width: 100%;
-          padding: 12px 16px;
+          padding: 8px 12px;
           border: none;
           background: none;
           display: flex;
@@ -364,10 +368,11 @@ class GlobalHeader extends HTMLElement {
           font-family: 'Inter', sans-serif;
           transition: background 0.2s;
           text-align: left;
+          border-radius: 8px;
         }
 
         .dropdown-profile-option:hover {
-          background: #f9fafb;
+          background: #f3f4f6;
         }
 
         .dropdown-profile-option.active {
@@ -393,13 +398,20 @@ class GlobalHeader extends HTMLElement {
         .dropdown-org-section {
           display: flex;
           flex-direction: column;
+
+          gap: .825rem;
+        }
+
+        .dropdown-org-selector-wrapper {
+          padding: 12px;
+          padding-bottom: 0;
         }
 
         .dropdown-org-selector {
           width: 100%;
-          padding: 12px 16px;
-          border: none;
-          border-radius: 0;
+          padding: 10px 12px;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
           background: white;
           display: flex;
           align-items: center;
@@ -431,32 +443,44 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-org-label {
-          font-size: 12px;
-          color: #6b7280;
+          font-size: 11px;
+          color: #9ca3af;
           margin: 0 0 2px 0;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+          font-weight: 500;
         }
 
         .dropdown-org-name {
           font-size: 14px;
           color: #0b1220;
           margin: 0;
-          font-weight: 500;
+          font-weight: 600;
+        }
+
+        .dropdown-org-options-wrapper {
+          padding: 12px;
+          padding-top: 0;
         }
 
         .dropdown-org-options {
           display: none;
-          background: #f9fafb;
+          background: white;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+           padding: 12px;
         }
 
         .dropdown-org-options.show {
           display: block;
+          margin-bottom: 12px;
         }
 
         .dropdown-org-option {
           width: 100%;
-          padding: 12px 16px;
+          padding: 8px 12px;
           border: none;
-          background: none;
+          background: white;
           display: flex;
           align-items: center;
           gap: 12px;
@@ -464,15 +488,16 @@ class GlobalHeader extends HTMLElement {
           font-family: 'Inter', sans-serif;
           transition: background 0.2s;
           text-align: left;
-          color: #374151;
+          color: #0b1220;
+          border-radius: 8px;
         }
 
         .dropdown-org-option:hover {
-          background: #f9fafb;
+          background: #f3f4f6;
         }
 
         .dropdown-org-option.active {
-          background: #eff6ff;
+          background: #dbeafe;
           color: #2563eb;
         }
 
@@ -493,10 +518,9 @@ class GlobalHeader extends HTMLElement {
 
         .dropdown-settings-btn {
           width: 100%;
-          padding: 12px 16px;
+          padding: 12px;
           border: none;
-          border-top: 1px solid #e5e7eb;
-          border-radius: 0;
+          border-radius: 12px;
           background: white;
           display: flex;
           align-items: center;
@@ -530,7 +554,7 @@ class GlobalHeader extends HTMLElement {
         }
 
         .dropdown-logout {
-          padding: 12px 16px;
+          padding: 10px 12px;
           display: flex;
           align-items: center;
           gap: 12px;
@@ -543,10 +567,11 @@ class GlobalHeader extends HTMLElement {
           color: #dc2626;
           font-size: 14px;
           text-align: left;
+          border-radius: 12px;
         }
 
         .dropdown-logout:hover {
-          background: #f9fafb;
+          background: #fef2f2;
         }
 
         .dropdown-logout .material-symbols-outlined {
@@ -665,42 +690,59 @@ class GlobalHeader extends HTMLElement {
                 <!-- Organization Card (Provider Only) -->
                 <div class="dropdown-card" id="orgCard">
                   <div class="dropdown-org-section">
-                    <button class="dropdown-org-selector" id="orgToggle">
-                      <div class="dropdown-org-selector-left">
-                        <div class="icon icon-sm">${icons.apartment}</div>
-                        <div class="dropdown-org-info">
-                          <p class="dropdown-org-label">Organization</p>
-                          <p class="dropdown-org-name" id="currentOrgName">Dr. Smith's Clinic</p>
+                    <div class="dropdown-org-selector-wrapper">
+                      <button class="dropdown-org-selector" id="orgToggle">
+                        <div class="dropdown-org-selector-left">
+                          <div class="icon icon-sm">${icons.apartment}</div>
+                          <div class="dropdown-org-info">
+                            <p class="dropdown-org-label">Organization</p>
+                            <p class="dropdown-org-name" id="currentOrgName">Dr. Smith's Clinic</p>
+                          </div>
                         </div>
-                      </div>
-                      <div class="dropdown-toggle-icon">
-                        <div class="icon" id="orgToggleIcon">${icons.expandMore}</div>
-                      </div>
-                    </button>
-
-                    <!-- Organization Options -->
-                    <div class="dropdown-org-options" id="orgOptions">
-                      <button class="dropdown-org-option active" data-org="clinic1">
-                        <div class="dropdown-org-option-icon">
-                          <div class="icon">${icons.apartment}</div>
+                        <div class="dropdown-toggle-icon">
+                          <div class="icon" id="orgToggleIcon">${icons.expandMore}</div>
                         </div>
-                        <span>Dr. Smith's Clinic</span>
-                      </button>
-                      <button class="dropdown-org-option" data-org="clinic2">
-                        <div class="dropdown-org-option-icon">
-                          <div class="icon">${icons.apartment}</div>
-                        </div>
-                        <span>Downtown Health Center</span>
                       </button>
                     </div>
 
-                    <a href="${basePath}/settings/organization-settings.html" class="dropdown-settings-btn">
-                      <div class="icon icon-sm">${icons.settings}</div>
-                      <span>Organization Settings</span>
-                      <div class="icon chevron">${icons.chevronRight}</div>
-                    </a>
-                  </div>
+                    <!-- Organization Options -->
+                    <div class="dropdown-org-options-wrapper">
+                      <div class="dropdown-org-options" id="orgOptions">
+                        <button class="dropdown-org-option active" data-org="clinic1">
+                          <div class="dropdown-org-option-icon">
+                            <div class="icon">${icons.apartment}</div>
+                          </div>
+                          <span>Dr. Smith's Clinic</span>
+                        </button>
+                        <button class="dropdown-org-option" data-org="clinic2">
+                          <div class="dropdown-org-option-icon">
+                            <div class="icon">${icons.apartment}</div>
+                          </div>
+                          <span>Downtown Health Center</span>
+                        </button>
+                      </div>
+
+
+
+                                <!-- Organization Settings Card (Provider Only) -->
+                <div class="dropdown-card" id="orgSettingsCard">
+                  <a href="${basePath}/settings/organization-settings.html" class="dropdown-settings-btn">
+                    <div class="icon icon-sm">${icons.settings}</div>
+                    <span>Organization Settings</span>
+                    <div class="icon chevron">${icons.chevronRight}</div>
+                  </a>
                 </div>
+
+
+
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+
 
                 <!-- Sign Out Card -->
                 <div class="dropdown-card">
@@ -730,6 +772,7 @@ class GlobalHeader extends HTMLElement {
     const currentOrgName = this.shadowRoot.getElementById('currentOrgName');
     const headerOrgName = this.shadowRoot.getElementById('headerOrgName');
     const orgCard = this.shadowRoot.getElementById('orgCard');
+    const orgSettingsCard = this.shadowRoot.getElementById('orgSettingsCard');
     const profileOptionBtns = this.shadowRoot.querySelectorAll('.dropdown-profile-option');
     const orgOptionBtns = this.shadowRoot.querySelectorAll('.dropdown-org-option');
 
@@ -770,11 +813,13 @@ class GlobalHeader extends HTMLElement {
         // Update label
         currentProfileLabel.textContent = profile.charAt(0).toUpperCase() + profile.slice(1);
 
-        // Show/hide org card based on profile
+        // Show/hide org card and settings based on profile
         if (profile === 'provider') {
           orgCard.classList.remove('hidden');
+          orgSettingsCard.classList.remove('hidden');
         } else {
           orgCard.classList.add('hidden');
+          orgSettingsCard.classList.add('hidden');
         }
 
         // Close selector
