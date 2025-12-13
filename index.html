@@ -56,6 +56,7 @@
         text-decoration: underline;
         font-weight: 500;
         cursor: pointer;
+        white-space: nowrap;
       }
 
       .status-badge {
@@ -276,9 +277,15 @@
         border: 1px solid rgba(11, 18, 32, 0.06);
       }
 
+      .table-wrapper {
+        overflow-x: auto;
+        width: 100%;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 1400px;
       }
     </style>
   </head>
@@ -307,252 +314,290 @@
       </div>
 
       <div class="table-container border">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Date of Birth</th>
-              <th>Prototype Concept</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th class="sortable">Updated</th>
-              <th><span class="material-symbols-outlined settings-icon">settings</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="./patient-details/index.html?tab=encounter-1" class="patient-name">
-                  H, Jane
-                </a>
-              </td>
-              <td>example@email.com</td>
-              <td>2000-01-01</td>
-              <td><status-chip variant="split-view" value="Split View"></status-chip></td>
-              <td>
-                <status-chip
-                  variant="in-progress"
-                  value="In Progress"
-                  editable="true"
-                ></status-chip>
-              </td>
-              <td>2025-11-21 09:36</td>
-              <td>2025-11-21 09:36</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-name="H, Jane">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Prototype Concept</th>
+                <th>Intake</th>
+                <th>Ready for review</th>
+                <th>Appointment Date</th>
+                <th>Appointment Type</th>
+                <th>Created</th>
+                <th class="sortable">Updated</th>
+                <th><span class="material-symbols-outlined settings-icon">settings</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="./patient-details/index.html?tab=encounter-1" class="patient-name">
+                    H, Jane
+                  </a>
+                </td>
+                <td>example@email.com</td>
+                <td>2000-01-01</td>
+                <td><status-chip variant="split-view" value="Split View"></status-chip></td>
+                <td>
+                  <status-chip
+                    variant="in-progress"
+                    value="In progress"
+                    editable="true"
+                  ></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="ready" value="Ready" editable="true"></status-chip>
+                </td>
+                <td>2025-12-15</td>
+                <td>
+                  <status-chip variant="neutral" value="Consult" editable="true"></status-chip>
+                </td>
+                <td>2025-11-21 09:36</td>
+                <td>2025-11-21 09:36</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-name="H, Jane">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="./patient-details/index-tabs.html?tab=encounter-2" class="patient-name">
-                  Smith, Ely
-                </a>
-              </td>
-              <td>ely@email.com</td>
-              <td>1999-01-01</td>
-              <td><status-chip variant="tab-view" value="Tab View"></status-chip></td>
-              <td>
-                <status-chip
-                  variant="in-progress"
-                  value="In Progress"
-                  editable="true"
-                ></status-chip>
-              </td>
-              <td>2025-11-19 14:40</td>
-              <td>2025-11-19 14:40</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-name="Smith, Ely">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./patient-details/index-tabs.html?tab=encounter-2" class="patient-name">
+                    Smith, Ely
+                  </a>
+                </td>
+                <td>ely@email.com</td>
+                <td>1999-01-01</td>
+                <td><status-chip variant="tab-view" value="Tab View"></status-chip></td>
+                <td>
+                  <status-chip variant="completed" value="Completed" editable="true"></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="neutral" value="Not ready" editable="true"></status-chip>
+                </td>
+                <td>2025-12-18</td>
+                <td>
+                  <status-chip variant="neutral" value="Follow-up" editable="true"></status-chip>
+                </td>
+                <td>2025-11-19 14:40</td>
+                <td>2025-11-19 14:40</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-name="Smith, Ely">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="./patient-details/index-single.html?tab=encounter-1" class="patient-name">
-                  Johnson, Maria
-                </a>
-              </td>
-              <td>maria.johnson@email.com</td>
-              <td>1985-06-15</td>
-              <td><status-chip variant="single-view" value="Single View"></status-chip></td>
-              <td>
-                <status-chip
-                  variant="in-progress"
-                  value="In Progress"
-                  editable="true"
-                ></status-chip>
-              </td>
-              <td>2025-11-18 11:22</td>
-              <td>2025-11-18 11:22</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-name="Johnson, Maria">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a
+                    href="./patient-details/index-single.html?tab=encounter-1"
+                    class="patient-name"
+                  >
+                    Johnson, Maria
+                  </a>
+                </td>
+                <td>maria.johnson@email.com</td>
+                <td>1985-06-15</td>
+                <td><status-chip variant="single-view" value="Single View"></status-chip></td>
+                <td>
+                  <status-chip variant="sent" value="Sent" editable="true"></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="ready" value="Ready" editable="true"></status-chip>
+                </td>
+                <td>2025-12-20</td>
+                <td>
+                  <status-chip variant="neutral" value="Consult" editable="true"></status-chip>
+                </td>
+                <td>2025-11-18 11:22</td>
+                <td>2025-11-18 11:22</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-name="Johnson, Maria">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="./patient-details/index.html" class="patient-name">Williams, Robert</a>
-              </td>
-              <td>robert.williams@email.com</td>
-              <td>1978-03-22</td>
-              <td><status-chip variant="split-view" value="Split View"></status-chip></td>
-              <td>
-                <status-chip
-                  variant="in-progress"
-                  value="In Progress"
-                  editable="true"
-                ></status-chip>
-              </td>
-              <td>2025-11-17 08:15</td>
-              <td>2025-11-17 08:15</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./patient-details/index.html" class="patient-name">Williams, Robert</a>
+                </td>
+                <td>robert.williams@email.com</td>
+                <td>1978-03-22</td>
+                <td><status-chip variant="split-view" value="Split View"></status-chip></td>
+                <td>
+                  <status-chip variant="completed" value="Completed" editable="true"></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="neutral" value="Not ready" editable="true"></status-chip>
+                </td>
+                <td>2025-12-14</td>
+                <td>
+                  <status-chip variant="neutral" value="Follow-up" editable="true"></status-chip>
+                </td>
+                <td>2025-11-17 08:15</td>
+                <td>2025-11-17 08:15</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="./patient-details/index.html" class="patient-name">Davis, Jennifer</a>
-              </td>
-              <td>jennifer.davis@email.com</td>
-              <td>1992-11-08</td>
-              <td><status-chip variant="split-view" value="Split View"></status-chip></td>
-              <td>
-                <status-chip
-                  variant="not-started"
-                  value="Not started"
-                  editable="true"
-                ></status-chip>
-              </td>
-              <td>2025-11-15 16:30</td>
-              <td>2025-11-15 16:30</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./patient-details/index.html" class="patient-name">Davis, Jennifer</a>
+                </td>
+                <td>jennifer.davis@email.com</td>
+                <td>1992-11-08</td>
+                <td><status-chip variant="split-view" value="Split View"></status-chip></td>
+                <td>
+                  <status-chip variant="sent" value="Sent" editable="true"></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="neutral" value="Not ready" editable="true"></status-chip>
+                </td>
+                <td>2025-12-22</td>
+                <td>
+                  <status-chip variant="neutral" value="Consult" editable="true"></status-chip>
+                </td>
+                <td>2025-11-15 16:30</td>
+                <td>2025-11-15 16:30</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="./patient-details/index.html" class="patient-name">Brown, Michael</a>
-              </td>
-              <td>michael.brown@email.com</td>
-              <td>1970-09-30</td>
-              <td><status-chip variant="split-view" value="Split View"></status-chip></td>
-              <td>
-                <status-chip variant="completed" value="Done" editable="true"></status-chip>
-              </td>
-              <td>2025-11-14 12:11</td>
-              <td>2025-11-14 12:11</td>
-              <td class="row-actions">
-                <div class="action-menu-wrapper">
-                  <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
-                    <span class="material-symbols-outlined">more_vert</span>
-                  </button>
-                  <div class="action-dropdown">
-                    <button class="action-dropdown-item view-patient">
-                      <span class="material-symbols-outlined">person</span>
-                      View Patient
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./patient-details/index.html" class="patient-name">Brown, Michael</a>
+                </td>
+                <td>michael.brown@email.com</td>
+                <td>1970-09-30</td>
+                <td><status-chip variant="split-view" value="Split View"></status-chip></td>
+                <td>
+                  <status-chip
+                    variant="in-progress"
+                    value="In progress"
+                    editable="true"
+                  ></status-chip>
+                </td>
+                <td>
+                  <status-chip variant="ready" value="Ready" editable="true"></status-chip>
+                </td>
+                <td>2025-11-16</td>
+                <td>
+                  <status-chip variant="neutral" value="Follow-up" editable="true"></status-chip>
+                </td>
+                <td>2025-11-14 12:11</td>
+                <td>2025-11-14 12:11</td>
+                <td class="row-actions">
+                  <div class="action-menu-wrapper">
+                    <button class="action-menu-btn" data-patient-url="./patient-details/index.html">
+                      <span class="material-symbols-outlined">more_vert</span>
                     </button>
-                    <button class="action-dropdown-item send-form">
-                      <span class="material-symbols-outlined">send</span>
-                      Send Form
-                    </button>
-                    <button class="action-dropdown-item danger archive-encounter">
-                      <span class="material-symbols-outlined">archive</span>
-                      Archive Encounter
-                    </button>
+                    <div class="action-dropdown">
+                      <button class="action-dropdown-item view-patient">
+                        <span class="material-symbols-outlined">person</span>
+                        View Patient
+                      </button>
+                      <button class="action-dropdown-item send-form">
+                        <span class="material-symbols-outlined">send</span>
+                        Send Form
+                      </button>
+                      <button class="action-dropdown-item danger archive-encounter">
+                        <span class="material-symbols-outlined">archive</span>
+                        Archive Encounter
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="pagination">
@@ -576,7 +621,10 @@
           detailsUrl: './patient-details/index.html?tab=encounter-1',
           encounterType: 'Active',
           concept: 'Split View',
-          status: 'In Progress',
+          intake: 'In progress',
+          readyForReview: 'Ready',
+          appointmentDate: '2025-12-15',
+          appointmentType: 'Consult',
           created: '2025-11-21 12:11',
           updated: '2025-11-21 12:11',
           summaries: [
@@ -648,7 +696,10 @@
           detailsUrl: './patient-details/index-tabs.html?tab=encounter-1',
           encounterType: 'Active',
           concept: 'Tab View',
-          status: 'In Progress',
+          intake: 'Completed',
+          readyForReview: 'Not ready',
+          appointmentDate: '2025-12-18',
+          appointmentType: 'Follow-up',
           created: '2025-11-21 12:11',
           updated: '2025-11-21 12:11',
           summaries: [
@@ -720,7 +771,10 @@
           detailsUrl: './patient-details/index-single.html?tab=encounter-1',
           encounterType: 'Active',
           concept: 'Single View',
-          status: 'In Progress',
+          intake: 'Sent',
+          readyForReview: 'Ready',
+          appointmentDate: '2025-12-20',
+          appointmentType: 'Consult',
           created: '2025-11-21 12:11',
           updated: '2025-11-21 12:11',
           summaries: [
@@ -784,28 +838,83 @@
             },
           ],
         },
+        'Williams, Robert': {
+          name: 'Williams, Robert',
+          dob: '1978-03-22',
+          phn: '4444 567 890',
+          email: 'robert.williams@email.com',
+          detailsUrl: './patient-details/index.html?tab=encounter-1',
+          encounterType: 'Active',
+          concept: 'Split View',
+          intake: 'Completed',
+          readyForReview: 'Not ready',
+          appointmentDate: '2025-12-14',
+          appointmentType: 'Follow-up',
+          created: '2025-11-17 08:15',
+          updated: '2025-11-17 08:15',
+          summaries: [],
+          forms: [],
+          notes: [],
+          activity: [],
+        },
+        'Davis, Jennifer': {
+          name: 'Davis, Jennifer',
+          dob: '1992-11-08',
+          phn: '3333 789 012',
+          email: 'jennifer.davis@email.com',
+          detailsUrl: './patient-details/index.html?tab=encounter-1',
+          encounterType: 'Active',
+          concept: 'Split View',
+          intake: 'Sent',
+          readyForReview: 'Not ready',
+          appointmentDate: '2025-12-22',
+          appointmentType: 'Consult',
+          created: '2025-11-15 16:30',
+          updated: '2025-11-15 16:30',
+          summaries: [],
+          forms: [],
+          notes: [],
+          activity: [],
+        },
+        'Brown, Michael': {
+          name: 'Brown, Michael',
+          dob: '1970-09-30',
+          phn: '2222 345 678',
+          email: 'michael.brown@email.com',
+          detailsUrl: './patient-details/index.html?tab=encounter-1',
+          encounterType: 'Active',
+          concept: 'Split View',
+          intake: 'In progress',
+          readyForReview: 'Ready',
+          appointmentDate: '2025-11-16',
+          appointmentType: 'Follow-up',
+          created: '2025-11-14 12:11',
+          updated: '2025-11-14 12:11',
+          summaries: [],
+          forms: [],
+          notes: [],
+          activity: [],
+        },
       };
 
       // Initialize slideout
       const slideout = document.querySelector('encounter-slideout');
 
-      // Add click handlers to first 3 patient links
+      // Add click handlers to all patient links
       document.addEventListener('DOMContentLoaded', () => {
         const patientLinks = document.querySelectorAll('.patient-name');
 
-        // Only add handlers to the first 3 patients
-        patientLinks.forEach((link, index) => {
-          if (index < 3) {
-            link.addEventListener('click', (e) => {
-              e.preventDefault();
-              const patientName = link.textContent.trim();
-              const encounterData = encountersData[patientName];
+        // Add handlers to all patients
+        patientLinks.forEach((link) => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const patientName = link.textContent.trim();
+            const encounterData = encountersData[patientName];
 
-              if (encounterData) {
-                slideout.open(encounterData);
-              }
-            });
-          }
+            if (encounterData) {
+              slideout.open(encounterData);
+            }
+          });
         });
 
         // Handle kebab menu dropdowns
@@ -851,7 +960,10 @@
               'Email',
               'Date of Birth',
               'Prototype Concept',
-              'Status',
+              'Intake',
+              'Ready for review',
+              'Appointment Date',
+              'Appointment Type',
               'Created',
               'Updated',
             ];

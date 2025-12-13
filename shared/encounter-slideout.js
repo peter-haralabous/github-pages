@@ -372,6 +372,7 @@ class EncounterSlideout extends HTMLElement {
           font-size: 13px;
           color: #6c757d;
           margin-bottom: .25rem;
+          font-weight: 600;
         }
 
         .detail-value {
@@ -799,7 +800,9 @@ class EncounterSlideout extends HTMLElement {
       <div class="section">
         <div class="section-header">
           <h3 class="section-title">Encounter Details</h3>
-          <status-chip variant="${data.encounterType === 'Active' ? 'active' : 'archived'}" value="${data.encounterType}" editable="true"></status-chip>
+          <status-chip variant="${
+            data.encounterType === 'Active' ? 'active' : 'archived'
+          }" value="${data.encounterType}" editable="true"></status-chip>
         </div>
         <div class="detail-grid">
           <div class="detail-item">
@@ -815,17 +818,53 @@ class EncounterSlideout extends HTMLElement {
               ? `
             <div class="detail-item">
               <span class="detail-label">Prototype Concept</span>
-              <status-chip variant="${this.getConceptVariant(data.concept)}" value="${data.concept}"></status-chip>
+              <status-chip variant="${this.getConceptVariant(data.concept)}" value="${
+                data.concept
+              }"></status-chip>
             </div>
           `
               : ''
           }
           ${
-            data.status
+            data.intake
               ? `
             <div class="detail-item">
-              <span class="detail-label">Status</span>
-              <status-chip variant="${this.getStatusVariant(data.status)}" value="${data.status}" editable="true"></status-chip>
+              <span class="detail-label">Intake</span>
+              <status-chip variant="${this.getIntakeVariant(data.intake)}" value="${
+                data.intake
+              }" editable="true"></status-chip>
+            </div>
+          `
+              : ''
+          }
+          ${
+            data.readyForReview
+              ? `
+            <div class="detail-item">
+              <span class="detail-label">Ready for review</span>
+              <status-chip variant="${this.getReadyVariant(data.readyForReview)}" value="${
+                data.readyForReview
+              }" editable="true"></status-chip>
+            </div>
+          `
+              : ''
+          }
+          ${
+            data.appointmentDate
+              ? `
+            <div class="detail-item">
+              <span class="detail-label">Appointment Date</span>
+              <span class="detail-value">${data.appointmentDate}</span>
+            </div>
+          `
+              : ''
+          }
+          ${
+            data.appointmentType
+              ? `
+            <div class="detail-item">
+              <span class="detail-label">Appointment Type</span>
+              <status-chip variant="neutral" value="${data.appointmentType}" editable="true"></status-chip>
             </div>
           `
               : ''
@@ -898,7 +937,9 @@ class EncounterSlideout extends HTMLElement {
                       </div>
                     </td>
                     <td>
-                      <span class="status-badge ${this.getStatusClass(form.status)}">${form.status}</span>
+                      <span class="status-badge ${this.getStatusClass(form.status)}">${
+                        form.status
+                      }</span>
                     </td>
                     <td>${form.date}</td>
                   </tr>
@@ -935,7 +976,9 @@ class EncounterSlideout extends HTMLElement {
                 <div class="note-content">
                   <div class="note-header">
                     <span class="note-author">${note.author}</span>
-                    <span class="note-badge ${note.visibility.toLowerCase()}">${note.visibility}</span>
+                    <span class="note-badge ${note.visibility.toLowerCase()}">${
+                      note.visibility
+                    }</span>
                   </div>
                   <p class="note-text">${note.text}</p>
                   <span class="note-time">${note.time}</span>
@@ -1016,6 +1059,19 @@ class EncounterSlideout extends HTMLElement {
     if (conceptLower.includes('tab')) return 'tab-view';
     if (conceptLower.includes('single')) return 'single-view';
     return 'split-view';
+  }
+
+  getIntakeVariant(value) {
+    const map = { Sent: 'sent', 'In progress': 'in-progress', Completed: 'completed' };
+    return map[value] || 'sent';
+  }
+
+  getReadyVariant(value) {
+    return value === 'Ready' ? 'ready' : 'neutral';
+  }
+
+  getAppointmentTypeVariant(value) {
+    return 'neutral';
   }
 }
 

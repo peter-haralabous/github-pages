@@ -60,6 +60,26 @@ class StatusChip extends HTMLElement {
         color: '#0f5132',
         border: '1px solid #9dd9be',
       },
+      neutral: {
+        background: '#ffffff',
+        color: '#6c757d',
+        border: '1px solid #dee2e6',
+      },
+      info: {
+        background: '#cfe2ff',
+        color: '#084298',
+        border: '1px solid #9ec5fe',
+      },
+      sent: {
+        background: '#ffffff',
+        color: '#6c757d',
+        border: '1px solid #dee2e6',
+      },
+      ready: {
+        background: '#d1f4e0',
+        color: '#0f5132',
+        border: '1px solid #9dd9be',
+      },
     };
     return variants[variant] || variants['active'];
   }
@@ -90,6 +110,13 @@ class StatusChip extends HTMLElement {
       'Split View': 'split-view',
       'Tab View': 'tab-view',
       'Single View': 'single-view',
+      Sent: 'sent',
+      'In progress': 'in-progress',
+      Completed: 'completed',
+      'Not ready': 'neutral',
+      Ready: 'ready',
+      Consult: 'neutral',
+      'Follow-up': 'neutral',
     };
     return valueMap[value] || 'active';
   }
@@ -114,6 +141,28 @@ class StatusChip extends HTMLElement {
           { value: 'Active', variant: 'active' },
           { value: 'Archived', variant: 'archived' },
         ];
+      } else if (variant === 'sent' || variant === 'in-progress' || variant === 'completed') {
+        // Intake field options
+        options = [
+          { value: 'Sent', variant: 'sent' },
+          { value: 'In progress', variant: 'in-progress' },
+          { value: 'Completed', variant: 'completed' },
+        ];
+      } else if (variant === 'neutral' || variant === 'ready') {
+        // Check if this is Ready for review or Appointment Type based on current value
+        if (value === 'Ready' || value === 'Not ready') {
+          // Ready for review options
+          options = [
+            { value: 'Not ready', variant: 'neutral' },
+            { value: 'Ready', variant: 'ready' },
+          ];
+        } else {
+          // Appointment Type options
+          options = [
+            { value: 'Consult', variant: 'neutral' },
+            { value: 'Follow-up', variant: 'neutral' },
+          ];
+        }
       }
 
       this.shadowRoot.innerHTML = `
