@@ -14,6 +14,7 @@
     />
     <script type="module" src="../shared/global-header.js"></script>
     <script type="module" src="../shared/status-chip.js"></script>
+    <script type="module" src="../shared/send-form-modal.js"></script>
     <link href="../shared/styles.css" rel="stylesheet" />
 
     <script>
@@ -2220,8 +2221,13 @@
       }
 
       function handleSendForm() {
-        console.log('Send Form clicked');
-        alert('Send Form coming soon!');
+        const sendFormModal = document.getElementById('sendFormModal');
+        if (sendFormModal) {
+          sendFormModal.open({
+            showEncounterSelection: true,
+            patientName: 'Smith, Ely',
+          });
+        }
       }
 
       function handleEditPatient() {
@@ -2281,5 +2287,8 @@
         }
       });
     </script>
+
+    <!-- Send Form Modal -->
+    <send-form-modal id="sendFormModal"></send-form-modal>
   </body>
 </html>

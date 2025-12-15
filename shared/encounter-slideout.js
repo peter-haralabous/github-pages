@@ -15,6 +15,10 @@ class EncounterSlideout extends HTMLElement {
   render() {
     this.shadowRoot.innerHTML = `
       <style>
+        * {
+          box-sizing: border-box;
+        }
+
         :host {
           display: none;
           position: fixed;
@@ -746,10 +750,29 @@ class EncounterSlideout extends HTMLElement {
       document.addEventListener('click', () => {
         kebabDropdown.classList.remove('show');
       });
+
+      // Send Form button handler
+      const sendFormBtn = kebabDropdown.querySelectorAll('button')[1];
+      if (sendFormBtn) {
+        sendFormBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          kebabDropdown.classList.remove('show');
+
+          // Dispatch event for parent to handle
+          this.dispatchEvent(
+            new CustomEvent('send-form', {
+              detail: { patientName: this.currentPatientData?.name },
+              bubbles: true,
+              composed: true,
+            })
+          );
+        });
+      }
     }
   }
 
   open(patientData) {
+    this.currentPatientData = patientData;
     this.classList.add('open');
     this.renderContent(patientData);
     this.setupKebabMenu();

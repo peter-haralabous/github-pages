@@ -167,6 +167,10 @@ class StatusChip extends HTMLElement {
 
       this.shadowRoot.innerHTML = `
         <style>
+          * {
+            box-sizing: border-box;
+          }
+
           :host {
             display: inline-block;
           }
@@ -233,6 +237,10 @@ class StatusChip extends HTMLElement {
       // Render static chip
       this.shadowRoot.innerHTML = `
         <style>
+          * {
+            box-sizing: border-box;
+          }
+
           :host {
             display: inline-block;
           }

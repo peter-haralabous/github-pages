@@ -14,6 +14,7 @@
     />
     <script type="module" src="../shared/global-header.js"></script>
     <script type="module" src="../shared/status-chip.js"></script>
+    <script type="module" src="../shared/send-form-modal.js"></script>
     <link href="../shared/styles.css" rel="stylesheet" />
 
     <script>
@@ -328,7 +329,7 @@
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-lg font-semibold text-text-dark-gray dark:text-white">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
                       New Encounter
                     </div>
                     <div class="text-xs text-text-light-gray">Create a new patient encounter</div>
@@ -350,7 +351,7 @@
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-lg font-semibold text-text-dark-gray dark:text-white">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
                       Health Record
                     </div>
                     <div class="text-xs text-text-light-gray">
@@ -374,7 +375,7 @@
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-lg font-semibold text-text-dark-gray dark:text-white">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
                       Note
                     </div>
                     <div class="text-xs text-text-light-gray">Personal note or observation</div>
@@ -396,7 +397,7 @@
                     </span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="text-lg font-semibold text-text-dark-gray dark:text-white">
+                    <div class="text-sm font-semibold text-text-dark-gray dark:text-white">
                       Document
                     </div>
                     <div class="text-xs text-text-light-gray">Upload file, image, or PDF</div>
@@ -4929,9 +4930,13 @@
       }
 
       function handleSendForm() {
-        console.log('Send Form clicked');
-        // TODO: Implement send form flow
-        alert('Send Form coming soon!');
+        const sendFormModal = document.getElementById('sendFormModal');
+        if (sendFormModal) {
+          sendFormModal.open({
+            showEncounterSelection: true,
+            patientName: 'H, Jane',
+          });
+        }
       }
 
       function handleEditPatient() {
@@ -4997,5 +5002,8 @@
         }
       });
     </script>
+
+    <!-- Send Form Modal -->
+    <send-form-modal id="sendFormModal"></send-form-modal>
   </body>
 </html>

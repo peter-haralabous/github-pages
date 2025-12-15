@@ -16,6 +16,10 @@ class CommandPalette extends HTMLElement {
   render() {
     this.shadowRoot.innerHTML = `
       <style>
+        * {
+          box-sizing: border-box;
+        }
+
         :host {
           display: none;
           position: fixed;

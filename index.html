@@ -19,6 +19,8 @@
     <script type="module" src="./shared/status-chip.js"></script>
     <script type="module" src="./shared/list-preferences.js"></script>
     <script type="module" src="./shared/command-palette.js"></script>
+    <script type="module" src="./shared/send-form-modal.js"></script>
+    <script type="module" src="./shared/send-form-modal.js"></script>
 
     <style>
       th {
@@ -610,6 +612,12 @@
     <!-- Command Palette -->
     <command-palette id="commandPalette"></command-palette>
 
+    <!-- Send Form Modal -->
+    <send-form-modal id="sendFormModal"></send-form-modal>
+
+    <!-- Send Form Modal -->
+    <send-form-modal id="sendFormModal"></send-form-modal>
+
     <!-- Confirmation Dialog -->
     <div
       id="confirmationDialog"
@@ -1038,6 +1046,14 @@
       // Track current patient encounter data
       let currentEncounterData = null;
 
+      // Listen for send-form event from slideout
+      slideout.addEventListener('send-form', (e) => {
+        const sendFormModal = document.getElementById('sendFormModal');
+        if (sendFormModal) {
+          sendFormModal.open({ showEncounterSelection: false });
+        }
+      });
+
       // Listen for summary link clicks from slideout
       slideout.addEventListener('open-summary', (e) => {
         const summaryId = e.detail.summaryId;
@@ -1349,9 +1365,12 @@
           // Send Form
           dropdown.querySelector('.send-form').addEventListener('click', (e) => {
             e.stopPropagation();
-            console.log('Send Form clicked');
             dropdown.classList.remove('show');
-            // TODO: Implement send form functionality
+
+            const sendFormModal = document.getElementById('sendFormModal');
+            if (sendFormModal) {
+              sendFormModal.open({ showEncounterSelection: false });
+            }
           });
 
           // Archive Encounter
