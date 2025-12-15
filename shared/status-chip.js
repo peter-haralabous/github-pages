@@ -130,7 +130,14 @@ class StatusChip extends HTMLElement {
     if (editable) {
       // Render dropdown
       let options = [];
-      if (variant.includes('started') || variant.includes('progress') || variant === 'completed') {
+      if (variant === 'sent' || variant === 'in-progress' || variant === 'completed') {
+        // Intake field options - check this first before generic progress check
+        options = [
+          { value: 'Sent', variant: 'sent' },
+          { value: 'In progress', variant: 'in-progress' },
+          { value: 'Completed', variant: 'completed' },
+        ];
+      } else if (variant.includes('started') || variant.includes('progress')) {
         options = [
           { value: 'Not started', variant: 'not-started' },
           { value: 'In Progress', variant: 'in-progress' },
@@ -140,13 +147,6 @@ class StatusChip extends HTMLElement {
         options = [
           { value: 'Active', variant: 'active' },
           { value: 'Archived', variant: 'archived' },
-        ];
-      } else if (variant === 'sent' || variant === 'in-progress' || variant === 'completed') {
-        // Intake field options
-        options = [
-          { value: 'Sent', variant: 'sent' },
-          { value: 'In progress', variant: 'in-progress' },
-          { value: 'Completed', variant: 'completed' },
         ];
       } else if (variant === 'neutral' || variant === 'ready') {
         // Check if this is Ready for review or Appointment Type based on current value

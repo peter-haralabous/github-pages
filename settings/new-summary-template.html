@@ -456,7 +456,7 @@
         <!-- Page Header -->
         <div class="page-header">
           <div class="page-title-section">
-            <h1>Edit Template: Health History - Simple Summary</h1>
+            <h1>Edit Template: Summary: Patient Intake Form</h1>
             <div style="display: flex; gap: 8px">
               <button
                 class="btn-secondary"
@@ -468,7 +468,10 @@
                 <span class="material-symbols-outlined" style="font-size: 18px">delete</span>
                 Delete
               </button>
-              <button class="btn-primary">
+              <button
+                class="btn-primary"
+                onclick="window.location.href = './summary-templates.html'"
+              >
                 <span class="material-symbols-outlined" style="font-size: 18px">save</span>
                 Save Template
               </button>
@@ -480,16 +483,17 @@
               <input
                 type="text"
                 class="info-input"
-                value="Health History - Simple Summary"
+                value="Summary: Patient Intake Form"
                 placeholder="Template name"
               />
             </div>
             <div class="info-field">
-              <span class="info-label">Form:</span>
+              <span class="info-label shrink-0">Form Data:</span>
               <select class="info-input">
-                <option>Simple Health History</option>
-                <option>Intake Form</option>
+                <option>Patient Intake Form</option>
+
                 <option>Follow-up Form</option>
+                <option>Simple Health History</option>
               </select>
             </div>
             <div class="info-field">
@@ -497,7 +501,7 @@
               <input
                 type="text"
                 class="info-input"
-                value="Concise health history summary for quick clinical review"
+                value="Basic Health History summary for Patient Intake Form"
                 placeholder="Template description"
               />
             </div>
@@ -617,6 +621,14 @@ Identify all current, ongoing medical conditions that are actively affecting the
               </div>
               <div class="editor-content">
                 <textarea class="editor-textarea" spellcheck="false">
+## Patient Demographics
+**Name:** {{ patient.name|default:"[Patient Name]" }}
+**Date of Birth:** {{ patient.dob|default:"[DOB]" }}
+**Age:** {{ patient.age|default:"[Age]" }}
+**Gender:** {{ patient.gender|default:"[Gender]" }}
+**PHN:** {{ patient.phn|default:"[PHN]" }}
+**Contact:** {{ patient.email|default:"[Email]" }} | {{ patient.phone|default:"[Phone]" }}
+
 ## Surgical History
 {% if submission.data.surgery %}
 • Notes any priority concerns requiring attention
@@ -676,6 +688,27 @@ Previous Anesthetic Issues: {% if submission.data.anesthesia_issues %}Yes{% else
             </div>
             <div class="preview-content">
               <div class="preview-document">
+                <h2>Patient Demographics</h2>
+                <p>
+                  <strong>Name:</strong>
+                  Jane H
+                  <br />
+                  <strong>Date of Birth:</strong>
+                  January 1, 2000
+                  <br />
+                  <strong>Age:</strong>
+                  25
+                  <br />
+                  <strong>Gender:</strong>
+                  Female
+                  <br />
+                  <strong>PHN:</strong>
+                  12349000
+                  <br />
+                  <strong>Contact:</strong>
+                  example@email.com | (555) 123-4567
+                </p>
+
                 <h2>Surgical History</h2>
                 <p>• Notes any priority concerns requiring attention</p>
 
