@@ -629,6 +629,7 @@
           updated: '2025-11-21 12:11',
           summaries: [
             {
+              id: 'summary-intake',
               name: 'Summary: Intake Form',
               type: 'Form Summary',
               date: '2025-11-21',
@@ -704,6 +705,7 @@
           updated: '2025-11-21 12:11',
           summaries: [
             {
+              id: 'summary-intake',
               name: 'Summary: Intake Form',
               type: 'Form Summary',
               date: '2025-11-21',
@@ -779,6 +781,7 @@
           updated: '2025-11-21 12:11',
           summaries: [
             {
+              id: 'summary-intake',
               name: 'Summary: Intake Form',
               type: 'Form Summary',
               date: '2025-11-21',
@@ -900,6 +903,25 @@
       // Initialize slideout
       const slideout = document.querySelector('encounter-slideout');
 
+      // Track current patient encounter data
+      let currentEncounterData = null;
+
+      // Listen for summary link clicks from slideout
+      slideout.addEventListener('open-summary', (e) => {
+        const summaryId = e.detail.summaryId;
+
+        // Use the current patient's detailsUrl to determine which page variant to open
+        let patientDetailsUrl = './patient-details/index.html?tab=' + summaryId;
+
+        if (currentEncounterData && currentEncounterData.detailsUrl) {
+          // Extract the base URL (before the query params) from detailsUrl
+          const baseUrl = currentEncounterData.detailsUrl.split('?')[0];
+          patientDetailsUrl = baseUrl + '?tab=' + summaryId;
+        }
+
+        window.open(patientDetailsUrl, '_blank');
+      });
+
       // Add click handlers to all patient links
       document.addEventListener('DOMContentLoaded', () => {
         const patientLinks = document.querySelectorAll('.patient-name');
@@ -912,6 +934,7 @@
             const encounterData = encountersData[patientName];
 
             if (encounterData) {
+              currentEncounterData = encounterData;
               slideout.open(encounterData);
             }
           });

@@ -894,7 +894,9 @@ class EncounterSlideout extends HTMLElement {
                     <td>
                       <div class="summary-name">
                         <span class="material-symbols-outlined">summarize</span>
-                        <a href="#">${summary.name}</a>
+                        <a href="#" class="summary-link" data-summary-id="${
+                          summary.id || 'summary-intake'
+                        }">${summary.name}</a>
                       </div>
                     </td>
                     <td>${summary.type || 'Form Summary'}</td>
@@ -1021,6 +1023,30 @@ class EncounterSlideout extends HTMLElement {
           : ''
       }
     `;
+
+    // Add event listeners for summary links
+    this.setupSummaryLinks();
+  }
+
+  setupSummaryLinks() {
+    const summaryLinks = this.shadowRoot.querySelectorAll('.summary-link');
+    summaryLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const summaryId = link.getAttribute('data-summary-id');
+
+        // Dispatch custom event that parent page can listen to
+        const event = new CustomEvent('open-summary', {
+          detail: { summaryId },
+          bubbles: true,
+          composed: true,
+        });
+        this.dispatchEvent(event);
+
+        // Close the slideout
+        this.close();
+      });
+    });
   }
 
   getStatusClass(status) {
