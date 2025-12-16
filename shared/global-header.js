@@ -27,7 +27,6 @@ class GlobalHeader extends HTMLElement {
     const homeUrl = this.getAttribute('home-url') || './index.html';
     const basePath = this.getAttribute('base-path') || '.';
     const icons = this.getIcons();
-    const isPatientDetailsPage = window.location.pathname.includes('/patient-details/');
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -79,34 +78,6 @@ class GlobalHeader extends HTMLElement {
           font-size: 20px;
           font-weight: 700;
           color: #0b1220;
-        }
-
-        .back-button {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          text-decoration: none;
-          color: #0b1220;
-          padding: 8px 12px;
-          border-radius: 8px;
-          transition: background 0.2s;
-        }
-
-        .back-button:hover {
-          background: #f3f4f6;
-        }
-
-        .back-button-icon {
-          width: 26px;
-          height: 26px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .back-button-text {
-          font-size: 16px;
-          font-weight: 600;
         }
 
         .search {
@@ -637,8 +608,8 @@ class GlobalHeader extends HTMLElement {
         }
 
         .icon-md {
-          width: 32px;
-          height: 32px;
+          width: 24px;
+          height: 24px;
         }
 
         .icon-lg {
@@ -649,20 +620,6 @@ class GlobalHeader extends HTMLElement {
 
       <header class="global-header">
         <div class="global-header__inner">
-          ${
-            isPatientDetailsPage
-              ? `
-          <a href="${homeUrl}" class="back-button">
-            <span class="back-button-icon">
-              <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m12 19-7-7 7-7"/>
-                <path d="M19 12H5"/>
-              </svg>
-            </span>
-            <span class="back-button-text">Patient Encounters</span>
-          </a>
-          `
-              : `
           <a href="${homeUrl}" class="brand">
             <span class="logo">
             <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256">
@@ -700,8 +657,6 @@ class GlobalHeader extends HTMLElement {
 </span>
             <span class="brand-name">Thrive Clinical</span>
           </a>
-          `
-          }
           <div class="search">
             <input type="search" placeholder="Search for a patient..." aria-label="Search" />
           </div>
