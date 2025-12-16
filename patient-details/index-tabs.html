@@ -285,7 +285,7 @@
               </div>
             </div>
           </div>
-          <div class="space-y-2 text-sm">
+          <div class="space-y-2 text-base">
             <div class="flex items-center gap-2 text-text-light-gray">
               <span class="material-symbols-outlined text-lg">calendar_today</span>
               <span>DOB: 2000-01-01</span>
@@ -652,9 +652,17 @@
                     onclick="toggleTab('condition-hypertension')"
                     class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
                   >
-                    <div class="flex items-center gap-3">
-                      <span class="material-symbols-outlined text-xl">health_and_safety</span>
-                      <span class="sidebar-title">Hypertension</span>
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-xl">health_and_safety</span>
+                        <span class="sidebar-title">Hypertension</span>
+                      </div>
+                      <span
+                        class="material-symbols-outlined text-sm text-text-light-gray"
+                        title="Added by doctor"
+                      >
+                        stethoscope
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -685,9 +693,17 @@
                     onclick="toggleTab('condition-dizziness')"
                     class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
                   >
-                    <div class="flex items-center gap-3">
-                      <span class="material-symbols-outlined text-xl">health_and_safety</span>
-                      <span class="sidebar-title">Dizziness</span>
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-xl">health_and_safety</span>
+                        <span class="sidebar-title">Dizziness</span>
+                      </div>
+                      <span
+                        class="material-symbols-outlined text-sm text-text-light-gray"
+                        title="Added by doctor"
+                      >
+                        stethoscope
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -707,9 +723,17 @@
                     onclick="toggleTab('condition-renal')"
                     class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
                   >
-                    <div class="flex items-center gap-3">
-                      <span class="material-symbols-outlined text-xl">health_and_safety</span>
-                      <span class="sidebar-title">Chronic Renal Insufficiency</span>
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-xl">health_and_safety</span>
+                        <span class="sidebar-title">Chronic Renal Insufficiency</span>
+                      </div>
+                      <span
+                        class="material-symbols-outlined text-sm text-text-light-gray"
+                        title="Added by doctor"
+                      >
+                        stethoscope
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -852,9 +876,17 @@
                     onclick="toggleTab('medication-warfarin')"
                     class="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-bg dark:hover:bg-background-dark text-text-dark-gray dark:text-neutral-bg transition-colors"
                   >
-                    <div class="flex items-center gap-3">
-                      <span class="material-symbols-outlined text-xl">medication</span>
-                      <span class="sidebar-title">Warfarin 5mg</span>
+                    <div class="flex items-center justify-between gap-3">
+                      <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-xl">medication</span>
+                        <span class="sidebar-title">Warfarin 5mg</span>
+                      </div>
+                      <span
+                        class="material-symbols-outlined text-sm text-text-light-gray"
+                        title="Added by doctor"
+                      >
+                        stethoscope
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -1440,7 +1472,7 @@
               </div>
               <div class="space-y-3">
                 <h2 class="text-2xl font-bold text-text-dark-gray dark:text-white">H, Jane</h2>
-                <div class="space-y-2 text-sm">
+                <div class="space-y-2 text-base">
                   <div class="flex gap-2">
                     <span class="text-text-light-gray">DOB:</span>
                     <span class="text-text-dark-gray dark:text-white">2000-01-01</span>
@@ -1459,7 +1491,7 @@
 
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Active Conditions</h3>
-              <ul class="space-y-2 text-sm">
+              <ul class="space-y-2 text-base">
                 <li class="flex items-start gap-2">
                   <span class="text-text-light-gray mt-0.5">•</span>
                   <div class="flex-1">
@@ -1484,7 +1516,7 @@
 
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Current Medications</h3>
-              <ul class="space-y-2 text-sm">
+              <ul class="space-y-2 text-base">
                 <li class="flex items-start gap-2">
                   <span class="text-text-light-gray mt-0.5">•</span>
                   <div class="flex-1">
@@ -1508,7 +1540,7 @@
                 <span class="material-symbols-outlined text-red-500">warning</span>
                 <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white">Allergies</h3>
               </div>
-              <ul class="space-y-2 text-sm">
+              <ul class="space-y-2 text-base">
                 <li class="flex items-start gap-2">
                   <span class="text-text-light-gray mt-0.5">•</span>
                   <span class="font-medium text-text-dark-gray dark:text-white">Penicillin - Rash (Moderate)</span>
@@ -1574,7 +1606,7 @@
 
             <!-- Summaries -->
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">Summaries</h3>
+              <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Summaries</h3>
               <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                 <table class="w-full text-sm">
                   <thead class="bg-gray-50 dark:bg-gray-800">
@@ -1618,7 +1650,7 @@
 
             <!-- Forms -->
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">Forms</h3>
+              <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Forms</h3>
               <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                 <table class="w-full text-sm">
                   <thead class="bg-gray-50 dark:bg-gray-800">
@@ -1667,7 +1699,7 @@
             <!-- Notes -->
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="text-base font-semibold text-text-dark-gray dark:text-white">Notes</h3>
+                <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white">Notes</h3>
                 <button class="px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex items-center gap-1">
                   <span class="material-symbols-outlined text-lg">add</span>
                   Add Note
@@ -1680,10 +1712,10 @@
                   </div>
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">Dr. Smith</p>
+                      <p class="text-base font-medium text-text-dark-gray dark:text-white">Dr. Smith</p>
                       <span class="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded">Private</span>
                     </div>
-                    <p class="text-sm text-text-dark-gray dark:text-white mb-2">Patient reports improvement in symptoms. Continue current treatment plan. Follow-up recommended in 2 weeks.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white mb-2">Patient reports improvement in symptoms. Continue current treatment plan. Follow-up recommended in 2 weeks.</p>
                     <p class="text-xs text-text-light-gray">${date} 15:45</p>
                   </div>
                 </div>
@@ -1693,10 +1725,10 @@
                   </div>
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">Maria Johnson (Patient)</p>
+                      <p class="text-base font-medium text-text-dark-gray dark:text-white">Maria Johnson (Patient)</p>
                       <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Public</span>
                     </div>
-                    <p class="text-sm text-text-dark-gray dark:text-white mb-2">I forgot to mention during my visit that I've also been experiencing occasional headaches in the morning. They usually go away after breakfast.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white mb-2">I forgot to mention during my visit that I've also been experiencing occasional headaches in the morning. They usually go away after breakfast.</p>
                     <p class="text-xs text-text-light-gray">${date} 14:30</p>
                   </div>
                 </div>
@@ -1706,10 +1738,10 @@
                   </div>
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
-                      <p class="text-sm font-medium text-text-dark-gray dark:text-white">Dr. Smith</p>
+                      <p class="text-base font-medium text-text-dark-gray dark:text-white">Dr. Smith</p>
                       <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Public</span>
                     </div>
-                    <p class="text-sm text-text-dark-gray dark:text-white mb-2">Appointment scheduled for comprehensive exam. Please arrive 15 minutes early to complete intake paperwork.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white mb-2">Appointment scheduled for comprehensive exam. Please arrive 15 minutes early to complete intake paperwork.</p>
                     <p class="text-xs text-text-light-gray">${date} 09:20</p>
                   </div>
                 </div>
@@ -1718,14 +1750,14 @@
 
             <!-- Activity -->
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 class="text-base font-semibold text-text-dark-gray dark:text-white mb-3">Activity</h3>
+              <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Activity</h3>
               <div class="space-y-3">
                 <div class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 last:border-0">
                   <div class="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                     <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm">check_circle</span>
                   </div>
                   <div class="flex-1">
-                    <p class="text-sm font-medium text-text-dark-gray dark:text-white">Form completed</p>
+                    <p class="text-base font-medium text-text-dark-gray dark:text-white">Form completed</p>
                     <p class="text-xs text-text-light-gray mt-1">Intake Form submitted by patient</p>
                     <p class="text-xs text-text-light-gray mt-1">${date} 14:30</p>
                   </div>
@@ -1735,7 +1767,7 @@
                     <span class="material-symbols-outlined text-purple-600 dark:text-purple-400 text-sm">send</span>
                   </div>
                   <div class="flex-1">
-                    <p class="text-sm font-medium text-text-dark-gray dark:text-white">Form sent</p>
+                    <p class="text-base font-medium text-text-dark-gray dark:text-white">Form sent</p>
                     <p class="text-xs text-text-light-gray mt-1">Intake Form sent to patient by Dr. Smith</p>
                     <p class="text-xs text-text-light-gray mt-1">${date} 09:15</p>
                   </div>
@@ -1745,7 +1777,7 @@
                     <span class="material-symbols-outlined text-green-600 dark:text-green-400 text-sm">add_circle</span>
                   </div>
                   <div class="flex-1">
-                    <p class="text-sm font-medium text-text-dark-gray dark:text-white">Encounter created</p>
+                    <p class="text-base font-medium text-text-dark-gray dark:text-white">Encounter created</p>
                     <p class="text-xs text-text-light-gray mt-1">Created by Dr. Smith</p>
                     <p class="text-xs text-text-light-gray mt-1">${date} 09:00</p>
                   </div>
@@ -1761,7 +1793,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Type:</span>
                   <span class="text-text-dark-gray dark:text-white">Condition</span>
@@ -1770,12 +1802,16 @@
                   <span class="text-text-light-gray">Status:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 rounded">Chronic</span>
                 </div>
+                <div class="flex gap-2">
+                  <span class="text-text-light-gray">Added by:</span>
+                  <span class="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 rounded">Patient</span>
+                </div>
               </div>
             </div>
 
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h3 class="text-lg font-semibold text-text-dark-gray dark:text-white mb-3">Details</h3>
-              <p class="text-sm text-text-dark-gray dark:text-white">Detailed information about ${name} would appear here.</p>
+              <p class="text-base text-text-dark-gray dark:text-white">Detailed information about ${name} would appear here.</p>
             </div>
           </div>
         `;
@@ -1786,7 +1822,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Specialty:</span>
                   <span class="text-text-dark-gray dark:text-white">Primary Care</span>
@@ -1806,7 +1842,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Date:</span>
                   <span class="text-text-dark-gray dark:text-white">Sep 22, 2024</span>
@@ -1814,6 +1850,10 @@
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Status:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Completed</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-text-light-gray">Added by:</span>
+                  <span class="px-2 py-0.5 text-sm font-medium bg-blue-100 text-blue-700 rounded flex items-center gap-1"><span class="material-symbols-outlined text-xs">stethoscope</span>Dr. Dean Lee</span>
                 </div>
               </div>
             </div>
@@ -1826,7 +1866,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Dosage:</span>
                   <span class="text-text-dark-gray dark:text-white">Once daily</span>
@@ -1834,6 +1874,10 @@
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Status:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Active</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-text-light-gray">Added by:</span>
+                  <span class="px-2 py-0.5 text-sm font-medium bg-blue-100 text-blue-700 rounded flex items-center gap-1"><span class="material-symbols-outlined text-xs">stethoscope</span>Dr. Martinez</span>
                 </div>
               </div>
             </div>
@@ -1846,7 +1890,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm border-l-4 border-red-500">
               <h2 class="text-xl font-bold text-text-dark-gray dark:text-white mb-4">${name} Allergy</h2>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Reaction:</span>
                   <span class="text-text-dark-gray dark:text-white">Rash</span>
@@ -1854,6 +1898,10 @@
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Severity:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-800 rounded">Moderate</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-text-light-gray">Added by:</span>
+                  <span class="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 rounded">Patient</span>
                 </div>
               </div>
             </div>
@@ -1866,7 +1914,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Date:</span>
                   <span class="text-text-dark-gray dark:text-white">Oct 15, 2024</span>
@@ -1874,6 +1922,10 @@
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Status:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Completed</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-text-light-gray">Added by:</span>
+                  <span class="px-2 py-0.5 text-sm font-medium bg-blue-100 text-blue-700 rounded flex items-center gap-1"><span class="material-symbols-outlined text-xs">stethoscope</span>Dr. Smith</span>
                 </div>
               </div>
             </div>
@@ -1901,19 +1953,19 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Full name</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Ely Smith</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Ely Smith</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Date of birth</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">July 3, 1956</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">July 3, 1956</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Email address</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">john.smith@email.com</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">john.smith@email.com</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Phone number</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">(555) 123-4567</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">(555) 123-4567</p>
                   </div>
                 </div>
               </div>
@@ -1923,19 +1975,19 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Primary concern</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Experiencing persistent lower back pain for the past 3 weeks. Pain is worse when sitting for long periods and improves with movement. Rating 6/10 on pain scale.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Experiencing persistent lower back pain for the past 3 weeks. Pain is worse when sitting for long periods and improves with movement. Rating 6/10 on pain scale.</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Current medications</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Lisinopril 10mg daily, Metformin 500mg twice daily, Aspirin 81mg daily</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Lisinopril 10mg daily, Metformin 500mg twice daily, Aspirin 81mg daily</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Known allergies</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Penicillin (rash), Latex (contact dermatitis)</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Penicillin (rash), Latex (contact dermatitis)</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Past surgeries or hospitalizations</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Appendectomy (2015), Cholecystectomy (2019)</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Appendectomy (2015), Cholecystectomy (2019)</p>
                   </div>
                 </div>
               </div>
@@ -1945,15 +1997,15 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Do you smoke?</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Never</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Never</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Exercise frequency</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Rarely (less than once per week)</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Rarely (less than once per week)</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Alcohol consumption</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">1-2 drinks per week</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">1-2 drinks per week</p>
                   </div>
                 </div>
               </div>
@@ -1978,8 +2030,8 @@
               </div>
 
               <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <p class="text-sm text-text-dark-gray dark:text-white"><span class="font-semibold">Last visit:</span> November 14, 2025</p>
-                <p class="text-sm text-text-dark-gray dark:text-white mt-1"><span class="font-semibold">Provider:</span> Dr. Smith</p>
+                <p class="text-base text-text-dark-gray dark:text-white"><span class="font-semibold">Last visit:</span> November 14, 2025</p>
+                <p class="text-base text-text-dark-gray dark:text-white mt-1"><span class="font-semibold">Provider:</span> Dr. Smith</p>
               </div>
 
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
@@ -1987,11 +2039,11 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">How are you feeling since your last visit?</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Feeling much better overall. The lower back pain has decreased significantly. I've been following the physical therapy exercises and they seem to be helping.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Feeling much better overall. The lower back pain has decreased significantly. I've been following the physical therapy exercises and they seem to be helping.</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Overall health rating</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Good</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Good</p>
                   </div>
                 </div>
               </div>
@@ -2001,11 +2053,11 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Any new symptoms?</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">No new symptoms to report.</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">No new symptoms to report.</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Pain level (0-10)</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">2/10 (improved from 6/10)</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">2/10 (improved from 6/10)</p>
                   </div>
                 </div>
               </div>
@@ -2015,11 +2067,11 @@
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Are you taking medications as prescribed?</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">Yes</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">Yes</p>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-text-light-gray mb-1">Physical therapy sessions completed</label>
-                    <p class="text-sm text-text-dark-gray dark:text-white">6 out of 8 sessions</p>
+                    <p class="text-base text-text-dark-gray dark:text-white">6 out of 8 sessions</p>
                   </div>
                 </div>
               </div>
@@ -2034,7 +2086,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <div class="space-y-2 text-sm">
+              <div class="space-y-2 text-base">
                 <div class="flex gap-2">
                   <span class="text-text-light-gray">Status:</span>
                   <span class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded">Completed</span>
@@ -2052,7 +2104,7 @@
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">Summary: ${name}</h1>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
 
-                <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
+                <div class="space-y-6 text-base text-text-dark-gray dark:text-white">
                   <div>
                     <h3 class="font-semibold text-base mb-2">Reason for Visit</h3>
                     <p>Jane is here for a consultation regarding recent health concerns and to establish care.</p>
@@ -2115,15 +2167,15 @@
               <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
                 <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white">Summary: ${name}</h1>
                 <div class="flex items-center gap-2 flex-wrap">lex-wrap">
-                  <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                  <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-lg">content_copy</span>
                     Copy
                   </button>
-                  <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                  <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-lg">print</span>
                     Print
                   </button>
-                  <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                  <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-lg">refresh</span>
                     Regenerate
                   </button>
@@ -2131,7 +2183,7 @@
               </div>
               <div class="p-4 bg-white dark:bg-card-dark rounded-lg border border-gray-300 dark:border-gray-700">
 
-                <div class="space-y-6 text-sm text-text-dark-gray dark:text-white">
+                <div class="space-y-6 text-base text-text-dark-gray dark:text-white">
                   <div>
                     <h3 class="font-semibold text-base mb-2">Follow-up Assessment</h3>
                     <p>Patient returns for 2-week follow-up. Reports significant improvement in lower back pain, now rating 2/10. Physical therapy exercises have been helpful.</p>
@@ -2163,22 +2215,22 @@
             <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
               <h2 class="text-xl font-bold text-text-dark-gray dark:text-white">Summary: ${name}</h2>
               <div class="flex items-center gap-2 flex-wrap">
-                <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-lg">content_copy</span>
                   Copy
                 </button>
-                <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-lg">print</span>
                   Print
                 </button>
-                <button class="px-3 py-1.5 text-sm font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
+                <button class="px-3 py-1.5 text-base font-medium text-text-dark-gray dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-lg">refresh</span>
                   Regenerate
                 </button>
               </div>
             </div>
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
-              <p class="text-sm text-text-dark-gray dark:text-white">AI-generated summary content would appear here.</p>
+              <p class="text-base text-text-dark-gray dark:text-white">AI-generated summary content would appear here.</p>
             </div>
           </div>
         `;
@@ -2189,7 +2241,7 @@
           <div class="space-y-4">
             <div class="p-4 bg-white dark:bg-card-dark rounded-lg shadow-sm">
               <h1 class="text-2xl font-bold text-text-dark-gray dark:text-white mb-4">${name}</h1>
-              <p class="text-sm text-text-dark-gray dark:text-white">Document viewer would appear here.</p>
+              <p class="text-base text-text-dark-gray dark:text-white">Document viewer would appear here.</p>
             </div>
           </div>
         `;
