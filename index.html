@@ -14,6 +14,12 @@
     />
     <link href="./shared/styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+      // Get today's date in YYYY-MM-DD format for active encounters
+      const todayFormatted = new Date().toISOString().split('T')[0];
+    </script>
+
     <script type="module" src="./shared/global-header.js"></script>
     <script type="module" src="./shared/encounter-slideout.js"></script>
     <script type="module" src="./shared/status-chip.js"></script>
@@ -759,10 +765,6 @@
     </div>
 
     <script>
-      // Get today's date in YYYY-MM-DD format for active encounters
-      const today = new Date();
-      const todayFormatted = today.toISOString().split('T')[0];
-
       // Sample encounter data for the first 3 patients
       const encountersData = {
         'H, Jane': {
