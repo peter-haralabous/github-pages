@@ -877,6 +877,19 @@ class EncounterSlideout extends HTMLElement {
           </div>
 
           ${
+            data.intake
+              ? `
+            <div class="detail-item">
+              <span class="detail-label">Intake</span>
+              <status-chip variant="${this.getIntakeVariant(data.intake)}" value="${
+                data.intake
+              }" editable="true"></status-chip>
+            </div>
+          `
+              : ''
+          }
+
+          ${
             data.readyForReview
               ? `
             <div class="detail-item">
@@ -908,18 +921,7 @@ class EncounterSlideout extends HTMLElement {
           `
               : ''
           }
-          ${
-            data.intake
-              ? `
-            <div class="detail-item">
-              <span class="detail-label">Intake</span>
-              <status-chip variant="${this.getIntakeVariant(data.intake)}" value="${
-                data.intake
-              }" editable="true"></status-chip>
-            </div>
-          `
-              : ''
-          }
+
           ${
             data.concept
               ? `
