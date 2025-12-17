@@ -204,6 +204,31 @@ class EncounterSlideout extends HTMLElement {
           font-size: 18px;
         }
 
+        .btn-send-form {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          background: white;
+          border: 1px solid #dee2e6;
+          border-radius: 8px;
+          color: #0b1220;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-decoration: none;
+        }
+
+        .btn-send-form:hover {
+          background: #f8f9fa;
+          border-color: #adb5bd;
+        }
+
+        .btn-send-form .material-symbols-outlined {
+          font-size: 18px;
+        }
+
         .kebab-menu {
           position: relative;
         }
@@ -750,24 +775,24 @@ class EncounterSlideout extends HTMLElement {
       document.addEventListener('click', () => {
         kebabDropdown.classList.remove('show');
       });
+    }
+  }
 
-      // Send Form button handler
-      const sendFormBtn = kebabDropdown.querySelectorAll('button')[1];
-      if (sendFormBtn) {
-        sendFormBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          kebabDropdown.classList.remove('show');
+  setupSendFormButton() {
+    const sendFormBtn = this.shadowRoot.querySelector('.btn-send-form');
+    if (sendFormBtn) {
+      sendFormBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
 
-          // Dispatch event for parent to handle
-          this.dispatchEvent(
-            new CustomEvent('send-form', {
-              detail: { patientName: this.currentPatientData?.name },
-              bubbles: true,
-              composed: true,
-            })
-          );
-        });
-      }
+        // Dispatch event for parent to handle
+        this.dispatchEvent(
+          new CustomEvent('send-form', {
+            detail: { patientName: this.currentPatientData?.name },
+            bubbles: true,
+            composed: true,
+          })
+        );
+      });
     }
   }
 
@@ -776,6 +801,7 @@ class EncounterSlideout extends HTMLElement {
     this.classList.add('open');
     this.renderContent(patientData);
     this.setupKebabMenu();
+    this.setupSendFormButton();
     this.setupFormLinks();
     document.body.style.overflow = 'hidden';
   }
@@ -797,6 +823,10 @@ class EncounterSlideout extends HTMLElement {
               <span class="material-symbols-outlined">open_in_new</span>
               <span>View patient</span>
             </a>
+            <button class="btn-send-form">
+              <span class="material-symbols-outlined">send</span>
+              <span>Send Form</span>
+            </button>
             <div class="kebab-menu">
               <button class="kebab-btn" aria-label="More actions">
                 <span class="material-symbols-outlined">more_vert</span>
@@ -805,10 +835,6 @@ class EncounterSlideout extends HTMLElement {
                 <button>
                   <span class="material-symbols-outlined">person</span>
                   <span>View Patient</span>
-                </button>
-                <button>
-                  <span class="material-symbols-outlined">send</span>
-                  <span>Send Form</span>
                 </button>
                 <button class="archive-item">
                   <span class="material-symbols-outlined">archive</span>
