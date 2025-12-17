@@ -209,20 +209,19 @@ class EncounterSlideout extends HTMLElement {
           align-items: center;
           gap: 6px;
           padding: 8px 16px;
-          background: white;
-          border: 1px solid #dee2e6;
+          background: #1d7aec;
+          border: 1px solid #1d7aec;
           border-radius: 8px;
-          color: #0b1220;
+          color: white;
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
-          text-decoration: none;
         }
 
         .btn-send-form:hover {
-          background: #f8f9fa;
-          border-color: #adb5bd;
+          background: #1567d3;
+          border-color: #1567d3;
         }
 
         .btn-send-form .material-symbols-outlined {
@@ -878,18 +877,6 @@ class EncounterSlideout extends HTMLElement {
           </div>
 
           ${
-            data.intake
-              ? `
-            <div class="detail-item">
-              <span class="detail-label">Intake</span>
-              <status-chip variant="${this.getIntakeVariant(data.intake)}" value="${
-                data.intake
-              }" editable="true"></status-chip>
-            </div>
-          `
-              : ''
-          }
-          ${
             data.readyForReview
               ? `
             <div class="detail-item">
@@ -917,6 +904,18 @@ class EncounterSlideout extends HTMLElement {
             <div class="detail-item">
               <span class="detail-label">Appointment Type</span>
               <status-chip variant="neutral" value="${data.appointmentType}" editable="true"></status-chip>
+            </div>
+          `
+              : ''
+          }
+          ${
+            data.intake
+              ? `
+            <div class="detail-item">
+              <span class="detail-label">Intake</span>
+              <status-chip variant="${this.getIntakeVariant(data.intake)}" value="${
+                data.intake
+              }" editable="true"></status-chip>
             </div>
           `
               : ''
