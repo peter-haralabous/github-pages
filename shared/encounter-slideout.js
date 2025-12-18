@@ -334,6 +334,9 @@ class EncounterSlideout extends HTMLElement {
           border-radius: 12px;
           margin-bottom: 16px;
           border: 1px solid #e9ecef;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
         }
 
         .section-header {
@@ -347,7 +350,7 @@ class EncounterSlideout extends HTMLElement {
           font-size: 16px;
           font-weight: 600;
           color: #0b1220;
-          margin: 0;
+          margin: 0 0 8px;
         }
 
         .status-badge {

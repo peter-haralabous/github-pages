@@ -509,7 +509,7 @@ class PatientTimeline extends HTMLElement {
 
       <div class="timeline-wrapper">
         <div class="timeline-header">
-          <h2>Patient Timeline</h2>
+          <!-- <h2>Patient Timeline</h2> -->
           <p>View all patient health events, encounters, and milestones in chronological order</p>
         </div>
 
