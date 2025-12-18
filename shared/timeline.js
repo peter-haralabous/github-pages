@@ -15,6 +15,44 @@ class PatientTimeline extends HTMLElement {
     }
   }
 
+  showModal(item) {
+    const modal = this.shadowRoot.querySelector('.timeline-modal');
+    const modalTitle = this.shadowRoot.querySelector('.modal-title');
+    const modalBody = this.shadowRoot.querySelector('.modal-body');
+
+    // Set modal title
+    modalTitle.textContent = item.title || item.content;
+
+    // Build modal content
+    let content = '';
+
+    if (item.description) {
+      content += `<p class="modal-description">${item.description}</p>`;
+    }
+
+    if (item.details) {
+      content += '<div class="modal-details">';
+      Object.entries(item.details).forEach(([key, value]) => {
+        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+        content += `
+          <div class="detail-row">
+            <span class="detail-label">${label}:</span>
+            <span class="detail-value">${value}</span>
+          </div>
+        `;
+      });
+      content += '</div>';
+    }
+
+    modalBody.innerHTML = content || '<p>No additional details available.</p>';
+    modal.classList.add('show');
+  }
+
+  closeModal() {
+    const modal = this.shadowRoot.querySelector('.timeline-modal');
+    modal.classList.remove('show');
+  }
+
   getSampleData() {
     // Get today's date
     const today = new Date();
@@ -29,6 +67,15 @@ class PatientTimeline extends HTMLElement {
         start: todayStr,
         type: 'point',
         className: 'encounter',
+        title: 'Annual Wellness Visit',
+        description:
+          'Routine annual wellness examination including vital signs, physical exam, and health screening discussions.',
+        details: {
+          provider: 'Dr. Sarah Johnson',
+          location: 'Main Clinic',
+          chiefComplaint: 'Annual wellness visit',
+          diagnosis: 'No acute findings',
+        },
       },
       {
         id: 2,
@@ -36,6 +83,15 @@ class PatientTimeline extends HTMLElement {
         start: '2025-11-14',
         type: 'point',
         className: 'encounter',
+        title: 'Follow-up Visit',
+        description:
+          'Follow-up appointment to review recent lab results and medication management.',
+        details: {
+          provider: 'Dr. Sarah Johnson',
+          location: 'Main Clinic',
+          chiefComplaint: 'Follow-up on hypertension',
+          diagnosis: 'Hypertension, controlled',
+        },
       },
 
       // Conditions (chronic - shown as ranges)
@@ -46,6 +102,16 @@ class PatientTimeline extends HTMLElement {
         end: todayStr,
         type: 'range',
         className: 'condition',
+        title: 'Essential Hypertension',
+        description:
+          'Chronic high blood pressure diagnosed in 2001. Currently managed with medication and lifestyle modifications.',
+        details: {
+          icd10: 'I10',
+          status: 'Active',
+          onsetDate: '2001-06-01',
+          notes:
+            'Patient has been compliant with antihypertensive medications. Blood pressure readings have been well-controlled.',
+        },
       },
       {
         id: 4,
@@ -192,6 +258,13 @@ class PatientTimeline extends HTMLElement {
     return items;
   }
 
+  hideLoader() {
+    const loader = this.shadowRoot.querySelector('.timeline-loader');
+    if (loader) {
+      loader.style.display = 'none';
+    }
+  }
+
   initializeTimeline() {
     const container = this.shadowRoot.getElementById('timeline-container');
     const items = this.getSampleData();
@@ -220,6 +293,23 @@ class PatientTimeline extends HTMLElement {
 
     // Initialize vis-timeline
     this.timeline = new vis.Timeline(container, items, options);
+
+    // Hide loader after timeline is ready
+    // Use a slight delay to ensure timeline has fully rendered
+    setTimeout(() => {
+      this.hideLoader();
+    }, 300);
+
+    // Add click event listener for timeline items
+    this.timeline.on('select', (properties) => {
+      if (properties.items.length > 0) {
+        const itemId = properties.items[0];
+        const item = items.find((i) => i.id === itemId);
+        if (item) {
+          this.showModal(item);
+        }
+      }
+    });
 
     // Setup fit button
     const fitButton = this.shadowRoot.querySelector('.fit-button');
@@ -313,9 +403,36 @@ class PatientTimeline extends HTMLElement {
           </button>
         </div>
 
-        <div id="timeline-container"></div>
+        <div id="timeline-container">
+          <div class="timeline-loader">
+            <div class="spinner"></div>
+            <p>Loading timeline...</p>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="timeline-modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title"></h3>
+              <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body"></div>
+          </div>
+        </div>
       </div>
     `;
+
+    // Setup modal close handlers
+    const modal = this.shadowRoot.querySelector('.timeline-modal');
+    const closeBtn = this.shadowRoot.querySelector('.modal-close');
+
+    closeBtn.addEventListener('click', () => this.closeModal());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        this.closeModal();
+      }
+    });
 
     // Load vis-timeline library if not already loaded
     if (typeof vis === 'undefined') {
