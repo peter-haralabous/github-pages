@@ -185,14 +185,7 @@ class PatientTimeline extends HTMLElement {
             'Possible orthostatic hypotension. Patient advised to rise slowly and maintain adequate hydration.',
         },
       },
-      {
-        id: 7,
-        content: 'HTN',
-        start: '2020-05-12',
-        end: todayStr,
-        type: 'range',
-        className: 'condition',
-      },
+
       {
         id: 8,
         content: 'Chronic Renal Insufficiency',
