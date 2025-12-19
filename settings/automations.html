@@ -146,23 +146,58 @@
         cursor: pointer;
       }
 
-      .status-badge {
+      .status-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .status-chip {
         display: inline-block;
         padding: 4px 12px;
         border-radius: 12px;
         font-size: 13px;
         font-weight: 500;
         white-space: nowrap;
+        cursor: pointer;
+        background: #e9ecef;
+        color: #495057;
+        border: none;
+        outline: none;
+        transition: background 0.2s;
       }
-
       .status-active {
         background: #d1f4e0;
         color: #0f5132;
       }
-
-      .status-neutral {
-        background: #e9ecef;
-        color: #495057;
+      .status-disabled {
+        background: #f8d7da;
+        color: #842029;
+      }
+      .status-paused {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status-options {
+        display: none;
+        position: absolute;
+        top: 110%;
+        left: 0;
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        z-index: 10;
+        min-width: 120px;
+      }
+      .status-options.show {
+        display: block;
+      }
+      .status-option {
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .status-option:hover {
+        background: #f8f9fa;
       }
 
       .row-actions {
@@ -281,7 +316,9 @@
                 </td>
                 <td>Follow up form submitted</td>
                 <td>Update Status to Urgent</td>
-                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <status-chip variant="active" value="Active" editable="true"></status-chip>
+                </td>
                 <td>2025-12-01 09:15</td>
                 <td>2025-12-08 14:30</td>
                 <td class="row-actions">
@@ -298,7 +335,9 @@
                 </td>
                 <td>Encounter created</td>
                 <td>Send Intake Form</td>
-                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <status-chip variant="active" value="Active" editable="true"></status-chip>
+                </td>
                 <td>2025-11-28 10:30</td>
                 <td>2025-12-07 11:45</td>
                 <td class="row-actions">
@@ -315,7 +354,9 @@
                 </td>
                 <td>Appointment date is 1 day before</td>
                 <td>Send Appointment reminder</td>
-                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <status-chip variant="disabled" value="Disabled" editable="true"></status-chip>
+                </td>
                 <td>2025-11-25 14:20</td>
                 <td>2025-12-06 09:10</td>
                 <td class="row-actions">
@@ -330,7 +371,9 @@
                 </td>
                 <td>Patient enrolled</td>
                 <td>Send notification</td>
-                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <status-chip variant="disabled" value="Disabled" editable="true"></status-chip>
+                </td>
                 <td>2025-11-20 16:00</td>
                 <td>2025-12-05 13:25</td>
                 <td class="row-actions">
@@ -345,20 +388,6 @@
       </div>
     </main>
 
-    <script>
-      function toggleDropdown() {
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('show');
-      }
-
-      document.addEventListener('click', function (event) {
-        const dropdown = document.getElementById('userDropdown');
-        const avatarBtn = document.getElementById('userAvatarBtn');
-
-        if (!dropdown.contains(event.target) && !avatarBtn.contains(event.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-    </script>
+    <script type="module" src="../shared/status-chip.js"></script>
   </body>
 </html>

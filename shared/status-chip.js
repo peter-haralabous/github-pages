@@ -45,6 +45,11 @@ class StatusChip extends HTMLElement {
         color: '#495057',
         border: '1px solid #ced4da',
       },
+      disabled: {
+        background: '#f8d7da',
+        color: '#842029',
+        border: '1px solid #f1aeb5',
+      },
       'not-started': {
         background: '#ffffff',
         color: '#6c757d',
@@ -112,6 +117,7 @@ class StatusChip extends HTMLElement {
       Done: 'completed',
       Active: 'active',
       Archived: 'archived',
+      Disabled: 'disabled',
       Split: 'split-view',
       Tabs: 'tab-view',
       Single: 'single-view',
@@ -155,10 +161,10 @@ class StatusChip extends HTMLElement {
           { value: 'In Progress', variant: 'in-progress' },
           { value: 'Done', variant: 'completed' },
         ];
-      } else if (variant === 'active' || variant === 'archived') {
+      } else if (variant === 'active' || variant === 'archived' || variant === 'disabled') {
         options = [
           { value: 'Active', variant: 'active' },
-          { value: 'Archived', variant: 'archived' },
+          { value: 'Disabled', variant: 'disabled' },
         ];
       } else if (variant === 'neutral' || variant === 'ready') {
         // Check if this is Ready for review or Appointment Type based on current value
