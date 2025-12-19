@@ -734,9 +734,6 @@ class EncounterSlideout extends HTMLElement {
       <div class="slideout">
         <div class="header">
           <div class="header-content">
-            <button class="back-btn" aria-label="Back to encounters list">
-              <span class="material-symbols-outlined">arrow_back</span>
-            </button>
             <div class="header-title">
               <span class="material-symbols-outlined">description</span>
               <h2>Encounter Details</h2>
