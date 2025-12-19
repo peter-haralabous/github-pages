@@ -61,7 +61,19 @@ class PatientTimeline extends HTMLElement {
       `;
     }
 
+    // Add "Go to encounter" button for encounter items
+    if (item.className === 'encounter') {
+      content += `
+        <div class="modal-actions">
+          <button class="go-to-encounter-btn" data-encounter-id="${item.id}">
+            Go to Encounter →
+          </button>
+        </div>
+      `;
+    }
+
     modalBody.innerHTML = content || '<p>No additional details available.</p>';
+
     modal.classList.add('show');
   }
 
@@ -76,8 +88,9 @@ class PatientTimeline extends HTMLElement {
     const todayStr = today.toISOString().split('T')[0];
 
     // Timeline data matching patient details pages
+    // Order matters for stacking - encounters first to appear on top
     const items = [
-      // Encounters
+      // Encounters (appear on top)
       {
         id: 1,
         content: 'Encounter · ' + todayStr,
@@ -441,6 +454,10 @@ class PatientTimeline extends HTMLElement {
       tooltip: {
         followMouse: true,
         overflowMethod: 'cap',
+      },
+      order: (a, b) => {
+        // Sort by id ascending - lower ids (encounters) appear on top
+        return a.id - b.id;
       },
     };
 

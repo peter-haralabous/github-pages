@@ -365,3 +365,31 @@
 .modal-image img:hover {
   transform: scale(1.02);
 }
+
+.modal-actions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.go-to-encounter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.go-to-encounter-btn:hover {
+  background: #2563eb;
+  transform: translateX(2px);
+}
